@@ -1,0 +1,5 @@
+# This project assumes you already have a system-wide ignore file
+# provided by https://gitignore.io configured for 'xcode'
+BikeIndex-development.xcconfig
+BikeIndex-production.xcconfig
+

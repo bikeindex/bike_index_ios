@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>bikeindex://</string>
+			</array>
+		</dict>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+	<key>API_SECRET</key>
+	<string>$(API_SECRET)</string>
+	<key>API_CLIENT_ID</key>
+	<string>$(API_CLIENT_ID)</string>
+	<key>API_HOST</key>
+	<string>$(API_HOST)</string>
+	<key>API_PORT</key>
+	<string>$(API_PORT)</string>
+	<key>API_REDIRECT_URI</key>
+	<string>$(API_REDIRECT_URI)</string>
+	<!--
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+	-->
+</dict>
+</plist>

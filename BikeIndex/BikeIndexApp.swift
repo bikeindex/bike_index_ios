@@ -10,9 +10,20 @@ import SwiftData
 
 @main
 struct BikeIndexApp: App {
+    @State private var client: Client = {
+        do {
+            return try Client()
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }()
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Bike.self,
+            User.self,
+            AuthenticatedUser.self,
+            AutocompleteManufacturer.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -25,8 +36,16 @@ struct BikeIndexApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if client.authenticated {
+                ContentView()
+                    .task {
+                        client.fetchProfile(context: sharedModelContainer.mainContext)
+                    }
+            } else {
+                AuthView()
+            }
         }
+        .environment(client)
         .modelContainer(sharedModelContainer)
     }
 }

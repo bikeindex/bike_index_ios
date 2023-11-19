@@ -1,0 +1,32 @@
+//
+//  BikeIndex-template.xcconfig
+//  BikeIndex
+//
+//  Created by Jack on 11/18/23.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+/// Instructions:
+/// 1. Copy or rename this file to "BikeIndex-development.xcconfig" and "BikeIndex-production.xcconfig"
+/// 2. Create your API Secret and Client at https://bikeindex.org/oauth/applications
+/// 3. Provide your own development team and bundle ID
+/// 4. Build and run
+
+API_SECRET =
+API_CLIENT_ID =
+
+// Double-slashes will be un-escaped in ClientConfiguration
+// Intended usage for API_HOST is `http:\/\/bikeindex.org`
+// IP addresses for local development must begin with `http://`
+// To use an IP address you must uncomment the NSAppTransportSecurity block inside Info.plist (use an XML editor)
+API_HOST =
+API_PORT =
+// Double-slashes will be un-escaped in ClientConfiguration
+// Intended usage for API_REDIRECT_URI is `bikeindex:\/\/`
+// This should exactly match one of your redirect URIs configured at bikeindex.org/oauth/applications
+API_REDIRECT_URI =
+
+DEVELOPMENT_TEAM =
+PRODUCT_BUNDLE_IDENTIFIER =
