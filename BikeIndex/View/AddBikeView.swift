@@ -7,17 +7,22 @@
 
 import SwiftUI
 import SwiftData
+import OSLog
 
+/// NOTE: Adopt @Focus State https://developer.apple.com/documentation/swiftui/focusstate
+/// NOTE: Wrap this in a pre-menu to select
+///     A) Add your own bike
+///     B) Add a stolen bike
+///     C) Add an abandoned bike you found
+///     --  https://bikeindex.org/choose_registration
 struct AddBikeView: View {
-
-    // TODO: 1) Replace @State variables with writing modifications to an in-memory/non-autosave Bike model, 2) write the model to the API, 3) then persist it locally
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
     // MARK: Shadow State
 
     // Shadow the serial number, manufacturer, and model to update the UI without unwrapping optionals
-    @State var missingSerial = true
+    @State var missingSerial = false
     @State var manufacturerSearchText = ""
     @State var manufacturerSearchActive = true
     @State var frameModel = ""
@@ -47,19 +52,12 @@ struct AddBikeView: View {
     /// 3. Primary frame color not empty
     /// 4. owner email
     /// Source: attempt to register on the web with any string for the serial number
-    /* TODO: revisit this **AFTER** replacing @State with an in-memory Bike model to let the model perform form validation
-    private var requiredFieldsNotMet: Binding<Bool> {
-        Binding {
-            let passedSerial = !serialNumber.isEmpty || missingSerialNumber
-            let passedManufacturer = !manufacturer.isEmpty
-            // let passedFrameColor = colorPrimary -- Should we allow empty values in the color?
-            // let ownerEmail = client. // TODO: Need to fetch account info, persist it, and provide it here
-            return !(passedSerial && passedManufacturer)
-        } set: { _ in
-            // this is a one-way binding
-        }
+    private var requiredFieldsNotMet: Bool {
+        let passedSerial = missingSerial || (!(bike.serial?.isEmpty ?? true))
+        let passedManufacturer = !bike.manufacturerName.isEmpty
+        let passedEmail = !ownerEmail.isEmpty
+        return !(passedSerial && passedManufacturer && passedEmail)
     }
-     */
 
     var body: some View {
         NavigationView {
@@ -225,8 +223,12 @@ struct AddBikeView: View {
                         Text("Register")
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } footer: {
+                    if !client.userCanRegisterBikes {
+                        Text("Oh no, your authorization doesn't include the ability to register a bike!")
+                    }
                 }
-
+                .disabled(client.userCanRegisterBikes && requiredFieldsNotMet)
             }
         }
         .navigationTitle("Enter Bike Details")
@@ -243,20 +245,41 @@ struct AddBikeView: View {
     /// Update the UI
     private func registerBike() {
         // https://developer.apple.com/documentation/swiftdata/adding-and-editing-persistent-data-in-your-app
+
+        Logger.model.debug("\(#function) Registering bike w/ serial \(String(describing: bike.serial))")
+        Logger.model.debug("\(#function) Registering bike w/ manufacturerName \(String(describing: bike.manufacturerName))")
+        Logger.model.debug("\(#function) Registering bike w/ frameColors \(String(describing: bike.frameColors))")
+        Logger.model.debug("\(#function) Registering w/ owner email \(String(describing: ownerEmail))")
+
+        let serial = bike.serial ?? "unknown"
+        let bikeRegistration = BikeRegistration(bike: bike,
+                                                ownerEmail: ownerEmail)
+        client.register(bikeRegistration: bikeRegistration,
+                        context: modelContext)
+        // TODO: persist bike after success
     }
 }
 
 #Preview {
     do {
+        var bike = Bike()
+
         let client = try Client()
-        return AddBikeView()
+
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+
+        let container = try ModelContainer(for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+                                               configurations: config)
+
+        let user = User(username: "previewUser", name: "Preview User", email: "preview@bikeindex.rog", additionalEmails: [], createdAt: Date(), image: nil, twitter: nil)
+
+        let auth = AuthenticatedUser(identifier: "1", user: user, memberships: [])
+        container.mainContext.insert(user)
+        container.mainContext.insert(auth)
+
+        return AddBikeView(bike: bike)
             .environment(client)
-            .modelContainer(for: User.self,
-                            inMemory: true,
-                            isAutosaveEnabled: false)
-            .modelContainer(for: Bike.self,
-                            inMemory: true,
-                            isAutosaveEnabled: false)
+            .modelContainer(container)
     } catch let error {
         return Text("Failed to load preview \(error.localizedDescription)")
     }

@@ -32,6 +32,8 @@ struct ClientConfiguration {
     /// Defaults to all
     let oauthScopes: [Scope] = Scope.allCases
 
+    /// Load the API network service information and OAuth configuration from BikeIndex-\*.xcconfig project files.
+    /// Please see BikeIndex-template.xcconfig for instructions to provide these values.
     static func bundledConfig() throws -> Self {
         guard let info = Bundle.main.infoDictionary,
               let clientId = info["API_CLIENT_ID"] as? String,

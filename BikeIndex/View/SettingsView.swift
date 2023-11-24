@@ -9,11 +9,30 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(Client.self) var client
+    @State var iconsModel = AlternateIconsModel()
 
     @State var secretHidden = true
 
     var body: some View {
         Form {
+            if iconsModel.hasAlternates {
+                Section {
+                    NavigationLink {
+                        // TODO: This navigation link is wrong and
+                        AppIconPicker(model: $iconsModel)
+                    } label: {
+                        if let uiImage = UIImage(named: iconsModel.selectedAppIcon.rawValue) {
+                            Label(title: { Text("App Icon") }, icon: {
+                                Image(uiImage: uiImage)
+                                    .appIcon(scale: .small)
+                            })
+                        } else {
+                            Label("App Icon", systemImage: iconsModel.absentIcon)
+                        }
+                    }
+                }
+            }
+
             Section {
                 Text("Host:\n`\(client.configuration.host.description)`")
                 Text("Port:\n`\(String(client.configuration.port))`")
@@ -34,9 +53,9 @@ struct SettingsView: View {
                 }
                 Text("Redirect:\n`\(client.configuration.redirectUri)`")
                 List(client.configuration.oauthScopes) { scope in
-                    // NOTE: ClientConfiguration only supports Scope.allCases at this time
                     HStack {
-                        Text("`\(scope.rawValue)`")
+                        Toggle("`\(scope.rawValue)`", isOn: .constant(true))
+                            .toggleStyle(.switch)
                     }
                 }
             } header: {
@@ -58,6 +77,6 @@ struct SettingsView: View {
 }
 
 #Preview {
-    return SettingsView()
+    return SettingsView(iconsModel: AlternateIconsModel())
         .environment(try! Client())
 }

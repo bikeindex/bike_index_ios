@@ -45,6 +45,16 @@ import SwiftData
     let image: URL?
     let twitter: URL?
 
+    init(username: String, name: String, email: String, additionalEmails: [String], createdAt: Date, image: URL?, twitter: URL?) {
+        self.username = username
+        self.name = name
+        self.email = email
+        self.additionalEmails = additionalEmails
+        self.createdAt = createdAt
+        self.image = image
+        self.twitter = twitter
+    }
+
     init() {
         username = ""
         name = ""

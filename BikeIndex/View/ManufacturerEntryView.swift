@@ -70,7 +70,7 @@ struct ManufacturerEntryView: View {
     }
 }
 
-/// These bindings are not working correctly (maybe the intermediate view needs to own them?)
+/// NOTE: These bindings are not working correctly (maybe the intermediate view needs to own them?)
 #Preview {
     var previewBike: Bike = Bike()
     let bikeBinding = Binding {
@@ -99,7 +99,8 @@ struct ManufacturerEntryView: View {
         ]
 
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let mockContainer = try ModelContainer(for: AutocompleteManufacturer.self, configurations: config)
+        let mockContainer = try ModelContainer(for: AutocompleteManufacturer.self, Bike.self,
+                                               configurations: config)
 
         mockAutocompleteManufacturers.forEach { manufacturer in
             mockContainer.mainContext.insert(manufacturer)
@@ -113,9 +114,6 @@ struct ManufacturerEntryView: View {
                                   searching: searchBinding)
             .environment(client)
             .modelContainer(mockContainer)
-            .modelContainer(for: Bike.self,
-                            inMemory: true,
-                            isAutosaveEnabled: false)
         }
     } catch let error {
         return Text("Failed to load preview \(error.localizedDescription)")

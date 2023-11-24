@@ -13,16 +13,18 @@
 /// 2. Create your API Secret and Client at https://bikeindex.org/oauth/applications
 /// 3. Provide your own development team and bundle ID
 /// 4. Build and run
-
 API_SECRET =
 API_CLIENT_ID =
 
 // Double-slashes will be un-escaped in ClientConfiguration
 // Intended usage for API_HOST is `http:\/\/bikeindex.org`
 // IP addresses for local development must begin with `http://`
-// To use an IP address you must uncomment the NSAppTransportSecurity block inside Info.plist (use an XML editor)
+// To use an IP address (https) you must uncomment NSAppTransportSecurity inside Info.plist (use an XML editor)
 API_HOST =
+
+// All ports that are _not_ 443 will be appended to the domain.
 API_PORT =
+
 // Double-slashes will be un-escaped in ClientConfiguration
 // Intended usage for API_REDIRECT_URI is `bikeindex:\/\/`
 // This should exactly match one of your redirect URIs configured at bikeindex.org/oauth/applications
