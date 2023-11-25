@@ -33,15 +33,14 @@ typealias QueryItemTuple = (name: String, value: String)
     private let session = URLSession(configuration: .default)
 
     private(set) var configuration: ClientConfiguration
+    private(set) var api = API()
 
     /// Full OAuth token response.
-    var auth: Auth?
+    private(set) var auth: Auth?
     /// Access token is provided by the OAuth flow to the application from `ASWebAuthenticationSession`.
     /// The access token may be required in requests and it may be used to retrieve the full OAuth token (see ``auth``).
     private var accessToken: Token?
-
     private var keychain = KeychainSwift()
-
     private var subscriptions: [AnyCancellable] = []
 
     init(keychain: KeychainSwift = KeychainSwift()) throws {
@@ -327,6 +326,7 @@ extension Client {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         do {
+
             request.httpBody = try URLEncodedFormEncoder().encode(bikeRegistration)
         } catch {
             Logger.api.error("\(#function) Failed to encode POST body from \(String(describing: bikeRegistration))")
@@ -471,6 +471,13 @@ extension Client {
             })
 
         cancellable.store(in: &subscriptions)
+
+    }
+}
+
+extension Client {
+    func get(_ endpoint: EndpointProvider, context: ModelContext) {
+//        let result: Bike = await api.get(endpoint)
 
     }
 }

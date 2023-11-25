@@ -14,7 +14,7 @@ To get started:
 
 ### Development
 
-Requirements: Xcode 15
+Requirements: Xcode 15.0.1
 
 This project targets iOS 17+ to use SwiftUI and SwiftData. At this time iOS (iPhone) is the primary development target with a long-term goal to include iPad and Mac support.
 

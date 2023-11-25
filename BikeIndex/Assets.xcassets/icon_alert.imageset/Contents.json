@@ -1,0 +1,15 @@
+{
+  "images" : [
+    {
+      "filename" : "_how_icon_alert.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "properties" : {
+    "preserves-vector-representation" : true
+  }
+}

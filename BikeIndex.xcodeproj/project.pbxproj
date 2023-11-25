@@ -11,6 +11,8 @@
 		04661D922B09B5F000C61B1D /* BikeRegisteredQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04661D912B09B5F000C61B1D /* BikeRegisteredQuery.swift */; };
 		04661D942B09C95100C61B1D /* AppIconPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04661D932B09C95100C61B1D /* AppIconPicker.swift */; };
 		04661D982B09D54900C61B1D /* AlternateIconsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04661D972B09D54900C61B1D /* AlternateIconsModel.swift */; };
+		049F10132B1056F700078F89 /* TextLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049F10122B1056F700078F89 /* TextLink.swift */; };
+		049F10192B10626700078F89 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049F10182B10626700078F89 /* ActionButton.swift */; };
 		04BF24FA2B0AA93000B22378 /* BikeRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF24F92B0AA93000B22378 /* BikeRegistration.swift */; };
 		04BF25062B0AB6E000B22378 /* URLEncodedForm in Frameworks */ = {isa = PBXBuildFile; productRef = 04BF25052B0AB6E000B22378 /* URLEncodedForm */; };
 		04F4B9012B098ADE009442B5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04F4B9002B098ADE009442B5 /* Assets.xcassets */; };
@@ -70,6 +72,8 @@
 		04661D912B09B5F000C61B1D /* BikeRegisteredQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeRegisteredQuery.swift; sourceTree = "<group>"; };
 		04661D932B09C95100C61B1D /* AppIconPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconPicker.swift; sourceTree = "<group>"; };
 		04661D972B09D54900C61B1D /* AlternateIconsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlternateIconsModel.swift; sourceTree = "<group>"; };
+		049F10122B1056F700078F89 /* TextLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextLink.swift; sourceTree = "<group>"; };
+		049F10182B10626700078F89 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
 		04BF24F92B0AA93000B22378 /* BikeRegistration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeRegistration.swift; sourceTree = "<group>"; };
 		04F4B8F72B098ADB009442B5 /* BikeIndex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BikeIndex.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04F4B9002B098ADE009442B5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -227,6 +231,8 @@
 				04F4B9402B098BAA009442B5 /* SettingsView.swift */,
 				04F4B93C2B098BA9009442B5 /* VerticalPicker.swift */,
 				04661D932B09C95100C61B1D /* AppIconPicker.swift */,
+				049F10122B1056F700078F89 /* TextLink.swift */,
+				049F10182B10626700078F89 /* ActionButton.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -399,6 +405,7 @@
 				04F4B9442B098BAA009442B5 /* VerticalPicker.swift in Sources */,
 				04661D982B09D54900C61B1D /* AlternateIconsModel.swift in Sources */,
 				04F4B9422B098BAA009442B5 /* AddBikeView.swift in Sources */,
+				049F10132B1056F700078F89 /* TextLink.swift in Sources */,
 				04F4B9532B098BB1009442B5 /* Auth.swift in Sources */,
 				04F4B9392B098B9C009442B5 /* Client.swift in Sources */,
 				04BF24FA2B0AA93000B22378 /* BikeRegistration.swift in Sources */,
@@ -413,6 +420,7 @@
 				04F4B9502B098BB1009442B5 /* Bike.swift in Sources */,
 				04F4B9632B0998F6009442B5 /* ClientConfiguration.swift in Sources */,
 				04F4B9552B098BB1009442B5 /* BicycleType.swift in Sources */,
+				049F10192B10626700078F89 /* ActionButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -455,6 +463,152 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		049F10142B1060C700078F89 /* DebugProd */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = DebugProd;
+		};
+		049F10152B1060C700078F89 /* DebugProd */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 04F4B9272B098B44009442B5 /* BikeIndex-production.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "Doodle AppIcon-wob AppIcon-bow AppIcon-striped";
+				ASSETCATALOG_COMPILER_APPICON_NAME = Doodle;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = BikeIndex/BikeIndex.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"BikeIndex/Preview Content\"";
+				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BikeIndex/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Bike Index Dev";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_IDENTIFIER)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DebugProd;
+		};
+		049F10162B1060C700078F89 /* DebugProd */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.bikeindex.BikeIndexTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BikeIndex.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BikeIndex";
+			};
+			name = DebugProd;
+		};
+		049F10172B1060C700078F89 /* DebugProd */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.bikeindex.BikeIndexUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = BikeIndex;
+			};
+			name = DebugProd;
+		};
 		04F4B91C2B098ADE009442B5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -577,6 +731,7 @@
 				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "Doodle AppIcon-wob AppIcon-bow AppIcon-striped";
 				ASSETCATALOG_COMPILER_APPICON_NAME = Doodle;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = BikeIndex/BikeIndex.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -617,6 +772,7 @@
 				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "Doodle AppIcon-wob AppIcon-bow AppIcon-striped";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = BikeIndex/BikeIndex.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -744,6 +900,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04F4B91C2B098ADE009442B5 /* Debug */,
+				049F10142B1060C700078F89 /* DebugProd */,
 				04F4B91D2B098ADE009442B5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -753,6 +910,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04F4B91F2B098ADE009442B5 /* Debug */,
+				049F10152B1060C700078F89 /* DebugProd */,
 				04F4B9202B098ADE009442B5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -762,6 +920,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04F4B9222B098ADE009442B5 /* Debug */,
+				049F10162B1060C700078F89 /* DebugProd */,
 				04F4B9232B098ADE009442B5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -771,6 +930,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04F4B9252B098ADE009442B5 /* Debug */,
+				049F10172B1060C700078F89 /* DebugProd */,
 				04F4B9262B098ADE009442B5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;

@@ -9,11 +9,51 @@ import SwiftUI
 import SwiftData
 import OSLog
 
+struct ContentMenuOption {
+    let view: AnyView
+    let icon: ActionIconResource
+    let title: String
+}
+
+enum ContentMenuOptions: Int, Identifiable, CaseIterable {
+    var id: Int { self.rawValue }
+
+    case registerBike
+//    case recoverBike
+    case alertBike
+    case respondBike
+
+    static var menuOptions: [ContentMenuOptions] {
+        [.registerBike, .alertBike, .respondBike]
+    }
+
+    var option: ContentMenuOption {
+        switch self {
+        case .registerBike:
+            ContentMenuOption(view: AnyView(AddBikeView()),
+                              icon: .register,
+                              title: "Register a Bike")
+//        case .recoverBike:
+//            ContentMenuOption(view: Text("Recover!"), 
+//                              icon: .recover,
+//                              title: "Recover Bike")
+        case .alertBike:
+            ContentMenuOption(view: AnyView(Text("Alert!")),
+                              icon: .alert,
+                              title: "I lost my bike!")
+        case .respondBike:
+            ContentMenuOption(view: AnyView(Text("Respond!")),
+                              icon: .responds,
+                              title: "I found a bike!")
+        }
+    }
+}
+
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
-    @State var api = API()
+//    @State var api = API()
 
     let columnLayout = Array(repeating: GridItem(), count: 2)
 
@@ -24,28 +64,23 @@ struct ContentView: View {
         NavigationSplitView {
             ScrollView {
                 LazyVGrid(columns: columnLayout) {
-                    NavigationLink {
-                        AddBikeView()
-                    } label: {
-                        VStack {
-                            RoundedRectangle(cornerRadius: 24)
-                                .scaledToFit()
-                                .foregroundStyle(Color.primary)
-                                .overlay {
-                                    HStack {
-                                        Image(systemName: "plus")
-                                            .resizable()
-                                            .scaledToFit()
-                                        Image(systemName: "bicycle")
-                                            .resizable()
-                                            .scaledToFit()
-                                    }
+                    ForEach(ContentMenuOptions.menuOptions, id: \.id) { menu in
+                        NavigationLink {
+//                            Text(String(describing: menu.option.view))
+                            menu.option.view
+                        } label: {
+                            VStack {
+                                RoundedRectangle(cornerRadius: 24)
                                     .scaledToFit()
-                                    .padding()
+                                    .foregroundStyle(Color.primary)
+                                    .overlay {
+                                        ActionIcon(icon: menu.option.icon)
+                                            .scaledToFit()
+                                            .padding()
+                                    }
 
-                                }
-
-                            Text("Add Bike")
+                                Text(menu.option.title)
+                            }
                         }
                     }
 
@@ -64,13 +99,14 @@ struct ContentView: View {
                 MainToolbar()
             }
             .navigationTitle(Text(authenticatedUsers.first?.user.name ?? "No user found"))
+
         } detail: {
             Text("Select an item")
         }
         .task {
             if client.authenticated {
-                let myProfile: AuthenticatedUser = await api.get(MeEndpoint.me(config: client.endpointConfig()))
-                Logger.views.debug("**NEW** API fetched my profile \(String(describing: myProfile))")
+//                let myProfile: AuthenticatedUser = await api.get(MeEndpoint.me(config: client.endpointConfig()))
+//                Logger.views.debug("**NEW** API fetched my profile \(String(describing: myProfile))")
             }
         }
     }
@@ -90,9 +126,9 @@ struct MainToolbar: ToolbarContent {
             }
         }
 
-         // The search UI is not ready yet
         ToolbarItem {
             NavigationLink {
+                // The search UI is not ready yet
                 SearchBikesView(searchTerms: $searchTerms,
                                 serialNumberSearch: $serialNumberSearch,
                                 searchMode: $searchMode)
@@ -100,16 +136,6 @@ struct MainToolbar: ToolbarContent {
                 Label("Search Bikes", systemImage: "magnifyingglass")
             }
         }
-         
-/*
-        ToolbarItem {
-            NavigationLink {
-                AddBikeView()
-            } label: {
-                Label("Add Bike", systemImage: "plus")
-            }
-        }
- */
     }
 }
 

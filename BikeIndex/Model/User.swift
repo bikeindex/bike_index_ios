@@ -8,12 +8,46 @@
 import Foundation
 import SwiftData
 
+@Model final class Organization: Decodable {
+    @Attribute(.unique) let identifier: Int
+    let name: String
+    let slug: String
+    let accessToken: Token
+    let userIsOrganizationAdmin: Bool
+    @Relationship(inverse: \AuthenticatedUser.memberships) var adminUsers: [AuthenticatedUser] = []
+
+    init(name: String, slug: String, identifier: Int, accessToken: Token, userIsOrganizationAdmin: Bool) {
+        self.name = name
+        self.slug = slug
+        self.identifier = identifier
+        self.accessToken = accessToken
+        self.userIsOrganizationAdmin = userIsOrganizationAdmin
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        slug = try container.decode(String.self, forKey: .slug)
+        identifier = try container.decode(Int.self, forKey: .identifier)
+        accessToken = try container.decode(Token.self, forKey: .accessToken)
+        userIsOrganizationAdmin = try container.decode(Bool.self, forKey: .userIsOrganizationAdmin)
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case name = "organization_name"
+        case slug = "organization_slug"
+        case identifier = "organization_id"
+        case accessToken = "organization_access_token"
+        case userIsOrganizationAdmin = "user_is_organization_admin"
+    }
+}
+
 @Model final class AuthenticatedUser: Decodable {
     // TODO: Check if this can be Int
     @Attribute(.unique) let identifier: String
     @Relationship(.unique, deleteRule: .cascade) let user: User
 //    let bikeIds: [String]
-    let memberships: [String]
+    @Relationship(deleteRule: .nullify) let memberships: [Organization]
 
     enum CodingKeys: String, CodingKey {
         case identifier = "id"
@@ -22,7 +56,7 @@ import SwiftData
         case memberships
     }
 
-    init(identifier: String, user: User, memberships: [String]) {
+    init(identifier: String, user: User, memberships: [Organization]) {
         self.identifier = identifier
         self.user = user
         self.memberships = memberships
@@ -32,14 +66,14 @@ import SwiftData
         let container = try decoder.container(keyedBy: CodingKeys.self)
         identifier = try container.decode(String.self, forKey: .identifier)
         user = try container.decode(User.self, forKey: .user)
-        memberships = try container.decode([String].self, forKey: .memberships)
+        memberships = try container.decode([Organization].self, forKey: .memberships)
     }
 }
 
 @Model final class User: Decodable {
+    @Attribute(.unique) let email: String
     let username: String
     let name: String
-    let email: String
     let additionalEmails: [String]
     let createdAt: Date
     let image: URL?

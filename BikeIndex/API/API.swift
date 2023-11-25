@@ -88,7 +88,7 @@ actor API {
 
             return modelDirect
         } catch {
-            Logger.api.error("\(#function) failed to fetch \(url) with error \(error.localizedDescription)")
+            Logger.api.error("\(#function) failed to fetch \(url) with error \(error)")
             fatalError()
         }
     }
