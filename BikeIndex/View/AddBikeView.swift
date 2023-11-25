@@ -25,7 +25,7 @@ struct AddBikeView: View {
     // Shadow the serial number, manufacturer, and model to update the UI without unwrapping optionals
     @State var missingSerial = false
     @State var manufacturerSearchText = ""
-    @State var manufacturerSearchActive = true
+    @State var manufacturerSearchActive = false
     @State var frameModel = ""
 
     /* Shadow the Bike.frameColors selection with local state to bridge the gap between Binding<FrameColor>
