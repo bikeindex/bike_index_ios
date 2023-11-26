@@ -26,6 +26,8 @@ This project targets iOS 17+ to use SwiftUI and SwiftData. At this time iOS (iPh
 - [ ] Switch navigation to path based stack to fix post-register behavior
 - [ ] Fix navigation for settings view on iphone (use path based stack)
 - [ ] Add SafariView and open edit bikes page in Safari view
+- [ ] Build and run UserTests on this branch/commit/tag in order to capture a bug report for the swift compiler team
+	- `branch compiler-bug-snapshot, tag: compiler-snapshot-bug-in-usertests)`
 
 ## License
 
