@@ -138,7 +138,7 @@ typealias QueryItemTuple = (name: String, value: String)
 // MARK: - Authentication Operations
 
 extension Client {
-    @discardableResult func accept(authCallback: URL) -> Bool {
+    @discardableResult func accept(authCallback: URL) async -> Bool {
         Logger.api.debug("\(#function) enter")
         let components = URLComponents(string: authCallback.absoluteString)
         guard let queryItems = components?.queryItems,

@@ -38,11 +38,13 @@ struct ClientConfiguration {
         guard let info = Bundle.main.infoDictionary,
               let clientId = info["API_CLIENT_ID"] as? String,
               let secret = info["API_SECRET"] as? String,
-              let hostString = (info["API_HOST"] as? String)?.replacing("\\/\\/", with: "//"),
+              let hostString = (info["API_HOST"] as? String)?
+                .replacing("\\/\\/", with: "//"),
               var host = URL(string: hostString),
               let portString = info["API_PORT"] as? String,
               let port = UInt16(portString),
-              let redirectUri = (info["API_REDIRECT_URI"] as? String)?.replacing("\\/\\/", with: "//")
+              let redirectUri = (info["API_REDIRECT_URI"] as? String)?
+                .replacing("\\/\\/", with: "//").trimmingCharacters(in: .alphanumerics.inverted)
         else {
             throw ClientConfigurationError.failedToLoadBundle
         }
