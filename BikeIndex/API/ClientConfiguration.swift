@@ -50,7 +50,7 @@ struct ClientConfiguration {
         if port != 443 {
             if let hostWithPort = URL(string: hostString + ":\(port)") {
                 host = hostWithPort
-                Logger.api.debug("Loaded configuration at host \(host)")
+                Logger.api.debug("Loaded configuration at host \(String(describing: host))")
             } else {
                 throw ClientConfigurationError.failedToLoadBundleWithPort
             }

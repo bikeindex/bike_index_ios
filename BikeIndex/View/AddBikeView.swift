@@ -261,7 +261,7 @@ struct AddBikeView: View {
 
 #Preview {
     do {
-        var bike = Bike()
+        let bike = Bike()
 
         let client = try Client()
 

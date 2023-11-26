@@ -18,6 +18,15 @@ Requirements: Xcode 15.0.1
 
 This project targets iOS 17+ to use SwiftUI and SwiftData. At this time iOS (iPhone) is the primary development target with a long-term goal to include iPad and Mac support.
 
+#### TODO List
+
+- [ ] Add AuthenticatedUser.Memberships and Organization
+- [ ] Add *unit tests for* AuthenticatedUser.Memberships and Organization
+- [ ] Fix SwiftData exceptions
+- [ ] Switch navigation to path based stack to fix post-register behavior
+- [ ] Fix navigation for settings view on iphone (use path based stack)
+- [ ] Add SafariView and open edit bikes page in Safari view
+
 ## License
 
 [Apache License 2.0](LICENSE.txt)

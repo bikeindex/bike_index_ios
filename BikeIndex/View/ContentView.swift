@@ -53,7 +53,7 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
-//    @State var api = API()
+    var api = API()
 
     let columnLayout = Array(repeating: GridItem(), count: 2)
 
@@ -104,9 +104,23 @@ struct ContentView: View {
             Text("Select an item")
         }
         .task {
+/*
+<<<<<<< Updated upstream
             if client.authenticated {
 //                let myProfile: AuthenticatedUser = await api.get(MeEndpoint.me(config: client.endpointConfig()))
 //                Logger.views.debug("**NEW** API fetched my profile \(String(describing: myProfile))")
+            }
+=======
+ */
+            if client.authenticated {
+                // MeEndpoint.me(config: client.endpointConfig())
+                let endpoint = BikeIndexV3.Me.`self`
+                let apiEndpoint = client.endpoint(endpoint)
+                if let myProfile: AuthenticatedUser? = await api.get(apiEndpoint) {
+                    Logger.views.debug("**NEW** API fetched my profile \(String(describing: myProfile))")
+                } else {
+                    Logger.views.debug("**NEW** API FAILED to fetch my profile")
+                }
             }
         }
     }

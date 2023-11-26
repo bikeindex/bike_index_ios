@@ -93,7 +93,7 @@ final class BikeModelTests: XCTestCase {
         XCTAssertEqual(output.serial, "GS020355")
 
         XCTAssertEqual(output.status, .stolen)
-        XCTAssertEqual(output.stolenCoordinates.distance(from: CLLocation(latitude: 45.53, longitude: -122.69)),
+        XCTAssertEqual(output.stolenCoordinates?.distance(from: CLLocation(latitude: 45.53, longitude: -122.69)),
                        CLLocationDistance(integerLiteral: 0))
         XCTAssertEqual(output.dateStolen, Date(timeIntervalSince1970: 1376719200))
 

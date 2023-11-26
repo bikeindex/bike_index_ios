@@ -99,6 +99,40 @@ typealias QueryItemTuple = (name: String, value: String)
         return EndpointConfiguration(accessToken: auth.accessToken,
                                      host: configuration.host)
     }
+
+    func endpoint(_ input: APIEndpoint) -> Endpoint {
+        guard let auth else {
+            // This blanket statement is not entirely true but we can improve it later
+            fatalError("BikeIndexOrgApiV3 requires authentication!")
+        }
+
+        let config = EndpointConfiguration(accessToken: auth.accessToken,
+                                           host: configuration.host)
+
+        // TODO: Move this into here
+        //        request.httpMethod = method.rawValue
+        //    encodingPostForm: if method == .post {
+        //            guard let formBody else {
+        //                Logger.api.info("Failed to configure POST request to \(url) for lack of encodable form body.")
+        //                break encodingPostForm
+        //            }
+        //            do {
+        //                request.httpBody = try URLEncodedFormEncoder().encode(formBody)
+        //            } catch {
+        //                Logger.api.info("Failed to configure POST request to \(url) with body because of encoding failure \(error)")
+        //            }
+        //        }
+
+        return Endpoint(path: input, config: config)
+
+//        return Endpoint(url: configuration.host.appending(components: input.path), path: input, method: <#T##HttpMethod#>, config: <#T##EndpointConfigurationProvider#>)
+
+
+//        return Endpoint(url: configuration.host.appending(components: input.path),
+//                                query: [],
+//                                method: .get,
+//                                config: config)
+    }
 }
 
 // MARK: - Authentication Operations
@@ -476,7 +510,7 @@ extension Client {
 }
 
 extension Client {
-    func get(_ endpoint: EndpointProvider, context: ModelContext) {
+    func get(_ endpoint: APIEndpoint, context: ModelContext) {
 //        let result: Bike = await api.get(endpoint)
 
     }
