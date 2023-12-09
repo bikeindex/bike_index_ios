@@ -1,24 +1,24 @@
 # Bike Index
 
-## Project Status
+⚠️ This project is incomplete and under active development. ⚠️
+⚠️ No guarantees are provided. ⚠️
 
-⚠️ This project is incomplete and under active development ⚠️
+iOS client for bikeindex.org
 
-No guarantees are provided.
+To get started:
 
-## Contributing
+1. Copy the BikeIndex-template file into BikeIndex-development and BikeIndex-production
+2. Follow the template instructions to provide your own OAuth token from https://bikeindex.org/oauth/applications or a local instance
+3. If building for a device you will need to provide a bundle identifier and your development team
+4. Build and run!
 
-### Commit Formats
+### Development
 
-Prefix commits with the topic in brackets.
+- Requirements: Xcode 15.0.1
+- Target deployment: iOS 17
 
-Such as:
-- `[api]` - network connections and Bruno API client
-- `[build]` - Xcode project configurations
-- `[docs]` - documentation
-- `[auth]` - code dealing with authentication
-- `[test]` - unit tests, UI tests
-- `[model]` - models!
-- `[ui]` - user interface
-- `[log]` - logging, error reporting, etc
-- `[nav]` - navigation and hierarchy
+This project uses SwiftUI and SwiftData. At this time iOS (iPhone) is the primary development target with a long-term goal to include iPad and Mac support.
+
+## License
+
+[Apache License 2.0](LICENSE.txt)

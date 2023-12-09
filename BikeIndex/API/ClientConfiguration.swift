@@ -32,15 +32,19 @@ struct ClientConfiguration {
     /// Defaults to all
     let oauthScopes: [Scope] = Scope.allCases
 
+    /// Load the API network service information and OAuth configuration from BikeIndex-\*.xcconfig project files.
+    /// Please see BikeIndex-template.xcconfig for instructions to provide these values.
     static func bundledConfig() throws -> Self {
         guard let info = Bundle.main.infoDictionary,
               let clientId = info["API_CLIENT_ID"] as? String,
               let secret = info["API_SECRET"] as? String,
-              let hostString = (info["API_HOST"] as? String)?.replacing("\\/\\/", with: "//"),
+              let hostString = (info["API_HOST"] as? String)?
+            .replacing("\\/\\/", with: "//"),
               var host = URL(string: hostString),
               let portString = info["API_PORT"] as? String,
               let port = UInt16(portString),
-              let redirectUri = (info["API_REDIRECT_URI"] as? String)?.replacing("\\/\\/", with: "//")
+              let redirectUri = (info["API_REDIRECT_URI"] as? String)?
+            .replacing("\\/\\/", with: "//")
         else {
             throw ClientConfigurationError.failedToLoadBundle
         }
@@ -48,7 +52,7 @@ struct ClientConfiguration {
         if port != 443 {
             if let hostWithPort = URL(string: hostString + ":\(port)") {
                 host = hostWithPort
-                Logger.api.debug("Loaded configuration at host \(host)")
+                Logger.api.debug("Loaded configuration at host \(String(describing: host))")
             } else {
                 throw ClientConfigurationError.failedToLoadBundleWithPort
             }

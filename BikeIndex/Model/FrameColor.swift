@@ -47,6 +47,7 @@ enum FrameColor: String, Codable, CaseIterable, Identifiable, Equatable {
 }
 
 extension [FrameColor] {
+    // TODO: Just rip all this out, replace it with three regular fields, and perform array-marshalling at the network layer
     var primary: FrameColor? {
         get {
             if self.count < 1 {

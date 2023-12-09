@@ -242,21 +242,39 @@ struct AddBikeView: View {
     /// Mark the local model as synchronized
     /// Update the UI
     private func registerBike() {
-        // https://developer.apple.com/documentation/swiftdata/adding-and-editing-persistent-data-in-your-app
+        Logger.model.debug("\(#function) Registering bike w/ serial \(String(describing: bike.serial))")
+        Logger.model.debug("\(#function) Registering bike w/ manufacturerName \(String(describing: bike.manufacturerName))")
+        Logger.model.debug("\(#function) Registering bike w/ frameColors \(String(describing: bike.frameColors))")
+        Logger.model.debug("\(#function) Registering w/ owner email \(String(describing: ownerEmail))")
+
+        let bikeRegistration = BikeRegistration(bike: bike,
+                                                ownerEmail: ownerEmail)
+        client.register(bikeRegistration: bikeRegistration,
+                        context: modelContext)
+        // TODO: persist bike after success
     }
 }
 
 #Preview {
     do {
+        let bike = Bike()
         let client = try Client()
-        return AddBikeView()
-            .environment(client)
-            .modelContainer(for: User.self,
-                            inMemory: true,
-                            isAutosaveEnabled: false)
-            .modelContainer(for: Bike.self,
-                            inMemory: true,
-                            isAutosaveEnabled: false)
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+
+        let container = try ModelContainer(for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+                                           configurations: config)
+
+        let user = User(username: "previewUser", name: "Preview User", email: "preview@bikeindex.rog", additionalEmails: [], createdAt: Date(), image: nil, twitter: nil)
+
+        let auth = AuthenticatedUser(identifier: "1")
+        auth.user = user
+        container.mainContext.insert(auth)
+
+        return NavigationStack {
+            AddBikeView(bike: bike)
+                .environment(client)
+                .modelContainer(container)
+        }
     } catch let error {
         return Text("Failed to load preview \(error.localizedDescription)")
     }

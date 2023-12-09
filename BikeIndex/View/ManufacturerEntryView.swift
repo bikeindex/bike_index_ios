@@ -70,7 +70,7 @@ struct ManufacturerEntryView: View {
     }
 }
 
-/// These bindings are not working correctly (maybe the intermediate view needs to own them?)
+/// NOTE: These bindings are not working correctly
 #Preview {
     var previewBike: Bike = Bike()
     let bikeBinding = Binding {

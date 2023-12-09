@@ -7,76 +7,70 @@
 
 import Foundation
 import SwiftData
+import OSLog
 
-@Model final class AuthenticatedUser: Decodable {
+@Model final class AuthenticatedUser: BikeIndexIdentifiable, CustomDebugStringConvertible {
     // TODO: Check if this can be Int
-    @Attribute(.unique) let identifier: String
-    @Relationship(.unique, deleteRule: .cascade) let user: User
-//    let bikeIds: [String]
-    let memberships: [String]
+    @Attribute(.unique) private(set) var identifier: String
+    @Relationship(deleteRule: .cascade) var user: User?
 
-    enum CodingKeys: String, CodingKey {
-        case identifier = "id"
-        case user
-        case bikeIds = "bike_ids"
-        case memberships
-    }
+    @Transient let uuid = UUID().uuidString
 
-    init(identifier: String, user: User, memberships: [String]) {
+    //    let bikeIds: [String]
+
+    //    @Relationship(deleteRule: .cascade)
+    //    private(set) var memberships: [Organization] = []
+
+    init(identifier: String) {
         self.identifier = identifier
-        self.user = user
-        self.memberships = memberships
+        Logger.model.debug("Authuser.init identifier: \(identifier)")
     }
 
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        identifier = try container.decode(String.self, forKey: .identifier)
-        user = try container.decode(User.self, forKey: .user)
-        memberships = try container.decode([String].self, forKey: .memberships)
+    var debugDescription: String {
+        "AuthenticatedUser: \(uuid)" // Rails.identifier=(identifier), SwiftData.id=(id), user=(String(describing: user))" // , memberships=\(memberships)"
     }
 }
 
-@Model final class User: Decodable {
-    let username: String
+@Model final class User { // CustomDebugStringConvertible {
+    @Attribute(.unique) fileprivate(set) var email: String
+    fileprivate(set) var username: String
+    fileprivate(set) var name: String
+    fileprivate(set) var additionalEmails: [String]
+    fileprivate(set) var createdAt: Date
+    fileprivate(set) var image: URL?
+    fileprivate(set) var twitter: URL?
+
+    @Relationship(inverse: \AuthenticatedUser.user)
+    fileprivate(set) var parent: AuthenticatedUser?
+
+    init(username: String, name: String, email: String, additionalEmails: [String], createdAt: Date, image: URL? = nil, twitter: URL? = nil) {
+        self.username = username
+        self.name = name
+        self.email = email.lowercased()
+        self.additionalEmails = additionalEmails
+        self.createdAt = createdAt
+        self.image = image
+        self.twitter = twitter
+    }
+}
+
+@Model final class Organization {
+    @Attribute(.unique) let identifier: Int
     let name: String
-    let email: String
-    let additionalEmails: [String]
-    let createdAt: Date
-    let image: URL?
-    let twitter: URL?
+    let slug: String
+    let accessToken: Token
+    let userIsOrganizationAdmin: Bool
 
-    init() {
-        username = ""
-        name = ""
-        email = ""
-        additionalEmails = []
-        createdAt = Date.distantPast
-        image = nil
-        twitter = nil
+    //    @Relationship(deleteRule: .cascade, inverse: \AuthenticatedUser.memberships)
+    //    var authorizedUsers: [AuthenticatedUser]? = []
+
+    init(name: String, slug: String, identifier: Int, accessToken: Token, userIsOrganizationAdmin: Bool) {
+        Logger.model.debug("Org.init w/ identifier \(identifier)")
+        self.name = name
+        self.slug = slug
+        self.identifier = identifier
+        self.accessToken = accessToken
+        self.userIsOrganizationAdmin = userIsOrganizationAdmin
     }
-
-    enum CodingKeys: String, CodingKey {
-        case username
-        case name
-        case email
-        case additionalEmails = "secondary_emails"
-        case createdAt = "created_at"
-        case image
-        case twitter
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        username = try container.decode(String.self, forKey: .username)
-        name = try container.decode(String.self, forKey: .name)
-        email = try container.decode(String.self, forKey: .email)
-        additionalEmails = try container.decode([String].self, forKey: .additionalEmails)
-        let createdAtTimestamp = try container.decode(TimeInterval.self, forKey: .createdAt)
-        createdAt = Date(timeIntervalSince1970: createdAtTimestamp)
-        image = try container.decodeIfPresent(URL.self, forKey: .image)
-        if let twitterString = try container.decodeIfPresent(String.self, forKey: .twitter) {
-            twitter = URL(string: twitterString)
-        }
-    }
-
 }
+

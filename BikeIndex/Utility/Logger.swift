@@ -12,5 +12,6 @@ extension Logger {
 
     static let views = Logger(subsystem: subsystem, category: "views")
     static let api = Logger(subsystem: subsystem, category: "api")
-    static let model = Logger(subsystem: subsystem, category: "api")
+    static let client = Logger(subsystem: subsystem, category: "client")
+    static let model = Logger(subsystem: subsystem, category: "model")
 }

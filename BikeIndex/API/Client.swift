@@ -10,29 +10,48 @@ import OSLog
 import SwiftData
 import Combine
 import KeychainSwift
+import URLEncodedForm
 
+/// Instances created by Client at runtime to provide the full information for EndpointProvider instances.
+/// This allows safe API access.
+protocol EndpointConfigurationProvider {
+    var accessToken: Token? { set get }
+    var host: URL { get }
+}
+
+/// Instance of EndpointConfigurationProvider
+struct EndpointConfiguration: EndpointConfigurationProvider {
+    var accessToken: Token?
+    let host: URL
+}
+
+/// Convenience wrapper to shuttle query items from an array of string-tuples into actual `URLQueryItem` objects.
 typealias QueryItemTuple = (name: String, value: String)
 
-/// API client for interacting with bikeindex.org
+/// Stateful API client for interacting with bikeindex.org
+/// Wraps ``API`` class.
+/// Controls networking state and loads app configuration from the bundle.
 @Observable class Client {
     private let session = URLSession(configuration: .default)
 
     private(set) var configuration: ClientConfiguration
+    private(set) var api: API
 
     /// Full OAuth token response.
-    var auth: Auth?
+    private(set) var auth: OAuthToken?
     /// Access token is provided by the OAuth flow to the application from `ASWebAuthenticationSession`.
     /// The access token may be required in requests and it may be used to retrieve the full OAuth token (see ``auth``).
-    var accessToken: Token?
-
+    private var accessToken: Token?
     private var keychain = KeychainSwift()
-
     private var subscriptions: [AnyCancellable] = []
 
     init(keychain: KeychainSwift = KeychainSwift()) throws {
         self.keychain = keychain
-        try self.configuration = ClientConfiguration.bundledConfig()
-
+        let configuration = try ClientConfiguration.bundledConfig()
+        self.api = API(configuration: EndpointConfiguration(accessToken: "",
+                                                            host: configuration.host),
+                       session: session)
+        self.configuration = configuration
         loadLastToken()
     }
 
@@ -49,34 +68,41 @@ typealias QueryItemTuple = (name: String, value: String)
         static let oauthToken = "oauthToken"
     }
 
+    /// Load any persisted OAuth Token and attempt to use it to continue the last session.
     private func loadLastToken() {
         if let lastKnownToken = KeychainSwift().get(Keychain.oauthToken),
            let rawData = lastKnownToken.data(using: .utf8) {
             do {
-                let lastKnownAuth = try JSONDecoder().decode(Auth.self, from: rawData)
+                let lastKnownAuth = try JSONDecoder().decode(OAuthToken.self, from: rawData)
                 guard lastKnownAuth.isValid else {
                     return
                 }
                 self.auth = lastKnownAuth
                 accessToken = lastKnownAuth.accessToken
+                self.api.configuration.accessToken = lastKnownAuth.accessToken
+                Logger.api.debug("Client.\(#function) found existing valid token \(String(describing: lastKnownAuth), privacy: .private)")
             } catch {
                 Logger.api.debug("Failed to find existing auth")
             }
         }
     }
 
+    /// Allow users to log out
     func destroySession() {
         KeychainSwift().delete(Keychain.oauthToken)
         accessToken = nil
         auth = nil
+    }
+
+    var userCanRegisterBikes: Bool {
+        configuration.oauthScopes.contains(Scope.writeBikes)
     }
 }
 
 // MARK: - Authentication Operations
 
 extension Client {
-    @discardableResult func accept(authCallback: URL) -> Bool {
-        Logger.api.debug("\(#function) enter")
+    @discardableResult func accept(authCallback: URL) async -> Bool {
         let components = URLComponents(string: authCallback.absoluteString)
         guard let queryItems = components?.queryItems,
               let code = queryItems.first(where: { $0.name == Constants.code }) else {
@@ -86,7 +112,34 @@ extension Client {
 
         if let newToken = code.value {
             accessToken = newToken
-            fetchFull(token: newToken)
+
+            let tokenQuery = [
+                ("client_id", configuration.clientId),
+                ("client_secret", configuration.secret),
+                ("code", newToken),
+                ("grant_type", "authorization_code"),
+                ("redirect_uri", configuration.redirectUri)
+            ].map { (item: QueryItemTuple) in
+                URLQueryItem(name: item.name, value: item.value)
+            }
+            let fullToken = await api.get(OAuth.token(queryItems: tokenQuery))
+            switch fullToken {
+            case .success(let success):
+                guard let fullTokenAuth = success as? OAuthToken else {
+                    return false
+                }
+                self.auth = fullTokenAuth
+                self.api.configuration.accessToken = fullTokenAuth.accessToken
+                do {
+                    let data = try JSONEncoder().encode(fullTokenAuth)
+                    self.keychain.set(data, forKey: Keychain.oauthToken)
+                } catch {
+                    Logger.client.error("Failed to persist /oauth/token to keychain after fetching successfully, continuing")
+                }
+            case .failure(let failure):
+                Logger.client.error("Failed to fetch /oauth/token \(failure)")
+                return false
+            }
             return true
         }
 
@@ -94,112 +147,105 @@ extension Client {
         return false
     }
 
-    /// https://bikeindex.org/documentation/api_v3#ref_oauth
-    private func fetchFull(token: Token) {
-        Logger.api.debug("\(#function) enter")
-        var url = configuration.host.appending(path: "oauth/token")
-
-        let queryItems: [URLQueryItem] = [
-            ("client_id", configuration.clientId),
-            ("client_secret", configuration.secret),
-            ("code", token),
-            ("grant_type", "authorization_code"),
-            ("redirect_uri", configuration.redirectUri)
-        ].map { (item: QueryItemTuple) in
-            URLQueryItem(name: item.name, value: item.value)
-        }
-        url.append(queryItems: queryItems)
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-
-        let authCancellable = session.dataTaskPublisher(for: request)
-            .tryMap { element -> Data in
-                guard let httpResponse = element.response as? HTTPURLResponse,
-                      httpResponse.statusCode == 200 else {
-                    Logger.api.debug("Received network response other than 200.")
-                    Logger.api.debug("requsted url \(url)")
-                    Logger.api.debug("received data: \(element.data)")
-                    Logger.api.debug("received data: \(element.response)")
-
-                    throw URLError(.badServerResponse)
-                }
-                return element.data
-            }
-            .decode(type: Auth.self, decoder: JSONDecoder())
-            .sink(receiveCompletion: { Logger.api.debug("\(#function) received completion: \(String(describing: $0)) ")},
-                  receiveValue: { auth in
-                self.auth = auth
-                do {
-                    let data = try JSONEncoder().encode(auth)
-                    self.keychain.set(data, forKey: Keychain.oauthToken)
-                } catch {
-                    Logger.api.error("Failed to persist \(error)")
-                }
-            })
-
-        authCancellable.store(in: &subscriptions)
-    }
-
     var authenticated: Bool {
         auth != nil
-    }
-}
-
-// MARK: - Profile Operations
-
-extension Client {
-    /// Fetch the full profile information of the currently authenticated user, cache it,
-    /// and allow the UI to be udpated from this change.
-    func fetchProfile(context: ModelContext) {
-        Logger.api.debug("\(#function) enter, auth?.accessToken \(String(describing: self.auth?.accessToken))")
-        guard let oauthToken = auth?.accessToken else {
-            return
-        }
-
-        var url = configuration.host.appendingPathComponent("api/v3/me")
-        url.append(queryItems: [
-            URLQueryItem(name: Constants.accessToken, value: oauthToken)
-        ])
-
-        let cancellable = session
-            .dataTaskPublisher(for: url)
-            .tryMap() { element -> Data in
-                guard let httpResponse = element.response as? HTTPURLResponse,
-                      httpResponse.statusCode == 200 else {
-
-                    Logger.api.debug("Received network response other than 200.")
-                    Logger.api.debug("requsted url \(url)")
-                    Logger.api.debug("received data: \(element.data)")
-                    Logger.api.debug("received data: \(element.response)")
-
-                    throw URLError(.badServerResponse)
-                }
-                return element.data
-            }
-            .decode(type: AuthenticatedUser.self, decoder: JSONDecoder())
-            .sink(receiveCompletion: { Logger.api.debug("\(#function) Received completion: \(String(describing: $0)).") },
-                  receiveValue: { authenticatedUser in
-
-                let authenticatedIdentifier = authenticatedUser.identifier
-                do {
-                    try context.delete(model: AuthenticatedUser.self, where: #Predicate { user in
-                        user.identifier != authenticatedIdentifier
-                    })
-                } catch {
-                    Logger.api.error("Failed to remove authenticated users from database \(error)")
-                }
-
-                context.insert(authenticatedUser)
-            })
-
-        cancellable.store(in: &subscriptions)
     }
 }
 
 // MARK: - Bike Query Operations
 
 extension Client {
+    /// NOTE: Leave this dormant until we can build out support for organization-specific features.
+    /// This endoint is not accessible to the general-public because most will not have an organization membership.
+    @available(*, deprecated, message: "Migrate to API for stateless and abstract network operations")
+    func checkIfRegistered(bikeQuery: BikeRegisteredQuery, context: ModelContext) {
+
+        var url = configuration.host.appending(path: "api/v3/bikes/check_if_registered")
+        url.append(queryItems: [
+            URLQueryItem(name: Constants.accessToken, value: auth?.accessToken)
+        ])
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        do {
+            request.httpBody = try JSONEncoder().encode(bikeQuery)
+        } catch {
+            Logger.api.error("\(#function) Failed to encode POST body from \(String(describing: bikeQuery))")
+        }
+
+        let cancellable = session
+            .dataTaskPublisher(for: request)
+            .tryMap { element -> Data in
+                guard let httpResponse = element.response as? HTTPURLResponse,
+                      httpResponse.statusCode == 200 else {
+
+                    Logger.api.debug("Received network response other than 200.")
+                    Logger.api.debug("requsted url \(url)")
+                    Logger.api.debug("received data: \(element.data)")
+                    Logger.api.debug("received data: \(element.response)")
+                    throw URLError(.badServerResponse)
+                }
+
+                return element.data
+            }
+            .decode(type: BikeRegisteredQueryResponse.self, decoder: JSONDecoder())
+            .sink(receiveCompletion: { Logger.api.debug("\(#function) Received completion: \(String(describing: $0)).") },
+                  receiveValue: { response in
+                Logger.api.debug("\(#function) registered? \(response.registered)")
+                Logger.api.debug("\(#function) claimed? \(response.claimed)")
+                Logger.api.debug("\(#function) can_edit? \(response.can_edit)")
+            })
+
+        cancellable.store(in: &subscriptions)
+
+    }
+
+    @available(*, deprecated, message: "Migrate to API for stateless and abstract network operations")
+    func register(bikeRegistration: BikeRegistration, context: ModelContext) {
+        Logger.api.debug("\(#function) enter")
+
+        var url = configuration.host.appending(path: "api/v3/bikes")
+        url.append(queryItems: [
+            URLQueryItem(name: Constants.accessToken, value: auth?.accessToken)
+        ])
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        do {
+
+            request.httpBody = try URLEncodedFormEncoder().encode(bikeRegistration)
+        } catch {
+            Logger.api.error("\(#function) Failed to encode POST body from \(String(describing: bikeRegistration))")
+        }
+
+        let cancellable = session
+            .dataTaskPublisher(for: request)
+            .tryMap { element -> Data in
+                guard let httpResponse = element.response as? HTTPURLResponse,
+                      httpResponse.statusCode == 200 else {
+
+                    Logger.api.debug("Received network response other than 200.")
+                    Logger.api.debug("requsted url \(url)")
+                    Logger.api.debug("received data: \(element.data)")
+                    Logger.api.debug("received data: \(element.response)")
+                    throw URLError(.badServerResponse)
+                }
+
+                return element.data
+            }
+            .decode(type: Bike.self, decoder: JSONDecoder())
+            .sink(receiveCompletion: { Logger.api.debug("\(#function) Received completion: \(String(describing: $0)).") },
+                  receiveValue: { response in
+//                Logger.api.debug("\(#function) registered? \(response.registered)")
+//                Logger.api.debug("\(#function) claimed? \(response.claimed)")
+//                Logger.api.debug("\(#function) can_edit? \(response.can_edit)")
+            })
+
+        cancellable.store(in: &subscriptions)
+
+    }
+
+    @available(*, deprecated, message: "Migrate to API for stateless and abstract network operations")
     func fetch(bike: UInt, context: ModelContext) {
         Logger.api.debug("\(#function) enter")
 
@@ -239,6 +285,7 @@ extension Client {
 
 extension Client {
     /// Queries https://bikeindex.org/api/autocomplete?per_page=10&categories=frame_mnfg&q=search_term
+    @available(*, deprecated, message: "Migrate to API for stateless and abstract network operations")
     func query(manufacturer name: String,
                pageSize: Int = 10,
                context: ModelContext) {
@@ -278,6 +325,7 @@ extension Client {
 // MARK: Global Bike Search queries
 
 extension Client {
+    @available(*, deprecated, message: "Migrate to API for stateless and abstract network operations")
     func queryGlobal(context: ModelContext) {
         Logger.api.debug("\(#function) enter")
 

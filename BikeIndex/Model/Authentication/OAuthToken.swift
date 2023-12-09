@@ -1,5 +1,5 @@
 //
-//  Auth.swift
+//  OAuthToken.swift
 //  BikeIndex
 //
 //  Created by Jack on 11/18/23.
@@ -9,7 +9,7 @@ import Foundation
 
 typealias Token = String
 
-struct Auth: Codable, Equatable {
+struct OAuthToken: Codable, Equatable {
     let accessToken: Token
     let tokenType: String
     let expiresIn: TimeInterval
@@ -61,7 +61,7 @@ struct Auth: Codable, Equatable {
     }
 }
 
-extension Auth {
+extension OAuthToken {
     var isValid: Bool {
         Date() < expiration
     }

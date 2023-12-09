@@ -77,7 +77,7 @@ struct SearchBikesView: View {
 
                 Button(action: {
                     client.queryGlobal(
-                        // fill in params
+                        // fill in endpoint and params
                         context: modelContext
                     )
                 }, label: {

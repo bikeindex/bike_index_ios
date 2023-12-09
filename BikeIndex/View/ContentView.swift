@@ -7,22 +7,85 @@
 
 import SwiftUI
 import SwiftData
-import AuthenticationServices
+import OSLog
+
+struct ContentMenuOption {
+    let view: AnyView
+    let icon: ActionIconResource
+    let title: String
+}
+
+enum ContentMenuOptions: Int, Identifiable, CaseIterable {
+    var id: Int { self.rawValue }
+
+    case registerBike
+//    case recoverBike
+    case alertBike
+    case respondBike
+
+    static var menuOptions: [ContentMenuOptions] {
+        [.registerBike, .alertBike, .respondBike]
+    }
+
+    var option: ContentMenuOption {
+        switch self {
+        case .registerBike:
+            ContentMenuOption(view: AnyView(AddBikeView()),
+                              icon: .register,
+                              title: "Register a Bike")
+//        case .recoverBike:
+//            ContentMenuOption(view: Text("Recover!"),
+//                              icon: .recover,
+//                              title: "Recover Bike")
+        case .alertBike:
+            ContentMenuOption(view: AnyView(Text("Alert!")),
+                              icon: .alert,
+                              title: "I lost my bike!")
+        case .respondBike:
+            ContentMenuOption(view: AnyView(Text("Respond!")),
+                              icon: .responds,
+                              title: "I found a bike!")
+        }
+    }
+}
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
+
+    var contentModel = ContentModel()
+
+    let columnLayout = Array(repeating: GridItem(), count: 2)
 
     @Query private var bikes: [Bike]
     @Query private var authenticatedUsers: [AuthenticatedUser]
 
     var body: some View {
         NavigationSplitView {
-            List {
-                ForEach(bikes) { bike in
-                    Text("Bike \(String(describing: bike.bikeDescription)), \(bike.serial ?? "missing serial number")")
+            ScrollView {
+                LazyVGrid(columns: columnLayout) {
+                    ForEach(ContentMenuOptions.menuOptions, id: \.id) { menuItem in
+                        NavigationLink {
+                            menuItem.option.view
+                        } label: {
+                            VStack {
+                                RoundedRectangle(cornerRadius: 24)
+                                    .scaledToFit()
+                                    .foregroundStyle(Color.primary)
+                                    .overlay {
+                                        ActionIcon(icon: menuItem.option.icon)
+                                            .scaledToFit()
+                                            .padding()
+                                    }
+
+                                Text(menuItem.option.title)
+                            }
+                        }
+                    }
                 }
+                .padding()
             }
+
 
 #if os(macOS)
             .navigationSplitViewColumnWidth(min: 180, ideal: 200)
@@ -30,9 +93,41 @@ struct ContentView: View {
             .toolbar {
                 MainToolbar()
             }
-            .navigationTitle(Text(authenticatedUsers.first?.user.name ?? "No user found"))
+            .navigationTitle(Text(authenticatedUsers.first?.user?.name ?? "No user found"))
+
         } detail: {
             Text("Select an item")
+        }
+        .task {
+            await contentModel.fetchProfile(client: client, modelContext: modelContext)
+        }
+    }
+}
+
+final class ContentModel {
+
+    @MainActor
+    func fetchProfile(client: Client, modelContext: ModelContext) async {
+        guard client.authenticated else {
+            return
+        }
+
+        let fetch_v3_me = await client.api.get(Me.`self`)
+
+        switch fetch_v3_me {
+        case .success(let success):
+            guard let myProfileSource = success as? AuthenticatedUserResponse else {
+                Logger.views.debug("ContentController.fetchProfile failed to parse profile from \(String(reflecting: success), privacy: .public)")
+                return
+            }
+
+            let myProfile = myProfileSource.modelInstance()
+            myProfile.user = myProfileSource.user.modelInstance()
+
+            modelContext.insert(myProfile)
+
+        case .failure(let failure):
+            Logger.views.error("\(type(of: self)).\(#function) - Failed with \(failure)")
         }
     }
 }
@@ -52,9 +147,9 @@ struct MainToolbar: ToolbarContent {
         }
 
         /*
-         // The search UI is not ready yet
         ToolbarItem {
             NavigationLink {
+                // The search UI is not ready yet
                 SearchBikesView(searchTerms: $searchTerms,
                                 serialNumberSearch: $serialNumberSearch,
                                 searchMode: $searchMode)
@@ -63,29 +158,20 @@ struct MainToolbar: ToolbarContent {
             }
         }
          */
-
-        ToolbarItem {
-            NavigationLink {
-                AddBikeView()
-            } label: {
-                Label("Add Bike", systemImage: "plus")
-            }
-        }
     }
 }
 
-// TODO: Fix this from crashing
 #Preview {
     do {
         let client = try Client()
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+
+        let container = try ModelContainer(for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+                                           configurations: config)
+
         return ContentView()
             .environment(client)
-            .modelContainer(for: Bike.self,
-                            inMemory: true,
-                            isAutosaveEnabled: false)
-            .modelContainer(for: AuthenticatedUser.self,
-                            inMemory: true,
-                            isAutosaveEnabled: false)
+            .modelContainer(container)
     } catch let error {
         return Text("Failed to load preview \(error.localizedDescription)")
     }

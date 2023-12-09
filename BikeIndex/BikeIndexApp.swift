@@ -38,9 +38,6 @@ struct BikeIndexApp: App {
         WindowGroup {
             if client.authenticated {
                 ContentView()
-                    .task {
-                        client.fetchProfile(context: sharedModelContainer.mainContext)
-                    }
             } else {
                 AuthView()
             }

@@ -10,23 +10,97 @@ import SwiftUI
 import AuthenticationServices
 import WebKit
 
-typealias AuthCompletion = (Token?, Error?) -> Void
-typealias InnerAuthCompletion = ASWebAuthenticationSession.CompletionHandler
+fileprivate extension ClientConfiguration {
+    var authorizeUrl: URL {
+        var url = host.appending(path: "oauth/authorize")
+
+        let queryItems: [URLQueryItem] = [
+            ("client_id", clientId),
+            ("response_type", "code"),
+            ("redirect_uri", redirectUri),
+            ("scope", oauthScopes.queryItem)
+        ].map { (item: QueryItemTuple) in
+            URLQueryItem(name: item.name, value: item.value)
+        }
+        url.append(queryItems: queryItems)
+        return url
+    }
+}
+
+struct WelcomeMessage {
+    let title: String
+    let subheadline: String?
+    let iconName: ActionIconResource?
+}
+
+enum WelcomeMessages: CaseIterable, Identifiable {
+    case headline
+    case explanation
+    case registerStep1
+    case alertStep2
+    case respondStep3
+    case retrieveStep4
+
+    var id: Self { self }
+
+    var content: WelcomeMessage {
+        switch self {
+        case .headline:
+            return WelcomeMessage(title: "Bike registration that works", subheadline: "Over $23,757,653 Worth of Bikes Recovered", iconName: nil)
+        case .explanation:
+            return WelcomeMessage(title: "How does it work?", subheadline: nil, iconName: nil)
+        case .registerStep1:
+            return WelcomeMessage(title: "Register Your Bike", subheadline: "It's simple. Submit your name, bike manufacturer, serial number, and component information to enter your bike into the most widely used bike registry on the planet.", iconName: .register)
+        case .alertStep2:
+            return WelcomeMessage(title: "Alert the Community", subheadline: "If your bike goes missing, mark it as lost or stolen to notify the entire Bike Index community and its partners.", iconName: .alert)
+        case .respondStep3:
+            return WelcomeMessage(title: "The community responds", subheadline: "A user or partner encounters your bike, uses Bike Index to identify it, and contacts you.", iconName: .recover)
+        case .retrieveStep4:
+            return WelcomeMessage(title: "You Get your Bike Back", subheadline: "With the help of the Bike Index community and its partners, you have the information necessary to recover your lost or stolen bike at no cost to you. It's what we do.", iconName: .responds)
+        }
+    }
+}
 
 struct AuthView: View {
+    @Environment(\.webAuthenticationSession) private var webAuthenticationSession
+
     /// api client for performing auth
     @Environment(Client.self) var client
 
     var body: some View {
         NavigationStack {
-            AuthContent { url, error in
-                guard let url else {
-                    return
+            List(WelcomeMessages.allCases) { message in
+                VStack {
+                    Text(message.content.title)
+                        .font(.headline)
+                    HStack {
+                        if let subheadline = message.content.subheadline {
+                            Text(subheadline)
+                        }
+                        Spacer()
+                        if let icon = message.content.iconName?.image {
+                            Image(uiImage: icon)
+                                .resizable()
+                                .aspectRatio(1.0, contentMode: .fit)
+                                .frame(width: 75, height: 75)
+                        }
+                    }
                 }
-                client.accept(authCallback: url)
             }
-            .environment(client)
-            #if DEBUG
+            Button(action: {
+                Task {
+                    let urlWithToken = try await webAuthenticationSession.authenticate(
+                        using: client.configuration.authorizeUrl,
+                        callbackURLScheme: client.configuration.redirectUri.trimmingCharacters(in: .alphanumerics.inverted),
+                        preferredBrowserSession: .shared)
+                    await client.accept(authCallback: urlWithToken)
+                }
+            }, label: {
+                Label("Sign in and get started", systemImage: "person.crop.circle.dashed")
+                    .font(.title2)
+
+            })
+#if DEBUG
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     NavigationLink {
@@ -36,8 +110,8 @@ struct AuthView: View {
                     }
                 }
             }
-            #endif
-            .navigationTitle("Please sign in")
+#endif
+            .navigationTitle("Welcome to Bike Index")
             .navigationBarTitleDisplayMode(.inline)
         }
     }
@@ -46,102 +120,4 @@ struct AuthView: View {
 #Preview {
     AuthView()
         .environment(try! Client())
-}
-
-struct AuthContent: UIViewControllerRepresentable {
-    typealias UIViewControllerType = AuthHarness
-    var completion: InnerAuthCompletion
-    @Environment(Client.self) var client
-
-    func makeUIViewController(context: Context) -> AuthHarness {
-        AuthHarness(client: client, completion: completion)
-    }
-
-    func updateUIViewController(_ uiViewController: AuthHarness, context: Context) {
-    }
-}
-
-class AuthHarness: UIViewController {
-    var client: Client
-    var controller: AuthenticationController?
-    var completion: InnerAuthCompletion
-    var webView = WKWebView()
-
-    init(client: Client, completion: @escaping InnerAuthCompletion) {
-        self.client = client
-        self.completion = completion
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        #if DEBUG
-        // Very helpful during local development to have visual confirmation the site is loading
-        view.addSubview(webView)
-        webView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            webView.topAnchor.constraint(equalTo: view.topAnchor),
-            webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
-
-        webView.load(URLRequest(url: client.configuration.host))
-        #endif
-
-        guard let scene = view.window?.windowScene else {
-            return
-        }
-
-        self.controller = AuthenticationController(anchor: ASPresentationAnchor(windowScene: scene),
-                                                   completion: completion)
-        self.controller?.authenticate(client: client)
-    }
-}
-
-final class AuthenticationController: NSObject {
-    let anchor: ASPresentationAnchor
-    let completion: InnerAuthCompletion
-
-    init(anchor: ASPresentationAnchor, completion: @escaping InnerAuthCompletion) {
-        self.anchor = anchor
-        self.completion = completion
-    }
-
-    func authenticate(client: Client) {
-        var url = client.configuration.host.appending(path: "oauth/authorize")
-
-        let queryItems: [URLQueryItem] = [
-            ("client_id", client.configuration.clientId),
-            ("response_type", "code"),
-            ("redirect_uri", client.configuration.redirectUri),
-            ("scope", client.configuration.oauthScopes.queryItem)
-        ].map { (item: QueryItemTuple) in
-            URLQueryItem(name: item.name, value: item.value)
-        }
-        url.append(queryItems: queryItems)
-
-        let callback = client.configuration.redirectUri.trimmingCharacters(in: .alphanumerics.inverted)
-        let session = ASWebAuthenticationSession(url: url,
-                                                 callbackURLScheme: callback,
-                                                 completionHandler: completion)
-
-        // emphemeral = false allows the session to stay in safari
-        session.prefersEphemeralWebBrowserSession = false
-
-        session.presentationContextProvider = self
-
-        session.start()
-    }
-}
-
-extension AuthenticationController: ASWebAuthenticationPresentationContextProviding {
-    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return anchor
-    }
 }
