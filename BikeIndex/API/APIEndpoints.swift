@@ -24,6 +24,12 @@ enum OAuth: APIEndpoint {
         .post
     }
 
+    /// Technically oauth/token does require authorization but the token is not available from ClientConfiguration.
+    /// oauth/token _provides_ the access token to ClientConfiguration
+    var authorized: Bool {
+        true
+    }
+
     var requestModel: (Encodable.Type)? {
         EmptyPost.self
     }
@@ -58,6 +64,8 @@ enum Organizations: APIEndpoint {
     var method: HttpMethod {
         .post
     }
+
+    var authorized: Bool { true }
 
     var requestModel: (Encodable.Type)? {
         EmptyPost.self
@@ -97,6 +105,8 @@ enum Search: APIEndpoint {
     var method: HttpMethod {
         .post
     }
+
+    var authorized: Bool { false }
 
     var requestModel: (Encodable.Type)? {
         EmptyPost.self
@@ -146,6 +156,8 @@ enum Bikes: APIEndpoint {
         .post
     }
 
+    var authorized: Bool { true }
+
     var requestModel: (Encodable.Type)? {
         EmptyPost.self
     }
@@ -177,6 +189,8 @@ enum Me: APIEndpoint {
         .post
     }
 
+    var authorized: Bool { true }
+
     var requestModel: (Encodable.Type)? {
         EmptyPost.self
     }
@@ -191,13 +205,7 @@ enum Me: APIEndpoint {
     }
 
     func request(for config: EndpointConfigurationProvider) -> URLRequest {
-        var url = config.host.appending(components: path)
-        switch self {
-        case .`self`:
-            Logger.api.info("hi")
-        case .bikes:
-            Logger.api.info("hi")
-        }
+        let url = config.host.appending(components: path)
         return URLRequest(url: url)
     }
 }
@@ -219,12 +227,14 @@ enum Manufacturers: APIEndpoint {
         .post
     }
 
+    var authorized: Bool { false }
+
     var requestModel: (Encodable.Type)? {
-        EmptyPost.self
+        return nil
     }
 
     var responseModel: Decodable.Type {
-        OAuthToken.self
+        fatalError()
     }
 
     func request(for config: EndpointConfigurationProvider) -> URLRequest {
@@ -271,11 +281,14 @@ enum Selections: APIEndpoint {
     }
 
     var requestModel: (Encodable.Type)? {
-        EmptyPost.self
+        // TODO
+        return nil
     }
 
+    var authorized: Bool { true }
+
     var responseModel: Decodable.Type {
-        OAuthToken.self
+        fatalError()
     }
 
     func request(for config: EndpointConfigurationProvider) -> URLRequest {

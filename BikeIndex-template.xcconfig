@@ -9,8 +9,11 @@
 // https://help.apple.com/xcode/#/dev745c5c974
 
 /// Instructions:
-/// 1. Copy or rename this file to "BikeIndex-development.xcconfig" and "BikeIndex-production.xcconfig"
-/// 2. Create your API Secret and Client at https://bikeindex.org/oauth/applications
+/// 1. Copy this file to "BikeIndex-development.xcconfig" and "BikeIndex-production.xcconfig"
+/// 2. Create your application at https://bikeindex.org/oauth/applications
+/// 	- copy the Application ID and insert it into API_CLIENT_ID
+/// 	- copy the Secret and insert it into API_SECRET
+/// 	- provide a Callback URL and insert it into API_REDIRECT_URI
 /// 3. Provide your own development team and bundle ID
 /// 4. Build and run
 

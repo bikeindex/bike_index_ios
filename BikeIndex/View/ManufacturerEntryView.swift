@@ -46,7 +46,7 @@ struct ManufacturerEntryView: View {
 
                 client.query(manufacturer: newValue, context: modelContext)
             }
-            if !manufacturerSearchText.isEmpty {
+            if !manufacturerSearchText.isEmpty, manufacturers.count > 0 {
                 List {
                     ForEach(manufacturers) { manufacturer in
                         Text(manufacturer.text)
@@ -59,6 +59,17 @@ struct ManufacturerEntryView: View {
                     }
                 }
                 .padding([.leading, .trailing], 8)
+
+            } else {
+                // NOTE: Hide Other after the textfield loses focus
+                Text("Other")
+                    .foregroundStyle(Color.secondary)
+                    .onTapGesture {
+                        bike.manufacturerName = "Other"
+                        manufacturerSearchText = "Other"
+                        searching = false
+                    }
+
             }
         } else {
             TextField(text: $manufacturerSearchText) {
@@ -99,7 +110,8 @@ struct ManufacturerEntryView: View {
         ]
 
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let mockContainer = try ModelContainer(for: AutocompleteManufacturer.self, configurations: config)
+        let mockContainer = try ModelContainer(for: AutocompleteManufacturer.self, Bike.self,
+                                               configurations: config)
 
         mockAutocompleteManufacturers.forEach { manufacturer in
             mockContainer.mainContext.insert(manufacturer)
@@ -113,9 +125,6 @@ struct ManufacturerEntryView: View {
                                   searching: searchBinding)
             .environment(client)
             .modelContainer(mockContainer)
-            .modelContainer(for: Bike.self,
-                            inMemory: true,
-                            isAutosaveEnabled: false)
         }
     } catch let error {
         return Text("Failed to load preview \(error.localizedDescription)")

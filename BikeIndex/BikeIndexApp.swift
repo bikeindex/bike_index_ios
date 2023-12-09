@@ -21,6 +21,7 @@ struct BikeIndexApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Bike.self,
+            Organization.self,
             User.self,
             AuthenticatedUser.self,
             AutocompleteManufacturer.self

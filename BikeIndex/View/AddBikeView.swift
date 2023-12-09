@@ -7,19 +7,25 @@
 
 import SwiftUI
 import SwiftData
+import OSLog
 
+/// NOTE: Adopt @Focus State https://developer.apple.com/documentation/swiftui/focusstate
+/// NOTE: Wrap this in a pre-menu to select
+///     ◉) Add a bike through $organization\_name... [for each organization]
+///     A) Add your own bike
+///     B) Add a stolen bike
+///     C) Add an abandoned bike you found
+///     --  https://bikeindex.org/choose_registration
 struct AddBikeView: View {
-
-    // TODO: 1) Replace @State variables with writing modifications to an in-memory/non-autosave Bike model, 2) write the model to the API, 3) then persist it locally
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
     // MARK: Shadow State
 
     // Shadow the serial number, manufacturer, and model to update the UI without unwrapping optionals
-    @State var missingSerial = true
+    @State var missingSerial = false
     @State var manufacturerSearchText = ""
-    @State var manufacturerSearchActive = true
+    @State var manufacturerSearchActive = false
     @State var frameModel = ""
 
     /* Shadow the Bike.frameColors selection with local state to bridge the gap between Binding<FrameColor>
@@ -47,187 +53,182 @@ struct AddBikeView: View {
     /// 3. Primary frame color not empty
     /// 4. owner email
     /// Source: attempt to register on the web with any string for the serial number
-    /* TODO: revisit this **AFTER** replacing @State with an in-memory Bike model to let the model perform form validation
-    private var requiredFieldsNotMet: Binding<Bool> {
-        Binding {
-            let passedSerial = !serialNumber.isEmpty || missingSerialNumber
-            let passedManufacturer = !manufacturer.isEmpty
-            // let passedFrameColor = colorPrimary -- Should we allow empty values in the color?
-            // let ownerEmail = client. // TODO: Need to fetch account info, persist it, and provide it here
-            return !(passedSerial && passedManufacturer)
-        } set: { _ in
-            // this is a one-way binding
-        }
+    private var requiredFieldsNotMet: Bool {
+        let passedSerial = missingSerial || (!(bike.serial?.isEmpty ?? true))
+        let passedManufacturer = !bike.manufacturerName.isEmpty
+        let passedEmail = !ownerEmail.isEmpty
+        return !(passedSerial && passedManufacturer && passedEmail)
     }
-     */
 
     var body: some View {
-        NavigationView {
-            Form {
-                Section {
-                    let safeSerial = Binding {
-                        bike.serial ?? ""
-                    } set: { newValue in
-                        bike.serial = newValue
-                        if let serial = bike.serial, !serial.isEmpty {
-                            missingSerial = false
-                        }
+        Form {
+            Section {
+                let safeSerial = Binding {
+                    bike.serial ?? ""
+                } set: { newValue in
+                    bike.serial = newValue
+                    if let serial = bike.serial, !serial.isEmpty {
+                        missingSerial = false
                     }
+                }
 
-                    TextField(text: safeSerial) {
-                        if missingSerial {
-                            Text("Unknown — or provide a number")
-                        } else {
-                            Text("Required — or mark as missing")
+                TextField(text: safeSerial) {
+                    if missingSerial {
+                        Text("Unknown — or provide a number")
+                    } else {
+                        Text("Required — or mark as missing")
+                    }
+                }
+                .textInputAutocapitalization(.characters)
+                Toggle("Missing Serial Number", isOn: $missingSerial)
+                    .onChange(of: missingSerial) { oldValue, newValue in
+                        if oldValue != newValue, newValue == true {
+                            bike.serial = nil
                         }
                     }
-                    .textInputAutocapitalization(.characters)
-                    Toggle("Missing Serial Number", isOn: $missingSerial)
-                        .onChange(of: missingSerial) { oldValue, newValue in
-                            if oldValue != newValue, newValue == true {
-                                bike.serial = nil
-                            }
-                        }
-                } header: {
-                    Text("Serial Number")
+            } header: {
+                Text("Serial Number")
+            } footer: {
+                TextLink(base: client.configuration.host, link: .serials)
+            }
+
+            if traditionalBicycle {
+                Section {
+                    Toggle("Traditional bicycle", isOn: $traditionalBicycle)
                 } footer: {
-                    Text("Every bike has a unique serial number, it's how they are identified. To learn more or see some examples, go to [our serial page](\(client.configuration.host)/serials).")
+                    Text("Two wheels, one seat, no motor")
                 }
-
-                if traditionalBicycle {
-                    Section {
-                        Toggle("Traditional bicycle", isOn: $traditionalBicycle)
-                    } footer: {
-                        Text("Two wheels, one seat, no motor")
-                    }
-                } else {
-                    Section {
-                        Picker("This is a: ", selection: $bike.typeOfCycle) {
-                            ForEach(BicycleType.allCases) { type in
-                                Text(type.name)
-                            }
-                        }
-                        // electric is not applicable for trail-behind
-                        // electric is always off for scooter/skateboard
-                        // electric is always active for e-scooter, personal mobility
-                        Toggle("⚡️ Electric (motorized)", isOn: .constant(false))
-                        // if electric { // not applicable for stroller/wheelchair/e-scooter/personal-mobility
-                        Toggle("Throttle", isOn: .constant(false))
-                        Toggle("Pedal Assist", isOn: .constant(false))
-                        // }
-                    } header: {
-                        Text("Bicycle Type")
-                    } footer: {
-                        EmptyView()
-                    }
-                }
-
+            } else {
                 Section {
-                    ManufacturerEntryView(bike: $bike,
-                                          manufacturerSearchText: $manufacturerSearchText,
-                                          searching: $manufacturerSearchActive)
-                        .environment(client)
-                        .modelContext(modelContext)
-                } header: {
-                    Text("Manufacturer")
-                } footer: {
-                    Text("Select 'Other' if manufacturer doesn't show up when entered")
-                }
-
-                Section {
-                    Picker("Model Year", selection: $bike.year) {
-                        Text("Unknown year").tag(nil as Int?)
-                        ForEach(Bike.Constants.displayableYearRange.reversed(), id: \.self) { year in
-                            Text(year.description).tag(year as Int?)
+                    Picker("This is a: ", selection: $bike.typeOfCycle) {
+                        ForEach(BicycleType.allCases) { type in
+                            Text(type.name)
                         }
                     }
-                    .pickerStyle(.automatic)
+                    // electric is not applicable for trail-behind
+                    // electric is always off for scooter/skateboard
+                    // electric is always active for e-scooter, personal mobility
+                    Toggle("⚡️ Electric (motorized)", isOn: .constant(false))
+                    // if electric { // not applicable for stroller/wheelchair/e-scooter/personal-mobility
+                    Toggle("Throttle", isOn: .constant(false))
+                    Toggle("Pedal Assist", isOn: .constant(false))
+                    // }
                 } header: {
-                    Text("Year of manufacturing")
+                    Text("Bicycle Type")
                 } footer: {
-                    Text("Select 'Unknown Year' if you don't know what year your bike was manufactured")
+                    EmptyView()
                 }
+            }
 
-                Section {
-                    TextField(text: $frameModel) {
-                        Text("Frame model")
+            Section {
+                ManufacturerEntryView(bike: $bike,
+                                      manufacturerSearchText: $manufacturerSearchText,
+                                      searching: $manufacturerSearchActive)
+                .environment(client)
+                .modelContext(modelContext)
+            } header: {
+                Text("Manufacturer")
+            } footer: {
+                Text("Select 'Other' if manufacturer doesn't show up when entered")
+            }
+
+            Section {
+                Picker("Model Year", selection: $bike.year) {
+                    Text("Unknown year").tag(nil as Int?)
+                    ForEach(Bike.Constants.displayableYearRange.reversed(), id: \.self) { year in
+                        Text(year.description).tag(year as Int?)
                     }
                 }
+                .pickerStyle(.automatic)
+            } header: {
+                Text("Year of manufacturing")
+            } footer: {
+                Text("Select 'Unknown Year' if you don't know what year your bike was manufactured")
+            }
 
-                Section {
-                    Picker("Primary Frame Color", selection: $colorPrimary) {
+            Section {
+                TextField(text: $frameModel) {
+                    Text("Frame model")
+                }
+            }
+
+            Section {
+                Picker("Primary Frame Color", selection: $colorPrimary) {
+                    ForEach(FrameColor.allCases) { option in
+                        Text(option.displayValue)
+                    }
+                }
+                .onChange(of: colorPrimary, { oldValue, newValue in
+                    bike.frameColors.primary = newValue
+                })
+                .pickerStyle(.menu)
+
+                if $bike.frameColors.count == 1 {
+                    Button("Add secondary color") {
+                        bike.addFrameColor()
+                    }
+                }
+                if $bike.frameColors.count >= 2 {
+                    Picker("Secondary Frame Color", selection: $colorSecondary) {
                         ForEach(FrameColor.allCases) { option in
                             Text(option.displayValue)
                         }
                     }
-                    .onChange(of: colorPrimary, { oldValue, newValue in
-                        bike.frameColors.primary = newValue
+                    .onChange(of: colorSecondary, { oldValue, newValue in
+                        bike.frameColors.secondary = newValue
                     })
                     .pickerStyle(.menu)
-
-                    if $bike.frameColors.count == 1 {
-                        Button("Add secondary color") {
-                            bike.addFrameColor()
-                        }
-                    }
-                    if $bike.frameColors.count >= 2 {
-                        Picker("Secondary Frame Color", selection: $colorSecondary) {
-                            ForEach(FrameColor.allCases) { option in
-                                Text(option.displayValue)
-                            }
-                        }
-                        .onChange(of: colorSecondary, { oldValue, newValue in
-                            bike.frameColors.secondary = newValue
-                        })
-                        .pickerStyle(.menu)
-                    }
-                    if $bike.frameColors.count == 2 {
-                        Button("Remove secondary color") {
-                            bike.removeFrameColor()
-                            colorSecondary = FrameColor.defaultColor
-                        }
-                        Button("Add tertiary color") {
-                            bike.addFrameColor()
-                        }
-                    }
-                    if $bike.frameColors.count == 3 {
-                        Picker("Tertiary Frame Color", selection: $colorTertiary) {
-                            ForEach(FrameColor.allCases) { option in
-                                Text(option.displayValue)
-                            }
-                        }
-                        .onChange(of: colorTertiary, { oldValue, newValue in
-                            bike.frameColors.tertiary = newValue
-                        })
-                        .pickerStyle(.menu)
-                        Button("Remove tertiary color") {
-                            bike.removeFrameColor()
-                            colorTertiary = FrameColor.defaultColor
-                        }
-                    }
-
-                } header: {
-                    Text("What color is the bike?")
-                } footer: {
-                    Text("The color of the frame and fork—not the wheels, cranks, or anything else. You can put a more detailed description in paint description (once you've registered), this is to get a general color to make searching easier")
                 }
-
-                Section(header: Text("Owner Email")) {
-                    TextField(text: $ownerEmail) {
-                        Text("Who should be contacted?")
+                if $bike.frameColors.count == 2 {
+                    Button("Remove secondary color") {
+                        bike.removeFrameColor()
+                        colorSecondary = FrameColor.defaultColor
+                    }
+                    Button("Add tertiary color") {
+                        bike.addFrameColor()
+                    }
+                }
+                if $bike.frameColors.count == 3 {
+                    Picker("Tertiary Frame Color", selection: $colorTertiary) {
+                        ForEach(FrameColor.allCases) { option in
+                            Text(option.displayValue)
+                        }
+                    }
+                    .onChange(of: colorTertiary, { oldValue, newValue in
+                        bike.frameColors.tertiary = newValue
+                    })
+                    .pickerStyle(.menu)
+                    Button("Remove tertiary color") {
+                        bike.removeFrameColor()
+                        colorTertiary = FrameColor.defaultColor
                     }
                 }
 
-                Section {
-                    Button {
-                        registerBike()
-                    } label: {
-                        Text("Register")
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                }
-
+            } header: {
+                Text("What color is the bike?")
+            } footer: {
+                Text("The color of the frame and fork—not the wheels, cranks, or anything else. You can put a more detailed description in paint description (once you've registered), this is to get a general color to make searching easier")
             }
+
+            Section(header: Text("Owner Email")) {
+                TextField(text: $ownerEmail) {
+                    Text("Who should be contacted?")
+                }
+            }
+
+            Section {
+                Button {
+                    registerBike()
+                } label: {
+                    Text("Register")
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } footer: {
+                if !client.userCanRegisterBikes {
+                    Text("Oh no, your authorization doesn't include the ability to register a bike!")
+                }
+            }
+            .disabled(client.userCanRegisterBikes && requiredFieldsNotMet)
         }
         .navigationTitle("Enter Bike Details")
         .onAppear {

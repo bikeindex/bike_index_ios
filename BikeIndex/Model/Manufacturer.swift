@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 
+/// API endpoint: api/autocomplete
 final class AutocompleteResponse: Decodable {
     var matches: [AutocompleteManufacturer]
 }
@@ -48,20 +49,3 @@ final class AutocompleteResponse: Decodable {
         case identifier = "id"
     }
 }
-
-//@Model class Manufacturer: Codable {
-/*
- self.name = InputNormalizer.string(name)
- self.slug = Slugifyer.manufacturer(name)
- self.website = website.present? ? Urlifyer.urlify(website) : nil
- self.logo_source = logo.present? ? (logo_source || "manual") : nil
- self.twitter_name = twitter_name.present? ? twitter_name.gsub(/\A@/, "") : nil
- self.description = nil if description.blank?
- self.priority = calculated_priority # scheduled updates via UpdateManufacturerLogoAndPriorityWorker
-
- */
-//}
-
-//extension Manufacturer: Decodable {
-//
-//}

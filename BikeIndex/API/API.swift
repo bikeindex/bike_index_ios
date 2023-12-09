@@ -33,6 +33,8 @@ public typealias Postable = Encodable
 protocol APIEndpoint {
     /// Array of path components to-be concatenated to the URL
     var path: [String] { get }
+
+    ///
     var method: HttpMethod { get }
 
     /// Does this endpoint require authorization? True for yes, false for no / public
@@ -55,10 +57,6 @@ final class API {
     }
 
     @MainActor
-    /// SwiftData response
-    /// - Parameters:
-    ///   - endpoint:
-    /// - Returns: <#description#>
     func get(_ endpoint: APIEndpoint) async -> Result<(any Decodable), Error> {
         var request = endpoint.request(for: configuration)
         if endpoint.authorized, let accessToken = configuration.accessToken {
@@ -115,18 +113,27 @@ enum HttpMethod: String {
     case patch = "PATCH"
 }
 
+public enum APIError: Error {
+    case cacheHit
+    case clientError(code: Int, data: Data?)
+}
+
 extension HTTPURLResponse {
-    public enum APIError: Error {
-        case cacheHit
-        case clientError(code: Int, data: Data?)
+
+    var cacheHit: Bool {
+        statusCode == 304
+    }
+    
+    var clientError: Bool {
+        statusCode >= 400 && statusCode < 500
     }
 
     @discardableResult
     func validate(with data: Data?) throws -> Bool {
-        if statusCode == 304 {
+        if cacheHit {
             throw APIError.cacheHit
         }
-        if statusCode >= 400, statusCode <= 499 {
+        if clientError {
             throw APIError.clientError(code: statusCode, data: data)
         }
         return true

@@ -8,35 +8,43 @@
 import Foundation
 
 enum FrameColor: String, Codable, CaseIterable, Identifiable, Equatable {
-    case black = "Black"
-    case blue = "Blue"
-    case brown = "Brown"
-    case green = "Green"
-    case orange = "Orange"
-    case pink = "Pink"
-    case purple = "Purple"
-    case red = "Red"
+    case black
+    case blue
+    case brown
+    case green
+    case orange
+    case pink
+    case purple
+    case red
     /// includes Silver and Gray!
-    case bareMetal = "Silver, gray or bare metal"
+    case bareMetal = "silver, gray or bare metal"
     /// covered by stickers, tape, or other cover-ups
-    case covered = "Stickers tape or other cover-up"
-    case teal = "Teal"
-    case white = "White"
+    case covered = "stickers tape or other cover-up"
+    case teal
+    case white
     /// includes Gold
-    case yellow = "Yellow or Gold"
+    case yellow = "yellow or gold"
 
     var id: Self { self }
 
     var displayValue: String {
         switch self {
+        case .black: return "Black"
+        case .blue: return "Blue"
+        case .brown: return "Brown"
+        case .green: return "Green"
+        case .orange: return "Orange"
+        case .pink: return "Pink"
+        case .purple: return "Purple"
+        case .red: return "Red"
+        case .teal: return "Teal"
+        case .white: return "White"
         case .bareMetal:
             return "Silver, Gray, or Bare Metal"
         case .covered:
             return "Stickers, tape, or other cover-up"
         case .yellow:
             return "Yellow or Gold"
-        default:
-            return self.rawValue.capitalized
         }
     }
 
