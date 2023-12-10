@@ -5,16 +5,13 @@
 //  Created by Jack on 11/18/23.
 //
 
-import UIKit
 import SwiftUI
 import AuthenticationServices
-import WebKit
+import OSLog
 
 fileprivate extension ClientConfiguration {
-    var authorizeUrl: URL {
-        var url = host.appending(path: "oauth/authorize")
-
-        let queryItems: [URLQueryItem] = [
+    var authorizeQueryItems: [URLQueryItem] {
+        return [
             ("client_id", clientId),
             ("response_type", "code"),
             ("redirect_uri", redirectUri),
@@ -22,8 +19,6 @@ fileprivate extension ClientConfiguration {
         ].map { (item: QueryItemTuple) in
             URLQueryItem(name: item.name, value: item.value)
         }
-        url.append(queryItems: queryItems)
-        return url
     }
 }
 
@@ -89,9 +84,14 @@ struct AuthView: View {
             }
             Button(action: {
                 Task {
+                    guard let authorizeUrl = OAuth.authorize(queryItems: client.configuration.authorizeQueryItems).request(for: client.api.configuration).url else {
+                        Logger.api.debug("Failed to construct authorization request")
+                        return
+                    }
+                    let redirectUri = client.configuration.redirectUri.trimmingCharacters(in: .alphanumerics.inverted)
                     let urlWithToken = try await webAuthenticationSession.authenticate(
-                        using: client.configuration.authorizeUrl,
-                        callbackURLScheme: client.configuration.redirectUri.trimmingCharacters(in: .alphanumerics.inverted),
+                        using: authorizeUrl,
+                        callbackURLScheme: redirectUri,
                         preferredBrowserSession: .shared)
                     await client.accept(authCallback: urlWithToken)
                 }

@@ -13,8 +13,10 @@ fileprivate let api = "api"
 fileprivate let v3 = "v3"
 
 struct EmptyPost: Postable {}
-
 enum OAuth: APIEndpoint {
+    /// https://bikeindex.org/documentation/api_v3#ref_oauth
+    case authorize(queryItems: [URLQueryItem])
+
     /// https://bikeindex.org/documentation/api_v3#ref_oauth
     case token(queryItems: [URLQueryItem])
 
@@ -39,12 +41,19 @@ enum OAuth: APIEndpoint {
     }
 
     var path: [String] {
-        ["oauth", "token"]
+        switch self {
+        case .authorize:
+            return ["oauth", "authorize"]
+        case .token:
+            return ["oauth", "token"]
+        }
     }
 
     func request(for config: EndpointConfigurationProvider) -> URLRequest {
         var url = config.host.appending(components: path)
         switch self {
+        case .authorize(queryItems: let queryItems):
+            url.append(queryItems: queryItems)
         case .token(let queryItems):
             url.append(queryItems: queryItems)
         }

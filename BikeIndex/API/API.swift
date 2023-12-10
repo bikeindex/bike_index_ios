@@ -67,9 +67,9 @@ final class API {
             let (data, response) = try await session.data(for: request)
             try (response as? HTTPURLResponse)?.validate(with: data)
 
-            Logger.api.debug("\(type(of: self)).\(#function) fetched \(String(describing: request.url))")
-            Logger.api.debug("\(type(of: self)).\(#function) \tfetched response \(String(describing: response))")
-            Logger.api.debug("\(type(of: self)).\(#function) \tfetched data \(String(data: data, encoding: .utf8).unsafelyUnwrapped)")
+            Logger.api.debug("\(type(of: self)).\(#function) fetched \(String(reflecting: request.url?.absoluteString ?? "nil url"))")
+            Logger.api.debug("\(type(of: self)).\(#function) fetched response \(String(reflecting: response))")
+            Logger.api.debug("\(type(of: self)).\(#function) fetched data \(String(data: data, encoding: .utf8) ?? "<failed to stringify data>")")
 
             return Result {
                 try JSONDecoder().decode(endpoint.responseModel, from: data)
