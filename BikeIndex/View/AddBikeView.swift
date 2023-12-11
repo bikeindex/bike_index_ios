@@ -17,6 +17,7 @@ import OSLog
 ///     C) Add an abandoned bike you found
 ///     --  https://bikeindex.org/choose_registration
 struct AddBikeView: View {
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
@@ -39,6 +40,10 @@ struct AddBikeView: View {
     @State var traditionalBicycle = true
     /// Shadow over the User.email in case there are local changes
     @State var ownerEmail: String = ""
+
+    // MARK: Validation State
+
+    @State var validationModel = AddBikeOutput()
 
     // MARK: Authoritative State
 
@@ -218,10 +223,19 @@ struct AddBikeView: View {
 
             Section {
                 Button {
-                    registerBike()
+                    Task { await registerBike() }
                 } label: {
                     Text("Register")
                 }
+                .alert(validationModel.title,
+                       isPresented: $validationModel.show,
+                       actions: {
+                    Button("Okay") {
+                        validationModel.actions()
+                    }
+                }, message: {
+                    Text(validationModel.message)
+                })
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } footer: {
                 if !client.userCanRegisterBikes {
@@ -238,11 +252,10 @@ struct AddBikeView: View {
         }
     }
 
-    /// Write the Bike model to the local storage and mark it pending/in-progress
-    /// Write the Bike model to the API client
-    /// Mark the local model as synchronized
+    /// Marshall the Bike model to a Postable intermediary, write that intermediary to the API client and discard Bike model
+    /// Receive the result and persist the server's model
     /// Update the UI
-    private func registerBike() {
+    private func registerBike() async {
         Logger.model.debug("\(#function) Registering bike w/ serial \(String(describing: bike.serial))")
         Logger.model.debug("\(#function) Registering bike w/ manufacturerName \(String(describing: bike.manufacturerName))")
         Logger.model.debug("\(#function) Registering bike w/ frameColors \(String(describing: bike.frameColors))")
@@ -250,9 +263,29 @@ struct AddBikeView: View {
 
         let bikeRegistration = BikeRegistration(bike: bike,
                                                 ownerEmail: ownerEmail)
-        client.register(bikeRegistration: bikeRegistration,
-                        context: modelContext)
-        // TODO: persist bike after success
+        let endpoint = Bikes.postBikes(form: bikeRegistration)
+        let response = await client.api.post(endpoint)
+        switch response {
+        case .success(let success):
+            guard let registrationResponseSource = success as? BikeResponseContainer else {
+                Logger.views.error("Failed to parse bike registtration successful response from \(String(reflecting: success))")
+                return
+            }
+
+            let bikeModel = registrationResponseSource.modelInstance()
+            modelContext.insert(bikeModel)
+            self.validationModel = AddBikeOutput(show: true, actions: {
+                dismiss()
+            }, message: "", title: "Success!")
+
+        case .failure(let failure):
+            Logger.views.error("Failed to register bike with model \(String(reflecting: bikeRegistration)), endpoint \(String(reflecting: endpoint))")
+            Logger.views.error("Failed to register bike with failure \(String(reflecting: failure)), response \(String(reflecting: response))")
+
+            self.validationModel = AddBikeOutput(show: true, actions: {
+
+            }, message: LocalizedStringKey(failure.localizedDescription), title: "Registering bike failed")
+        }
     }
 }
 

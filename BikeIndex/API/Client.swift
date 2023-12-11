@@ -156,90 +156,6 @@ extension Client {
     }
 }
 
-// MARK: - Bike Query Operations
-
-extension Client {
-    @available(*, deprecated, message: "Migrate to API for stateless and abstract network operations")
-    func register(bikeRegistration: BikeRegistration, context: ModelContext) {
-        Logger.api.debug("\(#function) enter")
-
-        var url = configuration.host.appending(path: "api/v3/bikes")
-        url.append(queryItems: [
-            URLQueryItem(name: Constants.accessToken, value: auth?.accessToken)
-        ])
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        do {
-
-            request.httpBody = try URLEncodedFormEncoder().encode(bikeRegistration)
-        } catch {
-            Logger.api.error("\(#function) Failed to encode POST body from \(String(describing: bikeRegistration))")
-        }
-
-        let cancellable = session
-            .dataTaskPublisher(for: request)
-            .tryMap { element -> Data in
-                guard let httpResponse = element.response as? HTTPURLResponse,
-                      httpResponse.statusCode == 200 else {
-
-                    Logger.api.debug("Received network response other than 200.")
-                    Logger.api.debug("requsted url \(url)")
-                    Logger.api.debug("received data: \(element.data)")
-                    Logger.api.debug("received data: \(element.response)")
-                    throw URLError(.badServerResponse)
-                }
-
-                return element.data
-            }
-            .decode(type: Bike.self, decoder: JSONDecoder())
-            .sink(receiveCompletion: { Logger.api.debug("\(#function) Received completion: \(String(describing: $0)).") },
-                  receiveValue: { response in
-//                Logger.api.debug("\(#function) registered? \(response.registered)")
-//                Logger.api.debug("\(#function) claimed? \(response.claimed)")
-//                Logger.api.debug("\(#function) can_edit? \(response.can_edit)")
-            })
-
-        cancellable.store(in: &subscriptions)
-
-    }
-
-    @available(*, deprecated, message: "Migrate to API for stateless and abstract network operations")
-    func fetch(bike: UInt, context: ModelContext) {
-        Logger.api.debug("\(#function) enter")
-
-        var url = configuration.host.appending(path: "api/v3/bikes")
-        url.append(path: String(bike))
-        url.append(queryItems: [
-            URLQueryItem(name: Constants.accessToken, value: auth?.accessToken),
-        ])
-
-        let cancellable = session
-            .dataTaskPublisher(for: url)
-            .tryMap { element -> Data in
-                guard let httpResponse = element.response as? HTTPURLResponse,
-                      httpResponse.statusCode == 200 else {
-
-                    Logger.api.debug("Received network response other than 200.")
-                    Logger.api.debug("requsted url \(url)")
-                    Logger.api.debug("received data: \(element.data)")
-                    Logger.api.debug("received data: \(element.response)")
-                    throw URLError(.badServerResponse)
-                }
-
-                return element.data
-            }
-            .decode(type: ResponseBike.self, decoder: JSONDecoder())
-            .sink(receiveCompletion: { Logger.api.debug("\(#function) Received completion: \(String(describing: $0)).") },
-                  receiveValue: { response in
-                Logger.api.debug("\(#function) Received response: \(response.bike.identifier)")
-                context.insert(response.bike)
-            })
-
-        cancellable.store(in: &subscriptions)
-    }
-}
-
 // MARK: - Autocomplete Queries
 
 extension Client {
@@ -286,39 +202,6 @@ extension Client {
 extension Client {
     @available(*, deprecated, message: "Migrate to API for stateless and abstract network operations")
     func queryGlobal(context: ModelContext) {
-        Logger.api.debug("\(#function) enter")
-
-        /* https://bikeindex.org:443/api/v3/search?page=1&per_page=25&location=IP&distance=10&stolenness=stolen&access_token=Lo-dGPjIpS-6YiVT0zT8ezB6IYv1zqIiQ85iAEeeWRM */
-
-        var url = configuration.host.appendingPathComponent("api/v3/search")
-        url.append(queryItems: [
-            URLQueryItem(name: "per_page", value: String(25)),
-            URLQueryItem(name: "page", value: String(1)),
-            URLQueryItem(name: "location", value: "IP"),
-            URLQueryItem(name: "distance", value: "10"),
-            URLQueryItem(name: "stolenness", value: "stolen"),
-            URLQueryItem(name: Constants.accessToken, value: auth?.accessToken),
-        ])
-
-        let cancellable = session
-            .dataTaskPublisher(for: url)
-            .tryMap() { element -> Data in
-                guard let httpResponse = element.response as? HTTPURLResponse,
-                      httpResponse.statusCode == 200 else {
-                    throw URLError(.badServerResponse)
-                }
-                return element.data
-            }
-            .decode(type: ResponseBikes.self, decoder: JSONDecoder())
-            .sink(receiveCompletion: { Logger.api.debug("\(#function) Received completion: \(String(describing: $0)).") },
-                  receiveValue: { response in
-                Logger.api.debug("\(#function) Received response: \(String(describing: response)),")
-                response.bikes.forEach {
-                    context.insert($0)
-                }
-            })
-
-        cancellable.store(in: &subscriptions)
-
+        Logger.api.critical("\(#function) has been removed until it can be replaced.")
     }
 }

@@ -40,7 +40,7 @@ protocol APIEndpoint {
     /// Does this endpoint require authorization? True for yes, false for no / public
     var authorized: Bool { get }
 
-    var requestModel: (any Encodable.Type)? { get }
+    var requestModel: Encodable? { get }
     var responseModel: any Decodable.Type { get }
 
     func request(for config: EndpointConfigurationProvider) -> URLRequest
@@ -82,7 +82,21 @@ final class API {
 
     /// Endpoint
     func post(_ endpoint: APIEndpoint) async -> Result<(any Decodable), Error> {
-        let request = endpoint.request(for: configuration)
+        var request = endpoint.request(for: configuration)
+        if endpoint.authorized, let accessToken = configuration.accessToken {
+            request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)])
+        }
+
+        do {
+            guard let requestModel = endpoint.requestModel else {
+                Logger.api.error("\(#function) Failed to find model for POST body encoding for endpoint \(String(reflecting: endpoint))")
+                return .failure(APIError.postMissingContents(endpoint: endpoint))
+            }
+            request.httpBody = try URLEncodedFormEncoder().encode(requestModel)
+        } catch {
+            Logger.api.error("\(#function) Failed to encode POST body with \(error)")
+            return .failure(error)
+        }
 
         do {
             let (data, response) = try await session.data(for: request)
@@ -113,9 +127,10 @@ enum HttpMethod: String {
     case patch = "PATCH"
 }
 
-public enum APIError: Error {
+enum APIError: Error {
     case cacheHit
     case clientError(code: Int, data: Data?)
+    case postMissingContents(endpoint: APIEndpoint)
 }
 
 extension HTTPURLResponse {

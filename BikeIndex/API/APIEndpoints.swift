@@ -37,7 +37,8 @@ enum OAuth: APIEndpoint {
         true
     }
 
-    var requestModel: (Encodable.Type)? {
+    /// Normally this would have contents, but because authorization occurs first the request contents require stateful involvement from Client
+    var requestModel: Encodable? {
         nil
     }
 
@@ -81,8 +82,8 @@ enum Organizations: APIEndpoint {
 
     var authorized: Bool { true }
 
-    var requestModel: (Encodable.Type)? {
-        EmptyPost.self
+    var requestModel: Encodable? {
+        nil
     }
 
     var responseModel: Decodable.Type {
@@ -122,8 +123,8 @@ enum Search: APIEndpoint {
 
     var authorized: Bool { false }
 
-    var requestModel: (Encodable.Type)? {
-        EmptyPost.self
+    var requestModel: Encodable? {
+        nil
     }
 
     var responseModel: Decodable.Type {
@@ -176,27 +177,29 @@ enum Bikes: APIEndpoint {
 
     var authorized: Bool { true }
 
-    var requestModel: (Encodable.Type)? {
+    var requestModel: Encodable? {
         switch self {
         case .postBikes(let form):
-            return type(of: form)
+            return form
         default:
-            return EmptyPost.self
+            return nil
         }
     }
 
     var responseModel: Decodable.Type {
         switch self {
         case .postBikes:
-            return Bike.self
+            return BikeResponseContainer.self
         default:
             return EmptyResponse.self
         }
     }
 
     func request(for config: EndpointConfigurationProvider) -> URLRequest {
-        var url = config.host.appending(components: path)
-        return URLRequest(url: url)
+        let url = config.host.appending(components: path)
+        var request = URLRequest(url: url)
+        request.httpMethod = method.rawValue
+        return request
     }
 }
 
@@ -219,8 +222,8 @@ enum Me: APIEndpoint {
 
     var authorized: Bool { true }
 
-    var requestModel: (Encodable.Type)? {
-        EmptyPost.self
+    var requestModel: Encodable? {
+        nil
     }
 
     var responseModel: Decodable.Type {
@@ -228,7 +231,7 @@ enum Me: APIEndpoint {
         case .self:
             return AuthenticatedUserResponse.self
         case .bikes:
-            return [Bike].self
+            return EmptyResponse.self
         }
     }
 
@@ -257,8 +260,8 @@ enum Manufacturers: APIEndpoint {
 
     var authorized: Bool { false }
 
-    var requestModel: (Encodable.Type)? {
-        return nil
+    var requestModel: Encodable? {
+        nil
     }
 
     var responseModel: Decodable.Type {
@@ -308,8 +311,7 @@ enum Selections: APIEndpoint {
         .post
     }
 
-    var requestModel: (Encodable.Type)? {
-        // TODO
+    var requestModel: Encodable? {
         return nil
     }
 
