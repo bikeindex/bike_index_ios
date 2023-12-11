@@ -18,7 +18,7 @@ final class UserTests: XCTestCase {
         let response_user = try JSONDecoder().decode(AuthenticatedUserResponse.UserResponse.self, from: inputData)
         let user = response_user.modelInstance()
 
-        XCTAssertEqual(user.username, "d16b16aea831b")
+        XCTAssertEqual(user.username, "00d66fc4724cad")
         XCTAssertEqual(user.name, "Test User")
         XCTAssertEqual(user.email, "test@example.com")
         XCTAssertEqual(user.additionalEmails, [])
@@ -51,7 +51,7 @@ final class UserTests: XCTestCase {
         wait(for: [expectation], timeout: 10.0)
 
         let user = response_authenticatedUser.user.modelInstance()
-        XCTAssertEqual(user.username, "d16b16aea831b")
+        XCTAssertEqual(user.username, "00d66fc4724cad")
         XCTAssertEqual(user.name, "Test User")
         XCTAssertEqual(user.email, "test@example.com")
         XCTAssertEqual(user.additionalEmails, [])
@@ -60,17 +60,7 @@ final class UserTests: XCTestCase {
         XCTAssertNil(user.image)
 
         authenticatedUser.user = user
-        XCTAssertEqual(authenticatedUser.identifier, "591441")
-
-//        let organization = try XCTUnwrap(authenticatedUser.memberships.first)
-//        XCTAssertEqual(authenticatedUser.memberships.count, 1)
-
-//        XCTAssertEqual(organization.name, "Hogwarts School of Witchcraft and Wizardry")
-//        XCTAssertEqual(organization.slug, "hogwarts")
-//        XCTAssertEqual(organization.identifier, 818)
-//        XCTAssertEqual(organization.accessToken, "bdcc3c3c85716167ce566ab1418ab13b")
-//        XCTAssertEqual(organization.userIsOrganizationAdmin, true)
-
+        XCTAssertEqual(authenticatedUser.identifier, "456654")
     }
 
 }

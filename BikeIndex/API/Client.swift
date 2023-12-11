@@ -102,51 +102,55 @@ typealias QueryItemTuple = (name: String, value: String)
 // MARK: - Authentication Operations
 
 extension Client {
+
+    /// Stateful function to receive results of a ASWebAuthenticationSession.
+    /// - Parameter authCallback: The "redirect URI" received from the OAuth provider. This should contain relevant
+    /// query parameters to continue with a valid session. This *must* contain a `code` query paramter which will be
+    /// forwarded to the ``OAuth.token`` endpoint.
+    /// - Returns: True if processing proceeded normally. False if any errors occurred.
     @discardableResult func accept(authCallback: URL) async -> Bool {
         let components = URLComponents(string: authCallback.absoluteString)
         guard let queryItems = components?.queryItems,
-              let code = queryItems.first(where: { $0.name == Constants.code }) else {
-            Logger.api.debug("\(#function) exiting for lack of query item")
+              let code = queryItems.first(where: { $0.name == Constants.code }),
+              let newToken = code.value else {
+            Logger.api.debug("\(#function) exiting for lack of query item 'code'")
+            return false
+        }
+        accessToken = newToken
+
+        let tokenQuery = [
+            ("client_id", configuration.clientId),
+            ("client_secret", configuration.secret),
+            ("code", newToken),
+            ("grant_type", "authorization_code"),
+            ("redirect_uri", configuration.redirectUri)
+        ].map { (item: QueryItemTuple) in
+            URLQueryItem(name: item.name, value: item.value)
+        }
+
+        let fullToken = await api.get(OAuth.token(queryItems: tokenQuery))
+        switch fullToken {
+        case .success(let success):
+            guard let fullTokenAuth = success as? OAuthToken else {
+                return false
+            }
+            self.auth = fullTokenAuth
+            self.api.configuration.accessToken = fullTokenAuth.accessToken
+            do {
+                let data = try JSONEncoder().encode(fullTokenAuth)
+                self.keychain.set(data, forKey: Keychain.oauthToken)
+            } catch {
+                Logger.client.error("Failed to persist /oauth/token to keychain after fetching successfully, continuing")
+            }
+        case .failure(let failure):
+            Logger.client.error("Failed to fetch /oauth/token \(failure)")
             return false
         }
 
-        if let newToken = code.value {
-            accessToken = newToken
-
-            let tokenQuery = [
-                ("client_id", configuration.clientId),
-                ("client_secret", configuration.secret),
-                ("code", newToken),
-                ("grant_type", "authorization_code"),
-                ("redirect_uri", configuration.redirectUri)
-            ].map { (item: QueryItemTuple) in
-                URLQueryItem(name: item.name, value: item.value)
-            }
-            let fullToken = await api.get(OAuth.token(queryItems: tokenQuery))
-            switch fullToken {
-            case .success(let success):
-                guard let fullTokenAuth = success as? OAuthToken else {
-                    return false
-                }
-                self.auth = fullTokenAuth
-                self.api.configuration.accessToken = fullTokenAuth.accessToken
-                do {
-                    let data = try JSONEncoder().encode(fullTokenAuth)
-                    self.keychain.set(data, forKey: Keychain.oauthToken)
-                } catch {
-                    Logger.client.error("Failed to persist /oauth/token to keychain after fetching successfully, continuing")
-                }
-            case .failure(let failure):
-                Logger.client.error("Failed to fetch /oauth/token \(failure)")
-                return false
-            }
-            return true
-        }
-
-        Logger.api.debug("\(#function) exiting false for lack of code.value from \(authCallback)")
-        return false
+        return true
     }
 
+    /// Inform any `@State` watchers if the authentication is valid or has become void.
     var authenticated: Bool {
         auth != nil
     }
@@ -155,51 +159,6 @@ extension Client {
 // MARK: - Bike Query Operations
 
 extension Client {
-    /// NOTE: Leave this dormant until we can build out support for organization-specific features.
-    /// This endoint is not accessible to the general-public because most will not have an organization membership.
-    @available(*, deprecated, message: "Migrate to API for stateless and abstract network operations")
-    func checkIfRegistered(bikeQuery: BikeRegisteredQuery, context: ModelContext) {
-
-        var url = configuration.host.appending(path: "api/v3/bikes/check_if_registered")
-        url.append(queryItems: [
-            URLQueryItem(name: Constants.accessToken, value: auth?.accessToken)
-        ])
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        do {
-            request.httpBody = try JSONEncoder().encode(bikeQuery)
-        } catch {
-            Logger.api.error("\(#function) Failed to encode POST body from \(String(describing: bikeQuery))")
-        }
-
-        let cancellable = session
-            .dataTaskPublisher(for: request)
-            .tryMap { element -> Data in
-                guard let httpResponse = element.response as? HTTPURLResponse,
-                      httpResponse.statusCode == 200 else {
-
-                    Logger.api.debug("Received network response other than 200.")
-                    Logger.api.debug("requsted url \(url)")
-                    Logger.api.debug("received data: \(element.data)")
-                    Logger.api.debug("received data: \(element.response)")
-                    throw URLError(.badServerResponse)
-                }
-
-                return element.data
-            }
-            .decode(type: BikeRegisteredQueryResponse.self, decoder: JSONDecoder())
-            .sink(receiveCompletion: { Logger.api.debug("\(#function) Received completion: \(String(describing: $0)).") },
-                  receiveValue: { response in
-                Logger.api.debug("\(#function) registered? \(response.registered)")
-                Logger.api.debug("\(#function) claimed? \(response.claimed)")
-                Logger.api.debug("\(#function) can_edit? \(response.can_edit)")
-            })
-
-        cancellable.store(in: &subscriptions)
-
-    }
-
     @available(*, deprecated, message: "Migrate to API for stateless and abstract network operations")
     func register(bikeRegistration: BikeRegistration, context: ModelContext) {
         Logger.api.debug("\(#function) enter")

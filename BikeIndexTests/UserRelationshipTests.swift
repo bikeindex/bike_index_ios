@@ -50,7 +50,7 @@ final class UserRelationshipTests: XCTestCase {
         authenticatedUser.user = user
         Logger.tests.debug("User is \(user.username, privacy: .public)")
         let username: String = user.username
-        XCTAssert(username == "d16b16aea831b")
+        XCTAssert(username == "00d66fc4724cad")
 
         let name: String = user.name
 //        Logger.tests.debug("Found user.name \(name), assertion \(name == "Test User")")
@@ -68,7 +68,7 @@ final class UserRelationshipTests: XCTestCase {
 
         let authIdentifier = authenticatedUser.identifier
         Logger.tests.debug("Found authIdentifier \(authIdentifier), assertion \(authIdentifier == "591441")")
-        XCTAssert(authIdentifier == "591441")
+        XCTAssert(authIdentifier == "456654")
 
         /*
         let memberships = authenticatedUser.memberships
@@ -120,7 +120,7 @@ final class UserRelationshipTests: XCTestCase {
         let authResults_preCreate = try container.mainContext.fetch(FetchDescriptor<AuthenticatedUser>())
         XCTAssertEqual(authResults_preCreate.count, 0)
 
-        let existingUser = User(username: "d16b16aea831b", name: "Test User presave", email: "test@example.com", additionalEmails: [], createdAt: Date())
+        let existingUser = User(username: "00d66fc4724cad", name: "Test User presave", email: "test@example.com", additionalEmails: [], createdAt: Date())
 
         let userResults_prefill_postcreate = try container.mainContext.fetch(FetchDescriptor<User>())
         XCTAssertEqual(userResults_prefill_postcreate.count, 0)
@@ -133,7 +133,7 @@ final class UserRelationshipTests: XCTestCase {
         container.mainContext.insert(existingUser)
 
 
-        let existingAuth = AuthenticatedUser(identifier: "591441")
+        let existingAuth = AuthenticatedUser(identifier: "456654")
 
         existingAuth.user = existingUser
 
@@ -185,7 +185,7 @@ final class UserRelationshipTests: XCTestCase {
 //        let usersUser = try XCTUnwrap(responseAuthUser.user)
 //        Logger.tests.debug("User is \(usersUser.username, privacy: .public)")
 
-        XCTAssertEqual(responseAuthUser.user?.username, "d16b16aea831b")
+        XCTAssertEqual(responseAuthUser.user?.username, "00d66fc4724cad")
 
         XCTAssertEqual(responseAuthUser.user?.name, "Test User")
         XCTAssertEqual(responseAuthUser.user?.name, "Test User")

@@ -11,7 +11,7 @@ struct MockData {
     static let userJson =
 """
 {
-    "username": "d16b16aea831b",
+    "username": "00d66fc4724cad",
     "name": "Test User",
     "email": "test@example.com",
     "secondary_emails": [],
@@ -24,17 +24,17 @@ struct MockData {
     static let authenticatedUserJson =
 """
 {
-    "id": "591441",
+    "id": "456654",
     "user": \(userJson),
     "bike_ids": [
 
     ],
     "memberships": [
         {
-            "organization_name": "Hogwarts School of Witchcraft and Wizardry",
-            "organization_slug": "hogwarts",
-            "organization_id": 818,
-            "organization_access_token": "bdcc3c3c85716167ce566ab1418ab13b",
+            "organization_name": "Test account",
+            "organization_slug": "testers",
+            "organization_id": 1234,
+            "organization_access_token": "59658bae53dec4cced6eafee0abc9670",
             "user_is_organization_admin": true
         }
     ]

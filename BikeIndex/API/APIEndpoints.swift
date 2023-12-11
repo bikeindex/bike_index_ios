@@ -8,16 +8,21 @@
 import Foundation
 import OSLog
 
-//struct BikeIndexV3 {
 fileprivate let api = "api"
 fileprivate let v3 = "v3"
 
+/// Convenience default empty object endpoints that will not provide any request model.
 struct EmptyPost: Postable {}
+
+struct EmptyResponse: Decodable {}
+
+/// Endpoints related to authorization.
+/// https://bikeindex.org/documentation/api_v3#ref_oauth
 enum OAuth: APIEndpoint {
-    /// https://bikeindex.org/documentation/api_v3#ref_oauth
+    /// Invoked first of all networking in a web authentication session before any authorized action can occur.
     case authorize(queryItems: [URLQueryItem])
 
-    /// https://bikeindex.org/documentation/api_v3#ref_oauth
+    /// Invoked second of all networking _using the `code` result_ from the ``OAuth.authorize`` response.
     case token(queryItems: [URLQueryItem])
 
     // MARK: -
@@ -33,7 +38,7 @@ enum OAuth: APIEndpoint {
     }
 
     var requestModel: (Encodable.Type)? {
-        EmptyPost.self
+        nil
     }
 
     var responseModel: Decodable.Type {
@@ -131,8 +136,12 @@ enum Search: APIEndpoint {
 }
 
 enum Bikes: APIEndpoint {
-    case postBikes(form: Postable)
-    case bikes(identifier: BikeId) // aka v3/bikes/{id} also available with no parameter
+    /// Add a new bike to the index
+    case postBikes(form: BikeRegistration)
+    /// Fetch bike details
+    /// aka v3/bikes/{id} also available with no parameter
+    case bikes(identifier: BikeId)
+    /// Update a bike
     case putBikes(identifier: BikeId, form: Postable) // aka v3/bikes/{id} also available with no parameter
     case check_if_registered
     case recover(identifier: BikeId)
@@ -168,11 +177,21 @@ enum Bikes: APIEndpoint {
     var authorized: Bool { true }
 
     var requestModel: (Encodable.Type)? {
-        EmptyPost.self
+        switch self {
+        case .postBikes(let form):
+            return type(of: form)
+        default:
+            return EmptyPost.self
+        }
     }
 
     var responseModel: Decodable.Type {
-        OAuthToken.self
+        switch self {
+        case .postBikes:
+            return Bike.self
+        default:
+            return EmptyResponse.self
+        }
     }
 
     func request(for config: EndpointConfigurationProvider) -> URLRequest {
