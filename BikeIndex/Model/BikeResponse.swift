@@ -66,8 +66,14 @@ struct BikeResponse: ResponseModelInstantiable {
         let dateStolen = date_stolen.map { Date(timeIntervalSince1970: $0) }
 
         let firstColor = frame_colors.first.flatMap { FrameColor(rawValue: $0) } ?? .black
-        let secondColor = FrameColor(rawValue: frame_colors[1])
-        let thirdColor = FrameColor(rawValue: frame_colors[2])
+
+        var secondColor: FrameColor?, thirdColor: FrameColor?
+        if frame_colors.count > 1 {
+            secondColor = FrameColor(rawValue: frame_colors[1])
+        }
+        if frame_colors.count > 2 {
+            thirdColor = FrameColor(rawValue: frame_colors[2])
+        }
 
         return Bike(identifier: id ?? Int.min,
                     bikeDescription: description,

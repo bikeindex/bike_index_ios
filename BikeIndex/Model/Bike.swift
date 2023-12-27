@@ -27,7 +27,7 @@ import MapKit
     var year: Int?
     var typeOfCycle: BicycleType
 
-    /// Nil if the serial number is absent
+    /// Nil if the serial number is missing
     var serial: String?
 
     var status: BikeStatus
