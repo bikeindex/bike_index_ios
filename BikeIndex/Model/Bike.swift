@@ -13,7 +13,15 @@ import MapKit
     @Attribute(.unique) var identifier: Int
     var bikeDescription: String?
     var frameModel: String?
-    var frameColors: [FrameColor]
+
+    var frameColorPrimary: FrameColor
+    var frameColorSecondary: FrameColor?
+    var frameColorTertiary: FrameColor?
+
+    @Transient var frameColors: [FrameColor] {
+        [frameColorPrimary, frameColorSecondary, frameColorTertiary].compactMap { $0 }
+    }
+
     /// Also accepts manufacturer identifier Int
     var manufacturerName: String
     var year: Int?
@@ -53,17 +61,18 @@ import MapKit
     struct Constants {
         /// The range of supported years for Bike models
         static let yearRange = 1900..<2100
+
         /// The range of **displayable** years for Bike models aka "inclusive 1900-2024"
         static let displayableYearRange = 1900..<2025
-        /// Only 3 frame colors are allowed.
-        static let maxFrameColorsCount = 3
     }
 
-    init(identifier: Int, bikeDescription: String? = nil, frameModel: String? = nil, frameColors: [FrameColor], manufacturerName: String, year: Int? = nil, typeOfCycle: BicycleType, serial: String? = nil, status: BikeStatus, stolenCoordinateLatitude: CLLocationDegrees, stolenCoordinateLongitude: CLLocationDegrees, stolenLocation: String? = nil, dateStolen: Date? = nil, thumb: URL? = nil, url: URL, apiUrl: URL? = nil, publicImages: [String]) {
+    init(identifier: Int, bikeDescription: String? = nil, frameModel: String? = nil, primaryColor: FrameColor, secondaryColor: FrameColor? = nil, tertiaryColor: FrameColor? = nil, manufacturerName: String, year: Int? = nil, typeOfCycle: BicycleType, serial: String? = nil, status: BikeStatus, stolenCoordinateLatitude: CLLocationDegrees, stolenCoordinateLongitude: CLLocationDegrees, stolenLocation: String? = nil, dateStolen: Date? = nil, thumb: URL? = nil, url: URL, apiUrl: URL? = nil, publicImages: [String]) {
         self.identifier = identifier
         self.bikeDescription = bikeDescription
         self.frameModel = frameModel
-        self.frameColors = frameColors
+        self.frameColorPrimary = primaryColor
+        self.frameColorSecondary = secondaryColor
+        self.frameColorTertiary = tertiaryColor
         self.manufacturerName = manufacturerName
         self.year = year
         self.typeOfCycle = typeOfCycle
@@ -83,7 +92,8 @@ import MapKit
         identifier = 0
         bikeDescription = ""
         frameModel = ""
-        frameColors = [FrameColor.defaultColor]
+        frameColorPrimary = .black
+
         manufacturerName = ""
         serial = ""
         status = .withOwner
@@ -97,24 +107,6 @@ import MapKit
         url = defaultUrl
         apiUrl = defaultUrl
         publicImages = []
-    }
-}
-
-extension Bike {
-    func addFrameColor() {
-        guard frameColors.count < Constants.maxFrameColorsCount else {
-            return
-        }
-
-        frameColors.append(FrameColor.defaultColor)
-    }
-
-    func removeFrameColor() {
-        guard frameColors.count > 1 else {
-            return
-        }
-
-        _ = frameColors.popLast()
     }
 }
 

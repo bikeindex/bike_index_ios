@@ -93,12 +93,9 @@ struct BikeRegistration: Encodable {
         self.owner_email = ownerEmail // Bike<->User relationships are not yet established
 
         // Non-required fields
-        if let secondary = bike.frameColors.secondary {
-            self.secondary_frame_color = secondary
-        }
-        if let tertiary = bike.frameColors.tertiary {
-            self.tertiary_frame_color = tertiary
-        }
+        self.secondary_frame_color = bike.frameColorSecondary
+        self.tertiary_frame_color = bike.frameColorTertiary
+
         self.cycle_type_name = bike.typeOfCycle
         if let bikeYear = bike.year {
             self.year = UInt(bikeYear)

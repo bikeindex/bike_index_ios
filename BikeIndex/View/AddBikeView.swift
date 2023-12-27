@@ -164,47 +164,47 @@ struct AddBikeView: View {
                     }
                 }
                 .onChange(of: colorPrimary, { oldValue, newValue in
-                    bike.frameColors.primary = newValue
+                    bike.frameColorPrimary = newValue
                 })
                 .pickerStyle(.menu)
 
-                if $bike.frameColors.count == 1 {
+                if bike.frameColors.count == 1 {
                     Button("Add secondary color") {
-                        bike.addFrameColor()
+                        bike.frameColorSecondary = .black
                     }
                 }
-                if $bike.frameColors.count >= 2 {
+                if bike.frameColors.count >= 2 {
                     Picker("Secondary Frame Color", selection: $colorSecondary) {
                         ForEach(FrameColor.allCases) { option in
                             Text(option.displayValue)
                         }
                     }
                     .onChange(of: colorSecondary, { oldValue, newValue in
-                        bike.frameColors.secondary = newValue
+                        bike.frameColorSecondary = newValue
                     })
                     .pickerStyle(.menu)
                 }
-                if $bike.frameColors.count == 2 {
+                if bike.frameColors.count == 2 {
                     Button("Remove secondary color") {
-                        bike.removeFrameColor()
+                        bike.frameColorSecondary = nil
                         colorSecondary = FrameColor.defaultColor
                     }
                     Button("Add tertiary color") {
-                        bike.addFrameColor()
+                        bike.frameColorTertiary = .black
                     }
                 }
-                if $bike.frameColors.count == 3 {
+                if bike.frameColors.count == 3 {
                     Picker("Tertiary Frame Color", selection: $colorTertiary) {
                         ForEach(FrameColor.allCases) { option in
                             Text(option.displayValue)
                         }
                     }
                     .onChange(of: colorTertiary, { oldValue, newValue in
-                        bike.frameColors.tertiary = newValue
+                        bike.frameColorTertiary = newValue
                     })
                     .pickerStyle(.menu)
                     Button("Remove tertiary color") {
-                        bike.removeFrameColor()
+                        bike.frameColorTertiary = nil
                         colorTertiary = FrameColor.defaultColor
                     }
                 }

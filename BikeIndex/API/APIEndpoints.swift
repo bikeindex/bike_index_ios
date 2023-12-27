@@ -139,8 +139,7 @@ enum Search: APIEndpoint {
 enum Bikes: APIEndpoint {
     /// Add a new bike to the index
     case postBikes(form: BikeRegistration)
-    /// Fetch bike details
-    /// aka v3/bikes/{id} also available with no parameter
+    /// Fetch bike details via `v3/bikes/{id}`
     case bikes(identifier: BikeId)
     /// Update a bike
     case putBikes(identifier: BikeId, form: Postable) // aka v3/bikes/{id} also available with no parameter
