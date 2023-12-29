@@ -7,6 +7,8 @@
 
 import Foundation
 
+/// NOTE: **Reading** FrameColor from the API is in title-case.
+/// **Writing** FrameColor to the API must be in lower-case.
 enum FrameColor: String, Codable, CaseIterable, Identifiable, Equatable {
     case black = "Black"
     case blue = "Blue"

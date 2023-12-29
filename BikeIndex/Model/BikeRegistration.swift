@@ -18,7 +18,7 @@ struct BikeRegistration: Encodable {
     let owner_email: String
     /// Write to `color` field in addition to `primary_frame_color`
     let color: String
-    let primary_frame_color: FrameColor
+    let primary_frame_color: String
 
     let test = true
 
@@ -34,8 +34,8 @@ struct BikeRegistration: Encodable {
     var frame_model: String?
     var year: UInt?
     var description: String?
-    var secondary_frame_color: FrameColor?
-    var tertiary_frame_color: FrameColor?
+    var secondary_frame_color: String?
+    var tertiary_frame_color: String?
     var rear_gear_type_slug: String?
     var front_gear_type_slug: String?
     var extra_registration_number: String?
@@ -53,8 +53,8 @@ struct BikeRegistration: Encodable {
         self.serial = serial ?? Constants.made_without_serial
         self.manufacturer = manufacturer
         self.owner_email = owner_email
-        self.primary_frame_color = primary_frame_color
-        self.color = primary_frame_color.rawValue
+        self.primary_frame_color = primary_frame_color.rawValue.lowercased()
+        self.color = primary_frame_color.rawValue.lowercased()
         self.owner_email_is_phone_number = owner_email_is_phone_number
         self.organization_slug = organization_slug
         self.cycle_type_name = cycle_type_name
@@ -66,8 +66,8 @@ struct BikeRegistration: Encodable {
         self.frame_model = frame_model
         self.year = year
         self.description = description
-        self.secondary_frame_color = secondary_frame_color
-        self.tertiary_frame_color = tertiary_frame_color
+        self.secondary_frame_color = secondary_frame_color?.rawValue.lowercased()
+        self.tertiary_frame_color = tertiary_frame_color?.rawValue.lowercased()
         self.rear_gear_type_slug = rear_gear_type_slug
         self.front_gear_type_slug = front_gear_type_slug
         self.extra_registration_number = extra_registration_number
@@ -82,30 +82,29 @@ struct BikeRegistration: Encodable {
         self.components = components
     }
 
-    init(bike: Bike, ownerEmail: String?) {
-        guard let primary = bike.frameColors.first,
-              let ownerEmail else {
-            fatalError()
-        }
-
-        // If the serial number is absent then
+    init(bike: Bike, stolen: StolenRecord?, ownerEmail: String) {
+        // If the serial number is absent then continue with a constant
         self.serial = bike.serial ?? Constants.made_without_serial
 
         // Required fields
         self.manufacturer = bike.manufacturerName
-        self.primary_frame_color = primary
-        self.color = primary.rawValue
+        self.primary_frame_color = bike.frameColorPrimary.rawValue.lowercased()
+        self.color = bike.frameColorPrimary.rawValue.lowercased()
         self.owner_email = ownerEmail // Bike<->User relationships are not yet established
 
         // Non-required fields
-        self.secondary_frame_color = bike.frameColorSecondary
-        self.tertiary_frame_color = bike.frameColorTertiary
+        self.secondary_frame_color = bike.frameColorSecondary?.rawValue.lowercased()
+        self.tertiary_frame_color = bike.frameColorTertiary?.rawValue.lowercased()
 
         self.cycle_type_name = bike.typeOfCycle
         if let bikeYear = bike.year {
             self.year = UInt(bikeYear)
         }
         self.frame_model = bike.frameModel
+
+        self.stolen_record = stolen
+
+        // Unsupported fields for future work
         self.owner_email_is_phone_number = nil
         self.organization_slug = nil
         self.cycle_type_name = nil
@@ -116,8 +115,6 @@ struct BikeRegistration: Encodable {
         self.front_tire_narrow = nil
         self.frame_model = nil
         self.description = nil
-        self.secondary_frame_color = nil
-        self.tertiary_frame_color = nil
         self.rear_gear_type_slug = nil
         self.front_gear_type_slug = nil
         self.extra_registration_number = nil
@@ -128,17 +125,18 @@ struct BikeRegistration: Encodable {
         self.external_image_urls = nil
         self.bike_sticker = nil
         self.propulsion_type_slug = nil
-        self.stolen_record = nil
         self.components = nil
     }
 }
 
 struct StolenRecord: Encodable {
-    let phone: String
-    let city: String
-    var country: String?
+    var phone: String
+    var city: String
+    var country: Countries.ISO? = Locale.current.region?.identifier
     var zipcode: String?
-    var state: String?
+    var state: US_States.Abbreviation?
+
+    /// Also used for text-description of intersection
     var address: String?
     var date_stolen: Int?
     var police_report_number: String?

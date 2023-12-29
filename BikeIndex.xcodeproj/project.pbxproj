@@ -7,8 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		043033282B3E285F00FD126F /* AddStolenRecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033272B3E285F00FD126F /* AddStolenRecordView.swift */; };
+		0430332A2B3E5EEB00FD126F /* Countries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033292B3E5EEB00FD126F /* Countries.swift */; };
+		0430332C2B3E642200FD126F /* Binding+Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0430332B2B3E642200FD126F /* Binding+Optional.swift */; };
+		0430332F2B3E64C300FD126F /* US_States.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0430332E2B3E64C300FD126F /* US_States.swift */; };
+		043033312B3E6FA100FD126F /* BikeRegistrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033302B3E6FA100FD126F /* BikeRegistrationTests.swift */; };
+		043033322B3E707900FD126F /* Countries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033292B3E5EEB00FD126F /* Countries.swift */; };
+		043033332B3E708800FD126F /* US_States.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0430332E2B3E64C300FD126F /* US_States.swift */; };
 		043C90B82B25222A00F13559 /* BikeRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA111C2B2503C40024CDDD /* BikeRegistration.swift */; };
 		043C90B92B25223400F13559 /* Manufacturer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B94E2B098BB1009442B5 /* Manufacturer.swift */; };
+		0453EA332B3CB07700FBF74C /* RegistrationPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0453EA322B3CB07700FBF74C /* RegistrationPath.swift */; };
 		046B0A372B251E58006519A7 /* AppIconPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A352B251E58006519A7 /* AppIconPicker.swift */; };
 		046B0A382B251E58006519A7 /* TextLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A362B251E58006519A7 /* TextLink.swift */; };
 		046B0A3A2B251E67006519A7 /* AlternateIconsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A392B251E67006519A7 /* AlternateIconsModel.swift */; };
@@ -89,6 +97,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		043033272B3E285F00FD126F /* AddStolenRecordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStolenRecordView.swift; sourceTree = "<group>"; };
+		043033292B3E5EEB00FD126F /* Countries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Countries.swift; sourceTree = "<group>"; };
+		0430332B2B3E642200FD126F /* Binding+Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Binding+Optional.swift"; sourceTree = "<group>"; };
+		0430332E2B3E64C300FD126F /* US_States.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = US_States.swift; sourceTree = "<group>"; };
+		043033302B3E6FA100FD126F /* BikeRegistrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeRegistrationTests.swift; sourceTree = "<group>"; };
+		0453EA322B3CB07700FBF74C /* RegistrationPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationPath.swift; sourceTree = "<group>"; };
 		046B0A352B251E58006519A7 /* AppIconPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppIconPicker.swift; sourceTree = "<group>"; };
 		046B0A362B251E58006519A7 /* TextLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextLink.swift; sourceTree = "<group>"; };
 		046B0A392B251E67006519A7 /* AlternateIconsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlternateIconsModel.swift; sourceTree = "<group>"; };
@@ -167,6 +181,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0430332D2B3E64B900FD126F /* Regions */ = {
+			isa = PBXGroup;
+			children = (
+				043033292B3E5EEB00FD126F /* Countries.swift */,
+				0430332E2B3E64C300FD126F /* US_States.swift */,
+			);
+			path = Regions;
+			sourceTree = "<group>";
+		};
+		0453EA312B3CB06500FBF74C /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				0453EA322B3CB07700FBF74C /* RegistrationPath.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
 		04EA11112B2502990024CDDD /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
@@ -233,6 +264,7 @@
 				046B0A3D2B251E91006519A7 /* UserRelationshipTests.swift */,
 				046B0A3B2B251E91006519A7 /* UserTests.swift */,
 				04F4B92E2B098B4F009442B5 /* BikeModelTests.swift */,
+				043033302B3E6FA100FD126F /* BikeRegistrationTests.swift */,
 				04F4B92D2B098B4F009442B5 /* OAuthTests.swift */,
 			);
 			path = BikeIndexTests;
@@ -250,6 +282,7 @@
 		04F4B9352B098B73009442B5 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				0453EA312B3CB06500FBF74C /* Navigation */,
 				046B0A392B251E67006519A7 /* AlternateIconsModel.swift */,
 				04EA111C2B2503C40024CDDD /* BikeRegistration.swift */,
 				04EA111A2B2503B40024CDDD /* BikeRegisteredQuery.swift */,
@@ -262,6 +295,7 @@
 				04F4B94C2B098BB1009442B5 /* User.swift */,
 				0490A5EE2B26972600C4EC1E /* BikeResponse.swift */,
 				0490A5F02B269F7800C4EC1E /* AddBikeModel.swift */,
+				0430332D2B3E64B900FD126F /* Regions */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -279,6 +313,7 @@
 				04F4B93D2B098BA9009442B5 /* SearchBikesView.swift */,
 				04F4B9402B098BAA009442B5 /* SettingsView.swift */,
 				04F4B93C2B098BA9009442B5 /* VerticalPicker.swift */,
+				043033272B3E285F00FD126F /* AddStolenRecordView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -298,6 +333,7 @@
 			isa = PBXGroup;
 			children = (
 				04F4B9602B0996EC009442B5 /* Logger.swift */,
+				0430332B2B3E642200FD126F /* Binding+Optional.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -449,7 +485,10 @@
 				04F4B9432B098BAA009442B5 /* AuthView.swift in Sources */,
 				04EA111B2B2503B40024CDDD /* BikeRegisteredQuery.swift in Sources */,
 				04F4B9442B098BAA009442B5 /* VerticalPicker.swift in Sources */,
+				0430332C2B3E642200FD126F /* Binding+Optional.swift in Sources */,
 				04F4B9422B098BAA009442B5 /* AddBikeView.swift in Sources */,
+				0430332F2B3E64C300FD126F /* US_States.swift in Sources */,
+				0430332A2B3E5EEB00FD126F /* Countries.swift in Sources */,
 				0490A5F12B269F7800C4EC1E /* AddBikeModel.swift in Sources */,
 				04F4B9392B098B9C009442B5 /* Client.swift in Sources */,
 				046B0A372B251E58006519A7 /* AppIconPicker.swift in Sources */,
@@ -460,6 +499,7 @@
 				04F4B9522B098BB1009442B5 /* User.swift in Sources */,
 				04F4B9512B098BB1009442B5 /* FrameColor.swift in Sources */,
 				04F4B9452B098BAA009442B5 /* SearchBikesView.swift in Sources */,
+				043033282B3E285F00FD126F /* AddStolenRecordView.swift in Sources */,
 				046B0A3A2B251E67006519A7 /* AlternateIconsModel.swift in Sources */,
 				04EA110F2B2502660024CDDD /* APIEndpoints.swift in Sources */,
 				04EA111D2B2503C40024CDDD /* BikeRegistration.swift in Sources */,
@@ -469,6 +509,7 @@
 				04F4B9592B098C11009442B5 /* BikeIndexApp.swift in Sources */,
 				04F4B9502B098BB1009442B5 /* Bike.swift in Sources */,
 				04F4B9632B0998F6009442B5 /* ClientConfiguration.swift in Sources */,
+				0453EA332B3CB07700FBF74C /* RegistrationPath.swift in Sources */,
 				04EA110E2B2502660024CDDD /* API.swift in Sources */,
 				04F4B9552B098BB1009442B5 /* BicycleType.swift in Sources */,
 				04EA11142B2502AF0024CDDD /* AuthenticatedUserResponse.swift in Sources */,
@@ -487,11 +528,14 @@
 				0490A5F22B26B66900C4EC1E /* BikeResponse.swift in Sources */,
 				04EA11172B2503920024CDDD /* User.swift in Sources */,
 				046B0A442B251E92006519A7 /* MockData.swift in Sources */,
+				043033332B3E708800FD126F /* US_States.swift in Sources */,
+				043033312B3E6FA100FD126F /* BikeRegistrationTests.swift in Sources */,
 				046B0A462B251F30006519A7 /* APIEndpoints.swift in Sources */,
 				04F4B9302B098B4F009442B5 /* BikeModelTests.swift in Sources */,
 				046B0A452B251F18006519A7 /* Client.swift in Sources */,
 				046B0A402B251E92006519A7 /* UserTests.swift in Sources */,
 				04EA112B2B25172A0024CDDD /* BicycleType.swift in Sources */,
+				043033322B3E707900FD126F /* Countries.swift in Sources */,
 				046B0A412B251E92006519A7 /* Logger+Tests.swift in Sources */,
 				046B0A432B251E92006519A7 /* BikeIndexOrgApiV3Tests.swift in Sources */,
 				043C90B82B25222A00F13559 /* BikeRegistration.swift in Sources */,

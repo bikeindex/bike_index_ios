@@ -30,7 +30,7 @@ enum ContentMenuOptions: Int, Identifiable, CaseIterable {
     var option: ContentMenuOption {
         switch self {
         case .registerBike:
-            ContentMenuOption(view: AnyView(AddBikeView()),
+            ContentMenuOption(view: AnyView(AddBikeView(mode: .ownBike)),
                               icon: .register,
                               title: "Register a Bike")
 //        case .recoverBike:
@@ -47,14 +47,31 @@ enum ContentMenuOptions: Int, Identifiable, CaseIterable {
                               title: "I found a bike!")
         }
     }
+
+    var longPressMenu: AnyView {
+        switch self {
+        case .registerBike:
+            AnyView(Group(content: {
+                NavigationLink("Register My Own Bike", value: RegistrationPath.ownBike)
+                NavigationLink("Register a stolen bike", value: RegistrationPath.knownStolen)
+                NavigationLink("Register an abandoned bike", value: RegistrationPath.foundAbandoned)
+            }))
+        default:
+            AnyView(EmptyView())
+        }
+    }
 }
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
-    var contentModel = ContentModel()
+    // Whole-app navigation
+    @State private var preferredColumn = NavigationSplitViewColumn.detail
+    @State var path = NavigationPath()
 
+    // Internal display
+    var contentModel = ContentModel()
     let columnLayout = Array(repeating: GridItem(), count: 2)
 
     @Query private var bikes: [Bike]
@@ -62,28 +79,36 @@ struct ContentView: View {
 
     var body: some View {
         NavigationSplitView {
-            ScrollView {
-                LazyVGrid(columns: columnLayout) {
-                    ForEach(ContentMenuOptions.menuOptions, id: \.id) { menuItem in
-                        NavigationLink {
-                            menuItem.option.view
-                        } label: {
-                            VStack {
-                                RoundedRectangle(cornerRadius: 24)
-                                    .scaledToFit()
-                                    .foregroundStyle(Color.primary)
-                                    .overlay {
-                                        ActionIcon(icon: menuItem.option.icon)
-                                            .scaledToFit()
-                                            .padding()
-                                    }
+            NavigationStack(path: $path) {
+                ScrollView {
+                    LazyVGrid(columns: columnLayout) {
+                        ForEach(ContentMenuOptions.menuOptions, id: \.id) { menuItem in
+                            NavigationLink {
+                                menuItem.option.view
+                            } label: {
+                                VStack {
+                                    RoundedRectangle(cornerRadius: 24)
+                                        .scaledToFit()
+                                        .foregroundStyle(Color.primary)
+                                        .overlay {
+                                            ActionIcon(icon: menuItem.option.icon)
+                                                .scaledToFit()
+                                                .padding()
+                                        }
 
-                                Text(menuItem.option.title)
+                                    Text(menuItem.option.title)
+                                }
+                                .contextMenu(menuItems: {
+                                    menuItem.longPressMenu
+                                })
                             }
                         }
                     }
+                    .padding()
                 }
-                .padding()
+                .navigationDestination(for: RegistrationPath.self, destination: { selection in
+                    AddBikeView(mode: selection)
+                })
             }
 
 

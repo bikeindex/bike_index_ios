@@ -12,14 +12,15 @@ import OSLog
 /// NOTE: Adopt @Focus State https://developer.apple.com/documentation/swiftui/focusstate
 /// NOTE: Wrap this in a pre-menu to select
 ///     ◉) Add a bike through $organization\_name... [for each organization]
-///     A) Add your own bike
-///     B) Add a stolen bike
-///     C) Add an abandoned bike you found
-///     --  https://bikeindex.org/choose_registration
 struct AddBikeView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
+
+    /// Provide which mode this registration will use.
+    /// Modes are displayed on https://bikeindex.org/choose_registration
+    /// Specific modes will add fields for ``StolenRecord`` entry.
+    var mode: RegistrationPath
 
     // MARK: Shadow State
 
@@ -49,6 +50,8 @@ struct AddBikeView: View {
 
     /// Primary model to mutate and persist
     @State var bike = Bike()
+    /// Model **only for** specific ``RegistrationPath`` modes.
+    @State var stolen = StolenRecord(phone: "", city: "")
     /// Access the known users to perform autocomplete on the owner's email
     @Query var authenticatedUsers: [AuthenticatedUser]
 
@@ -215,6 +218,11 @@ struct AddBikeView: View {
                 Text("The color of the frame and fork—not the wheels, cranks, or anything else. You can put a more detailed description in paint description (once you've registered), this is to get a general color to make searching easier")
             }
 
+            // MARK: Stolen Form
+            if mode.showStolenRecord {
+                StolenRecordEntryView(record: $stolen)
+            }
+
             Section(header: Text("Owner Email")) {
                 TextField(text: $ownerEmail) {
                     Text("Who should be contacted?")
@@ -262,6 +270,7 @@ struct AddBikeView: View {
         Logger.model.debug("\(#function) Registering w/ owner email \(String(describing: ownerEmail))")
 
         let bikeRegistration = BikeRegistration(bike: bike,
+                                                stolen: stolen,
                                                 ownerEmail: ownerEmail)
         let endpoint = Bikes.postBikes(form: bikeRegistration)
         let response = await client.api.post(endpoint)
@@ -298,14 +307,15 @@ struct AddBikeView: View {
         let container = try ModelContainer(for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
                                            configurations: config)
 
-        let user = User(username: "previewUser", name: "Preview User", email: "preview@bikeindex.rog", additionalEmails: [], createdAt: Date(), image: nil, twitter: nil)
+        let user = User(username: "previewUser", name: "Preview User", email: "preview@bikeindex.org", additionalEmails: [], createdAt: Date(), image: nil, twitter: nil)
 
         let auth = AuthenticatedUser(identifier: "1")
         auth.user = user
         container.mainContext.insert(auth)
 
         return NavigationStack {
-            AddBikeView(bike: bike)
+            AddBikeView(mode: .ownBike,
+                        bike: bike)
                 .environment(client)
                 .modelContainer(container)
         }
