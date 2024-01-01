@@ -240,6 +240,51 @@ enum Me: APIEndpoint {
     }
 }
 
+enum Autocomplete: APIEndpoint {
+    case manufacturer(query: String)
+
+    var path: [String] {
+        switch self {
+        case .manufacturer(let query):
+            [api, "autocomplete"]
+        }
+    }
+
+    var method: HttpMethod {
+        .get
+    }
+
+    var authorized: Bool { false }
+
+    var requestModel: Encodable? {
+        nil
+    }
+
+    var responseModel: Decodable.Type {
+        switch self {
+        case .manufacturer(let query):
+            AutocompleteManufacturerContainerResponse.self
+        }
+    }
+
+    func request(for config: EndpointConfigurationProvider) -> URLRequest {
+        var url = config.host.appending(components: path)
+
+        if case let .manufacturer(query) = self {
+            url.append(queryItems: [
+                URLQueryItem(name: "per_page", value: "10"),
+                URLQueryItem(name: "categories", value: "frame_mnfg"),
+                URLQueryItem(name: "q", value: query),
+            ])
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = method.rawValue
+        return request
+    }
+
+}
+
 enum Manufacturers: APIEndpoint {
     case all
     case get(identifier: BikeId) // aka v3/manufacturers/{id}, also available with no parameter

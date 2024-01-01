@@ -56,6 +56,9 @@ enum WelcomeMessages: CaseIterable, Identifiable {
     }
 }
 
+/// NOTE: Network traffic for ASWebAuthenticationSession will run in the WebKitNetworking process!
+/// This means that Proxyman will not show app authentication in the "Bike Index" app. You will have to look for the
+/// host or across all networking in Proxyman!
 struct AuthView: View {
     @Environment(\.webAuthenticationSession) private var webAuthenticationSession
 

@@ -159,47 +159,6 @@ extension Client {
     }
 }
 
-// MARK: - Autocomplete Queries
-
-extension Client {
-    /// Queries https://bikeindex.org/api/autocomplete?per_page=10&categories=frame_mnfg&q=search_term
-    @available(*, deprecated, message: "Migrate to API for stateless and abstract network operations")
-    func query(manufacturer name: String,
-               pageSize: Int = 10,
-               context: ModelContext) {
-        Logger.api.debug("\(#function) enter")
-
-        var url = configuration.host.appendingPathComponent("api/autocomplete")
-        url.append(queryItems: [
-            URLQueryItem(name: "per_page", value: String(pageSize)),
-            URLQueryItem(name: "categories", value: "frame_mnfg"),
-            URLQueryItem(name: "q", value: name)
-        ])
-
-        let cancellable = session
-            .dataTaskPublisher(for: url)
-            .tryMap() { element -> Data in
-                guard let httpResponse = element.response as? HTTPURLResponse,
-                      httpResponse.statusCode == 200 else {
-                    Logger.api.debug("\(#function) response other than 200 from \(element.response)")
-                    Logger.api.debug("\(#function) response other than 200 with data \(element.data)")
-                    throw URLError(.badServerResponse)
-                }
-                return element.data
-            }
-            .decode(type: AutocompleteResponse.self, decoder: JSONDecoder())
-            .sink(receiveCompletion: { Logger.api.debug("\(#function) Received completion: \(String(describing: $0)).") },
-                  receiveValue: { response in
-
-                response.matches.forEach {
-                    context.insert($0)
-                }
-            })
-
-        cancellable.store(in: &subscriptions)
-    }
-}
-
 // MARK: Global Bike Search queries
 
 extension Client {

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import OSLog
 
 struct ManufacturerEntryView: View {
     @Environment(\.modelContext) private var modelContext
@@ -39,12 +40,30 @@ struct ManufacturerEntryView: View {
             TextField(text: $manufacturerSearchText) {
                 Text("Search for manufacturer")
             }
-            .onChange(of: manufacturerSearchText) { oldValue, newValue in
-                guard !newValue.isEmpty else {
+            .onChange(of: manufacturerSearchText) { oldQuery, newQuery in
+                guard !newQuery.isEmpty else {
                     return
                 }
 
-                client.query(manufacturer: newValue, context: modelContext)
+                Task {
+                    let fetch_manufacturer = await client.api.get(Autocomplete.manufacturer(query: newQuery))
+                    switch fetch_manufacturer {
+                    case .success(let success):
+                        guard let autocompleteResponse = success as? AutocompleteManufacturerContainerResponse else {
+                            Logger.views.debug("ManufacturerEntryView search failed to parse response from \(String(reflecting: success), privacy: .public)")
+                            return
+                        }
+
+                        for manufacturer in autocompleteResponse.matches {
+                            modelContext.insert(manufacturer.modelInstance())
+                        }
+
+                        Logger.views.debug("ManufacturerEntryView received response \(String(describing: autocompleteResponse), privacy: .public)")
+
+                    case .failure(let failure):
+                        Logger.views.error("ManufacturerEntryView search failed with \(String(reflecting: failure), privacy: .public)")
+                    }
+                }
             }
             if !manufacturerSearchText.isEmpty, manufacturers.count > 0 {
                 List {
