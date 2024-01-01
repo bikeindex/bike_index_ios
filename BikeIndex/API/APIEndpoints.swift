@@ -34,7 +34,7 @@ enum OAuth: APIEndpoint {
     /// Technically oauth/token does require authorization but the token is not available from ClientConfiguration.
     /// oauth/token _provides_ the access token to ClientConfiguration
     var authorized: Bool {
-        true
+        false
     }
 
     /// Normally this would have contents, but because authorization occurs first the request contents require stateful involvement from Client

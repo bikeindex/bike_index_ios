@@ -92,6 +92,9 @@ typealias QueryItemTuple = (name: String, value: String)
         KeychainSwift().delete(Keychain.oauthToken)
         accessToken = nil
         auth = nil
+        api = API(configuration: EndpointConfiguration(accessToken: "",
+                                                       host: configuration.host),
+                  session: session)
     }
 
     var userCanRegisterBikes: Bool {
