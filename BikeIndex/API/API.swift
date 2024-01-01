@@ -9,12 +9,6 @@ import Foundation
 import OSLog
 import URLEncodedForm
 
-/// Type to represent any API response model that is
-/// 1) deocded
-/// 2) stored to SwiftData
-//public typealias PersistentDecodable = PersistentModel & Decodable
-
-
 /// URL's appending(components: String...) varidic function cannot accept arrays (splatting) so use reduce instead
 extension URL {
     func appending(components: [String]) -> Self {
@@ -34,7 +28,6 @@ protocol APIEndpoint {
     /// Array of path components to-be concatenated to the URL
     var path: [String] { get }
 
-    ///
     var method: HttpMethod { get }
 
     /// Does this endpoint require authorization? True for yes, false for no / public

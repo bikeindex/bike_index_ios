@@ -60,13 +60,11 @@ extension Image {
 }
 
 struct AppIconPicker: View {
-    let columnLayout = Array(repeating: GridItem(), count: 2)
-
     @Binding var model: AlternateIconsModel
 
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: columnLayout) {
+            ProportionalLazyVGrid {
                 ForEach(AppIcon.allCases, id: \.id) { icon in
                     Button {
                         model.update(icon: icon)
@@ -88,10 +86,17 @@ struct AppIconPicker: View {
             }
             .padding()
         }
+        .toolbar(content: {
+            ToolbarItem(placement: .status) {
+                Text("Choose your own app icon")
+            }
+        })
         .navigationTitle("App Icon")
     }
 }
 
 #Preview {
-    AppIconPicker(model: .constant(AlternateIconsModel()))
+    NavigationStack {
+        AppIconPicker(model: .constant(AlternateIconsModel()))
+    }
 }

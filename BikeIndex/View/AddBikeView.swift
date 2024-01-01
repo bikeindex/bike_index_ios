@@ -17,11 +17,6 @@ struct AddBikeView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
-    /// Provide which mode this registration will use.
-    /// Modes are displayed on https://bikeindex.org/choose_registration
-    /// Specific modes will add fields for ``StolenRecord`` entry.
-    var mode: RegistrationPath
-
     // MARK: Shadow State
 
     // Shadow the serial number, manufacturer, and model to update the UI without unwrapping optionals
@@ -33,9 +28,9 @@ struct AddBikeView: View {
     /* Shadow the Bike.frameColors selection with local state to bridge the gap between Binding<FrameColor>
      * Picker(selection:) changes and updating the Bike [FrameColor] array.
      */
-    @State var colorPrimary: FrameColor = .black
-    @State var colorSecondary: FrameColor = .black
-    @State var colorTertiary: FrameColor = .black
+    @State var colorPrimary = FrameColor.defaultColor
+    @State var colorSecondary = FrameColor.defaultColor
+    @State var colorTertiary = FrameColor.defaultColor
 
     /// Shadow over Bike cycleType in case there is a non-default value
     @State var traditionalBicycle = true
@@ -50,8 +45,6 @@ struct AddBikeView: View {
 
     /// Primary model to mutate and persist
     @State var bike = Bike()
-    /// Model **only for** specific ``RegistrationPath`` modes.
-    @State var stolen = StolenRecord(phone: "", city: "")
     /// Access the known users to perform autocomplete on the owner's email
     @Query var authenticatedUsers: [AuthenticatedUser]
 
@@ -218,15 +211,11 @@ struct AddBikeView: View {
                 Text("The color of the frame and fork—not the wheels, cranks, or anything else. You can put a more detailed description in paint description (once you've registered), this is to get a general color to make searching easier")
             }
 
-            // MARK: Stolen Form
-            if mode.showStolenRecord {
-                StolenRecordEntryView(record: $stolen)
-            }
-
             Section(header: Text("Owner Email")) {
                 TextField(text: $ownerEmail) {
                     Text("Who should be contacted?")
                 }
+                .textInputAutocapitalization(.never)
             }
 
             Section {
@@ -270,7 +259,7 @@ struct AddBikeView: View {
         Logger.model.debug("\(#function) Registering w/ owner email \(String(describing: ownerEmail))")
 
         let bikeRegistration = BikeRegistration(bike: bike,
-                                                stolen: stolen,
+                                                stolen: nil,
                                                 ownerEmail: ownerEmail)
         let endpoint = Bikes.postBikes(form: bikeRegistration)
         let response = await client.api.post(endpoint)
@@ -314,8 +303,7 @@ struct AddBikeView: View {
         container.mainContext.insert(auth)
 
         return NavigationStack {
-            AddBikeView(mode: .ownBike,
-                        bike: bike)
+            AddBikeView(bike: bike)
                 .environment(client)
                 .modelContainer(container)
         }
