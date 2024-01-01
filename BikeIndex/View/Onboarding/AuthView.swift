@@ -34,26 +34,29 @@ struct AuthView: View {
     var body: some View {
         NavigationStack {
             WelcomeView()
-            Button(action: {
-                Task {
-                    guard let authorizeUrl = OAuth.authorize(queryItems: client.configuration.authorizeQueryItems).request(for: client.api.configuration).url else {
-                        Logger.api.debug("Failed to construct authorization request")
-                        return
-                    }
-                    let redirectUri = client.configuration.redirectUri.trimmingCharacters(in: .alphanumerics.inverted)
-                    let urlWithToken = try await webAuthenticationSession.authenticate(
-                        using: authorizeUrl,
-                        callbackURLScheme: redirectUri,
-                        preferredBrowserSession: .shared)
-                    await client.accept(authCallback: urlWithToken)
-                }
-            }, label: {
-                Label("Sign in and get started", systemImage: "person.crop.circle.dashed")
-                    .font(.title2)
-
-            })
-#if DEBUG
             .toolbar {
+                ToolbarItem(placement: .bottomBar) {
+                    Button(action: {
+                        Task {
+                            guard let authorizeUrl = OAuth.authorize(queryItems: client.configuration.authorizeQueryItems).request(for: client.api.configuration).url else {
+                                Logger.api.debug("Failed to construct authorization request")
+                                return
+                            }
+                            let redirectUri = client.configuration.redirectUri.trimmingCharacters(in: .alphanumerics.inverted)
+                            let urlWithToken = try await webAuthenticationSession.authenticate(
+                                using: authorizeUrl,
+                                callbackURLScheme: redirectUri,
+                                preferredBrowserSession: .shared)
+                            await client.accept(authCallback: urlWithToken)
+                        }
+                    }, label: {
+                        Label("Sign in and get started", systemImage: "person.crop.circle.dashed")
+                            .font(.title3)
+                            .labelStyle(.titleAndIcon)
+                    })
+                    .buttonStyle(.borderedProminent)
+                }
+#if DEBUG
                 ToolbarItem(placement: .topBarLeading) {
                     NavigationLink {
                         SettingsView()
@@ -61,8 +64,8 @@ struct AuthView: View {
                         Label("Settings", systemImage: "gear")
                     }
                 }
-            }
 #endif
+            }
             .navigationTitle("Welcome to Bike Index")
             .navigationBarTitleDisplayMode(.inline)
         }

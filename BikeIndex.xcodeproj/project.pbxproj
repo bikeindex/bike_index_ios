@@ -38,6 +38,7 @@
 		0494FD8C2B4250F70053C54F /* MainToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0494FD8B2B4250F70053C54F /* MainToolbar.swift */; };
 		04B660082B4309780055A056 /* AutocompleteManufacturerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B660072B4309780055A056 /* AutocompleteManufacturerResponse.swift */; };
 		04B6600B2B43169E0055A056 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B6600A2B43169E0055A056 /* WelcomeView.swift */; };
+		04B660342B4338A50055A056 /* BetterSafariView in Frameworks */ = {isa = PBXBuildFile; productRef = 04B660332B4338A50055A056 /* BetterSafariView */; };
 		04EA110E2B2502660024CDDD /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA110C2B2502660024CDDD /* API.swift */; };
 		04EA110F2B2502660024CDDD /* APIEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA110D2B2502660024CDDD /* APIEndpoints.swift */; };
 		04EA11142B2502AF0024CDDD /* AuthenticatedUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA11122B2502AF0024CDDD /* AuthenticatedUserResponse.swift */; };
@@ -170,6 +171,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */,
+				04B660342B4338A50055A056 /* BetterSafariView in Frameworks */,
 				04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -396,6 +398,7 @@
 			packageProductDependencies = (
 				04F4B95D2B0990CE009442B5 /* KeychainSwift */,
 				04EA11212B2504340024CDDD /* URLEncodedForm */,
+				04B660332B4338A50055A056 /* BetterSafariView */,
 			);
 			productName = BikeIndex;
 			productReference = 04F4B8F72B098ADB009442B5 /* BikeIndex.app */;
@@ -472,6 +475,7 @@
 			packageReferences = (
 				04F4B95C2B0990CE009442B5 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				04EA11202B2504340024CDDD /* XCRemoteSwiftPackageReference "URLEncodedForm" */,
+				04B660322B4338A50055A056 /* XCRemoteSwiftPackageReference "BetterSafariView" */,
 			);
 			productRefGroup = 04F4B8F82B098ADB009442B5 /* Products */;
 			projectDirPath = "";
@@ -1089,6 +1093,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		04B660322B4338A50055A056 /* XCRemoteSwiftPackageReference "BetterSafariView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stleamist/BetterSafariView.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.4.2;
+			};
+		};
 		04EA11202B2504340024CDDD /* XCRemoteSwiftPackageReference "URLEncodedForm" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/interactord/URLEncodedForm.git";
@@ -1108,6 +1120,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		04B660332B4338A50055A056 /* BetterSafariView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04B660322B4338A50055A056 /* XCRemoteSwiftPackageReference "BetterSafariView" */;
+			productName = BetterSafariView;
+		};
 		04EA11212B2504340024CDDD /* URLEncodedForm */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 04EA11202B2504340024CDDD /* XCRemoteSwiftPackageReference "URLEncodedForm" */;
