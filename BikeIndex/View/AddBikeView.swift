@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import OSLog
+import BetterSafariView
 
 /// NOTE: Adopt @Focus State https://developer.apple.com/documentation/swiftui/focusstate
 /// NOTE: Wrap this in a pre-menu to select
@@ -40,6 +41,11 @@ struct AddBikeView: View {
     // MARK: Validation State
 
     @State var validationModel = AddBikeOutput()
+
+    // MARK:  UI State
+
+    /// Used for serial\_page link
+    @State var link: URL?
 
     // MARK: Authoritative State
 
@@ -91,6 +97,10 @@ struct AddBikeView: View {
                 Text("Serial Number")
             } footer: {
                 TextLink(base: client.configuration.host, link: .serials)
+                    .environment(\.openURL, OpenURLAction { URL in
+                        link = URL
+                        return .handled
+                    })
             }
 
             if traditionalBicycle {
@@ -247,6 +257,10 @@ struct AddBikeView: View {
                 ownerEmail = user.email
             }
         }
+        .safariView(item: $link) { url in
+            SafariView(url: url)
+        }
+
     }
 
     /// Marshall the Bike model to a Postable intermediary, write that intermediary to the API client and discard Bike model

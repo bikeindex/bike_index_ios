@@ -135,9 +135,6 @@ struct WelcomeView: View {
                     .background(colorScheme == .light ? .black : .secondary)
                     .padding(.horizontal, 8)
                 }
-                .fullScreenCover(item: $selectedUseCase) { useCase in
-                    SafariView(url: useCase.action(on: client.configuration.host))
-                }
                 Spacer()
                 ForEach(WelcomeMessages.allCases) { message in
                     WelcomeMessageView(message: message)
@@ -145,6 +142,9 @@ struct WelcomeView: View {
                 }
                 Spacer()
             }
+        }
+        .safariView(item: $selectedUseCase) { useCase in
+            SafariView(url: useCase.action(on: client.configuration.host))
         }
         .toolbarTitleDisplayMode(.inline)
         .toolbarColorScheme(.dark, for: .navigationBar)
