@@ -42,25 +42,26 @@ struct SettingsView: View {
 
             NavigationLink {
                 DebugMenu()
+                    .environment(client)
             } label: {
                 Label("Debug menu", systemImage: "ladybug.circle")
             }
 
-
             Section {
-                AcknowledgementsView()
-            } header: {
-                Text("Acknowledgements")
+                NavigationLink {
+                    AcknowledgementsListView()
+                } label: {
+                    Label("Acknowledgements", systemImage: "character.book.closed")
+                }
             }
 
-            Section {
-                EmptyView()
-            } footer: {
+            footer: {
                 HStack {
                     Spacer()
                     Text("Made with 💝 in Pittsburgh, PA")
                     Spacer()
                 }
+                .padding(.top)
             }
 
         }

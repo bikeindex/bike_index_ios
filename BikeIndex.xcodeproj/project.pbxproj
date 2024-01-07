@@ -19,9 +19,11 @@
 		0430333D2B41402800FD126F /* ProportionalLazyVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0430333C2B41402800FD126F /* ProportionalLazyVGrid.swift */; };
 		043C90B82B25222A00F13559 /* BikeRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA111C2B2503C40024CDDD /* BikeRegistration.swift */; };
 		043C90B92B25223400F13559 /* Manufacturer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B94E2B098BB1009442B5 /* Manufacturer.swift */; };
-		0452C6B02B4A608E00AD572C /* AcknowledgementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0452C6AF2B4A608E00AD572C /* AcknowledgementsView.swift */; };
+		0452C6B02B4A608E00AD572C /* AcknowledgementsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0452C6AF2B4A608E00AD572C /* AcknowledgementsListView.swift */; };
 		0452C6B32B4A630500AD572C /* DebugMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0452C6B22B4A630500AD572C /* DebugMenu.swift */; };
 		0452C6B62B4A64D800AD572C /* LicenseEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0452C6B52B4A64D800AD572C /* LicenseEnum.swift */; };
+		0452C6BA2B4A72FD00AD572C /* AcknowledgementPackageDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0452C6B92B4A72FD00AD572C /* AcknowledgementPackageDetailView.swift */; };
+		0452C6BC2B4A7DFE00AD572C /* AcknowledgementPackage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0452C6BB2B4A7DFE00AD572C /* AcknowledgementPackage.swift */; };
 		046B0A372B251E58006519A7 /* AppIconPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A352B251E58006519A7 /* AppIconPicker.swift */; };
 		046B0A382B251E58006519A7 /* TextLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A362B251E58006519A7 /* TextLink.swift */; };
 		046B0A3A2B251E67006519A7 /* AlternateIconsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A392B251E67006519A7 /* AlternateIconsModel.swift */; };
@@ -114,9 +116,11 @@
 		043033352B40C34800FD126F /* ContentButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentButtonView.swift; sourceTree = "<group>"; };
 		043033372B41367100FD126F /* MainContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainContent.swift; sourceTree = "<group>"; };
 		0430333C2B41402800FD126F /* ProportionalLazyVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProportionalLazyVGrid.swift; sourceTree = "<group>"; };
-		0452C6AF2B4A608E00AD572C /* AcknowledgementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementsView.swift; sourceTree = "<group>"; };
+		0452C6AF2B4A608E00AD572C /* AcknowledgementsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementsListView.swift; sourceTree = "<group>"; };
 		0452C6B22B4A630500AD572C /* DebugMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMenu.swift; sourceTree = "<group>"; };
 		0452C6B52B4A64D800AD572C /* LicenseEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseEnum.swift; sourceTree = "<group>"; };
+		0452C6B92B4A72FD00AD572C /* AcknowledgementPackageDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementPackageDetailView.swift; sourceTree = "<group>"; };
+		0452C6BB2B4A7DFE00AD572C /* AcknowledgementPackage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementPackage.swift; sourceTree = "<group>"; };
 		046B0A352B251E58006519A7 /* AppIconPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppIconPicker.swift; sourceTree = "<group>"; };
 		046B0A362B251E58006519A7 /* TextLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextLink.swift; sourceTree = "<group>"; };
 		046B0A392B251E67006519A7 /* AlternateIconsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlternateIconsModel.swift; sourceTree = "<group>"; };
@@ -223,7 +227,8 @@
 			children = (
 				04F4B9402B098BAA009442B5 /* SettingsView.swift */,
 				0452C6B22B4A630500AD572C /* DebugMenu.swift */,
-				0452C6AF2B4A608E00AD572C /* AcknowledgementsView.swift */,
+				0452C6AF2B4A608E00AD572C /* AcknowledgementsListView.swift */,
+				0452C6B92B4A72FD00AD572C /* AcknowledgementPackageDetailView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -232,6 +237,7 @@
 			isa = PBXGroup;
 			children = (
 				0452C6B52B4A64D800AD572C /* LicenseEnum.swift */,
+				0452C6BB2B4A7DFE00AD572C /* AcknowledgementPackage.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -568,13 +574,15 @@
 				046B0A382B251E58006519A7 /* TextLink.swift in Sources */,
 				0490A5EF2B26972600C4EC1E /* BikeResponse.swift in Sources */,
 				04F4B9522B098BB1009442B5 /* User.swift in Sources */,
-				0452C6B02B4A608E00AD572C /* AcknowledgementsView.swift in Sources */,
+				0452C6BC2B4A7DFE00AD572C /* AcknowledgementPackage.swift in Sources */,
+				0452C6B02B4A608E00AD572C /* AcknowledgementsListView.swift in Sources */,
 				0452C6B32B4A630500AD572C /* DebugMenu.swift in Sources */,
 				04F4B9512B098BB1009442B5 /* FrameColor.swift in Sources */,
 				04F4B9452B098BAA009442B5 /* SearchBikesView.swift in Sources */,
 				043033282B3E285F00FD126F /* AddStolenRecordView.swift in Sources */,
 				043033382B41367100FD126F /* MainContent.swift in Sources */,
 				046B0A3A2B251E67006519A7 /* AlternateIconsModel.swift in Sources */,
+				0452C6BA2B4A72FD00AD572C /* AcknowledgementPackageDetailView.swift in Sources */,
 				0494FD8C2B4250F70053C54F /* MainToolbar.swift in Sources */,
 				04EA110F2B2502660024CDDD /* APIEndpoints.swift in Sources */,
 				04EA111D2B2503C40024CDDD /* BikeRegistration.swift in Sources */,
