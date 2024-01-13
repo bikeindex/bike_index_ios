@@ -14,7 +14,7 @@ struct BikeDetailView: View {
     @Environment(Client.self) var client
 
     var bike: Bike
-    @State var url: URL?
+    @State private var url: URL?
 
     var body: some View {
         VStack {
@@ -40,9 +40,28 @@ struct BikeDetailView: View {
     }
 }
 
+#Preview {
+    do {
+        let client = try Client()
+        let filename = "SingleBikeResponse_mock"
+        let container: MultipleBikeResponseContainer? = try PreviewData.load(filename: filename)
+        if let container, let responseBike = container.bikes.first {
+            let bike = responseBike.modelInstance()
+            return NavigationStack {
+                BikeDetailView(bike: bike)
+                    .environment(client)
+            }
+        } else {
+            return Text("Failed to load preview data for \(filename)")
+        }
+    } catch {
+        return Text(error.localizedDescription)
+    }
+}
+
 
 extension Bike {
-    // MARK: - URLs for editing
+    // MARK: - Convenience URLs for editing
 
     @Transient var editUrl: URL? {
         url.appending(path: "edit/bike_details")
