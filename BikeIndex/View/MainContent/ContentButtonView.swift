@@ -41,9 +41,11 @@ struct ContentButtonView: View {
 enum ContentButton: String, Identifiable, Codable, CaseIterable {
     var id: String { self.rawValue }
 
+    /// This is my bike
     case registerBike
-//    case recoverBike
+    /// I lost my bike
     case alertBike
+    /// I found a bike
     case respondBike
 
     var icon: ActionIconResource {
@@ -62,7 +64,7 @@ enum ContentButton: String, Identifiable, Codable, CaseIterable {
         case .registerBike:
             return "Register a bike"
         case .alertBike:
-            return "I lost my bike!"
+            return "Register a stolen bike"
         case .respondBike:
             return "I found a bike"
         }
