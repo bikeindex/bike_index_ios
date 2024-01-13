@@ -43,7 +43,7 @@
 		0494FD8C2B4250F70053C54F /* MainToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0494FD8B2B4250F70053C54F /* MainToolbar.swift */; };
 		04B660082B4309780055A056 /* AutocompleteManufacturerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B660072B4309780055A056 /* AutocompleteManufacturerResponse.swift */; };
 		04B6600B2B43169E0055A056 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B6600A2B43169E0055A056 /* WelcomeView.swift */; };
-		04B660342B4338A50055A056 /* BetterSafariView in Frameworks */ = {isa = PBXBuildFile; productRef = 04B660332B4338A50055A056 /* BetterSafariView */; };
+		04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 04E1343D2B4B718200CE88DD /* WebViewKit */; };
 		04EA110E2B2502660024CDDD /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA110C2B2502660024CDDD /* API.swift */; };
 		04EA110F2B2502660024CDDD /* APIEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA110D2B2502660024CDDD /* APIEndpoints.swift */; };
 		04EA11142B2502AF0024CDDD /* AuthenticatedUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA11122B2502AF0024CDDD /* AuthenticatedUserResponse.swift */; };
@@ -52,7 +52,7 @@
 		04EA11192B25039F0024CDDD /* BikeIndexIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA11182B25039F0024CDDD /* BikeIndexIdentifiable.swift */; };
 		04EA111B2B2503B40024CDDD /* BikeRegisteredQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA111A2B2503B40024CDDD /* BikeRegisteredQuery.swift */; };
 		04EA111D2B2503C40024CDDD /* BikeRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA111C2B2503C40024CDDD /* BikeRegistration.swift */; };
-		04EA111F2B2503F40024CDDD /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA111E2B2503F40024CDDD /* ActionButton.swift */; };
+		04EA111F2B2503F40024CDDD /* ActionIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA111E2B2503F40024CDDD /* ActionIcon.swift */; };
 		04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */ = {isa = PBXBuildFile; productRef = 04EA11212B2504340024CDDD /* URLEncodedForm */; };
 		04EA11272B2516BA0024CDDD /* OAuthToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA11132B2502AF0024CDDD /* OAuthToken.swift */; };
 		04EA11282B2516CE0024CDDD /* AuthenticatedUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA11122B2502AF0024CDDD /* AuthenticatedUserResponse.swift */; };
@@ -60,6 +60,8 @@
 		04EA112A2B2517260024CDDD /* FrameColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B94B2B098BB1009442B5 /* FrameColor.swift */; };
 		04EA112B2B25172A0024CDDD /* BicycleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B94F2B098BB1009442B5 /* BicycleType.swift */; };
 		04EA112C2B25174E0024CDDD /* BikeIndexIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA11182B25039F0024CDDD /* BikeIndexIdentifiable.swift */; };
+		04F2C63A2B4B00CD009E0A37 /* BikeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F2C6392B4B00CD009E0A37 /* BikeDetailView.swift */; };
+		04F2C63C2B4B0127009E0A37 /* ContentBikeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F2C63B2B4B0127009E0A37 /* ContentBikeButton.swift */; };
 		04F4B9012B098ADE009442B5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04F4B9002B098ADE009442B5 /* Assets.xcassets */; };
 		04F4B9052B098ADE009442B5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04F4B9042B098ADE009442B5 /* Preview Assets.xcassets */; };
 		04F4B9192B098ADE009442B5 /* BikeIndexUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B9182B098ADE009442B5 /* BikeIndexUITests.swift */; };
@@ -141,7 +143,9 @@
 		04EA11182B25039F0024CDDD /* BikeIndexIdentifiable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BikeIndexIdentifiable.swift; sourceTree = "<group>"; };
 		04EA111A2B2503B40024CDDD /* BikeRegisteredQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BikeRegisteredQuery.swift; sourceTree = "<group>"; };
 		04EA111C2B2503C40024CDDD /* BikeRegistration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BikeRegistration.swift; sourceTree = "<group>"; };
-		04EA111E2B2503F40024CDDD /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
+		04EA111E2B2503F40024CDDD /* ActionIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionIcon.swift; sourceTree = "<group>"; };
+		04F2C6392B4B00CD009E0A37 /* BikeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeDetailView.swift; sourceTree = "<group>"; };
+		04F2C63B2B4B0127009E0A37 /* ContentBikeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentBikeButton.swift; sourceTree = "<group>"; };
 		04F4B8F72B098ADB009442B5 /* BikeIndex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BikeIndex.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04F4B9002B098ADE009442B5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04F4B9022B098ADE009442B5 /* BikeIndex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BikeIndex.entitlements; sourceTree = "<group>"; };
@@ -181,8 +185,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */,
-				04B660342B4338A50055A056 /* BetterSafariView in Frameworks */,
 				04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */,
+				04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,7 +220,9 @@
 			isa = PBXGroup;
 			children = (
 				04F4B9412B098BAA009442B5 /* ContentView.swift */,
+				04EA111E2B2503F40024CDDD /* ActionIcon.swift */,
 				043033352B40C34800FD126F /* ContentButtonView.swift */,
+				04F2C63B2B4B0127009E0A37 /* ContentBikeButton.swift */,
 				0494FD8B2B4250F70053C54F /* MainToolbar.swift */,
 			);
 			path = MainContent;
@@ -226,6 +232,7 @@
 			isa = PBXGroup;
 			children = (
 				04F4B9402B098BAA009442B5 /* SettingsView.swift */,
+				046B0A352B251E58006519A7 /* AppIconPicker.swift */,
 				0452C6B22B4A630500AD572C /* DebugMenu.swift */,
 				0452C6AF2B4A608E00AD572C /* AcknowledgementsListView.swift */,
 				0452C6B92B4A72FD00AD572C /* AcknowledgementPackageDetailView.swift */,
@@ -275,6 +282,23 @@
 				04EA11132B2502AF0024CDDD /* OAuthToken.swift */,
 			);
 			path = Authentication;
+			sourceTree = "<group>";
+		};
+		04F2C6372B4B0079009E0A37 /* Registering */ = {
+			isa = PBXGroup;
+			children = (
+				04F4B93A2B098BA9009442B5 /* AddBikeView.swift */,
+				04F4B93E2B098BAA009442B5 /* ManufacturerEntryView.swift */,
+			);
+			path = Registering;
+			sourceTree = "<group>";
+		};
+		04F2C6382B4B00B0009E0A37 /* BikeDetail */ = {
+			isa = PBXGroup;
+			children = (
+				04F2C6392B4B00CD009E0A37 /* BikeDetailView.swift */,
+			);
+			path = BikeDetail;
 			sourceTree = "<group>";
 		};
 		04F4B8EE2B098ADB009442B5 = {
@@ -374,13 +398,11 @@
 		04F4B9362B098B81009442B5 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				046B0A352B251E58006519A7 /* AppIconPicker.swift */,
+				04F2C6382B4B00B0009E0A37 /* BikeDetail */,
 				046B0A362B251E58006519A7 /* TextLink.swift */,
-				04EA111E2B2503F40024CDDD /* ActionButton.swift */,
-				04F4B93A2B098BA9009442B5 /* AddBikeView.swift */,
+				04F2C6372B4B0079009E0A37 /* Registering */,
 				04B660092B4316970055A056 /* Onboarding */,
 				043033342B40C32600FD126F /* MainContent */,
-				04F4B93E2B098BAA009442B5 /* ManufacturerEntryView.swift */,
 				04F4B93D2B098BA9009442B5 /* SearchBikesView.swift */,
 				0452C6B12B4A62FE00AD572C /* Settings */,
 				04F4B93C2B098BA9009442B5 /* VerticalPicker.swift */,
@@ -429,7 +451,7 @@
 			packageProductDependencies = (
 				04F4B95D2B0990CE009442B5 /* KeychainSwift */,
 				04EA11212B2504340024CDDD /* URLEncodedForm */,
-				04B660332B4338A50055A056 /* BetterSafariView */,
+				04E1343D2B4B718200CE88DD /* WebViewKit */,
 			);
 			productName = BikeIndex;
 			productReference = 04F4B8F72B098ADB009442B5 /* BikeIndex.app */;
@@ -506,7 +528,7 @@
 			packageReferences = (
 				04F4B95C2B0990CE009442B5 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				04EA11202B2504340024CDDD /* XCRemoteSwiftPackageReference "URLEncodedForm" */,
-				04B660322B4338A50055A056 /* XCRemoteSwiftPackageReference "BetterSafariView" */,
+				04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */,
 			);
 			productRefGroup = 04F4B8F82B098ADB009442B5 /* Products */;
 			projectDirPath = "";
@@ -565,6 +587,7 @@
 				04F4B9422B098BAA009442B5 /* AddBikeView.swift in Sources */,
 				0430332F2B3E64C300FD126F /* US_States.swift in Sources */,
 				0430332A2B3E5EEB00FD126F /* Countries.swift in Sources */,
+				04F2C63A2B4B00CD009E0A37 /* BikeDetailView.swift in Sources */,
 				0490A5F12B269F7800C4EC1E /* AddBikeModel.swift in Sources */,
 				04F4B9392B098B9C009442B5 /* Client.swift in Sources */,
 				043033362B40C34800FD126F /* ContentButtonView.swift in Sources */,
@@ -585,6 +608,7 @@
 				0452C6BA2B4A72FD00AD572C /* AcknowledgementPackageDetailView.swift in Sources */,
 				0494FD8C2B4250F70053C54F /* MainToolbar.swift in Sources */,
 				04EA110F2B2502660024CDDD /* APIEndpoints.swift in Sources */,
+				04F2C63C2B4B0127009E0A37 /* ContentBikeButton.swift in Sources */,
 				04EA111D2B2503C40024CDDD /* BikeRegistration.swift in Sources */,
 				0452C6B62B4A64D800AD572C /* LicenseEnum.swift in Sources */,
 				04F4B9462B098BAA009442B5 /* ManufacturerEntryView.swift in Sources */,
@@ -597,7 +621,7 @@
 				04EA110E2B2502660024CDDD /* API.swift in Sources */,
 				04F4B9552B098BB1009442B5 /* BicycleType.swift in Sources */,
 				04EA11142B2502AF0024CDDD /* AuthenticatedUserResponse.swift in Sources */,
-				04EA111F2B2503F40024CDDD /* ActionButton.swift in Sources */,
+				04EA111F2B2503F40024CDDD /* ActionIcon.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -732,6 +756,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"BikeIndex/Preview Content\"";
+				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BikeIndex/Info.plist;
@@ -931,10 +956,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"BikeIndex/Preview Content\"";
+				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BikeIndex/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Bike Index";
+				INFOPLIST_KEY_CFBundleDisplayName = "Bike Index dev";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -969,6 +995,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"BikeIndex/Preview Content\"";
+				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BikeIndex/Info.plist;
@@ -1129,12 +1156,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		04B660322B4338A50055A056 /* XCRemoteSwiftPackageReference "BetterSafariView" */ = {
+		04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/stleamist/BetterSafariView.git";
+			repositoryURL = "https://github.com/danielsaidi/WebViewKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.4.2;
+				minimumVersion = 0.3.0;
 			};
 		};
 		04EA11202B2504340024CDDD /* XCRemoteSwiftPackageReference "URLEncodedForm" */ = {
@@ -1156,10 +1183,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		04B660332B4338A50055A056 /* BetterSafariView */ = {
+		04E1343D2B4B718200CE88DD /* WebViewKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 04B660322B4338A50055A056 /* XCRemoteSwiftPackageReference "BetterSafariView" */;
-			productName = BetterSafariView;
+			package = 04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */;
+			productName = WebViewKit;
 		};
 		04EA11212B2504340024CDDD /* URLEncodedForm */ = {
 			isa = XCSwiftPackageProductDependency;

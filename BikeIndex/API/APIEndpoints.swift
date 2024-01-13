@@ -188,7 +188,7 @@ enum Bikes: APIEndpoint {
     var responseModel: Decodable.Type {
         switch self {
         case .postBikes:
-            return BikeResponseContainer.self
+            return SingleBikeResponseContainer.self
         default:
             return EmptyResponse.self
         }
@@ -230,7 +230,7 @@ enum Me: APIEndpoint {
         case .self:
             return AuthenticatedUserResponse.self
         case .bikes:
-            return EmptyResponse.self
+            return MultipleBikeResponseContainer.self
         }
     }
 
@@ -245,7 +245,7 @@ enum Autocomplete: APIEndpoint {
 
     var path: [String] {
         switch self {
-        case .manufacturer(let query):
+        case .manufacturer:
             [api, "autocomplete"]
         }
     }
@@ -262,7 +262,7 @@ enum Autocomplete: APIEndpoint {
 
     var responseModel: Decodable.Type {
         switch self {
-        case .manufacturer(let query):
+        case .manufacturer:
             AutocompleteManufacturerContainerResponse.self
         }
     }

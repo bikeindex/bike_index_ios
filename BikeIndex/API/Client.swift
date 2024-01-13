@@ -106,7 +106,7 @@ typealias QueryItemTuple = (name: String, value: String)
 
 extension Client {
 
-    /// Stateful function to receive results of a ASWebAuthenticationSession.
+    /// Stateful function to receive results of an authentication result.
     /// - Parameter authCallback: The "redirect URI" received from the OAuth provider. This should contain relevant
     /// query parameters to continue with a valid session. This *must* contain a `code` query paramter which will be
     /// forwarded to the ``OAuth.token`` endpoint.

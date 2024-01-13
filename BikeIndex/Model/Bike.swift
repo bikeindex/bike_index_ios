@@ -58,6 +58,10 @@ import MapKit
     var apiUrl: URL?
     var publicImages: [String]
 
+    @Transient var editUrl: URL? {
+        url.appending(path: "edit/bike_details")
+    }
+
     struct Constants {
         /// The range of supported years for Bike models
         static let yearRange = 1900..<2100

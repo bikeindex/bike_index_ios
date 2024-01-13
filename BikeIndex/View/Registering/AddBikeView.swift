@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 import OSLog
-import BetterSafariView
+import WebViewKit
 
 /// NOTE: Adopt @Focus State https://developer.apple.com/documentation/swiftui/focusstate
 /// NOTE: Wrap this in a pre-menu to select
@@ -257,9 +257,12 @@ struct AddBikeView: View {
                 ownerEmail = user.email
             }
         }
-        .safariView(item: $link) { url in
-            SafariView(url: url)
+        .navigationDestination(item: $link) { url in
+            WebView(url: url)
         }
+//        .safariView(item: $link) { url in
+//            SafariView(url: url)
+//        }
 
     }
 
@@ -279,12 +282,12 @@ struct AddBikeView: View {
         let response = await client.api.post(endpoint)
         switch response {
         case .success(let success):
-            guard let registrationResponseSource = success as? BikeResponseContainer else {
+            guard let registrationResponseSource = success as? SingleBikeResponseContainer else {
                 Logger.views.error("Failed to parse bike registtration successful response from \(String(reflecting: success))")
                 return
             }
 
-            let bikeModel = registrationResponseSource.modelInstance()
+            let bikeModel = registrationResponseSource.bike.modelInstance()
             modelContext.insert(bikeModel)
             self.validationModel = AddBikeOutput(show: true, actions: {
                 dismiss()

@@ -35,7 +35,6 @@ struct ContentButtonView: View {
                 Text(item.title)
             }
         })
-
     }
 }
 

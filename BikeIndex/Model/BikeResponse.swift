@@ -8,17 +8,17 @@
 import Foundation
 import MapKit
 
-struct BikeResponseContainer: ResponseModelInstantiable {
-    typealias ModelInstance = Bike
-
+struct SingleBikeResponseContainer: Decodable {
     var bike: BikeResponse
     var claim_url: URL?
-
-    func modelInstance() -> ModelInstance {
-        bike.modelInstance()
-    }
 }
 
+struct MultipleBikeResponseContainer: Decodable {
+    var bikes: [BikeResponse]
+}
+
+
+// MARK: -
 
 struct BikeResponse: ResponseModelInstantiable {
 
@@ -43,7 +43,7 @@ struct BikeResponse: ResponseModelInstantiable {
     let thumb: URL?
     let url: URL
     let api_url: URL?
-    let public_images: [String]
+    let public_images: [String]?
 
     // MARK: - ResponseModelInstantiable for BikeResponse
 
@@ -90,6 +90,6 @@ struct BikeResponse: ResponseModelInstantiable {
                     dateStolen: dateStolen,
                     url: url,
                     apiUrl: api_url,
-                    publicImages: public_images)
+                    publicImages: public_images ?? [])
     }
 }

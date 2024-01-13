@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import BetterSafariView
 
 struct AcknowledgementPackageDetailView: View {
     let package: AcknowledgementPackage

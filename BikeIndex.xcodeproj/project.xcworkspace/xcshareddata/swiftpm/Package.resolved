@@ -1,15 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "bettersafariview",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/stleamist/BetterSafariView.git",
-      "state" : {
-        "revision" : "884533749e55949b2566030948c6fdbe2873ed0c",
-        "version" : "2.4.2"
-      }
-    },
-    {
       "identity" : "keychain-swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/evgenyneu/keychain-swift.git",
@@ -25,6 +16,15 @@
       "state" : {
         "revision" : "5f51aa13d41b26fc8833cd040df3a3101768bb64",
         "version" : "1.0.8"
+      }
+    },
+    {
+      "identity" : "webviewkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/danielsaidi/WebViewKit.git",
+      "state" : {
+        "revision" : "a6be2a9f2936f6e2f078fcc764bb005d683bc027",
+        "version" : "0.3.0"
       }
     }
   ],

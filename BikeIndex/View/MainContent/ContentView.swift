@@ -29,6 +29,9 @@ struct ContentView: View {
                     ForEach(ContentButton.allCases, id: \.id) { menuItem in
                         ContentButtonView(path: $path, item: menuItem)
                     }
+                    ForEach(bikes) { bike in
+                        ContentBikeButtonView(path: $path, bike: bike)
+                    }
                 }
                 .padding()
             }
@@ -36,7 +39,6 @@ struct ContentView: View {
                 MainToolbar(path: $path)
             }
             .navigationTitle("Bike Index")
-            .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: MainContent.self) { selection in
                 switch selection {
                 case .settings:
@@ -49,9 +51,15 @@ struct ContentView: View {
                     Text("Respond to a missing bike")
                 }
             }
+            .navigationDestination(for: Bike.self) { bike in
+                BikeDetailView(bike: bike)
+            }
         }
        .task {
-            await contentModel.fetchProfile(client: client, modelContext: modelContext)
+           await contentModel.fetchProfile(client: client,
+                                           modelContext: modelContext)
+           await contentModel.fetchBikes(client: client,
+                                         modelContext: modelContext)
         }
     }
 }
@@ -69,7 +77,7 @@ final class ContentModel {
         switch fetch_v3_me {
         case .success(let success):
             guard let myProfileSource = success as? AuthenticatedUserResponse else {
-                Logger.views.debug("ContentController.fetchProfile failed to parse profile from \(String(reflecting: success), privacy: .public)")
+                Logger.model.debug("ContentController.fetchProfile failed to parse profile from \(String(reflecting: success), privacy: .public)")
                 return
             }
 
@@ -79,7 +87,32 @@ final class ContentModel {
             modelContext.insert(myProfile)
 
         case .failure(let failure):
-            Logger.views.error("\(type(of: self)).\(#function) - Failed with \(failure)")
+            Logger.model.error("\(type(of: self)).\(#function) - Failed with \(failure)")
+        }
+    }
+
+    @MainActor
+    func fetchBikes(client: Client, modelContext: ModelContext) async {
+        guard client.authenticated else {
+            return
+        }
+
+        let fetchMyBikes = await client.api.get(Me.bikes)
+
+        switch fetchMyBikes {
+        case .success(let success):
+            guard let myBikesSource = success as? MultipleBikeResponseContainer else {
+                Logger.model.debug("ContentController.fetchBikes failed to parse bikes from \(String(reflecting: success), privacy: .public)")
+                return
+            }
+
+            for bike in myBikesSource.bikes {
+                let model = bike.modelInstance()
+                modelContext.insert(model)
+            }
+
+        case .failure(let failure):
+            Logger.model.error("\(type(of: self)).\(#function) - Failed with \(failure)")
         }
     }
 }

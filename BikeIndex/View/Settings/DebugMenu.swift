@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import BetterSafariView
+import WebViewKit
 
 struct DebugMenu: View {
     @Environment(Client.self) var client
@@ -52,9 +52,9 @@ struct DebugMenu: View {
                     }))
             }
         }
-        .safariView(item: $selectedUrl, content: { url in
-            SafariView(url: url)
-        })
+        .navigationDestination(item: $selectedUrl) { url in
+            WebView(url: url)
+        }
         .navigationTitle("API Configuration")
     }
 }

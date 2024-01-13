@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import BetterSafariView
+import WebViewKit
 
 struct AcknowledgementListItemView: View {
     var package: AcknowledgementPackage
@@ -18,8 +18,8 @@ struct AcknowledgementListItemView: View {
                 AcknowledgementPackageDetailView(package: package, url: $repositoryUrl)
                     .navigationBarTitleDisplayMode(.inline)
             }
-            .safariView(item: $repositoryUrl) { url in
-                SafariView(url: url)
+            .navigationDestination(item: $repositoryUrl) { url in
+                WebView(url: url)
             }
         } label: {
             VStack(alignment: .leading) {

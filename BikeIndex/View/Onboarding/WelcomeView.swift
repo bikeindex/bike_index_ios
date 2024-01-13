@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import BetterSafariView
+import WebViewKit
 
 // MARK: - Use Case Buttons
 
@@ -143,10 +143,10 @@ struct WelcomeView: View {
                 Spacer()
             }
         }
-        .safariView(item: $selectedUseCase) { useCase in
-            SafariView(url: useCase.action(on: client.configuration.host))
+        .navigationDestination(item: $selectedUseCase) { useCase in
+            WebView(url: useCase.action(on: client.configuration.host))
         }
-        .toolbarTitleDisplayMode(.inline)
+        .toolbarTitleDisplayMode(.large)
         .toolbarColorScheme(.dark, for: .navigationBar)
         .toolbarBackground(colorScheme == .light ? .black : .blue, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
