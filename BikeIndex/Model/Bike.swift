@@ -58,10 +58,6 @@ import MapKit
     var apiUrl: URL?
     var publicImages: [String]
 
-    @Transient var editUrl: URL? {
-        url.appending(path: "edit/bike_details")
-    }
-
     struct Constants {
         /// The range of supported years for Bike models
         static let yearRange = 1900..<2100
@@ -112,6 +108,21 @@ import MapKit
         apiUrl = defaultUrl
         publicImages = []
     }
+}
+
+extension Bike {
+    // MARK: - Accessors for UI display
+
+    @Transient var title: String {
+        if let year {
+            String(year) + " " + manufacturerName
+        } else if let serial {
+            manufacturerName + " " + serial
+        } else {
+            manufacturerName
+        }
+    }
+
 }
 
 enum BikeStatus: String, Codable {

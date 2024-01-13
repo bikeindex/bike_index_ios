@@ -8,6 +8,7 @@
 import SwiftUI
 import WebKit
 import WebViewKit
+import SwiftData
 
 struct BikeDetailView: View {
     @Environment(Client.self) var client
@@ -17,22 +18,65 @@ struct BikeDetailView: View {
 
     var body: some View {
         VStack {
+            AsyncImage(url: bike.thumb) { image in
+                image.resizable().scaledToFill()
+            } placeholder: {
+                Button {
+                    url = bike.editPhoto
+                } label: {
+                    Label("Add a photo", systemImage: "camera.circle")
+                        .labelStyle(.titleAndIcon)
+                }
+
+            }
+            .frame(maxWidth: .infinity, maxHeight: 100)
+
             Text("bike!")
             NavigationLink("Edit") {
                 WebView(url: bike.editUrl)
             }
         }
+        .navigationTitle(bike.title)
     }
 }
 
-/*
- https://bikeindex.org/bikes/2553556/edit/bike_details
- https://bikeindex.org/bikes/2553556/edit/photos
- https://bikeindex.org/bikes/2553556/edit/drivetrain
- https://bikeindex.org/bikes/2553556/edit/accessories
- https://bikeindex.org/bikes/2553556/edit/ownership
- https://bikeindex.org/bikes/2553556/edit/groups
- https://bikeindex.org/bikes/2553556/edit/remove
- https://bikeindex.org/bikes/2553556/edit/versions
- https://bikeindex.org/bikes/2553556/edit/report_stolen
- */
+
+extension Bike {
+    // MARK: - URLs for editing
+
+    @Transient var editUrl: URL? {
+        url.appending(path: "edit/bike_details")
+    }
+
+    @Transient var editPhoto: URL? {
+        url.appending(path: "edit/photos")
+    }
+
+    @Transient var editDrivetrain: URL? {
+        url.appending(path: "edit/drivetrain")
+    }
+
+    @Transient var editAccessories: URL? {
+        url.appending(path: "edit/accessories")
+    }
+
+    @Transient var editOwnership: URL? {
+        url.appending(path: "edit/ownership")
+    }
+
+    @Transient var editGroups: URL? {
+        url.appending(path: "edit/groups")
+    }
+
+    @Transient var editRemove: URL? {
+        url.appending(path: "edit/remove")
+    }
+
+    @Transient var editVersions: URL? {
+        url.appending(path: "edit/versions")
+    }
+
+    @Transient var editReportStolen: URL? {
+        url.appending(path: "edit/report_stolen")
+    }
+}

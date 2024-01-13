@@ -88,6 +88,7 @@ struct BikeResponse: ResponseModelInstantiable {
                     stolenCoordinateLatitude: stolenCoordinateLatitude,
                     stolenCoordinateLongitude: stolenCoordinateLongitude,
                     dateStolen: dateStolen,
+                    thumb: thumb,
                     url: url,
                     apiUrl: api_url,
                     publicImages: public_images ?? [])
