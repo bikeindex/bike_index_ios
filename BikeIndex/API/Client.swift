@@ -8,7 +8,6 @@
 import Foundation
 import OSLog
 import SwiftData
-import Combine
 import KeychainSwift
 import URLEncodedForm
 
@@ -34,7 +33,9 @@ typealias QueryItemTuple = (name: String, value: String)
 @Observable class Client {
     private let session = URLSession(configuration: .default)
 
+    /// App configuration loaded from .xcconfig files to determine the network environment
     private(set) var configuration: ClientConfiguration
+    /// Stateless API class belonging to this stateful instance that performs network operations for us.
     private(set) var api: API
 
     /// Full OAuth token response.
@@ -43,7 +44,6 @@ typealias QueryItemTuple = (name: String, value: String)
     /// The access token may be required in requests and it may be used to retrieve the full OAuth token (see ``auth``).
     private var accessToken: Token?
     private var keychain = KeychainSwift()
-    private var subscriptions: [AnyCancellable] = []
 
     init(keychain: KeychainSwift = KeychainSwift()) throws {
         self.keychain = keychain
