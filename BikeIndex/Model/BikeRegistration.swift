@@ -8,8 +8,8 @@
 import Foundation
 
 struct BikeRegistration: Encodable {
-    struct Constants {
-        static let made_without_serial = "made_without_serial"
+    struct Serial {
+        static let unknown = "unkown"
     }
 
     // MARK: Required fields
@@ -50,7 +50,7 @@ struct BikeRegistration: Encodable {
     var components: [Component]?
 
     init(serial: String?, manufacturer: String, owner_email: String, primary_frame_color: FrameColor, owner_email_is_phone_number: Bool? = nil, organization_slug: String? = nil, cycle_type_name: BicycleType? = nil, no_duplicate: Bool? = nil, rear_wheel_bsd: Int? = nil, rear_tire_narrow: Bool? = nil, front_wheel_bsd: String? = nil, front_tire_narrow: Bool? = nil, frame_model: String? = nil, year: UInt? = nil, description: String? = nil, secondary_frame_color: FrameColor? = nil, tertiary_frame_color: FrameColor? = nil, rear_gear_type_slug: String? = nil, front_gear_type_slug: String? = nil, extra_registration_number: String? = nil, handlebar_type_slug: String? = nil, no_notify: Bool? = nil, is_for_sale: Bool? = nil, frame_material: String, external_image_urls: [URL]? = nil, bike_sticker: String? = nil, propulsion_type_slug: String? = nil, stolen_record: StolenRecord? = nil, components: [Component]? = nil) {
-        self.serial = serial ?? Constants.made_without_serial
+        self.serial = serial ?? Serial.unknown
         self.manufacturer = manufacturer
         self.owner_email = owner_email
         self.primary_frame_color = primary_frame_color.rawValue.lowercased()
@@ -84,7 +84,7 @@ struct BikeRegistration: Encodable {
 
     init(bike: Bike, stolen: StolenRecord?, ownerEmail: String) {
         // If the serial number is absent then continue with a constant
-        self.serial = bike.serial ?? Constants.made_without_serial
+        self.serial = bike.serial ?? Serial.unknown
 
         // Required fields
         self.manufacturer = bike.manufacturerName
