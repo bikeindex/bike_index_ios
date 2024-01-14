@@ -1,5 +1,5 @@
 //
-//  AddBikeModel.swift
+//  AddBikeOutput.swift
 //  BikeIndex
 //
 //  Created by Jack on 12/10/23.
