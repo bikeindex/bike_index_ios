@@ -23,47 +23,6 @@ fileprivate extension ClientConfiguration {
     }
 }
 
-class AuthNavigationDelegate: NSObject, WKNavigationDelegate {
-    var client: Client?
-
-    // MARK: - Act on navigation
-
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        Logger.auth.info("\(#function) with \(navigation.description)")
-    }
-
-    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
-        Logger.auth.info("\(#function) with \(navigation.description)")
-    }
-
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        Logger.auth.info("\(#function) with \(navigation.description)")
-    }
-
-    func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
-        Logger.auth.info("\(#function) with \(navigation.description)")
-    }
-
-    // MARK: - Decide Policy
-
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
-        Logger.auth.info("\(#function) with \(navigationAction)")
-        return .allow
-    }
-
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, preferences: WKWebpagePreferences) async -> (WKNavigationActionPolicy, WKWebpagePreferences) {
-        Logger.auth.info("\(#function) with \(navigationAction), and preferences \(preferences)")
-
-        if let url = navigationAction.request.url,
-           let result = await client?.accept(authCallback: url),
-           result {
-            return (WKNavigationActionPolicy.cancel, preferences)
-        }
-
-        return (.allow, preferences)
-    }
-}
-
 /// NOTE: Network traffic for ASWebAuthenticationSession will run in the WebKitNetworking process!
 /// This means that Proxyman will not show app authentication in the "Bike Index" app. You will have to look for the
 /// host or across all networking in Proxyman!
@@ -100,7 +59,7 @@ struct AuthView: View {
 #endif
             }
             .sheet(isPresented: $displaySignIn, content: {
-                WebView(url: oAuthUrl, webConfiguration: client.webConfiguration) {
+                WebView(url: oAuthUrl, configuration: client.webConfiguration) {
                     authNavigationDelegate.client = client
                     $0.navigationDelegate = authNavigationDelegate
                 }
