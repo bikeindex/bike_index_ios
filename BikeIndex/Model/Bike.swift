@@ -126,12 +126,3 @@ extension Bike {
     }
 
 }
-
-enum BikeStatus: String, Codable {
-    case withOwner = "with owner"
-    case found
-    case stolen
-    case abandoned
-    case impounded
-    case unregisteredParkingNotification = "unregistered parking notification"
-}
