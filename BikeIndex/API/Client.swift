@@ -155,7 +155,11 @@ extension Client {
 
     /// Inform any `@State` watchers if the authentication is valid or has become void.
     var authenticated: Bool {
-        auth != nil
+        if let auth {
+            auth.isValid
+        } else {
+            false
+        }
     }
 }
 
