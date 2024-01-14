@@ -17,14 +17,14 @@ struct ContentBikeButtonView: View {
         }, label: {
             VStack {
                 ZStack {
-                    if let hero = URL(string: bike.publicImages.first ?? "https://placekitten.com/200/200") {
+                    if let hero = bike.largeImage {
                         AsyncImage(url: hero) { image in
                             image.resizable().scaledToFill()
                         } placeholder: {
-                            EmptyView()
+                            Image(systemName: "bicycle.circle.fill")
                         }
                     }
-                    Text("\(String(bike.year ?? 0)) \(bike.manufacturerName)")
+                    Text(bike.title)
                         .font(.largeTitle)
                 }
                 .scaledToFit()
@@ -44,11 +44,16 @@ struct ContentBikeButtonView: View {
                           status: .withOwner,
                           stolenCoordinateLatitude: 0,
                           stolenCoordinateLongitude: 0,
+                          largeImage: URL(string: "https://placekitten.com/200/200").unsafelyUnwrapped,
                           url: URL(string: "about:blank").unsafelyUnwrapped,
                           publicImages: [
                             "https://placekitten.com/200/200",
                           ])
 
-    return ContentBikeButtonView(path: .constant(NavigationPath()),
-                                 bike: sampleBike)
+    return ScrollView {
+        ProportionalLazyVGrid {
+            ContentBikeButtonView(path: .constant(NavigationPath()),
+                                  bike: sampleBike)
+        }
+    }
 }

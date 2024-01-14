@@ -40,6 +40,7 @@ struct BikeResponse: ResponseModelInstantiable {
     let stolen_location: String?
     let date_stolen: TimeInterval?
 
+    let large_img: URL?
     let thumb: URL?
     let url: URL
     let api_url: URL?
@@ -88,6 +89,7 @@ struct BikeResponse: ResponseModelInstantiable {
                     stolenCoordinateLatitude: stolenCoordinateLatitude,
                     stolenCoordinateLongitude: stolenCoordinateLongitude,
                     dateStolen: dateStolen,
+                    largeImage: large_img,
                     thumb: thumb,
                     url: url,
                     apiUrl: api_url,

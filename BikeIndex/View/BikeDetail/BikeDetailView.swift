@@ -18,7 +18,7 @@ struct BikeDetailView: View {
 
     var body: some View {
         VStack {
-            AsyncImage(url: bike.thumb) { image in
+            AsyncImage(url: bike.largeImage) { image in
                 image.resizable().scaledToFill()
             } placeholder: {
                 Button {

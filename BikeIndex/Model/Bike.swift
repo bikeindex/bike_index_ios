@@ -55,6 +55,9 @@ import MapKit
     var stolenLocation: String?
     var dateStolen: Date?
 
+    /// Full resolution main image
+    var largeImage: URL?
+    /// Small-scale main image
     var thumb: URL?
     var url: URL
     var apiUrl: URL?
@@ -68,7 +71,26 @@ import MapKit
         static let displayableYearRange = 1900..<2026
     }
 
-    init(identifier: Int, bikeDescription: String? = nil, frameModel: String? = nil, primaryColor: FrameColor, secondaryColor: FrameColor? = nil, tertiaryColor: FrameColor? = nil, manufacturerName: String, year: Int? = nil, typeOfCycle: BicycleType, serial: String? = nil, status: BikeStatus, stolenCoordinateLatitude: CLLocationDegrees, stolenCoordinateLongitude: CLLocationDegrees, stolenLocation: String? = nil, dateStolen: Date? = nil, thumb: URL? = nil, url: URL, apiUrl: URL? = nil, publicImages: [String]) {
+    init(identifier: Int,
+         bikeDescription: String? = nil,
+         frameModel: String? = nil,
+         primaryColor: FrameColor,
+         secondaryColor: FrameColor? = nil,
+         tertiaryColor: FrameColor? = nil,
+         manufacturerName: String,
+         year: Int? = nil,
+         typeOfCycle: BicycleType,
+         serial: String? = nil,
+         status: BikeStatus,
+         stolenCoordinateLatitude: CLLocationDegrees,
+         stolenCoordinateLongitude: CLLocationDegrees,
+         stolenLocation: String? = nil,
+         dateStolen: Date? = nil,
+         largeImage: URL? = nil,
+         thumb: URL? = nil,
+         url: URL,
+         apiUrl: URL? = nil,
+         publicImages: [String]) {
         self.identifier = identifier
         self.bikeDescription = bikeDescription
         self.frameModel = frameModel
@@ -84,6 +106,7 @@ import MapKit
         self.stolenCoordinateLongitude = stolenCoordinateLongitude
         self.stolenLocation = stolenLocation
         self.dateStolen = dateStolen
+        self.largeImage = largeImage
         self.thumb = thumb
         self.url = url
         self.apiUrl = apiUrl
@@ -106,6 +129,7 @@ import MapKit
         stolenLocation = ""
         dateStolen = Date.distantFuture
         let defaultUrl = URL(string: "about:blank").unsafelyUnwrapped
+        largeImage = nil
         url = defaultUrl
         apiUrl = defaultUrl
         publicImages = []
