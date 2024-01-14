@@ -44,7 +44,7 @@ struct ContentView: View {
                 case .settings:
                     SettingsView()
                 case .registerBike:
-                    AddBikeView()
+                    RegisterBikeView()
                 case .lostBike:
                     Text("Alert a missing bike")
                 case .foundBike:

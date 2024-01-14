@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-/// Capture context for alerts after network operations fail or succeed when tapping Register in ``AddBikeView``.
+/// Capture context for alerts after network operations fail or succeed when tapping Register in ``RegisterBikeView``.
 @Observable final class AddBikeOutput {
     var show: Bool = false
     private(set) var actions: () -> Void = { }

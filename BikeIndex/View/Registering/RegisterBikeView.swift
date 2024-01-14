@@ -1,5 +1,5 @@
 //
-//  AddBikeView.swift
+//  RegisterBikeView.swift
 //  BikeIndex
 //
 //  Created by Jack on 11/18/23.
@@ -11,9 +11,8 @@ import OSLog
 import WebViewKit
 
 /// NOTE: Adopt @Focus State https://developer.apple.com/documentation/swiftui/focusstate
-/// NOTE: Wrap this in a pre-menu to select
-///     ◉) Add a bike through $organization\_name... [for each organization]
-struct AddBikeView: View {
+/// NOTE: Possibly add organization selection
+struct RegisterBikeView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
@@ -260,10 +259,6 @@ struct AddBikeView: View {
         .navigationDestination(item: $link) { url in
             WebView(url: url)
         }
-//        .safariView(item: $link) { url in
-//            SafariView(url: url)
-//        }
-
     }
 
     /// Marshall the Bike model to a Postable intermediary, write that intermediary to the API client and discard Bike model
@@ -320,7 +315,7 @@ struct AddBikeView: View {
         container.mainContext.insert(auth)
 
         return NavigationStack {
-            AddBikeView(bike: bike)
+            RegisterBikeView(bike: bike)
                 .environment(client)
                 .modelContainer(container)
         }
