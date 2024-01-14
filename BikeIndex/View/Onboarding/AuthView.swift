@@ -70,20 +70,17 @@ class AuthNavigationDelegate: NSObject, WKNavigationDelegate {
 struct AuthView: View {
     /// api client for performing auth
     @Environment(Client.self) var client
-    @State var presentAuth = false
-    var authNavigationDelegate = AuthNavigationDelegate()
+
+    @State private var displaySignIn = false
+    private var authNavigationDelegate = AuthNavigationDelegate()
 
     var body: some View {
         NavigationStack {
             WelcomeView()
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
-
-                    NavigationLink {
-                        WebView(url: OAuth.authorize(queryItems: client.configuration.authorizeQueryItems).request(for: client.api.configuration).url.unsafelyUnwrapped) {
-                            authNavigationDelegate.client = client
-                            $0.navigationDelegate = authNavigationDelegate
-                        }
+                    Button {
+                        displaySignIn = true
                     } label: {
                         Label("Sign in and get started", systemImage: "person.crop.circle.dashed")
                             .font(.title3)
@@ -102,10 +99,20 @@ struct AuthView: View {
                 }
 #endif
             }
+            .sheet(isPresented: $displaySignIn, content: {
+                WebView(url: oAuthUrl, webConfiguration: client.webConfiguration) {
+                    authNavigationDelegate.client = client
+                    $0.navigationDelegate = authNavigationDelegate
+                }
+            })
 
             .navigationTitle("Welcome to Bike Index")
             .navigationBarTitleDisplayMode(.inline)
         }
+    }
+
+    private var oAuthUrl: URL? {
+        OAuth.authorize(queryItems: client.configuration.authorizeQueryItems).request(for: client.api.configuration).url
     }
 }
 

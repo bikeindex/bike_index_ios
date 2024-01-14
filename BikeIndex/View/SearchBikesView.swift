@@ -76,10 +76,10 @@ struct SearchBikesView: View {
                 .padding(.leading, 8)
 
                 Button(action: {
-                    client.queryGlobal(
-                        // fill in endpoint and params
-                        context: modelContext
-                    )
+//                    client.queryGlobal(
+//                        // fill in endpoint and params
+//                        context: modelContext
+//                    )
                 }, label: {
                     Image(systemName: "magnifyingglass")
                         .resizable()

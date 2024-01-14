@@ -7,7 +7,7 @@
 
 import Foundation
 import OSLog
-import SwiftData
+import WebKit
 import KeychainSwift
 import URLEncodedForm
 
@@ -37,6 +37,8 @@ typealias QueryItemTuple = (name: String, value: String)
     private(set) var configuration: ClientConfiguration
     /// Stateless API class belonging to this stateful instance that performs network operations for us.
     private(set) var api: API
+    /// Stateful shared webview configuration to manage cookie storage for logout
+    private(set) var webConfiguration = WKWebViewConfiguration()
 
     /// Full OAuth token response.
     private(set) var auth: OAuthToken?
@@ -89,12 +91,34 @@ typealias QueryItemTuple = (name: String, value: String)
 
     /// Allow users to log out
     func destroySession() {
-        KeychainSwift().delete(Keychain.oauthToken)
-        accessToken = nil
-        auth = nil
-        api = API(configuration: EndpointConfiguration(accessToken: "",
-                                                       host: configuration.host),
-                  session: session)
+        Task { @MainActor in
+            // Clear web state
+            // NOTE: We could parse this for a 302 redirect to /goodbye but that seems unnecessary
+            _ = await api.get(OAuth.logout)
+
+            let allCookies = await webConfiguration.websiteDataStore.httpCookieStore.allCookies()
+            var authCookie: HTTPCookie?
+            for cookie in allCookies {
+                if cookie.name == "auth" {
+                    authCookie = cookie
+                }
+                Logger.client.info("Evaluated cookie named \(cookie.name) during sign-out")
+            }
+            Logger.client.warning("Found \(allCookies.count) cookies")
+            if let authCookie {
+                await webConfiguration.websiteDataStore.httpCookieStore.deleteCookie(authCookie)
+            } else {
+                Logger.client.warning("Failed to find and destroy auth cookie")
+            }
+
+            // Clear app state
+            KeychainSwift().delete(Keychain.oauthToken)
+            accessToken = nil
+            auth = nil
+            api = API(configuration: EndpointConfiguration(accessToken: "",
+                                                           host: configuration.host),
+                      session: session)
+        }
     }
 
     var userCanRegisterBikes: Bool {
@@ -160,14 +184,5 @@ extension Client {
         } else {
             false
         }
-    }
-}
-
-// MARK: Global Bike Search queries
-
-extension Client {
-    @available(*, deprecated, message: "Migrate to API for stateless and abstract network operations")
-    func queryGlobal(context: ModelContext) {
-        Logger.api.critical("\(#function) has been removed until it can be replaced.")
     }
 }

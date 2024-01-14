@@ -25,10 +25,17 @@ enum OAuth: APIEndpoint {
     /// Invoked second of all networking _using the `code` result_ from the ``OAuth.authorize`` response.
     case token(queryItems: [URLQueryItem])
 
+    case logout
+
     // MARK: -
 
     var method: HttpMethod {
-        .post
+        switch self {
+        case .authorize, .token:
+                .post
+        case .logout:
+                .get
+        }
     }
 
     /// Technically oauth/token does require authorization but the token is not available from ClientConfiguration.
@@ -43,7 +50,12 @@ enum OAuth: APIEndpoint {
     }
 
     var responseModel: Decodable.Type {
-        OAuthToken.self
+        switch self {
+        case .authorize, .token:
+            OAuthToken.self
+        case .logout:
+            EmptyResponse.self
+        }
     }
 
     var path: [String] {
@@ -52,6 +64,8 @@ enum OAuth: APIEndpoint {
             return ["oauth", "authorize"]
         case .token:
             return ["oauth", "token"]
+        case .logout:
+            return ["logout"]
         }
     }
 
@@ -62,9 +76,11 @@ enum OAuth: APIEndpoint {
             url.append(queryItems: queryItems)
         case .token(let queryItems):
             url.append(queryItems: queryItems)
+        case .logout:
+            break
         }
         var request = URLRequest(url: url)
-        request.httpMethod = "POST"
+        request.httpMethod = method.rawValue
         return request
     }
 }
