@@ -64,8 +64,8 @@ import MapKit
         /// The range of supported years for Bike models
         static let yearRange = 1900..<2100
 
-        /// The range of **displayable** years for Bike models aka "inclusive 1900-2024"
-        static let displayableYearRange = 1900..<2025
+        /// The range of **displayable** years for Bike models aka "inclusive 1900-2025"
+        static let displayableYearRange = 1900..<2026
     }
 
     init(identifier: Int, bikeDescription: String? = nil, frameModel: String? = nil, primaryColor: FrameColor, secondaryColor: FrameColor? = nil, tertiaryColor: FrameColor? = nil, manufacturerName: String, year: Int? = nil, typeOfCycle: BicycleType, serial: String? = nil, status: BikeStatus, stolenCoordinateLatitude: CLLocationDegrees, stolenCoordinateLongitude: CLLocationDegrees, stolenLocation: String? = nil, dateStolen: Date? = nil, thumb: URL? = nil, url: URL, apiUrl: URL? = nil, publicImages: [String]) {
