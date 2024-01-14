@@ -83,6 +83,7 @@ struct BikeResponse: ResponseModelInstantiable {
                     secondaryColor: secondColor,
                     tertiaryColor: thirdColor,
                     manufacturerName: manufacturer_name,
+                    year: year,
                     typeOfCycle: cycle_type_slug,
                     serial: serial,
                     status: status,
