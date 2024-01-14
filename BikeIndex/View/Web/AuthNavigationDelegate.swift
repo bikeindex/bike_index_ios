@@ -16,6 +16,8 @@ final class AuthNavigationDelegate: NSObject, WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, preferences: WKWebpagePreferences) async -> (WKNavigationActionPolicy, WKWebpagePreferences) {
         if let url = navigationAction.request.url,
+           let scheme = url.scheme,
+           scheme + "://" == client?.configuration.redirectUri,
            let result = await client?.accept(authCallback: url),
            result == true {
             return (WKNavigationActionPolicy.cancel, preferences)

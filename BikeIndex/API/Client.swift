@@ -136,11 +136,16 @@ extension Client {
     /// forwarded to the ``OAuth.token`` endpoint.
     /// - Returns: True if processing proceeded normally. False if any errors occurred.
     @discardableResult func accept(authCallback: URL) async -> Bool {
+        guard let scheme = authCallback.scheme, scheme + "://" == configuration.redirectUri else {
+            Logger.api.debug("\(#function) exiting because \(authCallback.scheme ?? "", privacy: .sensitive) does not match the redirectUri")
+            return false
+        }
+
         let components = URLComponents(string: authCallback.absoluteString)
         guard let queryItems = components?.queryItems,
               let code = queryItems.first(where: { $0.name == Constants.code }),
               let newToken = code.value else {
-            Logger.api.debug("\(#function) exiting for lack of query item 'code'")
+            Logger.api.debug("\(#function) exiting for lack of query item 'code' from callback \(authCallback, privacy: .sensitive)")
             return false
         }
         accessToken = newToken

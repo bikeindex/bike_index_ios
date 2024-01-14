@@ -62,6 +62,9 @@ struct AuthView: View {
                 WebView(url: oAuthUrl, configuration: client.webConfiguration) {
                     authNavigationDelegate.client = client
                     $0.navigationDelegate = authNavigationDelegate
+                    #if !RELEASE
+                    $0.isInspectable = true
+                    #endif
                 }
             })
 
