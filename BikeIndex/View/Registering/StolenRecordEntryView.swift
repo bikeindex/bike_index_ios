@@ -1,5 +1,5 @@
 //
-//  AddStolenRecordView.swift
+//  StolenRecordEntryView.swift
 //  BikeIndex
 //
 //  Created by Jack on 12/28/23.

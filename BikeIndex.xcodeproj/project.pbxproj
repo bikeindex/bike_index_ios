@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		043033282B3E285F00FD126F /* AddStolenRecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033272B3E285F00FD126F /* AddStolenRecordView.swift */; };
+		043033282B3E285F00FD126F /* StolenRecordEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033272B3E285F00FD126F /* StolenRecordEntryView.swift */; };
 		0430332A2B3E5EEB00FD126F /* Countries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033292B3E5EEB00FD126F /* Countries.swift */; };
 		0430332C2B3E642200FD126F /* Binding+Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0430332B2B3E642200FD126F /* Binding+Optional.swift */; };
 		0430332F2B3E64C300FD126F /* US_States.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0430332E2B3E64C300FD126F /* US_States.swift */; };
@@ -111,7 +111,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		043033272B3E285F00FD126F /* AddStolenRecordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStolenRecordView.swift; sourceTree = "<group>"; };
+		043033272B3E285F00FD126F /* StolenRecordEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StolenRecordEntryView.swift; sourceTree = "<group>"; };
 		043033292B3E5EEB00FD126F /* Countries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Countries.swift; sourceTree = "<group>"; };
 		0430332B2B3E642200FD126F /* Binding+Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Binding+Optional.swift"; sourceTree = "<group>"; };
 		0430332E2B3E64C300FD126F /* US_States.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = US_States.swift; sourceTree = "<group>"; };
@@ -303,6 +303,7 @@
 		04F2C6372B4B0079009E0A37 /* Registering */ = {
 			isa = PBXGroup;
 			children = (
+				043033272B3E285F00FD126F /* StolenRecordEntryView.swift */,
 				04F4B93A2B098BA9009442B5 /* RegisterBikeView.swift */,
 				04F4B93E2B098BAA009442B5 /* ManufacturerEntryView.swift */,
 			);
@@ -423,7 +424,6 @@
 				04F4B93D2B098BA9009442B5 /* SearchBikesView.swift */,
 				0452C6B12B4A62FE00AD572C /* Settings */,
 				04F4B93C2B098BA9009442B5 /* VerticalPicker.swift */,
-				043033272B3E285F00FD126F /* AddStolenRecordView.swift */,
 				0430333C2B41402800FD126F /* ProportionalLazyVGrid.swift */,
 			);
 			path = View;
@@ -617,7 +617,7 @@
 				04F4B9512B098BB1009442B5 /* FrameColor.swift in Sources */,
 				04F4B9452B098BAA009442B5 /* SearchBikesView.swift in Sources */,
 				04C7BC702B535E330091493C /* BikeStatus.swift in Sources */,
-				043033282B3E285F00FD126F /* AddStolenRecordView.swift in Sources */,
+				043033282B3E285F00FD126F /* StolenRecordEntryView.swift in Sources */,
 				043033382B41367100FD126F /* MainContent.swift in Sources */,
 				046B0A3A2B251E67006519A7 /* AlternateIconsModel.swift in Sources */,
 				0452C6BA2B4A72FD00AD572C /* AcknowledgementPackageDetailView.swift in Sources */,
