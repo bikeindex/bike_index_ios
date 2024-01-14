@@ -29,6 +29,7 @@ fileprivate extension ClientConfiguration {
 struct AuthView: View {
     /// api client for performing auth
     @Environment(Client.self) var client
+    @Environment(\.dismiss) var dismiss
 
     @State private var displaySignIn = false
     private var authNavigationDelegate = AuthNavigationDelegate()
@@ -59,12 +60,21 @@ struct AuthView: View {
 #endif
             }
             .sheet(isPresented: $displaySignIn, content: {
-                WebView(url: oAuthUrl, configuration: client.webConfiguration) {
-                    authNavigationDelegate.client = client
-                    $0.navigationDelegate = authNavigationDelegate
-                    #if !RELEASE
-                    $0.isInspectable = true
-                    #endif
+                NavigationStack {
+                    WebView(url: oAuthUrl, configuration: client.webConfiguration) {
+                        authNavigationDelegate.client = client
+                        $0.navigationDelegate = authNavigationDelegate
+                        #if !RELEASE
+                        $0.isInspectable = true
+                        #endif
+                    }
+                    .toolbar {
+                        ToolbarItemGroup(placement: .topBarLeading) {
+                            Button("Close") {
+                                dismiss()
+                            }
+                        }
+                    }
                 }
             })
 

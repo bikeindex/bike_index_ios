@@ -68,6 +68,7 @@
 		04EA112B2B25172A0024CDDD /* BicycleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B94F2B098BB1009442B5 /* BicycleType.swift */; };
 		04EA112C2B25174E0024CDDD /* BikeIndexIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA11182B25039F0024CDDD /* BikeIndexIdentifiable.swift */; };
 		04EC712D2B5436BD00898CA1 /* AuthNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EC712C2B5436BD00898CA1 /* AuthNavigationDelegate.swift */; };
+		04EC712F2B54414D00898CA1 /* WebScripts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EC712E2B54414D00898CA1 /* WebScripts.swift */; };
 		04F2C63A2B4B00CD009E0A37 /* BikeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F2C6392B4B00CD009E0A37 /* BikeDetailView.swift */; };
 		04F2C63C2B4B0127009E0A37 /* ContentBikeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F2C63B2B4B0127009E0A37 /* ContentBikeButton.swift */; };
 		04F4B9012B098ADE009442B5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04F4B9002B098ADE009442B5 /* Assets.xcassets */; };
@@ -154,6 +155,7 @@
 		04EA111C2B2503C40024CDDD /* BikeRegistration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BikeRegistration.swift; sourceTree = "<group>"; };
 		04EA111E2B2503F40024CDDD /* ActionIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionIcon.swift; sourceTree = "<group>"; };
 		04EC712C2B5436BD00898CA1 /* AuthNavigationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthNavigationDelegate.swift; sourceTree = "<group>"; };
+		04EC712E2B54414D00898CA1 /* WebScripts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebScripts.swift; sourceTree = "<group>"; };
 		04F2C6392B4B00CD009E0A37 /* BikeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeDetailView.swift; sourceTree = "<group>"; };
 		04F2C63B2B4B0127009E0A37 /* ContentBikeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentBikeButton.swift; sourceTree = "<group>"; };
 		04F4B8F72B098ADB009442B5 /* BikeIndex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BikeIndex.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -310,6 +312,7 @@
 			isa = PBXGroup;
 			children = (
 				04EC712C2B5436BD00898CA1 /* AuthNavigationDelegate.swift */,
+				04EC712E2B54414D00898CA1 /* WebScripts.swift */,
 			);
 			path = Web;
 			sourceTree = "<group>";
@@ -610,6 +613,7 @@
 				04F4B9432B098BAA009442B5 /* AuthView.swift in Sources */,
 				04EA111B2B2503B40024CDDD /* BikeRegisteredQuery.swift in Sources */,
 				04F4B9442B098BAA009442B5 /* VerticalPicker.swift in Sources */,
+				04EC712F2B54414D00898CA1 /* WebScripts.swift in Sources */,
 				0430332C2B3E642200FD126F /* Binding+Optional.swift in Sources */,
 				04C7BC642B534F090091493C /* PreviewData.swift in Sources */,
 				04B6600B2B43169E0055A056 /* WelcomeView.swift in Sources */,

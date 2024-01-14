@@ -38,7 +38,13 @@ typealias QueryItemTuple = (name: String, value: String)
     /// Stateless API class belonging to this stateful instance that performs network operations for us.
     private(set) var api: API
     /// Stateful shared webview configuration to manage cookie storage for logout
-    private(set) var webConfiguration = WKWebViewConfiguration()
+    private(set) var webConfiguration: WKWebViewConfiguration = {
+        let config = WKWebViewConfiguration()
+        let userContent = WKUserContentController()
+        userContent.addUserScript(WebScripts.removeFrame.script)
+        config.userContentController = userContent
+        return config
+    }()
 
     /// Full OAuth token response.
     private(set) var auth: OAuthToken?
