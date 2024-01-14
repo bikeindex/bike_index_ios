@@ -44,11 +44,11 @@ struct ContentView: View {
                 case .settings:
                     SettingsView()
                 case .registerBike:
-                    RegisterBikeView()
+                    RegisterBikeView(mode: .myOwnBike)
                 case .lostBike:
-                    Text("Alert a missing bike")
+                    RegisterBikeView(mode: .myStolenBike)
                 case .foundBike:
-                    Text("Respond to a missing bike")
+                    RegisterBikeView(mode: .abandonedBike)
                 }
             }
             .navigationDestination(for: Bike.self) { bike in

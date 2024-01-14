@@ -82,7 +82,7 @@ struct BikeRegistration: Encodable {
         self.components = components
     }
 
-    init(bike: Bike, stolen: StolenRecord?, ownerEmail: String) {
+    init(bike: Bike, mode: RegisterMode, stolen: StolenRecord?, ownerEmail: String) {
         // If the serial number is absent then continue with a constant
         self.serial = bike.serial ?? Serial.unknown
 
@@ -102,7 +102,11 @@ struct BikeRegistration: Encodable {
         }
         self.frame_model = bike.frameModel
 
-        self.stolen_record = stolen
+        if mode == .myStolenBike {
+            self.stolen_record = stolen
+        } else {
+            self.stolen_record = nil
+        }
 
         // Unsupported fields for future work
         self.owner_email_is_phone_number = nil

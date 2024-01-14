@@ -66,7 +66,7 @@ enum ContentButton: String, Identifiable, Codable, CaseIterable {
         case .alertBike:
             return "Register a stolen bike"
         case .respondBike:
-            return "I found a bike"
+            return "Register a found bike"
         }
     }
 

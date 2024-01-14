@@ -8,33 +8,48 @@
 import SwiftUI
 import OSLog
 
-enum BikeIndexLink: CustomDebugStringConvertible {
+enum BikeIndexLink: Identifiable {
     case oauthApplications
     case serials
+    case stolenBikeFAQ
 
+    var id: Self { self }
+
+    /// Return a displayable link within normal text
     func on(_ base: URL) -> AttributedString {
         let markdownSource: String
         switch self {
         case .oauthApplications:
-            markdownSource = "[Edit your OAuth Applications at bikeindex.org](\(base.appending(path: "oauth/applications")))"
+            markdownSource = "[Edit your OAuth Applications at bikeindex.org](\(base.appending(path: link)))"
         case .serials:
-            markdownSource = "Every bike has a unique serial number, it's how they are identified. To learn more or see some examples, [go to our serial page](\(base.appending(path: "serials")))."
+            markdownSource = "Every bike has a unique serial number, it's how they are identified. To learn more or see some examples, [go to our serial page](\(base.appending(path: link)))."
+        case .stolenBikeFAQ:
+            markdownSource = "Learn more about [How to get your stolen bike back](\(base.appending(path: link)))"
         }
 
         do {
             return try AttributedString(markdown: markdownSource)
         } catch {
-            Logger.views.error("Failed to create link from \(self.debugDescription, privacy: .public) on base \(base, privacy: .public)")
+            Logger.views.error("Failed to create link from \(self.link, privacy: .public) on base \(base, privacy: .public)")
             return AttributedString(stringLiteral: "Internal error creating link.")
         }
     }
 
-    var debugDescription: String {
+    func link(base: URL) -> URL {
+        base.appending(path: self.link)
+    }
+
+    var link: String {
         switch self {
         case .oauthApplications:
+            // https://bikeindex.org/oauth/applications
             return "oauth/applications"
         case .serials:
+            // https://bikeindex.org/serials
             return "serials"
+        case .stolenBikeFAQ:
+            // https://bikeindex.org/info/how-to-get-your-stolen-bike-back
+            return "info/how-to-get-your-stolen-bike-back"
         }
     }
 }
@@ -56,12 +71,10 @@ struct TextLink: View {
 #Preview {
     let localhost = URL(string: "http://localhost").unsafelyUnwrapped
     return VStack {
-        Spacer()
-        TextLink(base: localhost, link: .oauthApplications)
-            .padding()
-        Divider()
-        TextLink(base: localhost, link: .serials)
-            .padding()
-        Spacer()
+        ForEach([BikeIndexLink.oauthApplications, .serials, .stolenBikeFAQ]) { item in
+            TextLink(base: localhost, link: item)
+                .padding()
+            Spacer()
+        }
     }
 }

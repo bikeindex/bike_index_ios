@@ -48,8 +48,12 @@ struct RegisterBikeView: View {
 
     // MARK: Authoritative State
 
+    /// Change behavior depending if this is your own bike or stolen, etc
+    @State var mode: RegisterMode
+
     /// Primary model to mutate and persist
     @State var bike = Bike()
+    @State var stolenRecord = StolenRecord(phone: "", city: "")
     /// Access the known users to perform autocomplete on the owner's email
     @Query var authenticatedUsers: [AuthenticatedUser]
 
@@ -68,6 +72,16 @@ struct RegisterBikeView: View {
 
     var body: some View {
         Form {
+            if mode == .myStolenBike {
+                Section {
+                    NavigationLink {
+                        WebView(url: BikeIndexLink.stolenBikeFAQ.link(base: client.configuration.host))
+                    } label: {
+                        Text("⚠️ How to get your stolen bike back")
+                    }
+                }
+
+            }
             Section {
                 let safeSerial = Binding {
                     bike.serial ?? ""
@@ -220,6 +234,12 @@ struct RegisterBikeView: View {
                 Text("The color of the frame and fork—not the wheels, cranks, or anything else. You can put a more detailed description in paint description (once you've registered), this is to get a general color to make searching easier")
             }
 
+            // MARK: - Mode-special fields
+            if mode == .myStolenBike {
+                StolenRecordEntryView(record: $stolenRecord)
+            }
+            // MARK: -
+
             Section(header: Text("Owner Email")) {
                 TextField(text: $ownerEmail) {
                     Text("Who should be contacted?")
@@ -254,6 +274,8 @@ struct RegisterBikeView: View {
         .onAppear {
             if let user = authenticatedUsers.first?.user {
                 ownerEmail = user.email
+            } else {
+                Logger.views.info("Failed to find authenticated users with email, skiping association of ownerEmail. Authenticated users has count \(authenticatedUsers.count)")
             }
         }
         .navigationDestination(item: $link) { url in
@@ -271,7 +293,8 @@ struct RegisterBikeView: View {
         Logger.model.debug("\(#function) Registering w/ owner email \(String(describing: ownerEmail))")
 
         let bikeRegistration = BikeRegistration(bike: bike,
-                                                stolen: nil,
+                                                mode: mode,
+                                                stolen: stolenRecord,
                                                 ownerEmail: ownerEmail)
         let endpoint = Bikes.postBikes(form: bikeRegistration)
         let response = await client.api.post(endpoint)
@@ -299,6 +322,7 @@ struct RegisterBikeView: View {
     }
 }
 
+// MARK: - Normal Mode Preview
 #Preview {
     do {
         let bike = Bike()
@@ -315,7 +339,33 @@ struct RegisterBikeView: View {
         container.mainContext.insert(auth)
 
         return NavigationStack {
-            RegisterBikeView(bike: bike)
+            RegisterBikeView(mode: .myOwnBike, bike: bike)
+                .environment(client)
+                .modelContainer(container)
+        }
+    } catch let error {
+        return Text("Failed to load preview \(error.localizedDescription)")
+    }
+}
+
+// MARK: - Stolen Mode Preview
+#Preview {
+    do {
+        let bike = Bike()
+        let client = try Client()
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+
+        let container = try ModelContainer(for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+                                           configurations: config)
+
+        let user = User(username: "previewUser", name: "Preview User", email: "preview@bikeindex.org", additionalEmails: [], createdAt: Date(), image: nil, twitter: nil)
+
+        let auth = AuthenticatedUser(identifier: "1")
+        auth.user = user
+        container.mainContext.insert(auth)
+
+        return NavigationStack {
+            RegisterBikeView(mode: .myStolenBike, bike: bike)
                 .environment(client)
                 .modelContainer(container)
         }
