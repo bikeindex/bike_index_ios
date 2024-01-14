@@ -46,7 +46,7 @@ struct StolenRecordEntryView: View {
             }
 
         } header: {
-            Text("Address of bike when stolen")
+            Text("Where was it stolen?")
         } footer: {
             Text("**City** is required to register a stolen bike")
         }

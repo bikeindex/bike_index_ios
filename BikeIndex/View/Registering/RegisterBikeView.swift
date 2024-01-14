@@ -64,9 +64,12 @@ struct RegisterBikeView: View {
     /// 4. owner email
     /// Source: attempt to register on the web with any string for the serial number
     private var requiredFieldsNotMet: Bool {
+        // Serial is required, unless marked missing/unidentified
+        // There's also made_without_Serial but that's a more complicated scenario
         let passedSerial = missingSerial || (!(bike.serial?.isEmpty ?? true))
         let passedManufacturer = !bike.manufacturerName.isEmpty
-        let passedEmail = !ownerEmail.isEmpty
+        // Email is required, unless the bike is abandoned/impounded
+        let passedEmail = (!ownerEmail.isEmpty || mode == .abandonedBike)
         return !(passedSerial && passedManufacturer && passedEmail)
     }
 
@@ -238,13 +241,16 @@ struct RegisterBikeView: View {
             if mode == .myStolenBike {
                 StolenRecordEntryView(record: $stolenRecord)
             }
+            // NOTE: Consider adding ImpoundedRecordEntryView in the future
             // MARK: -
 
-            Section(header: Text("Owner Email")) {
-                TextField(text: $ownerEmail) {
-                    Text("Who should be contacted?")
+            if mode == .myOwnBike || mode == .myStolenBike {
+                Section(header: Text("Owner Email")) {
+                    TextField(text: $ownerEmail) {
+                        Text("Who should be contacted?")
+                    }
+                    .textInputAutocapitalization(.never)
                 }
-                .textInputAutocapitalization(.never)
             }
 
             Section {
@@ -270,7 +276,7 @@ struct RegisterBikeView: View {
             }
             .disabled(client.userCanRegisterBikes && requiredFieldsNotMet)
         }
-        .navigationTitle("Enter Bike Details")
+        .navigationTitle(mode.title)
         .onAppear {
             if let user = authenticatedUsers.first?.user {
                 ownerEmail = user.email

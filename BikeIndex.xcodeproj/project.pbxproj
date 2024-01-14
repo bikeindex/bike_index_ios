@@ -48,6 +48,8 @@
 		04C7BC702B535E330091493C /* BikeStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C7BC6F2B535E330091493C /* BikeStatus.swift */; };
 		04C7BC722B5361220091493C /* RegisterMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C7BC712B5361220091493C /* RegisterMode.swift */; };
 		04C7BC732B5362EB0091493C /* BikeStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C7BC6F2B535E330091493C /* BikeStatus.swift */; };
+		04C7BC772B536C150091493C /* StolenRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C7BC762B536C150091493C /* StolenRecord.swift */; };
+		04C7BC782B536C220091493C /* StolenRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C7BC762B536C150091493C /* StolenRecord.swift */; };
 		04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 04E1343D2B4B718200CE88DD /* WebViewKit */; };
 		04EA110E2B2502660024CDDD /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA110C2B2502660024CDDD /* API.swift */; };
 		04EA110F2B2502660024CDDD /* APIEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA110D2B2502660024CDDD /* APIEndpoints.swift */; };
@@ -141,6 +143,7 @@
 		04C7BC652B53514C0091493C /* SingleBikeResponse_mock.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SingleBikeResponse_mock.json; sourceTree = "<group>"; };
 		04C7BC6F2B535E330091493C /* BikeStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeStatus.swift; sourceTree = "<group>"; };
 		04C7BC712B5361220091493C /* RegisterMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterMode.swift; sourceTree = "<group>"; };
+		04C7BC762B536C150091493C /* StolenRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StolenRecord.swift; sourceTree = "<group>"; };
 		04EA110C2B2502660024CDDD /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		04EA110D2B2502660024CDDD /* APIEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIEndpoints.swift; sourceTree = "<group>"; };
 		04EA11122B2502AF0024CDDD /* AuthenticatedUserResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticatedUserResponse.swift; sourceTree = "<group>"; };
@@ -284,6 +287,7 @@
 			isa = PBXGroup;
 			children = (
 				04EA111C2B2503C40024CDDD /* BikeRegistration.swift */,
+				04C7BC762B536C150091493C /* StolenRecord.swift */,
 				04EA111A2B2503B40024CDDD /* BikeRegisteredQuery.swift */,
 				0490A5F02B269F7800C4EC1E /* AddBikeOutput.swift */,
 				04C7BC712B5361220091493C /* RegisterMode.swift */,
@@ -604,6 +608,7 @@
 				04F2C63A2B4B00CD009E0A37 /* BikeDetailView.swift in Sources */,
 				0490A5F12B269F7800C4EC1E /* AddBikeOutput.swift in Sources */,
 				04F4B9392B098B9C009442B5 /* Client.swift in Sources */,
+				04C7BC772B536C150091493C /* StolenRecord.swift in Sources */,
 				043033362B40C34800FD126F /* ContentButtonView.swift in Sources */,
 				046B0A372B251E58006519A7 /* AppIconPicker.swift in Sources */,
 				04F4B9612B0996EC009442B5 /* Logger.swift in Sources */,
@@ -647,6 +652,7 @@
 			files = (
 				04EA112C2B25174E0024CDDD /* BikeIndexIdentifiable.swift in Sources */,
 				046B0A482B251F61006519A7 /* API.swift in Sources */,
+				04C7BC782B536C220091493C /* StolenRecord.swift in Sources */,
 				04F4B92F2B098B4F009442B5 /* OAuthTests.swift in Sources */,
 				04F4B9652B09A12A009442B5 /* Bike.swift in Sources */,
 				0490A5F22B26B66900C4EC1E /* BikeResponse.swift in Sources */,
