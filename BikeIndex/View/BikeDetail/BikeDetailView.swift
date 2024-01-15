@@ -33,9 +33,8 @@ struct BikeDetailView: View {
 
             Text("bike!")
             NavigationLink("Edit") {
-                WebView(url: bike.editUrl,
-                        configuration: client.webConfiguration,
-                        viewConfiguration: WebView.inspectable)
+                NavigableWebView(url: bike.editUrl)
+                    .environment(client)
                 .navigationTitle("Edit")
                 .navigationBarTitleDisplayMode(.inline)
             }
