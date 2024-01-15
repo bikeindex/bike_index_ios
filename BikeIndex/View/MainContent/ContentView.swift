@@ -47,8 +47,9 @@ struct ContentView: View {
                     RegisterBikeView(mode: .myOwnBike)
                 case .lostBike:
                     RegisterBikeView(mode: .myStolenBike)
-                case .foundBike:
-                    RegisterBikeView(mode: .abandonedBike)
+                case .searchBikes:
+                    NavigableWebView(url: URL(string: "https://bikeindex.org/bikes?stolenness=all"))
+                        .environment(client)
                 }
             }
             .navigationDestination(for: Bike.self) { bike in

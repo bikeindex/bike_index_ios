@@ -69,7 +69,7 @@ struct RegisterBikeView: View {
         let passedSerial = missingSerial || (!(bike.serial?.isEmpty ?? true))
         let passedManufacturer = !bike.manufacturerName.isEmpty
         // Email is required, unless the bike is abandoned/impounded
-        let passedEmail = (!ownerEmail.isEmpty || mode == .abandonedBike)
+        let passedEmail = !ownerEmail.isEmpty
         return !(passedSerial && passedManufacturer && passedEmail)
     }
 

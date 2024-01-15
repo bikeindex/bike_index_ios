@@ -12,6 +12,7 @@ enum ActionIconResource: String {
     case recover = "icon_recover"
     case alert = "icon_alert"
     case responds = "icon_responds"
+    case search = "stolen-registry"
 
     var image: UIImage? {
         UIImage(named: self.rawValue)

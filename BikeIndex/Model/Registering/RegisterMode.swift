@@ -10,7 +10,6 @@ import Foundation
 enum RegisterMode {
     case myOwnBike
     case myStolenBike
-    case abandonedBike
 
     /// User-facing title for what this mode will do
     var title: String {
@@ -19,8 +18,6 @@ enum RegisterMode {
             "Enter Bike Details"
         case .myStolenBike:
             "Enter Stolen Bike Details"
-        case .abandonedBike:
-            "Enter Found Bike Details"
         }
     }
 }

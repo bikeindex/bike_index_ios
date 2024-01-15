@@ -18,8 +18,8 @@ struct ContentButtonView: View {
                 path.append(MainContent.registerBike)
             case .alertBike:
                 path.append(MainContent.lostBike)
-            case .respondBike:
-                path.append(MainContent.foundBike)
+            case .search:
+                path.append(MainContent.searchBikes)
             }
         }, label: {
             VStack {
@@ -45,8 +45,8 @@ enum ContentButton: String, Identifiable, Codable, CaseIterable {
     case registerBike
     /// I lost my bike
     case alertBike
-    /// I found a bike
-    case respondBike
+    /// Search!
+    case search
 
     var icon: ActionIconResource {
         switch self {
@@ -54,8 +54,8 @@ enum ContentButton: String, Identifiable, Codable, CaseIterable {
             return .register
         case .alertBike:
             return .alert
-        case .respondBike:
-            return .responds
+        case .search:
+            return .search
         }
     }
 
@@ -65,8 +65,8 @@ enum ContentButton: String, Identifiable, Codable, CaseIterable {
             return "Register a bike"
         case .alertBike:
             return "Register a stolen bike"
-        case .respondBike:
-            return "Register a found bike"
+        case .search:
+            return "Search"
         }
     }
 

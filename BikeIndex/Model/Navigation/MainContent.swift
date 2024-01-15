@@ -16,5 +16,7 @@ enum MainContent: Identifiable {
     //
     case registerBike
     case lostBike
-    case foundBike
+
+    //
+    case searchBikes
 }
