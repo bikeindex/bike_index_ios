@@ -35,8 +35,14 @@ struct SettingsView: View {
             if client.authenticated {
                 Section {
                     Button(action: client.destroySession) {
-                        Label("Sign out", systemImage: "figure.walk.departure")
+                        // Hack in an empty destination to achieve the disclosure indicator
+                        NavigationLink(destination: EmptyView()) {
+                            Label("Sign out", systemImage: "figure.walk.departure")
+                                .tint(Color.highlightPrimary)
+                                .foregroundStyle(Color.highlightPrimary)
+                        }
                     }
+                    .tint(Color.highlightPrimary)
                 }
             }
 
