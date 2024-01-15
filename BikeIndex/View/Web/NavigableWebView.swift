@@ -47,5 +47,6 @@ struct NavigableWebView: View {
                 }
             }
         }
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

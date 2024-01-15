@@ -20,9 +20,8 @@ struct AcknowledgementListItemView: View {
                     .navigationBarTitleDisplayMode(.inline)
             }
             .navigationDestination(item: $repositoryUrl) { url in
-                WebView(url: url,
-                        configuration: client.webConfiguration,
-                        viewConfiguration: WebView.inspectable)
+                NavigableWebView(url: url)
+                    .environment(client)
             }
         } label: {
             VStack(alignment: .leading) {
