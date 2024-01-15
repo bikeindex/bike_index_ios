@@ -9,12 +9,12 @@ import WebKit
 import OSLog
 
 /// Delegate to intercept completed OAuth callback URLs, forward them to Client, and complete authentication.
-final class AuthNavigationDelegate: NSObject, WKNavigationDelegate {
+final class AuthNavigationDelegate: NavigatorChild {
     var client: Client?
 
     // MARK: - Decide Policy
 
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, preferences: WKWebpagePreferences) async -> (WKNavigationActionPolicy, WKWebpagePreferences) {
+    override func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, preferences: WKWebpagePreferences) async -> (WKNavigationActionPolicy, WKWebpagePreferences) {
         if let url = navigationAction.request.url,
            let scheme = url.scheme,
            scheme + "://" == client?.configuration.redirectUri,

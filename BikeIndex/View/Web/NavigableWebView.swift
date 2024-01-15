@@ -14,7 +14,12 @@ struct NavigableWebView: View {
 
     var url: URL?
 
-    @State var navigator = Navigator()
+    @State var navigator: Navigator
+
+    init(url: URL? = nil, navigator: Navigator = Navigator()) {
+        self.url = url
+        self._navigator = State(initialValue: navigator)
+    }
 
     var body: some View {
         WebView(url: url,
@@ -42,28 +47,5 @@ struct NavigableWebView: View {
                 }
             }
         }
-    }
-}
-
-@Observable class Navigator: NSObject, WKNavigationDelegate {
-
-    // MARK: - Navigation Controller
-
-    var wkWebView: WKWebView?
-
-    var canGoBack: Bool {
-        wkWebView?.canGoBack ?? false
-    }
-
-    var canGoForward: Bool {
-        wkWebView?.canGoForward ?? false
-    }
-
-    var historyDidChange: Bool = false
-
-    // MARK: - Navigation Delegate
-
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        historyDidChange = true
     }
 }

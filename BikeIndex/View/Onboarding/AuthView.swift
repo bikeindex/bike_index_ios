@@ -61,14 +61,11 @@ struct AuthView: View {
             }
             .sheet(isPresented: $displaySignIn, content: {
                 NavigationStack {
-                    WebView(url: oAuthUrl, configuration: client.webConfiguration) {
-                        authNavigationDelegate.client = client
-                        $0.navigationDelegate = authNavigationDelegate
-                        #if !RELEASE
-                        $0.isInspectable = true
-                        #endif
-                    }
+                    NavigableWebView(url: oAuthUrl,
+                                     navigator: Navigator(child: authNavigationDelegate))
+                    .environment(client)
                     .navigationTitle("Sign in")
+                    .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItemGroup(placement: .topBarLeading) {
                             Button("Close") {
@@ -81,6 +78,9 @@ struct AuthView: View {
 
             .navigationTitle("Welcome to Bike Index")
             .navigationBarTitleDisplayMode(.inline)
+        }
+        .onAppear {
+            authNavigationDelegate.client = client
         }
     }
 
