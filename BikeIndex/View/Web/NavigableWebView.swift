@@ -14,9 +14,9 @@ struct NavigableWebView: View {
 
     var url: URL?
 
-    @State var navigator: Navigator
+    @State var navigator: HistoryNavigator
 
-    init(url: URL? = nil, navigator: Navigator = Navigator()) {
+    init(url: URL? = nil, navigator: HistoryNavigator = HistoryNavigator()) {
         self.url = url
         self._navigator = State(initialValue: navigator)
     }
