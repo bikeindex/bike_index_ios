@@ -14,8 +14,8 @@ enum WebScripts: String {
     nav { display: none }
     .primary-footer .terms-and-stuff { display: none }
     body, .organized-left-menu { padding-top: 16px }
+    .bike-overlay-wrapper { display: none }
     """
-    /*    footer { display: none } */
 
     var script: WKUserScript {
         let escapedNewlines = self.rawValue.replacingOccurrences(of: "\n", with: "\\n")

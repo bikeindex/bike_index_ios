@@ -69,7 +69,6 @@
 		04EA112C2B25174E0024CDDD /* BikeIndexIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA11182B25039F0024CDDD /* BikeIndexIdentifiable.swift */; };
 		04EC712D2B5436BD00898CA1 /* AuthNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EC712C2B5436BD00898CA1 /* AuthNavigationDelegate.swift */; };
 		04EC712F2B54414D00898CA1 /* WebScripts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EC712E2B54414D00898CA1 /* WebScripts.swift */; };
-		04EC71342B54B1BA00898CA1 /* WebView+Inspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EC71332B54B1BA00898CA1 /* WebView+Inspectable.swift */; };
 		04EC71362B54B59500898CA1 /* NavigableWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EC71352B54B59500898CA1 /* NavigableWebView.swift */; };
 		04EC71382B54CB3900898CA1 /* NavigatorChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EC71372B54CB3900898CA1 /* NavigatorChild.swift */; };
 		04EC713C2B54CB8F00898CA1 /* HistoryNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EC713B2B54CB8F00898CA1 /* HistoryNavigator.swift */; };
@@ -160,7 +159,6 @@
 		04EA111E2B2503F40024CDDD /* ActionIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionIcon.swift; sourceTree = "<group>"; };
 		04EC712C2B5436BD00898CA1 /* AuthNavigationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthNavigationDelegate.swift; sourceTree = "<group>"; };
 		04EC712E2B54414D00898CA1 /* WebScripts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebScripts.swift; sourceTree = "<group>"; };
-		04EC71332B54B1BA00898CA1 /* WebView+Inspectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebView+Inspectable.swift"; sourceTree = "<group>"; };
 		04EC71352B54B59500898CA1 /* NavigableWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigableWebView.swift; sourceTree = "<group>"; };
 		04EC71372B54CB3900898CA1 /* NavigatorChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigatorChild.swift; sourceTree = "<group>"; };
 		04EC713B2B54CB8F00898CA1 /* HistoryNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryNavigator.swift; sourceTree = "<group>"; };
@@ -321,7 +319,6 @@
 			children = (
 				04EC712C2B5436BD00898CA1 /* AuthNavigationDelegate.swift */,
 				04EC71372B54CB3900898CA1 /* NavigatorChild.swift */,
-				04EC71332B54B1BA00898CA1 /* WebView+Inspectable.swift */,
 				04EC713B2B54CB8F00898CA1 /* HistoryNavigator.swift */,
 				04EC712E2B54414D00898CA1 /* WebScripts.swift */,
 				04EC71352B54B59500898CA1 /* NavigableWebView.swift */,
@@ -629,7 +626,6 @@
 				0430332C2B3E642200FD126F /* Binding+Optional.swift in Sources */,
 				04C7BC642B534F090091493C /* PreviewData.swift in Sources */,
 				04B6600B2B43169E0055A056 /* WelcomeView.swift in Sources */,
-				04EC71342B54B1BA00898CA1 /* WebView+Inspectable.swift in Sources */,
 				04EC71362B54B59500898CA1 /* NavigableWebView.swift in Sources */,
 				04F4B9422B098BAA009442B5 /* RegisterBikeView.swift in Sources */,
 				0430332F2B3E64C300FD126F /* US_States.swift in Sources */,

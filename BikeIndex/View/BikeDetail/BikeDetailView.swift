@@ -17,28 +17,18 @@ struct BikeDetailView: View {
     @State private var url: URL?
 
     var body: some View {
-        VStack {
-            AsyncImage(url: bike.largeImage) { image in
-                image.resizable().scaledToFill()
-            } placeholder: {
-                Button {
-                    url = bike.editPhoto
-                } label: {
-                    Label("Add a photo", systemImage: "camera.circle")
-                        .labelStyle(.titleAndIcon)
+        NavigableWebView(url: bike.url)
+            .environment(client)
+            .toolbar(content: {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink("Edit") {
+                        NavigableWebView(url: bike.editUrl)
+                            .environment(client)
+                            .navigationTitle("Edit")
+                            .navigationBarTitleDisplayMode(.inline)
+                    }
                 }
-
-            }
-            .frame(maxWidth: .infinity, maxHeight: 100)
-
-            Text("bike!")
-            NavigationLink("Edit") {
-                NavigableWebView(url: bike.editUrl)
-                    .environment(client)
-                .navigationTitle("Edit")
-                .navigationBarTitleDisplayMode(.inline)
-            }
-        }
+            })
         .navigationTitle(bike.title)
     }
 }
@@ -64,7 +54,7 @@ struct BikeDetailView: View {
 
 
 extension Bike {
-    // MARK: - Convenience URLs for editing
+    // MARK: - Convenience URLs for future granular editing
 
     @Transient var editUrl: URL? {
         url.appending(path: "edit/bike_details")

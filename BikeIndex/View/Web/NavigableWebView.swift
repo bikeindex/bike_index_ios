@@ -24,6 +24,9 @@ struct NavigableWebView: View {
     var body: some View {
         WebView(url: url,
                 configuration: client.webConfiguration) {
+            #if !RELEASE
+            $0.isInspectable = true
+            #endif
             navigator.wkWebView = $0
             $0.navigationDelegate = navigator
         }
