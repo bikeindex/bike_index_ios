@@ -145,7 +145,8 @@ struct WelcomeView: View {
         }
         .navigationDestination(item: $selectedUseCase) { useCase in
             WebView(url: useCase.action(on: client.configuration.host),
-                    configuration: client.webConfiguration)
+                    configuration: client.webConfiguration,
+                    viewConfiguration: WebView.inspectable)
         }
         .toolbarTitleDisplayMode(.large)
         .toolbarColorScheme(.dark, for: .navigationBar)

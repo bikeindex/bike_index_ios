@@ -21,7 +21,8 @@ struct AcknowledgementListItemView: View {
             }
             .navigationDestination(item: $repositoryUrl) { url in
                 WebView(url: url,
-                        configuration: client.webConfiguration)
+                        configuration: client.webConfiguration,
+                        viewConfiguration: WebView.inspectable)
             }
         } label: {
             VStack(alignment: .leading) {

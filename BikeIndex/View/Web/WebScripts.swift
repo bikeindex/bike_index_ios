@@ -13,6 +13,7 @@ enum WebScripts: String {
     """
     nav { display: none }
     .primary-footer .terms-and-stuff { display: none }
+    body, .organized-left-menu { padding-top: 16px }
     """
     /*    footer { display: none } */
 
