@@ -50,6 +50,7 @@
 		04C7BC732B5362EB0091493C /* BikeStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C7BC6F2B535E330091493C /* BikeStatus.swift */; };
 		04C7BC772B536C150091493C /* StolenRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C7BC762B536C150091493C /* StolenRecord.swift */; };
 		04C7BC782B536C220091493C /* StolenRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C7BC762B536C150091493C /* StolenRecord.swift */; };
+		04D750A02B55DD2400D35342 /* Color+Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D7509F2B55DD2400D35342 /* Color+Theme.swift */; };
 		04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 04E1343D2B4B718200CE88DD /* WebViewKit */; };
 		04EA110E2B2502660024CDDD /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA110C2B2502660024CDDD /* API.swift */; };
 		04EA110F2B2502660024CDDD /* APIEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA110D2B2502660024CDDD /* APIEndpoints.swift */; };
@@ -149,6 +150,7 @@
 		04C7BC6F2B535E330091493C /* BikeStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeStatus.swift; sourceTree = "<group>"; };
 		04C7BC712B5361220091493C /* RegisterMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterMode.swift; sourceTree = "<group>"; };
 		04C7BC762B536C150091493C /* StolenRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StolenRecord.swift; sourceTree = "<group>"; };
+		04D7509F2B55DD2400D35342 /* Color+Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Theme.swift"; sourceTree = "<group>"; };
 		04EA110C2B2502660024CDDD /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		04EA110D2B2502660024CDDD /* APIEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIEndpoints.swift; sourceTree = "<group>"; };
 		04EA11122B2502AF0024CDDD /* AuthenticatedUserResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticatedUserResponse.swift; sourceTree = "<group>"; };
@@ -305,6 +307,14 @@
 			path = Registering;
 			sourceTree = "<group>";
 		};
+		04D7509E2B55DD1B00D35342 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				04D7509F2B55DD2400D35342 /* Color+Theme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
 		04EA11112B2502990024CDDD /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
@@ -442,6 +452,7 @@
 		04F4B9362B098B81009442B5 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				04D7509E2B55DD1B00D35342 /* Theme */,
 				04EC71292B54362700898CA1 /* Web */,
 				04F2C6382B4B00B0009E0A37 /* BikeDetail */,
 				046B0A362B251E58006519A7 /* TextLink.swift */,
@@ -649,6 +660,7 @@
 				04F4B9452B098BAA009442B5 /* SearchBikesView.swift in Sources */,
 				04C7BC702B535E330091493C /* BikeStatus.swift in Sources */,
 				043033282B3E285F00FD126F /* StolenRecordEntryView.swift in Sources */,
+				04D750A02B55DD2400D35342 /* Color+Theme.swift in Sources */,
 				043033382B41367100FD126F /* MainContent.swift in Sources */,
 				046B0A3A2B251E67006519A7 /* AlternateIconsModel.swift in Sources */,
 				0452C6BA2B4A72FD00AD572C /* AcknowledgementPackageDetailView.swift in Sources */,

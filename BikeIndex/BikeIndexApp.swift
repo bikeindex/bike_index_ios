@@ -39,8 +39,10 @@ struct BikeIndexApp: App {
         WindowGroup {
             if client.authenticated {
                 ContentView()
+                    .tint(Color.hero)
             } else {
                 AuthView()
+                    .tint(Color.hero)
             }
         }
         .environment(client)
