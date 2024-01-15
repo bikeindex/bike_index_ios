@@ -30,7 +30,7 @@ open class NavigatorChild: NSObject, WKNavigationDelegate {
         if let child {
             return await child.webView(webView, decidePolicyFor: navigationAction, preferences: preferences)
         } else {
-            return await (WKNavigationActionPolicy.allow, webView.configuration.defaultWebpagePreferences)
+            return (WKNavigationActionPolicy.allow, preferences)
         }
     }
 
