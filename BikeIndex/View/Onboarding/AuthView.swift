@@ -68,6 +68,7 @@ struct AuthView: View {
                         $0.isInspectable = true
                         #endif
                     }
+                    .navigationTitle("Sign in")
                     .toolbar {
                         ToolbarItemGroup(placement: .topBarLeading) {
                             Button("Close") {

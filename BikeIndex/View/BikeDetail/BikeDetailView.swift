@@ -33,7 +33,8 @@ struct BikeDetailView: View {
 
             Text("bike!")
             NavigationLink("Edit") {
-                WebView(url: bike.editUrl)
+                WebView(url: bike.editUrl,
+                        configuration: client.webConfiguration)
             }
         }
         .navigationTitle(bike.title)

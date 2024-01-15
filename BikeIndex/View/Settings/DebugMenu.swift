@@ -53,7 +53,8 @@ struct DebugMenu: View {
             }
         }
         .navigationDestination(item: $selectedUrl) { url in
-            WebView(url: url)
+            WebView(url: url,
+                    configuration: client.webConfiguration)
         }
         .navigationTitle("API Configuration")
     }

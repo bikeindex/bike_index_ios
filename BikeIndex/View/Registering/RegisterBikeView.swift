@@ -78,7 +78,8 @@ struct RegisterBikeView: View {
             if mode == .myStolenBike {
                 Section {
                     NavigationLink {
-                        WebView(url: BikeIndexLink.stolenBikeFAQ.link(base: client.configuration.host))
+                        WebView(url: BikeIndexLink.stolenBikeFAQ.link(base: client.configuration.host),
+                                configuration: client.webConfiguration)
                     } label: {
                         Text("⚠️ How to get your stolen bike back")
                     }
@@ -285,7 +286,8 @@ struct RegisterBikeView: View {
             }
         }
         .navigationDestination(item: $link) { url in
-            WebView(url: url)
+            WebView(url: url,
+                    configuration: client.webConfiguration)
         }
     }
 

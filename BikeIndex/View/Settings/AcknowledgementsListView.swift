@@ -9,8 +9,9 @@ import SwiftUI
 import WebViewKit
 
 struct AcknowledgementListItemView: View {
+    @Environment(Client.self) private var client
     var package: AcknowledgementPackage
-    @State var repositoryUrl: URL?
+    @State private var repositoryUrl: URL?
 
     var body: some View {
         NavigationLink {
@@ -19,7 +20,8 @@ struct AcknowledgementListItemView: View {
                     .navigationBarTitleDisplayMode(.inline)
             }
             .navigationDestination(item: $repositoryUrl) { url in
-                WebView(url: url)
+                WebView(url: url,
+                        configuration: client.webConfiguration)
             }
         } label: {
             VStack(alignment: .leading) {
