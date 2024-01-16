@@ -28,7 +28,7 @@ struct AcknowledgementListItemView: View {
                 Text(package.title)
                     .font(.title3)
                 Text(package.license.name)
-                Text(package.description)
+                Text(package.copyright)
             }
         }
     }

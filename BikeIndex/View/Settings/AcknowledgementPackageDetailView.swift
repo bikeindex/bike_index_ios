@@ -29,7 +29,7 @@ struct AcknowledgementPackageDetailView: View {
 #Preview {
     let package = AcknowledgementPackage(title: "BikeIndex iOS",
                                          license: .gnuAfferoGPLv3,
-                                         description: "2023 © Bike Index, a 501(c)(3) nonprofit - EIN 81-4296194",
+                                         copyright: "2023 © Bike Index, a 501(c)(3) nonprofit - EIN 81-4296194",
                                          repository: URL(string: "https://github.com/bikeindex/bike_index_ios"))
     var binding: Binding<URL?> = Binding {
         package.repository

@@ -7,6 +7,8 @@
 
 import SwiftUI
 import SwiftData
+import FontKit
+import FontOpenSans
 
 @main
 struct BikeIndexApp: App {
@@ -34,6 +36,10 @@ struct BikeIndexApp: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
+
+    init() {
+        FontKit.registerOpenSans()
+    }
 
     var body: some Scene {
         WindowGroup {
