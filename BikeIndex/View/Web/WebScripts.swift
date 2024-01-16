@@ -20,11 +20,11 @@ enum WebScripts: String {
     var script: WKUserScript {
         let escapedNewlines = self.rawValue.replacingOccurrences(of: "\n", with: "\\n")
         let javascript =
-"""
-console.log("I'm here!");
-document.head.insertAdjacentHTML('beforeend', \"<style>\(escapedNewlines)</style>\")
-"""
-        Logger.api.debug("\(javascript, privacy: .public)")
+        """
+        document.head.insertAdjacentHTML('beforeend', \"<style>\(escapedNewlines)</style>\")
+        """
+
+        Logger.api.debug("Injecting \(javascript, privacy: .public)")
         return WKUserScript(source: javascript,
                             injectionTime: .atDocumentEnd,
                             forMainFrameOnly: true)

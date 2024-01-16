@@ -12,6 +12,8 @@ enum BikeIndexLink: Identifiable {
     case oauthApplications
     case serials
     case stolenBikeFAQ
+    case privacyPolicy
+    case termsOfService
 
     var id: Self { self }
 
@@ -25,6 +27,8 @@ enum BikeIndexLink: Identifiable {
             markdownSource = "Every bike has a unique serial number, it's how they are identified. To learn more or see some examples, [go to our serial page](\(base.appending(path: link)))."
         case .stolenBikeFAQ:
             markdownSource = "Learn more about [How to get your stolen bike back](\(base.appending(path: link)))"
+        case .privacyPolicy, .termsOfService:
+            return AttributedString()
         }
 
         do {
@@ -50,6 +54,12 @@ enum BikeIndexLink: Identifiable {
         case .stolenBikeFAQ:
             // https://bikeindex.org/info/how-to-get-your-stolen-bike-back
             return "info/how-to-get-your-stolen-bike-back"
+        case .privacyPolicy:
+            // https://bikeindex.org/privacy
+            return "privacy"
+        case .termsOfService:
+            // https://bikeindex.org/terms
+            return "terms"
         }
     }
 }

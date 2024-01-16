@@ -59,6 +59,18 @@ struct SettingsView: View {
                 } label: {
                     Label("Acknowledgements", systemImage: "character.book.closed")
                 }
+                NavigationLink {
+                    NavigableWebView(url: BikeIndexLink.privacyPolicy.link(base: client.configuration.host))
+                        .navigationTitle("Privacy Policy")
+                } label: {
+                    Label("Privacy Policy", systemImage: "shield.checkered")
+                }
+                NavigationLink {
+                    NavigableWebView(url: BikeIndexLink.termsOfService.link(base: client.configuration.host))
+                        .navigationTitle("Terms of Service")
+                } label: {
+                    Label("Terms of Service", systemImage: "text.book.closed")
+                }
             }
 
             footer: {
