@@ -54,6 +54,14 @@ struct AcknowledgementsListView: View {
                 Text("iOS PACKAGES")
                     .textCase(nil)
             }
+
+            Section {
+                List(AcknowledgementPackage.fontPackages) { package in
+                    AcknowledgementListItemView(package: package)
+                }
+            } header: {
+                Text("Fonts")
+            }
         }
         .navigationTitle("Acknowledgements")
     }

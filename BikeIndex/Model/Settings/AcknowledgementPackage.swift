@@ -48,7 +48,13 @@ extension AcknowledgementPackage {
         AcknowledgementPackage(title: "FontKit",
                                license: .mit,
                                copyright: "Copyright © 2022 VishwaiOSDev",
-                               repository: URL(string: "https://github.com/VishwaiOSDev/FontKit"))
+                               repository: URL(string: "https://github.com/VishwaiOSDev/FontKit")),
+
+        // MARK: Open Font
+        AcknowledgementPackage(title: "Open Sans",
+                               license: .openFontLicense,
+                               copyright: "Copyright © 2021, Steve Matteson (https://mattesontypographics.com/),\nwith Reserved Font Name OpenSans.",
+                               repository: URL(string: "https://fonts.google.com/specimen/Open+Sans/about"))
     ]
 
     static var gnuAfferoGPLv3Packages: [AcknowledgementPackage] {
@@ -57,5 +63,9 @@ extension AcknowledgementPackage {
 
     static var mitPackages: [AcknowledgementPackage] {
         AcknowledgementPackage.all.filter { $0.license == .mit }
+    }
+
+    static var fontPackages: [AcknowledgementPackage] {
+        AcknowledgementPackage.all.filter { $0.license == .openFontLicense }
     }
 }
