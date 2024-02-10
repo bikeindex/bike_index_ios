@@ -802,7 +802,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F4B9272B098B44009442B5 /* BikeIndex-production.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "Doodle AppIcon-wob AppIcon-striped AppIcon-bow";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "Doodle AppIcon-wob AppIcon-striped AppIcon-bow AppIcon-pride";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BikeIndex/BikeIndex.entitlements;
@@ -998,7 +998,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F4B9292B098B44009442B5 /* BikeIndex-development.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "Doodle AppIcon-wob AppIcon-striped AppIcon-bow";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "Doodle AppIcon-wob AppIcon-striped AppIcon-bow AppIcon-pride";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BikeIndex/BikeIndex.entitlements;
@@ -1035,7 +1035,7 @@
 		04F4B9202B098ADE009442B5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-wob AppIcon-striped AppIcon-bow";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-wob AppIcon-striped AppIcon-bow AppIcon-pride";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BikeIndex/BikeIndex.entitlements;

@@ -15,6 +15,7 @@ enum AppIcon: String, CaseIterable, Identifiable {
     case blackOnWhite = "AppIcon-bow"
     case whiteOnBlack = "AppIcon-wob"
     case striped = "AppIcon-striped"
+    case pride = "AppIcon-pride"
     #if DEBUG
     case doodle = "Doodle"
     #endif
@@ -40,6 +41,8 @@ enum AppIcon: String, CaseIterable, Identifiable {
             return "White on black"
         case .striped:
             return "Striped"
+        case .pride:
+            return "Pride 🏳️‍🌈"
         #if DEBUG
         case .doodle:
             return "Jack's Doodle"
