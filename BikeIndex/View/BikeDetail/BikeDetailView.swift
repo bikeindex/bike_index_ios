@@ -52,7 +52,6 @@ struct BikeDetailView: View {
     }
 }
 
-
 extension Bike {
     // MARK: - Convenience URLs for future granular editing
 

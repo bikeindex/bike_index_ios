@@ -55,12 +55,14 @@ struct AcknowledgementsListView: View {
                     .textCase(nil)
             }
 
-            Section {
-                List(AcknowledgementPackage.fontPackages) { package in
-                    AcknowledgementListItemView(package: package)
+            if !AcknowledgementPackage.fontPackages.isEmpty {
+                Section {
+                    List(AcknowledgementPackage.fontPackages) { package in
+                        AcknowledgementListItemView(package: package)
+                    }
+                } header: {
+                    Text("Fonts")
                 }
-            } header: {
-                Text("Fonts")
             }
         }
         .navigationTitle("Acknowledgements")

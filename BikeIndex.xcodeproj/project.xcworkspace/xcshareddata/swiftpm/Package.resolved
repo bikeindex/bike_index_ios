@@ -1,15 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "fontkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/VishwaiOSDev/FontKit.git",
-      "state" : {
-        "revision" : "d058c81d3c16d1993f40240d071e360a3519e571",
-        "version" : "0.0.6"
-      }
-    },
-    {
       "identity" : "keychain-swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/evgenyneu/keychain-swift.git",
