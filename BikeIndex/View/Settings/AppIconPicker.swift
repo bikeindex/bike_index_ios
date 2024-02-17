@@ -23,13 +23,22 @@ struct AppIconView: ViewModifier {
                 return 24
             }
         }
+
+        var shadow: CGFloat {
+            switch self {
+            case .small:
+                0.5
+            case .large:
+                4
+            }
+        }
     }
 
     func body(content: Content) -> some View {
         content
             .scaledToFit()
             .clipShape(RoundedRectangle(cornerRadius: scale.size))
-            .shadow(color: .primary, radius: 4)
+            .shadow(color: .primary, radius: scale.shadow)
     }
 }
 
