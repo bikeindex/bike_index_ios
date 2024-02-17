@@ -26,7 +26,11 @@ struct ContentBikeButtonView: View {
                             .resizable()
                     }
                 }
-                .frame(width: 200, height: 200)
+                .frame(minWidth: 100,
+                       maxWidth: .infinity,
+                       minHeight: 100,
+                       maxHeight: .infinity)
+                .aspectRatio(1.0, contentMode: .fit)
                 .clipShape(RoundedRectangle(cornerRadius: 24))
 
                 Text(bike.title)
