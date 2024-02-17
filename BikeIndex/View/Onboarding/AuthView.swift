@@ -54,7 +54,7 @@ struct AuthView: View {
                     NavigationLink {
                         SettingsView()
                     } label: {
-                        Label("Settings", systemImage: "gear")
+                        Label("Settings", systemImage: "gearshape")
                     }
                 }
 #endif

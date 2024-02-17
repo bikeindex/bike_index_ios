@@ -18,7 +18,7 @@ struct MainToolbar: ToolbarContent {
             Button {
                 path.append(MainContent.settings)
             } label: {
-                Label("Settings", systemImage: "gear")
+                Label("Settings", systemImage: "gearshape")
             }
         }
     }
