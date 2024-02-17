@@ -7,18 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0401235E2B817BD50045FECE /* BikeIndexOrgApiV3Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A3E2B251E92006519A7 /* BikeIndexOrgApiV3Tests.swift */; };
+		0401235F2B817BD50045FECE /* BikeRegistrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033302B3E6FA100FD126F /* BikeRegistrationTests.swift */; };
+		040123602B817BD50045FECE /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A3F2B251E92006519A7 /* MockData.swift */; };
+		040123612B817BD50045FECE /* Logger+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A3C2B251E91006519A7 /* Logger+Tests.swift */; };
+		040123622B817BD50045FECE /* UserRelationshipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A3D2B251E91006519A7 /* UserRelationshipTests.swift */; };
+		040123632B817BD50045FECE /* UserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A3B2B251E91006519A7 /* UserTests.swift */; };
+		040123642B817BD50045FECE /* BikeModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B92E2B098B4F009442B5 /* BikeModelTests.swift */; };
+		040123652B817BD50045FECE /* OAuthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B92D2B098B4F009442B5 /* OAuthTests.swift */; };
+		040123662B817BF80045FECE /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A3F2B251E92006519A7 /* MockData.swift */; };
 		043033282B3E285F00FD126F /* StolenRecordEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033272B3E285F00FD126F /* StolenRecordEntryView.swift */; };
 		0430332A2B3E5EEB00FD126F /* Countries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033292B3E5EEB00FD126F /* Countries.swift */; };
 		0430332C2B3E642200FD126F /* Binding+Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0430332B2B3E642200FD126F /* Binding+Optional.swift */; };
 		0430332F2B3E64C300FD126F /* US_States.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0430332E2B3E64C300FD126F /* US_States.swift */; };
-		043033312B3E6FA100FD126F /* BikeRegistrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033302B3E6FA100FD126F /* BikeRegistrationTests.swift */; };
-		043033322B3E707900FD126F /* Countries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033292B3E5EEB00FD126F /* Countries.swift */; };
-		043033332B3E708800FD126F /* US_States.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0430332E2B3E64C300FD126F /* US_States.swift */; };
 		043033362B40C34800FD126F /* ContentButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033352B40C34800FD126F /* ContentButtonView.swift */; };
 		043033382B41367100FD126F /* MainContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033372B41367100FD126F /* MainContent.swift */; };
 		0430333D2B41402800FD126F /* ProportionalLazyVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0430333C2B41402800FD126F /* ProportionalLazyVGrid.swift */; };
-		043C90B82B25222A00F13559 /* BikeRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA111C2B2503C40024CDDD /* BikeRegistration.swift */; };
-		043C90B92B25223400F13559 /* Manufacturer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B94E2B098BB1009442B5 /* Manufacturer.swift */; };
 		0452C6B02B4A608E00AD572C /* AcknowledgementsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0452C6AF2B4A608E00AD572C /* AcknowledgementsListView.swift */; };
 		0452C6B32B4A630500AD572C /* DebugMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0452C6B22B4A630500AD572C /* DebugMenu.swift */; };
 		0452C6B62B4A64D800AD572C /* LicenseEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0452C6B52B4A64D800AD572C /* LicenseEnum.swift */; };
@@ -27,46 +31,25 @@
 		046B0A372B251E58006519A7 /* AppIconPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A352B251E58006519A7 /* AppIconPicker.swift */; };
 		046B0A382B251E58006519A7 /* TextLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A362B251E58006519A7 /* TextLink.swift */; };
 		046B0A3A2B251E67006519A7 /* AlternateIconsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A392B251E67006519A7 /* AlternateIconsModel.swift */; };
-		046B0A402B251E92006519A7 /* UserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A3B2B251E91006519A7 /* UserTests.swift */; };
-		046B0A412B251E92006519A7 /* Logger+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A3C2B251E91006519A7 /* Logger+Tests.swift */; };
-		046B0A422B251E92006519A7 /* UserRelationshipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A3D2B251E91006519A7 /* UserRelationshipTests.swift */; };
-		046B0A432B251E92006519A7 /* BikeIndexOrgApiV3Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A3E2B251E92006519A7 /* BikeIndexOrgApiV3Tests.swift */; };
-		046B0A442B251E92006519A7 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A3F2B251E92006519A7 /* MockData.swift */; };
-		046B0A452B251F18006519A7 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B9382B098B9C009442B5 /* Client.swift */; };
-		046B0A462B251F30006519A7 /* APIEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA110D2B2502660024CDDD /* APIEndpoints.swift */; };
-		046B0A472B251F3A006519A7 /* ClientConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B9622B0998F6009442B5 /* ClientConfiguration.swift */; };
-		046B0A482B251F61006519A7 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA110C2B2502660024CDDD /* API.swift */; };
-		046B0A492B251FF5006519A7 /* BikeRegisteredQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA111A2B2503B40024CDDD /* BikeRegisteredQuery.swift */; };
 		0490A5EF2B26972600C4EC1E /* BikeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490A5EE2B26972600C4EC1E /* BikeResponse.swift */; };
 		0490A5F12B269F7800C4EC1E /* AddBikeOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490A5F02B269F7800C4EC1E /* AddBikeOutput.swift */; };
-		0490A5F22B26B66900C4EC1E /* BikeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490A5EE2B26972600C4EC1E /* BikeResponse.swift */; };
 		0494FD8C2B4250F70053C54F /* MainToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0494FD8B2B4250F70053C54F /* MainToolbar.swift */; };
 		04B660082B4309780055A056 /* AutocompleteManufacturerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B660072B4309780055A056 /* AutocompleteManufacturerResponse.swift */; };
 		04B6600B2B43169E0055A056 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B6600A2B43169E0055A056 /* WelcomeView.swift */; };
 		04C7BC642B534F090091493C /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C7BC632B534F090091493C /* PreviewData.swift */; };
-		04C7BC6B2B535AA80091493C /* AutocompleteManufacturerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B660072B4309780055A056 /* AutocompleteManufacturerResponse.swift */; };
 		04C7BC702B535E330091493C /* BikeStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C7BC6F2B535E330091493C /* BikeStatus.swift */; };
 		04C7BC722B5361220091493C /* RegisterMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C7BC712B5361220091493C /* RegisterMode.swift */; };
-		04C7BC732B5362EB0091493C /* BikeStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C7BC6F2B535E330091493C /* BikeStatus.swift */; };
 		04C7BC772B536C150091493C /* StolenRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C7BC762B536C150091493C /* StolenRecord.swift */; };
-		04C7BC782B536C220091493C /* StolenRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C7BC762B536C150091493C /* StolenRecord.swift */; };
 		04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 04E1343D2B4B718200CE88DD /* WebViewKit */; };
 		04EA110E2B2502660024CDDD /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA110C2B2502660024CDDD /* API.swift */; };
 		04EA110F2B2502660024CDDD /* APIEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA110D2B2502660024CDDD /* APIEndpoints.swift */; };
 		04EA11142B2502AF0024CDDD /* AuthenticatedUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA11122B2502AF0024CDDD /* AuthenticatedUserResponse.swift */; };
 		04EA11152B2502AF0024CDDD /* OAuthToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA11132B2502AF0024CDDD /* OAuthToken.swift */; };
-		04EA11172B2503920024CDDD /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B94C2B098BB1009442B5 /* User.swift */; };
 		04EA11192B25039F0024CDDD /* BikeIndexIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA11182B25039F0024CDDD /* BikeIndexIdentifiable.swift */; };
 		04EA111B2B2503B40024CDDD /* BikeRegisteredQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA111A2B2503B40024CDDD /* BikeRegisteredQuery.swift */; };
 		04EA111D2B2503C40024CDDD /* BikeRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA111C2B2503C40024CDDD /* BikeRegistration.swift */; };
 		04EA111F2B2503F40024CDDD /* ActionIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA111E2B2503F40024CDDD /* ActionIcon.swift */; };
 		04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */ = {isa = PBXBuildFile; productRef = 04EA11212B2504340024CDDD /* URLEncodedForm */; };
-		04EA11272B2516BA0024CDDD /* OAuthToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA11132B2502AF0024CDDD /* OAuthToken.swift */; };
-		04EA11282B2516CE0024CDDD /* AuthenticatedUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA11122B2502AF0024CDDD /* AuthenticatedUserResponse.swift */; };
-		04EA11292B2517040024CDDD /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B9602B0996EC009442B5 /* Logger.swift */; };
-		04EA112A2B2517260024CDDD /* FrameColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B94B2B098BB1009442B5 /* FrameColor.swift */; };
-		04EA112B2B25172A0024CDDD /* BicycleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B94F2B098BB1009442B5 /* BicycleType.swift */; };
-		04EA112C2B25174E0024CDDD /* BikeIndexIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA11182B25039F0024CDDD /* BikeIndexIdentifiable.swift */; };
 		04EC712D2B5436BD00898CA1 /* AuthNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EC712C2B5436BD00898CA1 /* AuthNavigationDelegate.swift */; };
 		04EC712F2B54414D00898CA1 /* WebScripts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EC712E2B54414D00898CA1 /* WebScripts.swift */; };
 		04EC71362B54B59500898CA1 /* NavigableWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EC71352B54B59500898CA1 /* NavigableWebView.swift */; };
@@ -77,8 +60,6 @@
 		04F4B9012B098ADE009442B5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04F4B9002B098ADE009442B5 /* Assets.xcassets */; };
 		04F4B9192B098ADE009442B5 /* BikeIndexUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B9182B098ADE009442B5 /* BikeIndexUITests.swift */; };
 		04F4B91B2B098ADE009442B5 /* BikeIndexUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B91A2B098ADE009442B5 /* BikeIndexUITestsLaunchTests.swift */; };
-		04F4B92F2B098B4F009442B5 /* OAuthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B92D2B098B4F009442B5 /* OAuthTests.swift */; };
-		04F4B9302B098B4F009442B5 /* BikeModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B92E2B098B4F009442B5 /* BikeModelTests.swift */; };
 		04F4B9322B098B5A009442B5 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 04F4B9312B098B5A009442B5 /* README.md */; };
 		04F4B9392B098B9C009442B5 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B9382B098B9C009442B5 /* Client.swift */; };
 		04F4B9422B098BAA009442B5 /* RegisterBikeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B93A2B098BA9009442B5 /* RegisterBikeView.swift */; };
@@ -97,7 +78,6 @@
 		04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04F4B95D2B0990CE009442B5 /* KeychainSwift */; };
 		04F4B9612B0996EC009442B5 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B9602B0996EC009442B5 /* Logger.swift */; };
 		04F4B9632B0998F6009442B5 /* ClientConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B9622B0998F6009442B5 /* ClientConfiguration.swift */; };
-		04F4B9652B09A12A009442B5 /* Bike.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B94A2B098BB1009442B5 /* Bike.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -621,6 +601,7 @@
 				0430333D2B41402800FD126F /* ProportionalLazyVGrid.swift in Sources */,
 				04F4B9432B098BAA009442B5 /* AuthView.swift in Sources */,
 				04EA111B2B2503B40024CDDD /* BikeRegisteredQuery.swift in Sources */,
+				040123662B817BF80045FECE /* MockData.swift in Sources */,
 				04F4B9442B098BAA009442B5 /* VerticalPicker.swift in Sources */,
 				04EC712F2B54414D00898CA1 /* WebScripts.swift in Sources */,
 				0430332C2B3E642200FD126F /* Binding+Optional.swift in Sources */,
@@ -678,35 +659,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04EA112C2B25174E0024CDDD /* BikeIndexIdentifiable.swift in Sources */,
-				046B0A482B251F61006519A7 /* API.swift in Sources */,
-				04C7BC782B536C220091493C /* StolenRecord.swift in Sources */,
-				04F4B92F2B098B4F009442B5 /* OAuthTests.swift in Sources */,
-				04F4B9652B09A12A009442B5 /* Bike.swift in Sources */,
-				0490A5F22B26B66900C4EC1E /* BikeResponse.swift in Sources */,
-				04EA11172B2503920024CDDD /* User.swift in Sources */,
-				04C7BC732B5362EB0091493C /* BikeStatus.swift in Sources */,
-				046B0A442B251E92006519A7 /* MockData.swift in Sources */,
-				04C7BC6B2B535AA80091493C /* AutocompleteManufacturerResponse.swift in Sources */,
-				043033332B3E708800FD126F /* US_States.swift in Sources */,
-				043033312B3E6FA100FD126F /* BikeRegistrationTests.swift in Sources */,
-				046B0A462B251F30006519A7 /* APIEndpoints.swift in Sources */,
-				04F4B9302B098B4F009442B5 /* BikeModelTests.swift in Sources */,
-				046B0A452B251F18006519A7 /* Client.swift in Sources */,
-				046B0A402B251E92006519A7 /* UserTests.swift in Sources */,
-				04EA112B2B25172A0024CDDD /* BicycleType.swift in Sources */,
-				043033322B3E707900FD126F /* Countries.swift in Sources */,
-				046B0A412B251E92006519A7 /* Logger+Tests.swift in Sources */,
-				046B0A432B251E92006519A7 /* BikeIndexOrgApiV3Tests.swift in Sources */,
-				043C90B82B25222A00F13559 /* BikeRegistration.swift in Sources */,
-				04EA11282B2516CE0024CDDD /* AuthenticatedUserResponse.swift in Sources */,
-				04EA112A2B2517260024CDDD /* FrameColor.swift in Sources */,
-				046B0A492B251FF5006519A7 /* BikeRegisteredQuery.swift in Sources */,
-				04EA11272B2516BA0024CDDD /* OAuthToken.swift in Sources */,
-				046B0A472B251F3A006519A7 /* ClientConfiguration.swift in Sources */,
-				04EA11292B2517040024CDDD /* Logger.swift in Sources */,
-				043C90B92B25223400F13559 /* Manufacturer.swift in Sources */,
-				046B0A422B251E92006519A7 /* UserRelationshipTests.swift in Sources */,
+				040123632B817BD50045FECE /* UserTests.swift in Sources */,
+				040123642B817BD50045FECE /* BikeModelTests.swift in Sources */,
+				0401235E2B817BD50045FECE /* BikeIndexOrgApiV3Tests.swift in Sources */,
+				040123602B817BD50045FECE /* MockData.swift in Sources */,
+				0401235F2B817BD50045FECE /* BikeRegistrationTests.swift in Sources */,
+				040123622B817BD50045FECE /* UserRelationshipTests.swift in Sources */,
+				040123612B817BD50045FECE /* Logger+Tests.swift in Sources */,
+				040123652B817BD50045FECE /* OAuthTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -6,6 +6,7 @@
 //
 
 import XCTest
+@testable import BikeIndex
 
 final class BikeRegistrationTests: XCTestCase {
 
@@ -18,6 +19,7 @@ final class BikeRegistrationTests: XCTestCase {
 
         bike.frameColorTertiary = .covered
         let registrationModel = BikeRegistration(bike: bike,
+                                                 mode: .myOwnBike,
                                                  stolen: nil,
                                                  ownerEmail: "")
 

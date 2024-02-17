@@ -6,6 +6,7 @@
 //
 
 import XCTest
+@testable import BikeIndex
 
 final class OAuthTests: XCTestCase {
 
