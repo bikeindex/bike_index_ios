@@ -29,7 +29,7 @@ struct AppIconView: ViewModifier {
         content
             .scaledToFit()
             .clipShape(RoundedRectangle(cornerRadius: scale.size))
-            .shadow(radius: 4)
+            .shadow(color: .primary, radius: 4)
     }
 }
 
