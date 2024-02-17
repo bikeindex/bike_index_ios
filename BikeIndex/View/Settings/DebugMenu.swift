@@ -8,6 +8,7 @@
 import SwiftUI
 import WebViewKit
 
+#if DEBUG
 struct DebugMenu: View {
     @Environment(Client.self) var client
 
@@ -66,3 +67,4 @@ struct DebugMenu: View {
             .environment(try! Client())
     }
 }
+#endif

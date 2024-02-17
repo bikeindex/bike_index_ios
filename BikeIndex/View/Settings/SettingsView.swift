@@ -46,12 +46,14 @@ struct SettingsView: View {
                 }
             }
 
+            #if DEBUG
             NavigationLink {
                 DebugMenu()
                     .environment(client)
             } label: {
                 Label("Debug menu", systemImage: "ladybug.circle")
             }
+            #endif
 
             Section {
                 NavigationLink {
