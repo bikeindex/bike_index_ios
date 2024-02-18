@@ -25,13 +25,17 @@ enum OAuth: APIEndpoint {
     /// Invoked second of all networking _using the `code` result_ from the ``OAuth.authorize`` response.
     case token(queryItems: [URLQueryItem])
 
+    /// POST https://bikeindex.org/oauth/token?grant_type=refresh_token&client_id={app_id}&refresh_token={refresh_token}
+    /// -- https://bikeindex.org/documentation/api_v3#ref_refresh_tokens
+    case refresh(queryItems: [URLQueryItem])
+
     case logout
 
     // MARK: -
 
     var method: HttpMethod {
         switch self {
-        case .authorize, .token:
+        case .authorize, .token, .refresh:
                 .post
         case .logout:
                 .get
@@ -51,7 +55,7 @@ enum OAuth: APIEndpoint {
 
     var responseModel: Decodable.Type {
         switch self {
-        case .authorize, .token:
+        case .authorize, .token, .refresh:
             OAuthToken.self
         case .logout:
             EmptyResponse.self
@@ -62,7 +66,7 @@ enum OAuth: APIEndpoint {
         switch self {
         case .authorize:
             return ["oauth", "authorize"]
-        case .token:
+        case .token, .refresh:
             return ["oauth", "token"]
         case .logout:
             return ["logout"]
@@ -75,6 +79,11 @@ enum OAuth: APIEndpoint {
         case .authorize(queryItems: let queryItems):
             url.append(queryItems: queryItems)
         case .token(let queryItems):
+            url.append(queryItems: queryItems)
+        case .refresh(let queryItems):
+            assert(queryItems.contains(where: { $0.name == "grant_type" }))
+            assert(queryItems.contains(where: { $0.name == "refresh_token" }))
+            assert(queryItems.contains(where: { $0.name == "client_id" }))
             url.append(queryItems: queryItems)
         case .logout:
             break

@@ -47,14 +47,20 @@ typealias QueryItemTuple = (name: String, value: String)
     }()
 
     /// Full OAuth token response.
-    private(set) var auth: OAuthToken?
+    var auth: OAuthToken?
     /// Access token is provided by the OAuth flow to the application from `ASWebAuthenticationSession`.
     /// The access token may be required in requests and it may be used to retrieve the full OAuth token (see ``auth``).
     private var accessToken: Token?
     private var keychain = KeychainSwift()
 
-    init(keychain: KeychainSwift = KeychainSwift()) throws {
+    // MARK: Refresh Properties
+    var refreshTimer: Timer?
+    var refreshRunLoop: RunLoop
+
+    init(keychain: KeychainSwift = KeychainSwift(),
+         refreshRunLoop: RunLoop = RunLoop.main) throws {
         self.keychain = keychain
+        self.refreshRunLoop = refreshRunLoop
         let configuration = try ClientConfiguration.bundledConfig()
         self.api = API(configuration: EndpointConfiguration(accessToken: "",
                                                             host: configuration.host),
@@ -130,11 +136,8 @@ typealias QueryItemTuple = (name: String, value: String)
     var userCanRegisterBikes: Bool {
         configuration.oauthScopes.contains(Scope.writeBikes)
     }
-}
 
-// MARK: - Authentication Operations
-
-extension Client {
+    // MARK: - Authentication Operations
 
     /// Stateful function to receive results of an authentication result.
     /// - Parameter authCallback: The "redirect URI" received from the OAuth provider. This should contain relevant
@@ -156,6 +159,7 @@ extension Client {
         }
         accessToken = newToken
 
+        // Step 2: Perform the full token fetch now that we have a requisite access code.
         let tokenQuery = [
             ("client_id", configuration.clientId),
             ("client_secret", configuration.secret),
@@ -174,6 +178,14 @@ extension Client {
             }
             self.auth = fullTokenAuth
             self.api.configuration.accessToken = fullTokenAuth.accessToken
+            let bufferedExpirationInterval = (fullTokenAuth.expiration - 60 * 3).timeIntervalSinceNow
+            let timer = Timer(timeInterval: bufferedExpirationInterval,
+                                      target: self,
+                                      selector: #selector(self.refreshToken(timer:)),
+                                      userInfo: ["token": fullTokenAuth],
+                                      repeats: false)
+            self.refreshRunLoop.add(timer, forMode: .default)
+            self.refreshTimer = timer
             do {
                 let data = try JSONEncoder().encode(fullTokenAuth)
                 self.keychain.set(data, forKey: Keychain.oauthToken)
@@ -194,6 +206,49 @@ extension Client {
             auth.isValid
         } else {
             false
+        }
+    }
+
+    @objc func refreshToken(timer: Timer) {
+        let refreshToken = self.auth?.refreshToken ?? ""
+
+        let tokenQuery = [
+            ("client_id", configuration.clientId),
+            ("refresh_token", refreshToken),
+            ("grant_type", "refresh_token"),
+        ].map { (item: QueryItemTuple) in
+            URLQueryItem(name: item.name, value: item.value)
+        }
+
+        Task {
+            let renewedTokenRequest = await api.get(OAuth.refresh(queryItems: tokenQuery))
+            switch renewedTokenRequest {
+            case .success(let success):
+                guard let refreshedToken = success as? OAuthToken else {
+                    Logger.client.error("Failed to parse oauthtoken from fetch")
+                    return
+                }
+
+                self.auth = refreshedToken
+                self.api.configuration.accessToken = refreshedToken.accessToken
+
+                let expirationInterval = (refreshedToken.expiration - 60 * 3).timeIntervalSinceNow
+                let timer = Timer(timeInterval: expirationInterval,
+                                          target: self,
+                                          selector: #selector(self.refreshToken(timer:)),
+                                          userInfo: ["token": refreshedToken],
+                                          repeats: false)
+                self.refreshRunLoop.add(timer, forMode: .default)
+                self.refreshTimer = timer
+                do {
+                    let data = try JSONEncoder().encode(refreshedToken)
+                    self.keychain.set(data, forKey: Keychain.oauthToken)
+                } catch {
+                    Logger.client.error("Failed to persist /oauth/token to keychain after fetching successfully, continuing")
+                }
+            case .failure(let failure):
+                Logger.client.error("Failed to fetch /oauth/token \(failure)")
+            }
         }
     }
 }

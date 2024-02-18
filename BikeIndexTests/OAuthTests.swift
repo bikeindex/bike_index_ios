@@ -11,17 +11,7 @@ import XCTest
 final class OAuthTests: XCTestCase {
 
     func test_oauth_parsing() throws {
-        let input = """
-{
-    "access_token": "vQclXy6QL-OZJnYP88mpjGJXiK8KkwHwCrpMDezLedY",
-    "token_type": "Bearer",
-    "expires_in": 3600,
-    "refresh_token": "-Y8FDaHbr3F6KauqtFINsPvIjziN9DCIbdGEy8GS-tM",
-    "scope": "read_user write_user read_bikes write_bikes read_organization_membership write_organizations",
-    "created_at": 1698883930
-}
-"""
-
+        let input = MockData.fullToken
         let rawJsonData = input.data(using: .utf8).unsafelyUnwrapped
         let output = try JSONDecoder().decode(OAuthToken.self, from: rawJsonData)
 

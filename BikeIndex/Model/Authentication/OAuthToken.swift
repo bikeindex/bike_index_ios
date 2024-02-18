@@ -10,6 +10,7 @@ import Foundation
 typealias Token = String
 
 struct OAuthToken: Codable, Equatable {
+    // MARK: JSON properties
     let accessToken: Token
     let tokenType: String
     let expiresIn: TimeInterval
@@ -17,8 +18,13 @@ struct OAuthToken: Codable, Equatable {
     let scope: [Scope]
     let createdAt: Date
 
-    let expiration: Date
+    // MARK: Synthesized property
+    var expiration: Date {
+        createdAt.addingTimeInterval(expiresIn)
+    }
+}
 
+extension OAuthToken {
     enum CodingKeys: String, CodingKey {
         // https://developer.apple.com/documentation/foundation/jsondecoder/keydecodingstrategy/convertfromsnakecase
         // Alternatively use convertFromSnakeCase decoding strategy but that would incur a performance cost.
@@ -36,14 +42,12 @@ struct OAuthToken: Codable, Equatable {
         self.tokenType = try container.decode(String.self, forKey: .tokenType)
         self.expiresIn = try container.decode(TimeInterval.self, forKey: .expiresIn)
         self.refreshToken = try container.decode(Token.self, forKey: .refreshToken)
-        
+
         let createdInt = try container.decode(Int.self, forKey: .createdAt)
         self.createdAt = Date(timeIntervalSince1970: TimeInterval(createdInt))
 
         let scopeString = try container.decode(String.self, forKey: .scope)
         self.scope = scopeString.components(separatedBy: " ").compactMap { Scope(rawValue: $0) }
-
-        self.expiration = createdAt.addingTimeInterval(expiresIn)
     }
 
     func encode(to encoder: Encoder) throws {
