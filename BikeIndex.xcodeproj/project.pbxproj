@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0401235E2B817BD50045FECE /* BikeIndexOrgApiV3Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A3E2B251E92006519A7 /* BikeIndexOrgApiV3Tests.swift */; };
 		0401235F2B817BD50045FECE /* BikeRegistrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033302B3E6FA100FD126F /* BikeRegistrationTests.swift */; };
-		040123602B817BD50045FECE /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A3F2B251E92006519A7 /* MockData.swift */; };
 		040123612B817BD50045FECE /* Logger+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A3C2B251E91006519A7 /* Logger+Tests.swift */; };
 		040123622B817BD50045FECE /* UserRelationshipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A3D2B251E91006519A7 /* UserRelationshipTests.swift */; };
 		040123632B817BD50045FECE /* UserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A3B2B251E91006519A7 /* UserTests.swift */; };
@@ -124,6 +123,7 @@
 		0494FD8B2B4250F70053C54F /* MainToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainToolbar.swift; sourceTree = "<group>"; };
 		04B660072B4309780055A056 /* AutocompleteManufacturerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutocompleteManufacturerResponse.swift; sourceTree = "<group>"; };
 		04B6600A2B43169E0055A056 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		04C736EC2B817FDC00D2BDA3 /* Debug (development).xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Debug (development).xctestplan"; sourceTree = "<group>"; };
 		04C7BC632B534F090091493C /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
 		04C7BC652B53514C0091493C /* SingleBikeResponse_mock.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SingleBikeResponse_mock.json; sourceTree = "<group>"; };
 		04C7BC6F2B535E330091493C /* BikeStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeStatus.swift; sourceTree = "<group>"; };
@@ -327,6 +327,7 @@
 		04F4B8EE2B098ADB009442B5 = {
 			isa = PBXGroup;
 			children = (
+				04C736EC2B817FDC00D2BDA3 /* Debug (development).xctestplan */,
 				04F4B9312B098B5A009442B5 /* README.md */,
 				04F4B9292B098B44009442B5 /* BikeIndex-development.xcconfig */,
 				04F4B9272B098B44009442B5 /* BikeIndex-production.xcconfig */,
@@ -379,7 +380,6 @@
 			children = (
 				046B0A3E2B251E92006519A7 /* BikeIndexOrgApiV3Tests.swift */,
 				046B0A3C2B251E91006519A7 /* Logger+Tests.swift */,
-				046B0A3F2B251E92006519A7 /* MockData.swift */,
 				046B0A3D2B251E91006519A7 /* UserRelationshipTests.swift */,
 				046B0A3B2B251E91006519A7 /* UserTests.swift */,
 				04F4B92E2B098B4F009442B5 /* BikeModelTests.swift */,
@@ -401,6 +401,7 @@
 		04F4B9352B098B73009442B5 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				046B0A3F2B251E92006519A7 /* MockData.swift */,
 				0452C6B42B4A64C200AD572C /* Settings */,
 				0453EA312B3CB06500FBF74C /* Navigation */,
 				046B0A392B251E67006519A7 /* AlternateIconsModel.swift */,
@@ -662,7 +663,6 @@
 				040123632B817BD50045FECE /* UserTests.swift in Sources */,
 				040123642B817BD50045FECE /* BikeModelTests.swift in Sources */,
 				0401235E2B817BD50045FECE /* BikeIndexOrgApiV3Tests.swift in Sources */,
-				040123602B817BD50045FECE /* MockData.swift in Sources */,
 				0401235F2B817BD50045FECE /* BikeRegistrationTests.swift in Sources */,
 				040123622B817BD50045FECE /* UserRelationshipTests.swift in Sources */,
 				040123612B817BD50045FECE /* Logger+Tests.swift in Sources */,

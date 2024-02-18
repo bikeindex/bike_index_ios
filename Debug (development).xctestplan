@@ -1,0 +1,40 @@
+{
+  "configurations" : [
+    {
+      "id" : "5655538D-D3A2-4265-8BE4-1EF7E4F89960",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:BikeIndex.xcodeproj",
+      "identifier" : "04F4B8F62B098ADB009442B5",
+      "name" : "BikeIndex"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "skippedTests" : [
+        "BikeModelTests\/test_reading_writing_json()"
+      ],
+      "target" : {
+        "containerPath" : "container:BikeIndex.xcodeproj",
+        "identifier" : "04F4B9092B098ADE009442B5",
+        "name" : "BikeIndexTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:BikeIndex.xcodeproj",
+        "identifier" : "04F4B9132B098ADE009442B5",
+        "name" : "BikeIndexUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
