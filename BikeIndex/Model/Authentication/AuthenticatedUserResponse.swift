@@ -21,7 +21,7 @@ struct AuthenticatedUserResponse: Decodable, ResponseModelInstantiable {
 
     let id: String
     let user: UserResponse
-    let bike_ids: [String]
+    let bike_ids: [Int]
     let memberships: [OrganizationResponse]
 
     func modelInstance() -> ModelInstance {
