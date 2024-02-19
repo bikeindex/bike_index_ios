@@ -46,16 +46,16 @@ enum BikeIndexLink: Identifiable {
 
     var id: Self { self }
 
-    /// Return a displayable link within normal text
+    /// Return a displayable link within attributed text for inline display
     func on(_ base: URL) -> AttributedString {
         let markdownSource: String
         switch self {
         case .oauthApplications:
-            markdownSource = "[Edit your OAuth Applications at bikeindex.org](\(base.appending(path: link)))"
+            markdownSource = "[Edit your OAuth Applications at bikeindex.org](\(link(base: base))"
         case .serials:
-            markdownSource = "Every bike has a unique serial number, it's how they are identified. To learn more or see some examples, [go to our serial page](\(base.appending(path: link)))."
+            markdownSource = "Every bike has a unique serial number, it's how they are identified. To learn more or see some examples, [go to our serial page](\(link(base: base)))."
         case .stolenBikeFAQ:
-            markdownSource = "Learn more about [How to get your stolen bike back](\(base.appending(path: link)))"
+            markdownSource = "Learn more about [How to get your stolen bike back](\(link(base: base)))"
         case .privacyPolicy, .termsOfService:
             return AttributedString()
         }
@@ -63,16 +63,17 @@ enum BikeIndexLink: Identifiable {
         do {
             return try AttributedString(markdown: markdownSource)
         } catch {
-            Logger.views.error("Failed to create link from \(self.link, privacy: .public) on base \(base, privacy: .public)")
+            Logger.views.error("Failed to create link from \(self.path, privacy: .public) on base \(base, privacy: .public)")
             return AttributedString(stringLiteral: "Internal error creating link.")
         }
     }
 
+    /// Return a plain URL for an action on another display (non-textual button)
     func link(base: URL) -> URL {
-        base.appending(path: self.link)
+        base.appending(path: path)
     }
 
-    var link: String {
+    var path: String {
         switch self {
         case .oauthApplications:
             // https://bikeindex.org/oauth/applications
