@@ -9,6 +9,7 @@ import SwiftUI
 import OSLog
 
 struct SettingsView: View {
+    @Environment(\.openURL) var openURL
     @Environment(Client.self) var client
 
     @State var iconsModel = AlternateIconsModel()
@@ -56,6 +57,11 @@ struct SettingsView: View {
             #endif
 
             Section {
+                Button("Contact Us", systemImage: "envelope") {
+                    openURL(MailToLink.contactUs.link)
+                }
+                .buttonStyle(PlainButtonStyle())
+
                 NavigationLink {
                     AcknowledgementsListView()
                 } label: {

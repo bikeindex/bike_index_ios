@@ -8,6 +8,35 @@
 import SwiftUI
 import OSLog
 
+enum MailToLink: Identifiable {
+    case contactUs
+
+    var id: Self { self }
+
+    var link: URL {
+        switch self {
+        case .contactUs:
+            let base = URL(string: "mailto:")!
+            let recipient = "support+ios@bikeindex.org"
+
+            let subject = URLQueryItem(name: "subject", value: "iOS App Help Request")
+            var queryItems: [URLQueryItem] = [subject]
+
+            if let info = Bundle.main.infoDictionary,
+               let marketingVersion = info["CFBundleShortVersionString"],
+               let buildNumber = info["CFBundleVersion"]
+            {
+                let body = URLQueryItem(name: "body", value: "\r\n\r\nVersion: \(marketingVersion) (\(buildNumber))")
+                queryItems.append(body)
+            }
+
+            return base
+                .appending(path: recipient)
+                .appending(queryItems: queryItems)
+        }
+    }
+}
+
 enum BikeIndexLink: Identifiable {
     case oauthApplications
     case serials
