@@ -94,6 +94,9 @@ typealias QueryItemTuple = (name: String, value: String)
                 self.auth = lastKnownAuth
                 accessToken = lastKnownAuth.accessToken
                 self.api.configuration.accessToken = lastKnownAuth.accessToken
+
+                setupRefreshTimer()
+
                 Logger.api.debug("Client.\(#function) found existing valid token \(String(describing: lastKnownAuth), privacy: .private)")
             } catch {
                 Logger.api.debug("Failed to find existing auth")
@@ -178,14 +181,7 @@ typealias QueryItemTuple = (name: String, value: String)
             }
             self.auth = fullTokenAuth
             self.api.configuration.accessToken = fullTokenAuth.accessToken
-            let bufferedExpirationInterval = (fullTokenAuth.expiration - 60 * 3).timeIntervalSinceNow
-            let timer = Timer(timeInterval: bufferedExpirationInterval,
-                                      target: self,
-                                      selector: #selector(self.refreshToken(timer:)),
-                                      userInfo: ["token": fullTokenAuth],
-                                      repeats: false)
-            self.refreshRunLoop.add(timer, forMode: .default)
-            self.refreshTimer = timer
+            self.setupRefreshTimer()
             do {
                 let data = try JSONEncoder().encode(fullTokenAuth)
                 self.keychain.set(data, forKey: Keychain.oauthToken)
@@ -207,6 +203,28 @@ typealias QueryItemTuple = (name: String, value: String)
         } else {
             false
         }
+    }
+
+    // Renew the session token 3 minutes before expiration
+    func setupRefreshTimer() {
+        guard let auth else {
+            fatalError()
+        }
+        let bufferedExpirationInterval = (auth.expiration - 60 * 3).timeIntervalSinceNow
+        let timer = Timer(timeInterval: bufferedExpirationInterval,
+                          target: self,
+                          selector: #selector(self.refreshToken(timer:)),
+                          userInfo: ["token": auth],
+                          repeats: false)
+        self.refreshRunLoop.add(timer, forMode: .default)
+        self.refreshTimer = timer
+    }
+
+    func forceRefreshToken() {
+        guard let timer = self.refreshTimer else {
+            fatalError()
+        }
+        self.refreshToken(timer: timer)
     }
 
     @objc func refreshToken(timer: Timer) {
@@ -231,15 +249,7 @@ typealias QueryItemTuple = (name: String, value: String)
 
                 self.auth = refreshedToken
                 self.api.configuration.accessToken = refreshedToken.accessToken
-
-                let expirationInterval = (refreshedToken.expiration - 60 * 3).timeIntervalSinceNow
-                let timer = Timer(timeInterval: expirationInterval,
-                                          target: self,
-                                          selector: #selector(self.refreshToken(timer:)),
-                                          userInfo: ["token": refreshedToken],
-                                          repeats: false)
-                self.refreshRunLoop.add(timer, forMode: .default)
-                self.refreshTimer = timer
+                self.setupRefreshTimer()
                 do {
                     let data = try JSONEncoder().encode(refreshedToken)
                     self.keychain.set(data, forKey: Keychain.oauthToken)

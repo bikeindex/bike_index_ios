@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MainToolbar: ToolbarContent {
+    @Environment(Client.self) var client
+
     @State var searchTerms: [SearchTerm] = []
     @State var serialNumberSearch: String = ""
     @State var searchMode: GlobalSearchMode = .withinHundredMiles
@@ -21,5 +23,15 @@ struct MainToolbar: ToolbarContent {
                 Label("Settings", systemImage: "gearshape")
             }
         }
+
+        #if DEBUG
+        ToolbarItem(placement: .automatic) {
+            Button {
+                client.forceRefreshToken()
+            } label: {
+                Label("Refresh", systemImage: "restart.circle")
+            }
+        }
+        #endif
     }
 }
