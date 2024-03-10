@@ -50,6 +50,7 @@ struct NavigableWebView: View {
                 Button("Back", systemImage: "chevron.backward") {
                     navigator.wkWebView?.goBack()
                 }
+                .accessibilityIdentifier(Identifiers.backButton.rawValue)
                 .disabled(!navigator.canGoBack)
                 .onChange(of: navigator.historyDidChange) { _, _ in
                     navigator.historyDidChange = false
@@ -59,6 +60,7 @@ struct NavigableWebView: View {
                 Button("Forward", systemImage: "chevron.forward") {
                     navigator.wkWebView?.goForward()
                 }
+                .accessibilityIdentifier(Identifiers.forwardButton.rawValue)
                 .disabled(!navigator.canGoForward)
                 .onChange(of: navigator.historyDidChange) { _, _ in
                     navigator.historyDidChange = false
@@ -74,4 +76,12 @@ struct NavigableWebView: View {
         url: .constant(URL(string: "https://bikeindex.org")!),
         navigator: HistoryNavigator()
     )
+}
+
+extension NavigableWebView {
+    enum Identifiers: String {
+
+        case backButton = "WebViewBack"
+        case forwardButton = "WebViewForward"
+    }
 }

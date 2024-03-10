@@ -124,12 +124,21 @@ final class BikeIndexUITests: XCTestCase {
         _ = linkButton.waitForExistence(timeout: timeout)
         linkButton.tap()
 
+        // No history is available yet
+        let backButton = app.buttons["WebViewBack"]
+        _ = backButton.waitForExistence(timeout: timeout)
+        XCTAssertFalse(backButton.isEnabled)
+
+        let forwardButton = app.buttons["WebViewForward"]
+        _ = forwardButton.waitForExistence(timeout: timeout)
+        XCTAssertFalse(forwardButton.isEnabled)
+
         let licenseTxt = link(with: "LICENSE.txt")
-        licenseTxt.waitForExistence(timeout: timeout)
+        _ = licenseTxt.waitForExistence(timeout: timeout)
         licenseTxt.tap()
 
         let learnMoreLicenses = link(with: "Learn more about repository")
-        learnMoreLicenses.waitForExistence(timeout: timeout)
+        _ = learnMoreLicenses.waitForExistence(timeout: timeout)
         learnMoreLicenses.tap()
 
         Logger.tests.debug("End result reached, available links are \(self.app.links, privacy: .public)")
