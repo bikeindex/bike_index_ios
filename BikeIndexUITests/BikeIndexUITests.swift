@@ -8,6 +8,9 @@
 import XCTest
 
 final class BikeIndexUITests: XCTestCase {
+    let timeout: TimeInterval = 10
+    let app = XCUIApplication()
+    lazy var backButton = app.navigationBars.buttons.element(boundBy: 0)
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -24,7 +27,6 @@ final class BikeIndexUITests: XCTestCase {
 
     func testExample() throws {
         // UI tests must launch the application that they test.
-        let app = XCUIApplication()
         app.launch()
 
         // Use XCTAssert and related functions to verify your tests produce the correct results.
@@ -37,5 +39,70 @@ final class BikeIndexUITests: XCTestCase {
                 XCUIApplication().launch()
             }
         }
+    }
+
+    func test_basic_bike_detail_navigation() throws {
+        app.launch()
+
+        let bike1 = app.buttons["Bike 1"]
+        _ = bike1.waitForExistence(timeout: timeout)
+        bike1.tap()
+
+        // On-page
+        let webViewEdit = app.buttons["Edit"]
+        _ = webViewEdit.waitForExistence(timeout: timeout)
+        webViewEdit.tap()
+
+        let webViewBikeView = app.links["View Bike"]
+        _ = webViewBikeView.waitForExistence(timeout: timeout)
+        webViewBikeView.tap()
+
+        _ = webViewEdit.waitForExistence(timeout: timeout)
+        webViewEdit.tap()
+
+        back()
+    }
+
+    func test_basic_settings_navigation() throws {
+        app.launch()
+
+        let settings = app.buttons["Settings"]
+        _ = settings.waitForExistence(timeout: timeout)
+        settings.tap()
+
+        let appIcon = app.buttons["App Icon"]
+        _ = appIcon.waitForExistence(timeout: timeout)
+        appIcon.tap()
+
+        back()
+
+        let debugMenu = app.buttons["Debug menu"]
+        _ = debugMenu.waitForExistence(timeout: timeout)
+        debugMenu.tap()
+
+        back()
+
+        let acknowledgements = app.buttons["Acknowledgements"]
+        _ = acknowledgements.waitForExistence(timeout: timeout)
+        acknowledgements.tap()
+
+        back()
+
+        let privacyPolicy = app.buttons["Privacy Policy"]
+        _ = privacyPolicy.waitForExistence(timeout: timeout)
+        privacyPolicy.tap()
+
+        back()
+
+        let terms = app.buttons["Terms of Service"]
+        _ = terms.waitForExistence(timeout: timeout)
+        terms.tap()
+
+        back()
+    }
+
+    func back() {
+        _ = backButton.waitForExistence(timeout: timeout)
+        backButton.tap()
     }
 }

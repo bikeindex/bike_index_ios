@@ -69,5 +69,4 @@ enum ContentButton: String, Identifiable, Codable, CaseIterable {
             return "Search"
         }
     }
-
 }

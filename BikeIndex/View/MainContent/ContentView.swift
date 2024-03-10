@@ -28,9 +28,11 @@ struct ContentView: View {
                 ProportionalLazyVGrid {
                     ForEach(ContentButton.allCases, id: \.id) { menuItem in
                         ContentButtonView(path: $path, item: menuItem)
+                            .accessibilityIdentifier(menuItem.title)
                     }
-                    ForEach(bikes) { bike in
+                    ForEach(Array(bikes.enumerated()), id: \.element) { (index, bike) in
                         ContentBikeButtonView(path: $path, bike: bike)
+                            .accessibilityIdentifier("Bike \(index + 1)")
                     }
                 }
                 .padding()
@@ -43,6 +45,7 @@ struct ContentView: View {
                 switch selection {
                 case .settings:
                     SettingsView()
+                        .accessibilityIdentifier("Settings")
                 case .registerBike:
                     RegisterBikeView(mode: .myOwnBike)
                 case .lostBike:
