@@ -46,22 +46,20 @@ struct NavigableWebView: View {
             }
         })
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("Back", systemImage: "chevron.backward") {
-                    navigator.wkWebView?.goBack()
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                Group {
+                    Button("Back", systemImage: "chevron.backward") {
+                        navigator.wkWebView?.goBack()
+                    }
+                    .accessibilityIdentifier(Identifiers.backButton.rawValue)
+                    .disabled(!navigator.canGoBack)
+
+                    Button("Forward", systemImage: "chevron.forward") {
+                        navigator.wkWebView?.goForward()
+                    }
+                    .accessibilityIdentifier(Identifiers.forwardButton.rawValue)
+                    .disabled(!navigator.canGoForward)
                 }
-                .accessibilityIdentifier(Identifiers.backButton.rawValue)
-                .disabled(!navigator.canGoBack)
-                .onChange(of: navigator.historyDidChange) { _, _ in
-                    navigator.historyDidChange = false
-                }
-            }
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("Forward", systemImage: "chevron.forward") {
-                    navigator.wkWebView?.goForward()
-                }
-                .accessibilityIdentifier(Identifiers.forwardButton.rawValue)
-                .disabled(!navigator.canGoForward)
                 .onChange(of: navigator.historyDidChange) { _, _ in
                     navigator.historyDidChange = false
                 }
