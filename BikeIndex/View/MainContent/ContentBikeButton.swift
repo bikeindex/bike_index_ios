@@ -13,6 +13,8 @@ struct ContentBikeButtonView: View {
 
     var body: some View {
         Button(action: {
+            /// NOTE: @Observable (includes @Model) instances should **NOT** be used for NavigationPath:
+            /// via https://stackoverflow.com/a/75713254
             path.append(bike)
         }, label: {
             VStack {

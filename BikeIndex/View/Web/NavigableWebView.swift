@@ -13,16 +13,16 @@ struct NavigableWebView: View {
     @Environment(Client.self) var client
 
     @Binding var url: URL
-    @State var navigator: HistoryNavigator
+    var navigator: HistoryNavigator
 
     init(url: Binding<URL>, navigator: HistoryNavigator = HistoryNavigator()) {
         self._url = url
-        self._navigator = State(initialValue: navigator)
+        self.navigator = navigator
     }
 
     init(url: URL? = nil, navigator: HistoryNavigator = HistoryNavigator()) {
         self._url = Binding.constant(url ?? URL(string: "about:blank")!)
-        self._navigator = State(initialValue: navigator)
+        self.navigator = navigator
     }
 
     var body: some View {
@@ -51,7 +51,7 @@ struct NavigableWebView: View {
                     navigator.wkWebView?.goBack()
                 }
                 .disabled(!navigator.canGoBack)
-                .onChange(of: navigator.historyDidChange) { oldValue, newValue in
+                .onChange(of: navigator.historyDidChange) { _, _ in
                     navigator.historyDidChange = false
                 }
             }
@@ -60,7 +60,7 @@ struct NavigableWebView: View {
                     navigator.wkWebView?.goForward()
                 }
                 .disabled(!navigator.canGoForward)
-                .onChange(of: navigator.historyDidChange) { oldValue, newValue in
+                .onChange(of: navigator.historyDidChange) { _, _ in
                     navigator.historyDidChange = false
                 }
             }

@@ -13,7 +13,7 @@ import WebViewKit
 /// NOTE: Adopt @Focus State https://developer.apple.com/documentation/swiftui/focusstate
 /// NOTE: Possibly add organization selection
 struct RegisterBikeView: View {
-    @Environment(\.dismiss) private var dismiss
+    // @Environment(\.dismiss) private var dismiss // Can't use with NavigableWebView for serial or how-to-recover links
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
@@ -316,7 +316,10 @@ struct RegisterBikeView: View {
             let bikeModel = registrationResponseSource.bike.modelInstance()
             modelContext.insert(bikeModel)
             self.validationModel = AddBikeOutput(show: true, actions: {
-                dismiss()
+                /// Access dismiss directly.
+                /// If ``RegisterBikeView`` captures the Environment object in a var it will conflict with the
+                /// NavigableWebViews and cause an infinite loop. (I think that's the cause).
+                Environment(\.dismiss).wrappedValue.callAsFunction()
             }, message: "", title: "Success!")
 
         case .failure(let failure):

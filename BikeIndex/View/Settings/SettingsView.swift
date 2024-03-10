@@ -9,7 +9,6 @@ import SwiftUI
 import OSLog
 
 struct SettingsView: View {
-    @Environment(\.openURL) var openURL
     @Environment(Client.self) var client
 
     @State var iconsModel = AlternateIconsModel()
@@ -58,7 +57,10 @@ struct SettingsView: View {
 
             Section {
                 Button("Contact Us", systemImage: "envelope") {
-                    openURL(MailToLink.contactUs.link)
+                    /// Access openURL directly.
+                    /// If ``SettingsView`` captures the Environment object in a var it will conflict with the
+                    /// NavigationLink's web views and cause an infinite loop. (I think that's the cause).
+                    Environment(\.openURL).wrappedValue(MailToLink.contactUs.link)
                 }
                 .buttonStyle(PlainButtonStyle())
 
