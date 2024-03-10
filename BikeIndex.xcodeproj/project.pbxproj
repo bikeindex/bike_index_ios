@@ -15,6 +15,7 @@
 		040123642B817BD50045FECE /* BikeModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B92E2B098B4F009442B5 /* BikeModelTests.swift */; };
 		040123652B817BD50045FECE /* OAuthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B92D2B098B4F009442B5 /* OAuthTests.swift */; };
 		040123662B817BF80045FECE /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A3F2B251E92006519A7 /* MockData.swift */; };
+		042724CA2B85714D008BEDBC /* SingleBikeResponse_mock.json in Resources */ = {isa = PBXBuildFile; fileRef = 04C7BC652B53514C0091493C /* SingleBikeResponse_mock.json */; };
 		043033282B3E285F00FD126F /* StolenRecordEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033272B3E285F00FD126F /* StolenRecordEntryView.swift */; };
 		0430332A2B3E5EEB00FD126F /* Countries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033292B3E5EEB00FD126F /* Countries.swift */; };
 		0430332C2B3E642200FD126F /* Binding+Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0430332B2B3E642200FD126F /* Binding+Optional.swift */; };
@@ -575,6 +576,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04F4B9012B098ADE009442B5 /* Assets.xcassets in Resources */,
+				042724CA2B85714D008BEDBC /* SingleBikeResponse_mock.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

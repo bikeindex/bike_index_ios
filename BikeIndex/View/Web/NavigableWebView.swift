@@ -12,12 +12,16 @@ import WebViewKit
 struct NavigableWebView: View {
     @Environment(Client.self) var client
 
-    var url: URL?
-
+    @Binding var url: URL
     @State var navigator: HistoryNavigator
 
+    init(url: Binding<URL>, navigator: HistoryNavigator = HistoryNavigator()) {
+        self._url = url
+        self._navigator = State(initialValue: navigator)
+    }
+
     init(url: URL? = nil, navigator: HistoryNavigator = HistoryNavigator()) {
-        self.url = url
+        self._url = Binding.constant(url ?? URL(string: "about:blank")!)
         self._navigator = State(initialValue: navigator)
     }
 
@@ -30,6 +34,17 @@ struct NavigableWebView: View {
             navigator.wkWebView = $0
             $0.navigationDelegate = navigator
         }
+        .onChange(of: url, { _, newValue in
+            // When the binding changes, navigate to the new page.
+            navigator.wkWebView?.load(URLRequest(url: newValue))
+        })
+        .onChange(of: navigator.wkWebView?.url, { oldValue, newValue in
+            // After a user action causes a change, update the binding.
+            // This allows assigning new values to the binding to navigate to.
+            if let newValue, newValue != url {
+                url = newValue
+            }
+        })
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Back", systemImage: "chevron.backward") {
@@ -52,4 +67,11 @@ struct NavigableWebView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
     }
+}
+
+#Preview {
+    NavigableWebView(
+        url: .constant(URL(string: "https://bikeindex.org")!),
+        navigator: HistoryNavigator()
+    )
 }

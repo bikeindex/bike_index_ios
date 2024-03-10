@@ -14,18 +14,22 @@ struct BikeDetailView: View {
     @Environment(Client.self) var client
 
     var bike: Bike
-    @State private var url: URL?
+    @State private var url: URL
+
+    init(bike: Bike) {
+        self.bike = bike
+        self._url = State(initialValue: bike.url)
+    }
 
     var body: some View {
-        NavigableWebView(url: bike.url)
+        NavigableWebView(url: $url)
             .environment(client)
             .toolbar(content: {
                 ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink("Edit") {
-                        NavigableWebView(url: bike.editUrl)
-                            .environment(client)
-                            .navigationTitle("Edit")
-                            .navigationBarTitleDisplayMode(.inline)
+                    Button("Edit", systemImage: "pencil") {
+                        if let editUrl = bike.editUrl {
+                            self.url = editUrl
+                        }
                     }
                 }
             })
