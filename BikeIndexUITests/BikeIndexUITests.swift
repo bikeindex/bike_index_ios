@@ -154,6 +154,10 @@ final class BikeIndexUITests: XCTestCase {
         backButton.tap()
         // POP: github.com "learn about licenses"
 
+        let bikeIndex_iOS = link(with: "bike_index_ios")
+        _ = bikeIndex_iOS.waitForExistence(timeout: timeout)
+        // Wait for the POP to complete before testing the next step
+
         XCTAssertTrue(backButton.isEnabled)
         // XCTAssertTrue(forwardButton.isEnabled) // TODO: FAILING TEST
 
