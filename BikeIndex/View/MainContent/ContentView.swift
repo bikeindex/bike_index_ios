@@ -52,8 +52,10 @@ struct ContentView: View {
                         .environment(client)
                 }
             }
-            .navigationDestination(for: Bike.self) { bike in
-                BikeDetailView(bike: bike)
+            .navigationDestination(for: PersistentIdentifier.self) { identifier in
+                if let bike = bikes.first(where: { $0.persistentModelID == identifier }) {
+                    BikeDetailView(bike: bike)
+                }
             }
         }
        .task {
