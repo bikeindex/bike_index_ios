@@ -43,6 +43,7 @@ final class BikeIndexUITests: XCTestCase {
 
     func test_basic_bike_detail_navigation() throws {
         app.launch()
+        signin()
 
         let bike1 = app.buttons["Bike 1"]
         _ = bike1.waitForExistence(timeout: timeout)
@@ -65,6 +66,7 @@ final class BikeIndexUITests: XCTestCase {
 
     func test_basic_settings_navigation() throws {
         app.launch()
+        signin()
 
         let settings = app.buttons["Settings"]
         _ = settings.waitForExistence(timeout: timeout)
@@ -101,8 +103,18 @@ final class BikeIndexUITests: XCTestCase {
         back()
     }
 
+    // MARK: - Helpers
+
     func back() {
         _ = backButton.waitForExistence(timeout: timeout)
         backButton.tap()
+    }
+
+    func signin() {
+        let signIn = app.buttons["SignIn"]
+        let result = signIn.waitForExistence(timeout: 2)
+        if result {
+            signIn.tap()
+        }
     }
 }

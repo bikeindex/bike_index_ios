@@ -43,6 +43,7 @@ struct AuthView: View {
                         displaySignIn = true
                     } label: {
                         Label("Sign in and get started", systemImage: "person.crop.circle.dashed")
+                            .accessibilityIdentifier("SignIn")
                             .font(.title3)
                             .labelStyle(.titleAndIcon)
                     }
