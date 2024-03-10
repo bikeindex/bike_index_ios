@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import OSLog
 
 final class BikeIndexUITests: XCTestCase {
     let timeout: TimeInterval = 10
@@ -103,6 +104,38 @@ final class BikeIndexUITests: XCTestCase {
         back()
     }
 
+    func test_acknowledgements_webView_navigation_history() throws {
+        app.launch()
+        signin()
+
+        let settings = app.buttons["Settings"]
+        _ = settings.waitForExistence(timeout: timeout)
+        settings.tap()
+
+        let acknowledgements = app.buttons["Acknowledgements"]
+        _ = acknowledgements.waitForExistence(timeout: timeout)
+        acknowledgements.tap()
+
+        let iOS_repo = app.collectionViews.cells.element(boundBy: 2)
+        _ = iOS_repo.waitForExistence(timeout: timeout)
+        iOS_repo.tap()
+
+        let linkButton = app.buttons["Open Repository"]
+        _ = linkButton.waitForExistence(timeout: timeout)
+        linkButton.tap()
+
+        let licenseTxt = link(with: "LICENSE.txt")
+        licenseTxt.waitForExistence(timeout: timeout)
+        licenseTxt.tap()
+
+        let learnMoreLicenses = link(with: "Learn more about repository")
+        learnMoreLicenses.waitForExistence(timeout: timeout)
+        learnMoreLicenses.tap()
+
+        Logger.tests.debug("End result reached, available links are \(self.app.links, privacy: .public)")
+        Logger.tests.debug("End result reached, available links are \(self.app.links, privacy: .public)")
+    }
+
     // MARK: - Helpers
 
     func back() {
@@ -116,5 +149,9 @@ final class BikeIndexUITests: XCTestCase {
         if result {
             signIn.tap()
         }
+    }
+
+    func link(with prefix: String) -> XCUIElement {
+        app.links.matching(NSPredicate(format: "label BEGINSWITH %@", prefix)).element
     }
 }
