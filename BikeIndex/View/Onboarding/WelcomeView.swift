@@ -12,21 +12,27 @@ struct WelcomeView: View {
     @Environment(Client.self) var client
     @Environment(\.colorScheme) var colorScheme
 
+    @State var iconsModel = AlternateIconsModel()
+
     var body: some View {
         VStack {
             Spacer()
             if let striped = UIImage(named: "AppIcon-striped")
             {
                 HStack {
-                    Image(uiImage: striped)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: .infinity,
-                               maxHeight: 200,
-                               alignment: .leading)
+                    if let uiImage = UIImage(named: iconsModel.selectedAppIcon.rawValue) {
+                        Image(uiImage: uiImage)
+                            .appIcon(scale: .large)
+                            .frame(maxWidth: .infinity,
+                                   maxHeight: 200)
+                    } else {
+                        Image(systemName: iconsModel.absentIcon)
+                            .appIcon(scale: .large)
+                            .frame(maxWidth: .infinity,
+                                   maxHeight: 200)
+                    }
                     Spacer()
                 }
-
             }
             Text("The world's largest and most effective bicycle registry and stolen bike recovery platform.")
                 .font(.headline)
