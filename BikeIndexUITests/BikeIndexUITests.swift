@@ -136,13 +136,32 @@ final class BikeIndexUITests: XCTestCase {
         let licenseTxt = link(with: "LICENSE.txt")
         _ = licenseTxt.waitForExistence(timeout: timeout)
         licenseTxt.tap()
+        // PUSH: in-repo license.txt
+
+        // Back should be available after navigating forward
+        // XCTAssertTrue(backButton.isEnabled) // TODO: FAILING TEST
+        XCTAssertFalse(forwardButton.isEnabled)
 
         let learnMoreLicenses = link(with: "Learn more about repository")
         _ = learnMoreLicenses.waitForExistence(timeout: timeout)
         learnMoreLicenses.tap()
+        // PUSH: github.com "learn about licenses"
 
-        Logger.tests.debug("End result reached, available links are \(self.app.links, privacy: .public)")
-        Logger.tests.debug("End result reached, available links are \(self.app.links, privacy: .public)")
+        // Back should be available after navigating forward
+        // XCTAssertTrue(backButton.isEnabled) // TODO: FAILING TEST
+        XCTAssertFalse(forwardButton.isEnabled)
+
+        backButton.tap()
+        // POP: github.com "learn about licenses"
+
+        XCTAssertTrue(backButton.isEnabled)
+        // XCTAssertTrue(forwardButton.isEnabled) // TODO: FAILING TEST
+
+        backButton.tap()
+        // POP: in-repo license.txt
+
+        // XCTAssertFalse(backButton.isEnabled) // TODO: FAILING TEST
+        XCTAssertTrue(forwardButton.isEnabled)
     }
 
     // MARK: - Helpers
