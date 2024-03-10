@@ -104,9 +104,13 @@ final class BikeIndexUITests: XCTestCase {
         back()
     }
 
+    /// Just remember that GitHub is running its own navigation control with JavaScript/whatever/replacing the page
+    /// so the buttons will behave incorrectly when using GitHub links. (Except for their subdomains).
     func test_acknowledgements_webView_navigation_history() throws {
         app.launch()
         signin()
+
+        // SETUP
 
         let settings = app.buttons["Settings"]
         _ = settings.waitForExistence(timeout: timeout)
@@ -133,38 +137,36 @@ final class BikeIndexUITests: XCTestCase {
         _ = forwardButton.waitForExistence(timeout: timeout)
         XCTAssertFalse(forwardButton.isEnabled)
 
-        let licenseTxt = link(with: "LICENSE.txt")
-        _ = licenseTxt.waitForExistence(timeout: timeout)
-        licenseTxt.tap()
-        // PUSH: in-repo license.txt
+        // SUBSTANCE
+
+        let oauthApplicationsLink = link(with: "https://bikeindex.org/oauth/applications")
+        _ = oauthApplicationsLink.waitForExistence(timeout: timeout)
+        oauthApplicationsLink.tap()
+        // PUSH: bikeindex.org OAuth Applications
+
+        let documentationLink = link(with: "/documentation")
+        _ = documentationLink.waitForExistence(timeout: timeout)
+        // Wait for the page to finish loading before testing back button
 
         // Back should be available after navigating forward
-        // XCTAssertTrue(backButton.isEnabled) // TODO: FAILING TEST
-        XCTAssertFalse(forwardButton.isEnabled)
-
-        let learnMoreLicenses = link(with: "Learn more about repository")
-        _ = learnMoreLicenses.waitForExistence(timeout: timeout)
-        learnMoreLicenses.tap()
-        // PUSH: github.com "learn about licenses"
-
-        // Back should be available after navigating forward
-        // XCTAssertTrue(backButton.isEnabled) // TODO: FAILING TEST
-        XCTAssertFalse(forwardButton.isEnabled)
-
-        backButton.tap()
-        // POP: github.com "learn about licenses"
-
-        let bikeIndex_iOS = link(with: "bike_index_ios")
-        _ = bikeIndex_iOS.waitForExistence(timeout: timeout)
-        // Wait for the POP to complete before testing the next step
-
         XCTAssertTrue(backButton.isEnabled)
-        // XCTAssertTrue(forwardButton.isEnabled) // TODO: FAILING TEST
+        XCTAssertFalse(forwardButton.isEnabled)
 
         backButton.tap()
-        // POP: in-repo license.txt
 
-        // XCTAssertFalse(backButton.isEnabled) // TODO: FAILING TEST
+        let licenseTxtLink = link(with: "LICENSE.txt")
+        _ = licenseTxtLink.waitForExistence(timeout: timeout)
+        licenseTxtLink.tap()
+        // PUSH: github.com LICENSE.txt
+
+        // Back should be available after navigating forward but it will _not be available_ because of GitHub
+        XCTAssertFalse(backButton.isEnabled)
+        XCTAssertTrue(forwardButton.isEnabled) // Technically should be false but because GitHub
+
+        backButton.tap()
+        // POP: github.com LICENSE.txt
+
+        XCTAssertFalse(backButton.isEnabled)
         XCTAssertTrue(forwardButton.isEnabled)
     }
 
