@@ -50,7 +50,6 @@
 		04EA11192B25039F0024CDDD /* BikeIndexIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA11182B25039F0024CDDD /* BikeIndexIdentifiable.swift */; };
 		04EA111B2B2503B40024CDDD /* BikeRegisteredQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA111A2B2503B40024CDDD /* BikeRegisteredQuery.swift */; };
 		04EA111D2B2503C40024CDDD /* BikeRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA111C2B2503C40024CDDD /* BikeRegistration.swift */; };
-		04EA111F2B2503F40024CDDD /* ActionIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA111E2B2503F40024CDDD /* ActionIcon.swift */; };
 		04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */ = {isa = PBXBuildFile; productRef = 04EA11212B2504340024CDDD /* URLEncodedForm */; };
 		04EC712D2B5436BD00898CA1 /* AuthNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EC712C2B5436BD00898CA1 /* AuthNavigationDelegate.swift */; };
 		04EC712F2B54414D00898CA1 /* WebScripts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EC712E2B54414D00898CA1 /* WebScripts.swift */; };
@@ -140,7 +139,6 @@
 		04EA11182B25039F0024CDDD /* BikeIndexIdentifiable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BikeIndexIdentifiable.swift; sourceTree = "<group>"; };
 		04EA111A2B2503B40024CDDD /* BikeRegisteredQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BikeRegisteredQuery.swift; sourceTree = "<group>"; };
 		04EA111C2B2503C40024CDDD /* BikeRegistration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BikeRegistration.swift; sourceTree = "<group>"; };
-		04EA111E2B2503F40024CDDD /* ActionIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionIcon.swift; sourceTree = "<group>"; };
 		04EC712C2B5436BD00898CA1 /* AuthNavigationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthNavigationDelegate.swift; sourceTree = "<group>"; };
 		04EC712E2B54414D00898CA1 /* WebScripts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebScripts.swift; sourceTree = "<group>"; };
 		04EC71352B54B59500898CA1 /* NavigableWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigableWebView.swift; sourceTree = "<group>"; };
@@ -222,7 +220,6 @@
 			isa = PBXGroup;
 			children = (
 				04F4B9412B098BAA009442B5 /* ContentView.swift */,
-				04EA111E2B2503F40024CDDD /* ActionIcon.swift */,
 				043033352B40C34800FD126F /* ContentButtonView.swift */,
 				04F2C63B2B4B0127009E0A37 /* ContentBikeButton.swift */,
 				0494FD8B2B4250F70053C54F /* MainToolbar.swift */,
@@ -666,7 +663,6 @@
 				04EA110E2B2502660024CDDD /* API.swift in Sources */,
 				04F4B9552B098BB1009442B5 /* BicycleType.swift in Sources */,
 				04EA11142B2502AF0024CDDD /* AuthenticatedUserResponse.swift in Sources */,
-				04EA111F2B2503F40024CDDD /* ActionIcon.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

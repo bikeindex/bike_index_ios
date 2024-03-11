@@ -48,14 +48,14 @@ enum ContentButton: String, Identifiable, Codable, CaseIterable {
     /// Search!
     case search
 
-    var icon: ActionIconResource {
+    var icon: ImageResource {
         switch self {
         case .registerBike:
-            return .register
+            return .iconRegister
         case .alertBike:
-            return .alert
+            return .iconAlert
         case .search:
-            return .search
+            return .stolenRegistry
         }
     }
 
