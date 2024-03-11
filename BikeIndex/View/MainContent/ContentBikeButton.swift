@@ -25,8 +25,17 @@ struct ContentBikeButtonView: View {
                             .resizable()
                             .scaledToFill()
                     } placeholder: {
-                        Image(systemName: "bicycle.circle.fill")
+                        Image(systemName: "bicycle")
                             .resizable()
+                            .scaledToFit()
+                            .padding()
+                            .frame(minWidth: 100,
+                                   maxWidth: .infinity,
+                                   minHeight: 100,
+                                   maxHeight: .infinity)
+                            .tint(Color.white)
+                            .background(Color.accentColor, in: RoundedRectangle(cornerRadius: 24))
+
                     }
                 }
                 .frame(minWidth: 100,
