@@ -12,7 +12,6 @@ import OSLog
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
-    @Environment(\.colorScheme) var colorScheme
 
     // Control the navigation hierarchy for all views after this one
     @State var path = NavigationPath()
@@ -28,22 +27,8 @@ struct ContentView: View {
             ScrollView {
                 LazyVGrid(columns: Array(repeating: GridItem(), count: 1)) {
                     ForEach(ContentButton.allCases, id: \.id) { menuItem in
-
-                        Button(action: {
-
-                        }, label: {
-                            Text(menuItem.title)
-                                .padding(.leading, 10)
-                            Spacer()
-                            Text("»")
-                                .bold()
-                                .padding(.trailing, 10)
-                        })
-                        .multilineTextAlignment(.leading)
-                        .frame(maxWidth: .infinity, minHeight: 40)
-                        .tint(.white)
-                        .background(colorScheme == .light ? .black : .secondary)
-                        .padding(.horizontal, 8)
+                        ContentButtonView(path: $path,
+                                          item: menuItem)
                     }
                 }
 

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentButtonView: View {
+    @Environment(\.colorScheme) var colorScheme
     @Binding var path: NavigationPath
     var item: ContentButton
 
@@ -22,19 +23,19 @@ struct ContentButtonView: View {
                 path.append(MainContent.searchBikes)
             }
         }, label: {
-            VStack {
-                RoundedRectangle(cornerRadius: 24)
-                    .scaledToFit()
-                    .foregroundStyle(Color.primary)
-                    .overlay {
-                        ActionIcon(icon: item.icon)
-                            .scaledToFit()
-                            .padding()
-                    }
-
-                Text(item.title)
-            }
+            Text(item.title)
+                .padding(.leading, 10)
+            Spacer()
+            Text("»")
+                .bold()
+                .padding(.trailing, 10)
         })
+        .accessibilityIdentifier(item.title)
+        .multilineTextAlignment(.leading)
+        .frame(maxWidth: .infinity, minHeight: 40)
+        .tint(.white)
+        .background(colorScheme == .light ? .black : .secondary)
+        .padding(.horizontal, 8)
     }
 }
 
