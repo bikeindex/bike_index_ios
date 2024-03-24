@@ -126,7 +126,10 @@ final class ContentModel {
     }
 }
 
+// MARK: - Previews
+
 #Preview {
+    // MARK: Empty Data Preview
     do {
         let client = try Client()
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
@@ -137,6 +140,31 @@ final class ContentModel {
         return ContentView()
             .environment(client)
             .modelContainer(container)
+            .previewDisplayName("Empty data")
+    } catch let error {
+        return Text("Failed to load preview \(error.localizedDescription)")
+    }
+}
+
+#Preview {
+    // MARK: 1 Bike Preview
+    do {
+        let client = try Client()
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+
+        let container = try ModelContainer(for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+                                           configurations: config)
+
+        let rawJsonData = MockData.sampleBikeJson.data(using: .utf8)!
+        let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
+        let bike = output.modelInstance()
+
+        container.mainContext.insert(bike)
+
+        return ContentView()
+            .environment(client)
+            .modelContainer(container)
+            .previewDisplayName("1 Bike Preview")
     } catch let error {
         return Text("Failed to load preview \(error.localizedDescription)")
     }

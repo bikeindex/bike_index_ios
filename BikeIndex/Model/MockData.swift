@@ -7,7 +7,7 @@
 
 import Foundation
 
-#if DEBUG
+#if !RELEASE
 struct MockData {
     static let fullToken =
 """
