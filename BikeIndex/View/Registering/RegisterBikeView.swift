@@ -120,33 +120,15 @@ struct RegisterBikeView: View {
                     })
             }
 
-            if traditionalBicycle {
-                Section {
-                    Toggle("Traditional bicycle", isOn: $traditionalBicycle)
-                } footer: {
-                    Text("Two wheels, one seat, no motor")
-                }
-            } else {
-                Section {
-                    Picker("This is a: ", selection: $bike.typeOfCycle) {
-                        ForEach(BicycleType.allCases) { type in
-                            Text(type.name)
-                        }
-                    }
-                    // electric is not applicable for trail-behind
-                    // electric is always off for scooter/skateboard
-                    // electric is always active for e-scooter, personal mobility
-                    Toggle("⚡️ Electric (motorized)", isOn: .constant(false))
-                    // if electric { // not applicable for stroller/wheelchair/e-scooter/personal-mobility
-                    Toggle("Throttle", isOn: .constant(false))
-                    Toggle("Pedal Assist", isOn: .constant(false))
-                    // }
-                } header: {
-                    Text("Bicycle Type")
-                } footer: {
-                    EmptyView()
-                }
-            }
+//            Section {
+                BicycleTypeSelectionView(bike: $bike,
+                                         traditionalBicycle: $traditionalBicycle)
+//                Text("BicycleTypeSelectionView")
+//            } header: {
+//                Text("Bicycle type")
+//            } footer: {
+//                Text("Two wheels, one seat, no mooter")
+//            }
 
             Section {
                 ManufacturerEntryView(bike: $bike,

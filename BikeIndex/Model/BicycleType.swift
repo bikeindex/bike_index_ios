@@ -80,3 +80,75 @@ enum BicycleType: String, Codable, CaseIterable, Identifiable {
         }
     }
 }
+
+extension BicycleType {
+    /// Determine whether the user _can mark_ this bicycle/item type as electric motorized.
+    var canBeElectric: Bool {
+        switch self {
+        case .bike,
+             .tandem,
+             .unicycle,
+             .tricycle,
+             .stroller,
+             .recumbent,
+             .trailer,
+             .wheelchair,
+             .cargo,
+             .tallBike,
+             .pennyFarthing,
+             .cargoRear,
+             .cargoTrike,
+             .cargoTrikeRear:
+            return true
+        case .trailBehind:
+            return false
+        case .pediCab:
+            return true
+        case .eScooter:
+            return true // FIXED true
+        case .personalMobility:
+            return true // FIXED true
+        case .nonEScooter:
+            return false
+        case .nonESkateboard:
+            return false
+        }
+    }
+
+    /// Determine whether the user _can mark_ this bicycle/item type as having throttle, pedal assist (separate fields).
+    var pedalAssistAndThrottle: Bool {
+        switch self {
+        case .bike,
+                .tandem,
+                .unicycle,
+                .tricycle:
+            return true
+        case .stroller:
+            return false
+        case .recumbent:
+            return true
+        case .trailer,
+                .wheelchair:
+            return false
+        case    .cargo,
+                .tallBike,
+                .pennyFarthing,
+                .cargoRear,
+                .cargoTrike,
+                .cargoTrikeRear:
+            return true
+        case .trailBehind:
+            return false
+        case .pediCab:
+            return true
+        case .eScooter:
+            return false
+        case .personalMobility:
+            return false
+        case .nonEScooter:
+            return false
+        case .nonESkateboard:
+            return false
+        }
+    }
+}
