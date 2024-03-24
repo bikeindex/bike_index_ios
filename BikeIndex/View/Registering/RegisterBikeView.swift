@@ -353,6 +353,7 @@ struct RegisterBikeView: View {
             RegisterBikeView(mode: .myOwnBike, bike: bike)
                 .environment(client)
                 .modelContainer(container)
+                .previewDisplayName("Normal Mode Preview")
         }
     } catch let error {
         return Text("Failed to load preview \(error.localizedDescription)")
@@ -379,6 +380,7 @@ struct RegisterBikeView: View {
             RegisterBikeView(mode: .myStolenBike, bike: bike)
                 .environment(client)
                 .modelContainer(container)
+                .previewDisplayName("Stolen Mode Preview")
         }
     } catch let error {
         return Text("Failed to load preview \(error.localizedDescription)")
