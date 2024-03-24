@@ -32,13 +32,18 @@ struct ContentView: View {
                     }
                 }
 
-                ProportionalLazyVGrid {
-                    ForEach(Array(bikes.enumerated()), id: \.element) { (index, bike) in
-                        ContentBikeButtonView(path: $path, bike: bike)
-                            .accessibilityIdentifier("Bike \(index + 1)")
+                if bikes.isEmpty {
+                    ContentUnavailableView("No bikes registered", systemImage: "bicycle.circle")
+                        .padding()
+                } else {
+                    ProportionalLazyVGrid {
+                        ForEach(Array(bikes.enumerated()), id: \.element) { (index, bike) in
+                            ContentBikeButtonView(path: $path, bike: bike)
+                                .accessibilityIdentifier("Bike \(index + 1)")
+                        }
                     }
+                    .padding()
                 }
-                .padding()
             }
             .toolbar {
                 MainToolbar(path: $path)
