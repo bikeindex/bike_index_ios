@@ -31,12 +31,12 @@ struct BicycleTypeSelectionView: View {
                 // electric is always active for e-scooter, personal mobility
                 if bike.typeOfCycle.canBeElectric {
                     Toggle("⚡️ Electric (motorized)", isOn: .constant(false))
-                }
 
-                if bike.typeOfCycle.pedalAssistAndThrottle {
-                    // not applicable for stroller/wheelchair/e-scooter/personal-mobility
-                    Toggle("Throttle", isOn: .constant(false))
-                    Toggle("Pedal Assist", isOn: .constant(false))
+                    if bike.typeOfCycle.pedalAssistAndThrottle {
+                        // not applicable for stroller/wheelchair/e-scooter/personal-mobility
+                        Toggle("Throttle", isOn: .constant(false))
+                        Toggle("Pedal Assist", isOn: .constant(false))
+                    }
                 }
             } header: {
                 Text("Bicycle Type")
