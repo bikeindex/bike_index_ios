@@ -7,6 +7,8 @@
 
 import Foundation
 
+/// Used by ``APIEndpoint.postBikes``
+/// Documented at https://bikeindex.org/documentation/api_v3#!/bikes/POST_version_bikes_format_post_3
 struct BikeRegistration: Encodable {
     struct Serial {
         static let unknown = "unkown"
@@ -45,11 +47,11 @@ struct BikeRegistration: Encodable {
     var frame_material: String? // replace with frame material enum?
     var external_image_urls: [URL]?
     var bike_sticker: String?
-    var propulsion_type_slug: String?
+    var propulsion_type_slug: PropulsionType?
     var stolen_record: StolenRecord?
     var components: [Component]?
 
-    init(serial: String?, manufacturer: String, owner_email: String, primary_frame_color: FrameColor, owner_email_is_phone_number: Bool? = nil, organization_slug: String? = nil, cycle_type_name: BicycleType? = nil, no_duplicate: Bool? = nil, rear_wheel_bsd: Int? = nil, rear_tire_narrow: Bool? = nil, front_wheel_bsd: String? = nil, front_tire_narrow: Bool? = nil, frame_model: String? = nil, year: UInt? = nil, description: String? = nil, secondary_frame_color: FrameColor? = nil, tertiary_frame_color: FrameColor? = nil, rear_gear_type_slug: String? = nil, front_gear_type_slug: String? = nil, extra_registration_number: String? = nil, handlebar_type_slug: String? = nil, no_notify: Bool? = nil, is_for_sale: Bool? = nil, frame_material: String, external_image_urls: [URL]? = nil, bike_sticker: String? = nil, propulsion_type_slug: String? = nil, stolen_record: StolenRecord? = nil, components: [Component]? = nil) {
+    init(serial: String?, manufacturer: String, owner_email: String, primary_frame_color: FrameColor, owner_email_is_phone_number: Bool? = nil, organization_slug: String? = nil, cycle_type_name: BicycleType? = nil, no_duplicate: Bool? = nil, rear_wheel_bsd: Int? = nil, rear_tire_narrow: Bool? = nil, front_wheel_bsd: String? = nil, front_tire_narrow: Bool? = nil, frame_model: String? = nil, year: UInt? = nil, description: String? = nil, secondary_frame_color: FrameColor? = nil, tertiary_frame_color: FrameColor? = nil, rear_gear_type_slug: String? = nil, front_gear_type_slug: String? = nil, extra_registration_number: String? = nil, handlebar_type_slug: String? = nil, no_notify: Bool? = nil, is_for_sale: Bool? = nil, frame_material: String, external_image_urls: [URL]? = nil, bike_sticker: String? = nil, propulsion_type_slug: PropulsionType? = nil, stolen_record: StolenRecord? = nil, components: [Component]? = nil) {
         self.serial = serial ?? Serial.unknown
         self.manufacturer = manufacturer
         self.owner_email = owner_email
@@ -97,6 +99,8 @@ struct BikeRegistration: Encodable {
         self.tertiary_frame_color = bike.frameColorTertiary?.rawValue.lowercased()
 
         self.cycle_type_name = bike.typeOfCycle
+        self.propulsion_type_slug = bike.typeOfPropulsion
+
         if let bikeYear = bike.year {
             self.year = UInt(bikeYear)
         }
@@ -111,7 +115,6 @@ struct BikeRegistration: Encodable {
         // Unsupported fields for future work
         self.owner_email_is_phone_number = nil
         self.organization_slug = nil
-        self.cycle_type_name = nil
         self.no_duplicate = nil
         self.rear_wheel_bsd = nil
         self.rear_tire_narrow = nil
@@ -128,7 +131,6 @@ struct BikeRegistration: Encodable {
         self.frame_material = nil
         self.external_image_urls = nil
         self.bike_sticker = nil
-        self.propulsion_type_slug = nil
         self.components = nil
     }
 }
