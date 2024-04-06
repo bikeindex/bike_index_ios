@@ -25,7 +25,12 @@ import MapKit
     /// Also accepts manufacturer identifier Int
     var manufacturerName: String
     var year: Int?
+
+    /// Keyed by `cycle_type_slug`
     var typeOfCycle: BicycleType
+
+    /// Keyed by `propulsion_type_slug`
+    var typeOfPropulsion: PropulsionType
 
     /// Nil if the serial number is missing.
     /// There are various concepts of abasent serial numbers
@@ -80,6 +85,7 @@ import MapKit
          manufacturerName: String,
          year: Int? = nil,
          typeOfCycle: BicycleType,
+         typeOfPropulsion: PropulsionType,
          serial: String? = nil,
          status: BikeStatus,
          stolenCoordinateLatitude: CLLocationDegrees,
@@ -100,6 +106,7 @@ import MapKit
         self.manufacturerName = manufacturerName
         self.year = year
         self.typeOfCycle = typeOfCycle
+        self.typeOfPropulsion = typeOfPropulsion
         self.serial = serial
         self.status = status
         self.stolenCoordinateLatitude = stolenCoordinateLatitude
@@ -123,6 +130,7 @@ import MapKit
         serial = ""
         status = .withOwner
         typeOfCycle = .bike
+        typeOfPropulsion = .footPedal
 
         stolenCoordinateLatitude = 0
         stolenCoordinateLongitude = 0

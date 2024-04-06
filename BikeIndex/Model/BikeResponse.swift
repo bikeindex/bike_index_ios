@@ -31,6 +31,7 @@ struct BikeResponse: ResponseModelInstantiable {
     let manufacturer_name: String
     let year: Int?
     let cycle_type_slug: BicycleType
+    let propulsion_type_slug: PropulsionType
 
     /// Nil if the serial number is absent
     let serial: String?
@@ -85,6 +86,7 @@ struct BikeResponse: ResponseModelInstantiable {
                     manufacturerName: manufacturer_name,
                     year: year,
                     typeOfCycle: cycle_type_slug,
+                    typeOfPropulsion: propulsion_type_slug,
                     serial: serial,
                     status: status,
                     stolenCoordinateLatitude: stolenCoordinateLatitude,

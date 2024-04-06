@@ -95,6 +95,7 @@ struct MockData {
  "rear_tire_narrow": true,
  "front_tire_narrow": null,
  "type_of_cycle": "Bike",
+ "propulsion_type_slug": "foot-pedal",
  "test_bike": false,
  "rear_wheel_size_iso_bsd": null,
  "front_wheel_size_iso_bsd": null,

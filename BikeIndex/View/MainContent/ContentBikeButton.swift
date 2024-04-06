@@ -52,57 +52,69 @@ struct ContentBikeButtonView: View {
 }
 
 #Preview {
-    let sampleBike1 = Bike(identifier: 1,
-                          primaryColor: FrameColor.bareMetal,
-                          manufacturerName: "Jamis",
-                          typeOfCycle: BicycleType.bike,
-                          status: .withOwner,
-                          stolenCoordinateLatitude: 0,
-                          stolenCoordinateLongitude: 0,
-                          largeImage: URL(string: "https://placekitten.com/200/200"),
-                          url: URL(string: "about:blank").unsafelyUnwrapped,
-                          publicImages: [
-                            "https://placekitten.com/200/200",
-                          ])
+    let sampleBike1 = Bike(
+        identifier: 1,
+        primaryColor: FrameColor.bareMetal,
+        manufacturerName: "Jamis",
+        typeOfCycle: .bike,
+        typeOfPropulsion: .footPedal,
+        status: .withOwner,
+        stolenCoordinateLatitude: 0,
+        stolenCoordinateLongitude: 0,
+        largeImage: URL(string: "https://placekitten.com/200/200"),
+        url: URL(string: "about:blank").unsafelyUnwrapped,
+        publicImages: [
+            "https://placekitten.com/200/200",
+        ]
+    )
 
-    let sampleBike2 = Bike(identifier: 2,
-                          primaryColor: FrameColor.bareMetal,
-                          manufacturerName: "Wide",
-                          typeOfCycle: BicycleType.bike,
-                          status: .withOwner,
-                          stolenCoordinateLatitude: 0,
-                          stolenCoordinateLongitude: 0,
-                          largeImage: URL(string: "https://placekitten.com/500/200"),
-                          url: URL(string: "about:blank").unsafelyUnwrapped,
-                          publicImages: [
-                            "https://placekitten.com/200/200",
-                          ])
+    let sampleBike2 = Bike(
+        identifier: 2,
+        primaryColor: FrameColor.bareMetal,
+        manufacturerName: "Wide",
+        typeOfCycle: .bike,
+        typeOfPropulsion: .footPedal,
+        status: .withOwner,
+        stolenCoordinateLatitude: 0,
+        stolenCoordinateLongitude: 0,
+        largeImage: URL(string: "https://placekitten.com/500/200"),
+        url: URL(string: "about:blank").unsafelyUnwrapped,
+        publicImages: [
+            "https://placekitten.com/200/200",
+        ]
+    )
 
-    let sampleBike3 = Bike(identifier: 3,
-                          primaryColor: FrameColor.bareMetal,
-                          manufacturerName: "Tall",
-                          typeOfCycle: BicycleType.bike,
-                          status: .withOwner,
-                          stolenCoordinateLatitude: 0,
-                          stolenCoordinateLongitude: 0,
-                          largeImage: URL(string: "https://placekitten.com/200/500"),
-                          url: URL(string: "about:blank").unsafelyUnwrapped,
-                          publicImages: [
-                            "https://placekitten.com/200/200",
-                          ])
+    let sampleBike3 = Bike(
+        identifier: 3,
+        primaryColor: FrameColor.bareMetal,
+        manufacturerName: "Tall",
+        typeOfCycle: BicycleType.bike,
+        typeOfPropulsion: .footPedal,
+        status: .withOwner,
+        stolenCoordinateLatitude: 0,
+        stolenCoordinateLongitude: 0,
+        largeImage: URL(string: "https://placekitten.com/200/500"),
+        url: URL(string: "about:blank").unsafelyUnwrapped,
+        publicImages: [
+            "https://placekitten.com/200/200",
+        ]
+    )
 
-    let sampleBike4 = Bike(identifier: 4,
-                          primaryColor: FrameColor.bareMetal,
-                          manufacturerName: "Empty",
-                          typeOfCycle: BicycleType.bike,
-                          status: .withOwner,
-                          stolenCoordinateLatitude: 0,
-                          stolenCoordinateLongitude: 0,
-                          largeImage: nil,
-                          url: URL(string: "about:blank").unsafelyUnwrapped,
-                          publicImages: [
-                            "https://placekitten.com/200/200",
-                          ])
+    let sampleBike4 = Bike(
+        identifier: 4,
+        primaryColor: FrameColor.bareMetal,
+        manufacturerName: "Empty",
+        typeOfCycle: BicycleType.bike,
+        typeOfPropulsion: .footPedal,
+        status: .withOwner,
+        stolenCoordinateLatitude: 0,
+        stolenCoordinateLongitude: 0,
+        largeImage: nil,
+        url: URL(string: "about:blank").unsafelyUnwrapped,
+        publicImages: [
+            "https://placekitten.com/200/200",
+        ]
+    )
 
     let samples = [sampleBike1, sampleBike2, sampleBike3, sampleBike4]
 

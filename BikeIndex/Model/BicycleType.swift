@@ -7,6 +7,41 @@
 
 import Foundation
 
+enum PropulsionType: String, Codable, CaseIterable, Identifiable {
+    var id: Self { self }
+
+    case footPedal = "foot-pedal"
+    case pedalAssist = "pedal-assist"
+    case throttle = "throttle"
+    case pedalAssistAndThrottle = "pedal-assist-and-throttle"
+    case handPedal = "hand-pedal"
+    case humanNotPedal = "human-not-pedal"
+
+    var name: String {
+        switch self {
+        case .footPedal:
+            return "Foot Pedal"
+
+        case .pedalAssist:
+            return "Pedal Assist"
+
+        case .throttle:
+            return "Electric Throttle"
+
+        case .pedalAssistAndThrottle:
+            return "Pedal Assist and Throttle"
+
+        case .handPedal:
+            return "Hand Cycle (hand pedal)"
+
+        case .humanNotPedal:
+            return "Human powered (not by pedals)"
+        }
+    }
+
+}
+
+
 /// Raw values correspond to the 'Slug' used in the API
 enum BicycleType: String, Codable, CaseIterable, Identifiable {
     case bike = "bike"
