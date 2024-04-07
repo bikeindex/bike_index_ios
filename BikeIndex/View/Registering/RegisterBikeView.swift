@@ -53,6 +53,8 @@ struct RegisterBikeView: View {
 
     /// Primary model to mutate and persist
     @State var bike = Bike()
+    /// Sub-model for electric/throttle/pedal-assist behavior. Will be combined with BikeRegistration inside ``registerBike()`` function.
+    @State var propulsion = BikeRegistration.Propulsion()
     @State var stolenRecord = StolenRecord(phone: "", city: "")
     /// Access the known users to perform autocomplete on the owner's email
     @Query var authenticatedUsers: [AuthenticatedUser]
@@ -120,15 +122,9 @@ struct RegisterBikeView: View {
                     })
             }
 
-//            Section {
-                BicycleTypeSelectionView(bike: $bike,
-                                         traditionalBicycle: $traditionalBicycle)
-//                Text("BicycleTypeSelectionView")
-//            } header: {
-//                Text("Bicycle type")
-//            } footer: {
-//                Text("Two wheels, one seat, no mooter")
-//            }
+            BicycleTypeSelectionView(bike: $bike,
+                                     traditionalBicycle: $traditionalBicycle,
+                                     propulsion: $propulsion)
 
             Section {
                 ManufacturerEntryView(bike: $bike,
@@ -285,6 +281,7 @@ struct RegisterBikeView: View {
         let bikeRegistration = BikeRegistration(bike: bike,
                                                 mode: mode,
                                                 stolen: stolenRecord,
+                                                propulsion: propulsion,
                                                 ownerEmail: ownerEmail)
         let endpoint = Bikes.postBikes(form: bikeRegistration)
         let response = await client.api.post(endpoint)

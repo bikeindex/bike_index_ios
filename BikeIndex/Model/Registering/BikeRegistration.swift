@@ -84,7 +84,12 @@ struct BikeRegistration: Encodable {
         self.components = components
     }
 
-    init(bike: Bike, mode: RegisterMode, stolen: StolenRecord?, ownerEmail: String) {
+    init(bike: Bike,
+         mode: RegisterMode,
+         stolen: StolenRecord?,
+         propulsion: Propulsion?,
+         ownerEmail: String)
+    {
         // If the serial number is absent then continue with a constant
         self.serial = bike.serial ?? Serial.unknown
 
@@ -98,8 +103,13 @@ struct BikeRegistration: Encodable {
         self.secondary_frame_color = bike.frameColorSecondary?.rawValue.lowercased()
         self.tertiary_frame_color = bike.frameColorTertiary?.rawValue.lowercased()
 
-        self.cycle_type_name = bike.typeOfCycle
-        self.propulsion_type_slug = bike.typeOfPropulsion
+        if let propulsion {
+//            self.propulsion_type_slug = ""  propulsion.slug
+            self.cycle_type_name = bike.typeOfCycle
+        } else {
+            self.cycle_type_name = bike.typeOfCycle
+            self.propulsion_type_slug = bike.typeOfPropulsion
+        }
 
         if let bikeYear = bike.year {
             self.year = UInt(bikeYear)

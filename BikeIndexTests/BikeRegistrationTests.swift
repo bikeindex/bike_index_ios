@@ -21,6 +21,7 @@ final class BikeRegistrationTests: XCTestCase {
         let registrationModel = BikeRegistration(bike: bike,
                                                  mode: .myOwnBike,
                                                  stolen: nil,
+                                                 propulsion: nil,
                                                  ownerEmail: "")
 
         XCTAssertEqual(registrationModel.primary_frame_color, "green")

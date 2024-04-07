@@ -8,8 +8,14 @@
 import SwiftUI
 
 struct BicycleTypeSelectionView: View {
+    /// Model provided by parent view to write changes to
     @Binding var bike: Bike
+
+    /// Transient view-only state reflecting traditional foot-pedal / non-electric bicycle
     @Binding var traditionalBicycle: Bool
+
+    /// View-only state belonging to the parent view that contains just motor info (electric/pedal-assist/throttle
+    @Binding var propulsion: BikeRegistration.Propulsion
 
     var body: some View {
         if traditionalBicycle {
@@ -30,12 +36,13 @@ struct BicycleTypeSelectionView: View {
                 // electric is always off for scooter/skateboard
                 // electric is always active for e-scooter, personal mobility
                 if bike.typeOfCycle.canBeElectric {
-                    Toggle("⚡️ Electric (motorized)", isOn: .constant(false))
+                    Toggle("⚡️ Electric (motorized)",
+                           isOn: $propulsion.isElectric)
 
                     if bike.typeOfCycle.pedalAssistAndThrottle {
                         // not applicable for stroller/wheelchair/e-scooter/personal-mobility
-                        Toggle("Throttle", isOn: .constant(false))
-                        Toggle("Pedal Assist", isOn: .constant(false))
+                        Toggle("Throttle", isOn: $propulsion.hasThrottle)
+                        Toggle("Pedal Assist", isOn: $propulsion.hasPedalAssist)
                     }
                 }
             } header: {
@@ -56,8 +63,19 @@ struct BicycleTypeSelectionView: View {
         previewBike = newValue
     }
 
+    var previewPropulsion = BikeRegistration.Propulsion()
+    let propulsionBinding = Binding {
+        previewPropulsion
+    } set: { newValue in
+        previewPropulsion = newValue
+    }
+
     return Form {
-        BicycleTypeSelectionView(bike: bikeBinding,
-                                 traditionalBicycle: .constant(true))
+        BicycleTypeSelectionView(
+            bike: bikeBinding,
+
+            traditionalBicycle: .constant(true),
+            propulsion: propulsionBinding
+        )
     }
 }

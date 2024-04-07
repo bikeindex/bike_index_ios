@@ -44,7 +44,13 @@ final class BikeModelTests: XCTestCase {
         
         let bike = parsedModel.modelInstance()
         
-        let registrationInstance = BikeRegistration(bike: bike, mode: .myOwnBike, stolen: nil, ownerEmail: "")
+        let registrationInstance = BikeRegistration(
+            bike: bike,
+            mode: .myOwnBike,
+            stolen: nil,
+            propulsion: nil,
+            ownerEmail: ""
+        )
         let json = try JSONEncoder().encode(registrationInstance)
         let modelString = String(data: json, encoding: .utf8).unsafelyUnwrapped
 
