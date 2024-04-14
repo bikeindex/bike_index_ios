@@ -88,6 +88,8 @@ struct RegisterBikeView: View {
                 }
 
             }
+
+            // MARK: Serial number
             Section {
                 let safeSerial = Binding {
                     bike.serial ?? ""
@@ -128,10 +130,12 @@ struct RegisterBikeView: View {
                     })
             }
 
+            // MARK: Bike type and propulsion
             BicycleTypeSelectionView(bike: $bike,
                                      traditionalBicycle: $traditionalBicycle,
                                      propulsion: $propulsion)
 
+            // MARK: Manufacturer
             Section {
                 ManufacturerEntryView(bike: $bike,
                                       manufacturerSearchText: $manufacturerSearchText,
@@ -144,6 +148,7 @@ struct RegisterBikeView: View {
                 Text("Select 'Other' if manufacturer doesn't show up when entered")
             }
 
+            // MARK: Year
             Section {
                 Picker("Model Year", selection: $bike.year) {
                     Text("Unknown year").tag(nil as Int?)
@@ -158,12 +163,14 @@ struct RegisterBikeView: View {
                 Text("Select 'Unknown Year' if you don't know what year your bike was manufactured")
             }
 
+            // MARK: Frame
             Section {
                 TextField(text: $frameModel) {
                     Text("Frame model")
                 }
             }
 
+            // MARK: Frame colors
             Section {
                 Picker("Primary Frame Color", selection: $colorPrimary) {
                     ForEach(FrameColor.allCases) { option in
@@ -229,6 +236,7 @@ struct RegisterBikeView: View {
             // NOTE: Consider adding ImpoundedRecordEntryView in the future
             // MARK: -
 
+            // MARK: Email
             if mode == .myOwnBike || mode == .myStolenBike {
                 Section(header: Text("Owner Email")) {
                     TextField(text: $ownerEmail) {
@@ -238,6 +246,7 @@ struct RegisterBikeView: View {
                 }
             }
 
+            // MARK: Save
             Section {
                 Button {
                     Task { await registerBike() }
