@@ -21,6 +21,8 @@ struct BicycleTypeSelectionView: View {
         if traditionalBicycle {
             Section {
                 Toggle("Traditional bicycle", isOn: $traditionalBicycle)
+            } header: {
+                Text("Bicycle Type")
             } footer: {
                 Text("Two wheels, one seat, no motor")
             }
@@ -42,7 +44,9 @@ struct BicycleTypeSelectionView: View {
                     if bike.typeOfCycle.pedalAssistAndThrottle {
                         // not applicable for stroller/wheelchair/e-scooter/personal-mobility
                         Toggle("Throttle", isOn: $propulsion.hasThrottle)
+                            .disabled(!propulsion.isElectric)
                         Toggle("Pedal Assist", isOn: $propulsion.hasPedalAssist)
+                            .disabled(!propulsion.isElectric)
                     }
                 }
             } header: {
