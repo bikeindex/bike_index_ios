@@ -9,6 +9,8 @@ import Foundation
 
 extension BikeRegistration {
     /// Track View state with validation. This model should be composed with BikeRegistration and reduce the complexity in ``Bike`` and ``BikeRegistration``.
+    /// Used by BikeRegistration to POST to API endpoints
+    // TODO: Check if we can invoke this from BikeRegistration.encode -> Propulsion.encode and remove duplication and the "wrong" level of abstraction to perform encoding
     struct Propulsion {
 
         /// ``hasThrottle`` and ``hasPedalAssist`` can only be true when ``isElectric`` is true.

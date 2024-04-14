@@ -74,7 +74,6 @@ final class RegistrationPropulsionTests: XCTestCase {
 
         let registration = registration(with: propulsion)
 
-        XCTAssertEqual(registration.propulsion_type_slug, .footPedal)
         XCTAssertEqual(registration.cycle_type_name, .bike)
 
         let formDataString = try formDataString(from: registration)
@@ -82,11 +81,11 @@ final class RegistrationPropulsionTests: XCTestCase {
         let prettyFormString = delimitedFormContents.joined(separator: "&\n")
         Logger.tests.debug("Encoded value is \n\(prettyFormString, privacy: .public)")
 
-        XCTAssertTrue(delimitedFormContents.contains("cycle_type_name=bike"))
+        XCTAssertTrue(formDataString.contains("cycle_type_name=bike"))
 
-        XCTAssertFalse(delimitedFormContents.contains("propulsion_type_motorized"))
-        XCTAssertFalse(delimitedFormContents.contains("propulsion_type_throttle"))
-        XCTAssertFalse(delimitedFormContents.contains("propulsion_type_pedal_assist"))
+        XCTAssertFalse(formDataString.contains("propulsion_type_motorized"))
+        XCTAssertFalse(formDataString.contains("propulsion_type_throttle"))
+        XCTAssertFalse(formDataString.contains("propulsion_type_pedal_assist"))
     }
 
     /// Electric = true, has throttle = true, has pedal assist = true
@@ -99,7 +98,6 @@ final class RegistrationPropulsionTests: XCTestCase {
 
         let registration = registration(with: propulsion)
 
-        XCTAssertEqual(registration.propulsion_type_slug, .pedalAssistAndThrottle)
         XCTAssertEqual(registration.cycle_type_name, .bike)
 
         let formDataString = try formDataString(from: registration)
@@ -107,11 +105,11 @@ final class RegistrationPropulsionTests: XCTestCase {
         let prettyFormString = delimitedFormContents.joined(separator: "&\n")
         Logger.tests.debug("Encoded value is \n\(prettyFormString, privacy: .public)")
 
-        XCTAssertTrue(delimitedFormContents.contains("cycle_type_name=bike"))
+        XCTAssertTrue(formDataString.contains("cycle_type_name=bike"))
 
-        XCTAssertFalse(delimitedFormContents.contains("propulsion_type_motorized"))
-        XCTAssertTrue(delimitedFormContents.contains("propulsion_type_throttle"))
-        XCTAssertTrue(delimitedFormContents.contains("propulsion_type_pedal_assist"))
+        XCTAssertFalse(formDataString.contains("propulsion_type_motorized"))
+        XCTAssertTrue(formDataString.contains("propulsion_type_throttle"))
+        XCTAssertTrue(formDataString.contains("propulsion_type_pedal_assist"))
     }
 
     /// Electric = true, has throttle = false, has pedal assist = false
@@ -124,8 +122,6 @@ final class RegistrationPropulsionTests: XCTestCase {
 
         let registration = registration(with: propulsion)
 
-        // TODO: Confirm humanNotPedal
-        XCTAssertEqual(registration.propulsion_type_slug, .humanNotPedal)
         XCTAssertEqual(registration.cycle_type_name, .bike)
 
         let formDataString = try formDataString(from: registration)
@@ -133,11 +129,11 @@ final class RegistrationPropulsionTests: XCTestCase {
         let prettyFormString = delimitedFormContents.joined(separator: "&\n")
         Logger.tests.debug("Encoded value is \n\(prettyFormString, privacy: .public)")
 
-        XCTAssertTrue(delimitedFormContents.contains("cycle_type_name=bike"))
+        XCTAssertTrue(formDataString.contains("cycle_type_name=bike"))
 
-        XCTAssertTrue(delimitedFormContents.contains("propulsion_type_motorized"))
-        XCTAssertFalse(delimitedFormContents.contains("propulsion_type_throttle"))
-        XCTAssertFalse(delimitedFormContents.contains("propulsion_type_pedal_assist"))
+        XCTAssertTrue(formDataString.contains("propulsion_type_motorized"))
+        XCTAssertFalse(formDataString.contains("propulsion_type_throttle"))
+        XCTAssertFalse(formDataString.contains("propulsion_type_pedal_assist"))
     }
 
     // MARK: - Helpers

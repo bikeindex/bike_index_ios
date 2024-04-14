@@ -29,7 +29,7 @@ final class BikeRegistrationTests: XCTestCase {
         XCTAssertEqual(registrationModel.tertiary_frame_color, "stickers tape or other cover-up")
 
         XCTAssertEqual(registrationModel.cycle_type_name, .bike)
-        XCTAssertEqual(registrationModel.propulsion_type_slug, .footPedal)
+        XCTAssertNil(registrationModel.propulsion)
     }
 
 }

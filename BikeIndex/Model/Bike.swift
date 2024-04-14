@@ -32,16 +32,6 @@ import MapKit
     /// Keyed by `propulsion_type_slug`
     var typeOfPropulsion: PropulsionType
 
-    /// TRUE WHEN eletric(motorized) == true && (pedal && throttle==false)
-    /// EXCLUDED when pedal==true && throttle==true
-    @Transient var propulsion_type_motorized: Bool?
-
-    /// TRUE WHEN throttle == true
-    @Transient var propulsion_type_throttle: Bool?
-
-    /// TRUE WHEN pedal == true
-    @Transient var propulsion_type_pedal_assist: Bool?
-
     /// Nil if the serial number is missing.
     /// There are various concepts of abasent serial numbers
     /// such as "unknown" and also "made\_without\_serial" for certain older bikes.
