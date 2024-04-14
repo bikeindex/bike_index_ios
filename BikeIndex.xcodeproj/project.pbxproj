@@ -33,6 +33,7 @@
 		046B0A372B251E58006519A7 /* AppIconPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A352B251E58006519A7 /* AppIconPicker.swift */; };
 		046B0A382B251E58006519A7 /* TextLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A362B251E58006519A7 /* TextLink.swift */; };
 		046B0A3A2B251E67006519A7 /* AlternateIconsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A392B251E67006519A7 /* AlternateIconsModel.swift */; };
+		0482AF1E2BCB59FE0077B0BF /* CameraCaptureButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0482AF1D2BCB59FE0077B0BF /* CameraCaptureButton.swift */; };
 		0485E9C72B9E2FA70071C48B /* Logger+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A3C2B251E91006519A7 /* Logger+Tests.swift */; };
 		0490A5EF2B26972600C4EC1E /* BikeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490A5EE2B26972600C4EC1E /* BikeResponse.swift */; };
 		0490A5F12B269F7800C4EC1E /* AddBikeOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490A5F02B269F7800C4EC1E /* AddBikeOutput.swift */; };
@@ -125,6 +126,7 @@
 		046B0A3D2B251E91006519A7 /* UserRelationshipTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserRelationshipTests.swift; sourceTree = "<group>"; };
 		046B0A3E2B251E92006519A7 /* BikeIndexOrgApiV3Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BikeIndexOrgApiV3Tests.swift; sourceTree = "<group>"; };
 		046B0A3F2B251E92006519A7 /* MockData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
+		0482AF1D2BCB59FE0077B0BF /* CameraCaptureButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCaptureButton.swift; sourceTree = "<group>"; };
 		0490A5EE2B26972600C4EC1E /* BikeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeResponse.swift; sourceTree = "<group>"; };
 		0490A5F02B269F7800C4EC1E /* AddBikeOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBikeOutput.swift; sourceTree = "<group>"; };
 		0494FD8B2B4250F70053C54F /* MainToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainToolbar.swift; sourceTree = "<group>"; };
@@ -260,6 +262,14 @@
 				043033372B41367100FD126F /* MainContent.swift */,
 			);
 			path = Navigation;
+			sourceTree = "<group>";
+		};
+		0482AF1C2BCB59ED0077B0BF /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				0482AF1D2BCB59FE0077B0BF /* CameraCaptureButton.swift */,
+			);
+			path = Camera;
 			sourceTree = "<group>";
 		};
 		0485E9C82B9E2FAE0071C48B /* SharedTests */ = {
@@ -442,6 +452,7 @@
 		04F4B9362B098B81009442B5 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				0482AF1C2BCB59ED0077B0BF /* Camera */,
 				04EC71292B54362700898CA1 /* Web */,
 				04F2C6382B4B00B0009E0A37 /* BikeDetail */,
 				046B0A362B251E58006519A7 /* TextLink.swift */,
@@ -668,6 +679,7 @@
 				04EA11152B2502AF0024CDDD /* OAuthToken.swift in Sources */,
 				04F4B9592B098C11009442B5 /* BikeIndexApp.swift in Sources */,
 				04F4B9502B098BB1009442B5 /* Bike.swift in Sources */,
+				0482AF1E2BCB59FE0077B0BF /* CameraCaptureButton.swift in Sources */,
 				04F4B9632B0998F6009442B5 /* ClientConfiguration.swift in Sources */,
 				04B660082B4309780055A056 /* AutocompleteManufacturerResponse.swift in Sources */,
 				04EA110E2B2502660024CDDD /* API.swift in Sources */,

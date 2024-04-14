@@ -106,6 +106,12 @@ struct RegisterBikeView: View {
                     }
                 }
                 .textInputAutocapitalization(.characters)
+
+                HStack(spacing: 0) {
+                    CameraCaptureButton(text: safeSerial)
+                        .frame(maxWidth: .infinity)
+                }
+
                 Toggle("Missing Serial Number", isOn: $missingSerial)
                     .onChange(of: missingSerial) { oldValue, newValue in
                         if oldValue != newValue, newValue == true {
