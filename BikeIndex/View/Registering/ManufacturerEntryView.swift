@@ -79,8 +79,7 @@ struct ManufacturerEntryView: View {
                 }
                 .padding([.leading, .trailing], 8)
 
-            } else {
-                // NOTE: Hide Other after the textfield loses focus
+            } else if manufacturers.count > 0 {
                 Text("Other")
                     .foregroundStyle(Color.secondary)
                     .onTapGesture {
