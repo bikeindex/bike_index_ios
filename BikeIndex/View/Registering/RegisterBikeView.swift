@@ -109,8 +109,9 @@ struct RegisterBikeView: View {
                 }
                 .textInputAutocapitalization(.characters)
 
-                HStack(spacing: 0) {
+                HStack {
                     CameraCaptureButton(text: safeSerial)
+                    Spacer()
                         .frame(maxWidth: .infinity)
                 }
 

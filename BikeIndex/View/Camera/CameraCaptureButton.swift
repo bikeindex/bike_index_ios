@@ -21,6 +21,10 @@ struct CameraCaptureButton: UIViewRepresentable {
         return UIButton(primaryAction: captureTextAction)
     }
 
+    func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIButton, context: Context) -> CGSize? {
+        uiView.intrinsicContentSize
+    }
+
     func updateUIView(_ uiView: UIViewType, context: Context) { }
 
     // MARK: - UIKit bridging
