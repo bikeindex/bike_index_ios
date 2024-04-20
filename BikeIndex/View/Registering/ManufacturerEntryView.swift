@@ -13,13 +13,14 @@ struct ManufacturerEntryView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
+    @FocusState.Binding var searching: Bool
+
     @Binding var bike: Bike
     @Binding var manufacturerSearchText: String
-    @Binding var searching: Bool
 
     @Query var manufacturers: [AutocompleteManufacturer]
 
-    init(bike: Binding<Bike>, manufacturerSearchText: Binding<String>, searching: Binding<Bool>) {
+    init(bike: Binding<Bike>, manufacturerSearchText: Binding<String>, searching: FocusState<Bool>.Binding) {
         _bike = bike
         _manufacturerSearchText = manufacturerSearchText
         _searching = searching
@@ -36,65 +37,59 @@ struct ManufacturerEntryView: View {
     }
 
     var body: some View {
-        if searching {
-            TextField(text: $manufacturerSearchText) {
-                Text("Search for manufacturer")
+        TextField(text: $manufacturerSearchText) {
+            Text("Search for manufacturer")
+        }
+        .accessibilityIdentifier("manufacturerSearchTextField")
+        .focused($searching)
+        .onChange(of: manufacturerSearchText) { oldQuery, newQuery in
+            guard !newQuery.isEmpty else {
+                return
             }
-            .onChange(of: manufacturerSearchText) { oldQuery, newQuery in
-                guard !newQuery.isEmpty else {
-                    return
-                }
 
-                Task {
-                    let fetch_manufacturer = await client.api.get(Autocomplete.manufacturer(query: newQuery))
-                    switch fetch_manufacturer {
-                    case .success(let success):
-                        guard let autocompleteResponse = success as? AutocompleteManufacturerContainerResponse else {
-                            Logger.views.debug("ManufacturerEntryView search failed to parse response from \(String(reflecting: success), privacy: .public)")
-                            return
+            Task {
+                let fetch_manufacturer = await client.api.get(Autocomplete.manufacturer(query: newQuery))
+                switch fetch_manufacturer {
+                case .success(let success):
+                    guard let autocompleteResponse = success as? AutocompleteManufacturerContainerResponse else {
+                        Logger.views.debug("ManufacturerEntryView search failed to parse response from \(String(reflecting: success), privacy: .public)")
+                        return
+                    }
+
+                    for manufacturer in autocompleteResponse.matches {
+                        modelContext.insert(manufacturer.modelInstance())
+                    }
+
+                    Logger.views.debug("ManufacturerEntryView received response \(String(describing: autocompleteResponse), privacy: .public)")
+
+                case .failure(let failure):
+                    Logger.views.error("ManufacturerEntryView search failed with \(String(reflecting: failure), privacy: .public)")
+                }
+            }
+        }
+        if !manufacturerSearchText.isEmpty, manufacturers.count > 0 {
+            List {
+                ForEach(manufacturers) { manufacturer in
+                    Text(manufacturer.text)
+                        .foregroundStyle(Color.secondary)
+                        .onTapGesture {
+                            bike.manufacturerName = manufacturer.text
+                            manufacturerSearchText = manufacturer.text
+                            searching = false
                         }
-
-                        for manufacturer in autocompleteResponse.matches {
-                            modelContext.insert(manufacturer.modelInstance())
-                        }
-
-                        Logger.views.debug("ManufacturerEntryView received response \(String(describing: autocompleteResponse), privacy: .public)")
-
-                    case .failure(let failure):
-                        Logger.views.error("ManufacturerEntryView search failed with \(String(reflecting: failure), privacy: .public)")
-                    }
                 }
             }
-            if !manufacturerSearchText.isEmpty, manufacturers.count > 0 {
-                List {
-                    ForEach(manufacturers) { manufacturer in
-                        Text(manufacturer.text)
-                            .foregroundStyle(Color.secondary)
-                            .onTapGesture {
-                                bike.manufacturerName = manufacturer.text
-                                manufacturerSearchText = manufacturer.text
-                                searching = false
-                            }
-                    }
+            .padding([.leading, .trailing], 8)
+
+        } else if manufacturers.count > 0 {
+            Text("Other")
+                .foregroundStyle(Color.secondary)
+                .onTapGesture {
+                    bike.manufacturerName = "Other"
+                    manufacturerSearchText = "Other"
+                    searching = false
                 }
-                .padding([.leading, .trailing], 8)
 
-            } else if manufacturers.count > 0 {
-                Text("Other")
-                    .foregroundStyle(Color.secondary)
-                    .onTapGesture {
-                        bike.manufacturerName = "Other"
-                        manufacturerSearchText = "Other"
-                        searching = false
-                    }
-
-            }
-        } else {
-            TextField(text: $manufacturerSearchText) {
-                Text("Search for manufacturer")
-            }.onChange(of: manufacturerSearchText, { _, _ in
-                searching = true
-            })
         }
     }
 }
@@ -116,11 +111,11 @@ struct ManufacturerEntryView: View {
     })
 
     var searching = true
-    let searchBinding = Binding(get: { searching }, set: { searching = $0 })
+    let searchFocus = FocusState<Bool>()
 
     do {
         let client = try Client()
-        
+
         let mockAutocompleteManufacturers = [
             AutocompleteManufacturer(text: "Aaaaaaaa", category: "", slug: "aaa", priority: 1, searchId: "aaa", identifier: 1),
             AutocompleteManufacturer(text: "Bbbbbbbb", category: "", slug: "bbb", priority: 1, searchId: "bbb", identifier: 1),
@@ -136,11 +131,11 @@ struct ManufacturerEntryView: View {
         }
 
         return Section {
-            Text("Search text count is \(searchTextBinding.wrappedValue.count). Searching? \(searchBinding.wrappedValue ? "True" : "False")")
+            Text("Search text count is \(searchTextBinding.wrappedValue.count). Searching? \(searchFocus.wrappedValue ? "True" : "False")")
 
             ManufacturerEntryView(bike: bikeBinding,
                                   manufacturerSearchText: searchTextBinding,
-                                  searching: searchBinding)
+                                  searching: searchFocus.projectedValue)
             .environment(client)
             .modelContainer(mockContainer)
         }
