@@ -22,7 +22,7 @@ struct RegisterBikeView: View {
     // Shadow the serial number, manufacturer, and model to update the UI without unwrapping optionals
     @State var missingSerial = false
     @State var manufacturerSearchText = ""
-    @FocusState var manufacturerSearchActive: Bool
+    @FocusState var manufacturerSearchActive: ManufacturerEntryView.EditState?
     @State var frameModel = ""
 
     /* Shadow the Bike.frameColors selection with local state to bridge the gap between Binding<FrameColor>
