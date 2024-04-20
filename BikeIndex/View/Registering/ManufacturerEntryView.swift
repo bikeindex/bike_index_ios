@@ -13,17 +13,17 @@ struct ManufacturerEntryView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
-    @FocusState.Binding var searching: EditState?
+    @FocusState.Binding var state: EditState?
 
     @Binding var bike: Bike
     @Binding var manufacturerSearchText: String
 
     @Query var manufacturers: [AutocompleteManufacturer]
 
-    init(bike: Binding<Bike>, manufacturerSearchText: Binding<String>, searching: FocusState<EditState?>.Binding) {
+    init(bike: Binding<Bike>, manufacturerSearchText: Binding<String>, state: FocusState<EditState?>.Binding) {
         _bike = bike
         _manufacturerSearchText = manufacturerSearchText
-        _searching = searching
+        _state = state
         let searchTerm = manufacturerSearchText.wrappedValue
 
         let predicate = #Predicate<AutocompleteManufacturer> { model in
@@ -41,9 +41,9 @@ struct ManufacturerEntryView: View {
             Text("Search for manufacturer")
         }
         .accessibilityIdentifier("manufacturerSearchTextField")
-        .focused($searching, equals: .editing)
+        .focused($state, equals: .editing)
         .onChange(of: manufacturerSearchText) { oldQuery, newQuery in
-            searching = .editing
+            state = .editing
 
             guard !newQuery.isEmpty else {
                 return
@@ -77,7 +77,7 @@ struct ManufacturerEntryView: View {
                         .onTapGesture {
                             bike.manufacturerName = manufacturer.text
                             manufacturerSearchText = manufacturer.text
-                            searching = nil
+                            state = nil
                         }
                 }
             }
@@ -89,7 +89,7 @@ struct ManufacturerEntryView: View {
                 .onTapGesture {
                     bike.manufacturerName = "Other"
                     manufacturerSearchText = "Other"
-                    searching = nil
+                    state = nil
                 }
 
         }
@@ -120,7 +120,7 @@ struct ManufacturerEntryView: View {
     })
 
     var searching = true
-    let searchFocus = FocusState<ManufacturerEntryView.EditState?>()
+    let state = FocusState<ManufacturerEntryView.EditState?>()
 
     do {
         let client = try Client()
@@ -140,11 +140,11 @@ struct ManufacturerEntryView: View {
         }
 
         return Section {
-            Text("Search text count is \(searchTextBinding.wrappedValue.count). Searching? \(String(describing: searchFocus.wrappedValue))")
+            Text("Search text count is \(searchTextBinding.wrappedValue.count). Searching? \(String(describing: state.wrappedValue))")
 
             ManufacturerEntryView(bike: bikeBinding,
                                   manufacturerSearchText: searchTextBinding,
-                                  searching: searchFocus.projectedValue)
+                                  state: state.projectedValue)
             .environment(client)
             .modelContainer(mockContainer)
         }
