@@ -69,29 +69,28 @@ struct ManufacturerEntryView: View {
                 }
             }
         }
-        if !manufacturerSearchText.isEmpty, manufacturers.count > 0 {
+        if manufacturers.count == 1 && manufacturerSearchText == manufacturers.first?.text {
+            /// After the user taps a selection, stop displaying the suggestions list
+            EmptyView()
+        } else if !manufacturerSearchText.isEmpty, manufacturers.count > 0, state == .editing {
             List {
                 ForEach(manufacturers) { manufacturer in
-                    Text(manufacturer.text)
-                        .foregroundStyle(Color.secondary)
-                        .onTapGesture {
-                            bike.manufacturerName = manufacturer.text
-                            manufacturerSearchText = manufacturer.text
-                            state = nil
-                        }
+                    Button(manufacturer.text) {
+                        bike.manufacturerName = manufacturer.text
+                        manufacturerSearchText = manufacturer.text
+                        state = nil
+                    }
+                    .foregroundStyle(Color.secondary)
                 }
             }
             .padding([.leading, .trailing], 8)
-
         } else if manufacturers.count > 0 {
-            Text("Other")
-                .foregroundStyle(Color.secondary)
-                .onTapGesture {
-                    bike.manufacturerName = "Other"
-                    manufacturerSearchText = "Other"
-                    state = nil
-                }
-
+            Button("Other") {
+                bike.manufacturerName = "Other"
+                manufacturerSearchText = "Other"
+                state = nil
+            }
+            .foregroundStyle(Color.secondary)
         }
     }
 
