@@ -88,9 +88,6 @@ typealias QueryItemTuple = (name: String, value: String)
            let rawData = lastKnownToken.data(using: .utf8) {
             do {
                 let lastKnownAuth = try JSONDecoder().decode(OAuthToken.self, from: rawData)
-                guard lastKnownAuth.isValid else {
-                    return
-                }
                 self.auth = lastKnownAuth
                 accessToken = lastKnownAuth.accessToken
                 self.api.configuration.accessToken = lastKnownAuth.accessToken
