@@ -47,7 +47,7 @@ typealias QueryItemTuple = (name: String, value: String)
     }()
 
     /// Full OAuth token response.
-    var auth: OAuthToken?
+    internal var auth: OAuthToken?
     /// Access token is provided by the OAuth flow to the application from `ASWebAuthenticationSession`.
     /// The access token may be required in requests and it may be used to retrieve the full OAuth token (see ``auth``).
     private var accessToken: Token?
@@ -88,9 +88,10 @@ typealias QueryItemTuple = (name: String, value: String)
            let rawData = lastKnownToken.data(using: .utf8) {
             do {
                 let lastKnownAuth = try JSONDecoder().decode(OAuthToken.self, from: rawData)
-                self.auth = lastKnownAuth
+
+                auth = lastKnownAuth
                 accessToken = lastKnownAuth.accessToken
-                self.api.configuration.accessToken = lastKnownAuth.accessToken
+                api.configuration.accessToken = lastKnownAuth.accessToken
 
                 setupRefreshTimer()
 
@@ -98,6 +99,8 @@ typealias QueryItemTuple = (name: String, value: String)
             } catch {
                 Logger.api.debug("Failed to find existing auth")
             }
+        } else {
+            Logger.api.debug("\(#function) Could not find valid oauth token in keychain")
         }
     }
 
@@ -213,15 +216,15 @@ typealias QueryItemTuple = (name: String, value: String)
                           selector: #selector(self.refreshToken(timer:)),
                           userInfo: ["token": auth],
                           repeats: false)
-        self.refreshRunLoop.add(timer, forMode: .default)
-        self.refreshTimer = timer
+        refreshRunLoop.add(timer, forMode: .default)
+        refreshTimer = timer
     }
 
     func forceRefreshToken() {
-        guard let timer = self.refreshTimer else {
+        guard let refreshTimer else {
             fatalError()
         }
-        self.refreshToken(timer: timer)
+        refreshToken(timer: refreshTimer)
     }
 
     @objc func refreshToken(timer: Timer) {
