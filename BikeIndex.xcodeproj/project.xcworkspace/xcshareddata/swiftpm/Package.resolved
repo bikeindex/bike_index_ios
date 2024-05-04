@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/danielsaidi/WebViewKit.git",
       "state" : {
-        "revision" : "a6be2a9f2936f6e2f078fcc764bb005d683bc027",
-        "version" : "0.3.0"
+        "revision" : "04fcd86336f4d254f0967b8cc7023af29dd7adce",
+        "version" : "0.4.0"
       }
     }
   ],
