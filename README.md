@@ -1,7 +1,8 @@
 # Bike Index
 
-⚠️ This project is incomplete and under active development. ⚠️
-⚠️ No guarantees are provided. ⚠️
+> [!IMPORTANT]
+> This project is incomplete and under active development.
+> No guarantees are provided.
 
 iOS client for bikeindex.org
 
