@@ -17,23 +17,22 @@ struct WelcomeView: View {
     var body: some View {
         VStack {
             Spacer()
-            if let striped = UIImage(named: "AppIcon-striped")
-            {
-                HStack {
-                    if let uiImage = UIImage(named: iconsModel.selectedAppIcon.rawValue) {
-                        Image(uiImage: uiImage)
-                            .appIcon(scale: .large)
-                            .frame(maxWidth: .infinity,
-                                   maxHeight: 200)
-                    } else {
-                        Image(systemName: iconsModel.absentIcon)
-                            .appIcon(scale: .large)
-                            .frame(maxWidth: .infinity,
-                                   maxHeight: 200)
-                    }
-                    Spacer()
+
+            HStack {
+                if let uiImage = UIImage(named: iconsModel.selectedAppIcon.rawValue) {
+                    Image(uiImage: uiImage)
+                        .appIcon(scale: .large)
+                        .frame(maxWidth: .infinity,
+                               maxHeight: 200)
+                } else {
+                    Image(systemName: iconsModel.absentIcon)
+                        .appIcon(scale: .large)
+                        .frame(maxWidth: .infinity,
+                               maxHeight: 200)
                 }
+                Spacer()
             }
+
             Text("The world's largest and most effective bicycle registry and stolen bike recovery platform.")
                 .font(.headline)
                 .multilineTextAlignment(.center)

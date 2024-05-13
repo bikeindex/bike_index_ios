@@ -31,7 +31,7 @@ struct AcknowledgementPackageDetailView: View {
                                          license: .gnuAfferoGPLv3,
                                          copyright: "2023 © Bike Index, a 501(c)(3) nonprofit - EIN 81-4296194",
                                          repository: URL(string: "https://github.com/bikeindex/bike_index_ios"))
-    var binding: Binding<URL?> = Binding {
+    let binding: Binding<URL?> = Binding {
         package.repository
     } set: { _ in }
 

@@ -56,7 +56,7 @@ struct StolenRecordEntryView: View {
 
 #Preview {
     var backingRecord = StolenRecord(phone: "", city: "")
-    var record = Binding {
+    let record = Binding {
         backingRecord
     } set: { value in
         backingRecord = value
