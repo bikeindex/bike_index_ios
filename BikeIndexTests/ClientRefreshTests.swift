@@ -71,7 +71,7 @@ final class ClientRefreshTests: XCTestCase {
         client.api.configuration.accessToken = client.auth?.accessToken
         XCTAssertEqual(client.state, .authenticated)
 
-        var expectation = XCTestExpectation(description: "Token renewal must activate a refresh request")
+        let expectation = XCTestExpectation(description: "Token renewal must activate a refresh request")
 
         // NEW token
         let newAccessToken = UUID().uuidString
@@ -86,7 +86,7 @@ final class ClientRefreshTests: XCTestCase {
         Logger.tests.info("starting waiter")
 
         let safeClient = try XCTUnwrap(client)
-        var timer = Timer(timeInterval: expirationInterval,
+        let timer = Timer(timeInterval: expirationInterval,
                           target: safeClient,
                           selector: #selector(safeClient.refreshToken(timer:)),
                           userInfo: ["token": newToken,
