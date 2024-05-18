@@ -34,6 +34,34 @@ struct SettingsView: View {
 
             if client.authenticated {
                 Section {
+                    NavigationLink {
+                        NavigableWebView(url: BikeIndexLink.accountUserSettings.link(base: client.configuration.host))
+                            .navigationTitle("User Settings")
+                    } label: {
+                        Label("User Settings", systemImage: "person.crop.circle")
+                    }
+
+                    NavigationLink {
+                        NavigableWebView(url: BikeIndexLink.accountPassword.link(base: client.configuration.host))
+                            .navigationTitle("Password")
+                    } label: {
+                        Label("Password", systemImage: "key")
+                    }
+
+                    NavigationLink {
+                        NavigableWebView(url: BikeIndexLink.accountSharingPersonalPage.link(base: client.configuration.host))
+                            .navigationTitle("Sharing + Personal Page")
+                    } label: {
+                        Label("Sharing + Personal Page", systemImage: "shared.with.you")
+                    }
+
+                    NavigationLink {
+                        NavigableWebView(url: BikeIndexLink.accountRegistrationOrganization.link(base: client.configuration.host))
+                            .navigationTitle("Registration Organization")
+                    } label: {
+                        Label("Registration Organization", systemImage: "person.badge.shield.checkmark")
+                    }
+
                     Button(action: client.destroySession) {
                         // Hack in an empty destination to achieve the disclosure indicator
                         NavigationLink(destination: EmptyView()) {
@@ -43,6 +71,18 @@ struct SettingsView: View {
                         }
                     }
                     .tint(Color.highlightPrimary)
+
+                    NavigationLink {
+                        NavigableWebView(url: BikeIndexLink.deleteAccount.link(base: client.configuration.host))
+                            .navigationTitle("Delete Account")
+                    } label: {
+                        Label("Delete Account", systemImage: "trash.fill")
+                            .tint(Color.highlightPrimary)
+                            .foregroundStyle(Color.highlightPrimary)
+                    }
+                    .tint(Color.highlightPrimary)
+                } header: {
+                    Text("Manage Account")
                 }
             }
 
@@ -82,7 +122,9 @@ struct SettingsView: View {
                     Label("Terms of Service", systemImage: "text.book.closed")
                 }
             }
-
+            header: {
+                Text("About")
+            }
             footer: {
                 HStack {
                     Spacer()
@@ -91,21 +133,6 @@ struct SettingsView: View {
                 }
                 .padding(.top)
             }
-
-            if client.authenticated {
-                Section {
-                    NavigationLink {
-                        NavigableWebView(url: BikeIndexLink.deleteAccount.link(base: client.configuration.host))
-                            .navigationTitle("Delete Account")
-                    } label: {
-                        Label("Delete Account", systemImage: "trash.fill")
-                            .tint(Color.highlightPrimary)
-                            .foregroundStyle(Color.highlightPrimary)
-                    }
-                    .tint(Color.highlightPrimary)
-                }
-            }
-
         }
         .navigationTitle("Settings")
     }

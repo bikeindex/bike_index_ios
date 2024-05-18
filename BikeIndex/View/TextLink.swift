@@ -38,11 +38,18 @@ enum MailToLink: Identifiable {
 }
 
 enum BikeIndexLink: Identifiable {
+    // MARK: General
     case oauthApplications
     case serials
     case stolenBikeFAQ
     case privacyPolicy
     case termsOfService
+
+    // MARK: Account
+    case accountUserSettings
+    case accountPassword
+    case accountSharingPersonalPage
+    case accountRegistrationOrganization
     case deleteAccount
 
     var id: Self { self }
@@ -57,7 +64,8 @@ enum BikeIndexLink: Identifiable {
             markdownSource = "Every bike has a unique serial number, it's how they are identified. To learn more or see some examples, [go to our serial page](\(link(base: base)))."
         case .stolenBikeFAQ:
             markdownSource = "Learn more about [How to get your stolen bike back](\(link(base: base)))"
-        case .privacyPolicy, .termsOfService, .deleteAccount:
+        case .privacyPolicy, .termsOfService, .deleteAccount, .accountUserSettings,
+                .accountPassword, .accountSharingPersonalPage, .accountRegistrationOrganization:
             return AttributedString()
         }
 
@@ -91,6 +99,19 @@ enum BikeIndexLink: Identifiable {
         case .termsOfService:
             // https://bikeindex.org/terms
             return "terms"
+
+        case .accountUserSettings:
+            // https://bikeindex.org/my_account/edit
+            return "my_account/edit"
+        case .accountPassword:
+            // https://bikeindex.org/my_account/edit/password
+            return "my_account/edit/password"
+        case .accountSharingPersonalPage:
+            // https://bikeindex.org/my_account/edit/sharing
+            return "my_account/edit/sharing"
+        case .accountRegistrationOrganization:
+            // https://bikeindex.org/my_account/edit/registration_organizations
+            return "my_account/edit/registration_organizations"
         case .deleteAccount:
             // https://bikeindex.org/my_account/edit/delete_account
             return "my_account/edit/delete_account"
