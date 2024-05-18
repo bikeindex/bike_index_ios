@@ -92,6 +92,20 @@ struct SettingsView: View {
                 .padding(.top)
             }
 
+            if client.authenticated {
+                Section {
+                    NavigationLink {
+                        NavigableWebView(url: BikeIndexLink.deleteAccount.link(base: client.configuration.host))
+                            .navigationTitle("Delete Account")
+                    } label: {
+                        Label("Delete Account", systemImage: "trash.fill")
+                            .tint(Color.highlightPrimary)
+                            .foregroundStyle(Color.highlightPrimary)
+                    }
+                    .tint(Color.highlightPrimary)
+                }
+            }
+
         }
         .navigationTitle("Settings")
     }
