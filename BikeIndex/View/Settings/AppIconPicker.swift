@@ -49,17 +49,18 @@ extension Image {
     }
 }
 
-#Preview {
+/// Validates Views with UIImages (without using models)
+#Preview("App Icon Direct UIImage Access") {
     VStack {
         Form {
             Section {
-                Image(uiImage: UIImage(named: "AppIcon").unsafelyUnwrapped)
+                Image(uiImage: UIImage(named: "AppIcon-in-app").unsafelyUnwrapped)
                     .appIcon(scale: .large)
 
                 Label(
                     title: { Text("App Icon") },
                     icon: {
-                        Image(uiImage: UIImage(named: "AppIcon").unsafelyUnwrapped)
+                        Image(uiImage: UIImage(named: "AppIcon-in-app").unsafelyUnwrapped)
                         .appIcon(scale: .small)
                     }
                 )
@@ -99,7 +100,7 @@ struct AppIconPicker: View {
     }
 }
 
-#Preview {
+#Preview("App Icon Picker View") {
     NavigationStack {
         AppIconPicker(model: .constant(AlternateIconsModel()))
     }
