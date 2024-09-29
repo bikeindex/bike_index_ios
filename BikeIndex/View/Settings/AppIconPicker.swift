@@ -79,13 +79,8 @@ struct AppIconPicker: View {
                         model.update(icon: icon)
                     } label: {
                         VStack {
-                            if let uiImage = UIImage(named: icon.rawValue) {
-                                Image(uiImage: uiImage)
-                                    .appIcon()
-                            } else {
-                                Image(systemName: model.absentIcon)
-                                    .appIcon()
-                            }
+                            Image(uiImage: icon.image)
+                                .appIcon()
                             Text(icon.description)
                         }
                     }

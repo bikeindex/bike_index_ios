@@ -10,6 +10,8 @@ import Observation
 import OSLog
 import UIKit
 
+/// Represents icons in Assets/AppIcons asset catalog.
+/// For display in-app, 1) append "-in-app" and 2) see Assets/AppIcons-in-app catalog.
 enum AppIcon: String, CaseIterable, Identifiable {
     case primary = "AppIcon"
     case blackOnWhite = "AppIcon-bow"
@@ -20,14 +22,27 @@ enum AppIcon: String, CaseIterable, Identifiable {
     case doodle = "Doodle"
     #endif
 
-    var id: String { rawValue }
+    /// iOS 18 icons must be in a regular image asset catalog, thus "-in-app".
+    var id: String { rawValue + "-in-app" }
 
+    /// Provide a name suitable for the Alternate App Icon API to ingest.
+    /// This is not suitable for displaying a UIImage in-app
     var iconName: String? {
         switch self {
         case .primary:
             return nil
         default:
             return rawValue
+        }
+    }
+
+    /// Provide a UIImage suitable for display in-app
+    var image: UIImage {
+        if let uiImage = UIImage(named: id) {
+            return uiImage
+        } else {
+            // Fallback SF Symbol when an AppIcon cannot be loaded
+            return UIImage(systemName: "questionmark.app.dashed").unsafelyUnwrapped
         }
     }
 
@@ -66,11 +81,6 @@ enum AppIcon: String, CaseIterable, Identifiable {
 
     var hasAlternates: Bool {
         UIApplication.shared.supportsAlternateIcons
-    }
-
-    /// Fallback SF Symbol when an AppIcon cannot be loaded
-    var absentIcon: String {
-        "questionmark.app.dashed"
     }
 
     func update(icon: AppIcon) {
