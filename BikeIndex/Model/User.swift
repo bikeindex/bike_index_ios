@@ -31,7 +31,7 @@ import OSLog
     }
 }
 
-@Model final class User { // CustomDebugStringConvertible {
+@Model final class User {
     @Attribute(.unique) fileprivate(set) var email: String
     fileprivate(set) var username: String
     fileprivate(set) var name: String

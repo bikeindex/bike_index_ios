@@ -118,7 +118,6 @@ struct ManufacturerEntryView: View {
         searchText = $0
     })
 
-    let searching = true
     let state = FocusState<ManufacturerEntryView.EditState?>()
 
     do {
