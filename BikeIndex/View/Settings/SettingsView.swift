@@ -20,14 +20,10 @@ struct SettingsView: View {
                     NavigationLink {
                         AppIconPicker(model: $iconsModel)
                     } label: {
-                        if let uiImage = UIImage(named: iconsModel.selectedAppIcon.rawValue) {
-                            Label(title: { Text("App Icon") }, icon: {
-                                Image(uiImage: uiImage)
-                                    .appIcon(scale: .small)
-                            })
-                        } else {
-                            Label("App Icon", systemImage: iconsModel.absentIcon)
-                        }
+                        Label(title: { Text("App Icon") }, icon: {
+                            Image(uiImage: iconsModel.selectedAppIcon.image)
+                                .appIcon(scale: .small)
+                        })
                     }
                 }
             }

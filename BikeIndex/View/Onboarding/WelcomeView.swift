@@ -19,17 +19,10 @@ struct WelcomeView: View {
             Spacer()
 
             HStack {
-                if let uiImage = UIImage(named: iconsModel.selectedAppIcon.rawValue) {
-                    Image(uiImage: uiImage)
-                        .appIcon(scale: .large)
-                        .frame(maxWidth: .infinity,
-                               maxHeight: 200)
-                } else {
-                    Image(systemName: iconsModel.absentIcon)
-                        .appIcon(scale: .large)
-                        .frame(maxWidth: .infinity,
-                               maxHeight: 200)
-                }
+                Image(uiImage: iconsModel.selectedAppIcon.image)
+                    .appIcon(scale: .large)
+                    .frame(maxWidth: .infinity,
+                           maxHeight: 200)
                 Spacer()
             }
 
