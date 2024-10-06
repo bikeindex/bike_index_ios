@@ -69,9 +69,15 @@ struct AcknowledgementsListView: View {
     }
 }
 
+#Preview("AcknowledgementListItemView") {
+    AcknowledgementListItemView(package: AcknowledgementPackage.all.first(where: {$0.title == "Bike Index"}).unsafelyUnwrapped)
+        .environment(try! Client())
+}
+
 #Preview {
     NavigationStack {
         AcknowledgementsListView()
+            .environment(try! Client())
             .navigationTitle("Acknowledgements")
     }
 }
