@@ -98,7 +98,24 @@ final class ContentModel {
             let myProfile = myProfileSource.modelInstance()
             myProfile.user = myProfileSource.user.modelInstance()
 
+            let bikeIdentifiers = myProfileSource.bike_ids
+
             modelContext.insert(myProfile)
+
+            let predicate = #Predicate<Bike> { model in
+                bikeIdentifiers.contains(model.identifier)
+            }
+
+            var descriptor = FetchDescriptor<Bike>(predicate: predicate)
+            descriptor.fetchLimit = 10
+
+            do {
+                let bikes = try modelContext.fetch(descriptor)
+                myProfile.bikes = bikes
+            } catch {
+                Logger.model.debug("Attempting to associate AuthenticatedUser.bike_ids with bikes on disk but failed to find any. Using identifiers: \(bikeIdentifiers)")
+            }
+
 
         case .failure(let failure):
             Logger.model.error("\(type(of: self)).\(#function) - Failed with \(failure)")
