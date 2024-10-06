@@ -10,7 +10,7 @@ import SwiftData
 import OSLog
 
 @Model final class AuthenticatedUser: BikeIndexIdentifiable, CustomDebugStringConvertible {
-    // TODO: Check if this can be Int
+    // TODO: Check if `identifier` can be Int
     @Attribute(.unique) private(set) var identifier: String
     @Relationship(deleteRule: .cascade) var user: User?
 
@@ -31,7 +31,7 @@ import OSLog
     }
 }
 
-@Model final class User { // CustomDebugStringConvertible {
+@Model final class User {
     @Attribute(.unique) fileprivate(set) var email: String
     fileprivate(set) var username: String
     fileprivate(set) var name: String
@@ -55,11 +55,11 @@ import OSLog
 }
 
 @Model final class Organization {
-    @Attribute(.unique) let identifier: Int
-    let name: String
-    let slug: String
-    let accessToken: Token
-    let userIsOrganizationAdmin: Bool
+    @Attribute(.unique) var identifier: Int
+    var name: String
+    var slug: String
+    var accessToken: Token
+    var userIsOrganizationAdmin: Bool
 
     //    @Relationship(deleteRule: .cascade, inverse: \AuthenticatedUser.memberships)
     //    var authorizedUsers: [AuthenticatedUser]? = []
