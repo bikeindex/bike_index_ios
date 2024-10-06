@@ -59,7 +59,7 @@ enum BikeIndexLink: Identifiable {
         let markdownSource: String
         switch self {
         case .oauthApplications:
-            markdownSource = "[Edit your OAuth Applications at bikeindex.org](\(link(base: base))"
+            markdownSource = "[Edit your OAuth Applications at bikeindex.org](\(link(base: base)))"
         case .serials:
             markdownSource = "Every bike has a unique serial number, it's how they are identified. To learn more or see some examples, [go to our serial page](\(link(base: base)))."
         case .stolenBikeFAQ:
