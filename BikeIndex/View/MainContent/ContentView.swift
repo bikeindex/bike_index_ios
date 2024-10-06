@@ -133,7 +133,7 @@ final class ContentModel {
 
 // MARK: - Previews
 
-#Preview {
+#Preview("Empty data") {
     // MARK: Empty Data Preview
     do {
         let client = try Client()
@@ -145,13 +145,12 @@ final class ContentModel {
         return ContentView()
             .environment(client)
             .modelContainer(container)
-            .previewDisplayName("Empty data")
     } catch let error {
         return Text("Failed to load preview \(error.localizedDescription)")
     }
 }
 
-#Preview {
+#Preview("1 Bike Preview") {
     // MARK: 1 Bike Preview
     do {
         let client = try Client()
@@ -169,7 +168,6 @@ final class ContentModel {
         return ContentView()
             .environment(client)
             .modelContainer(container)
-            .previewDisplayName("1 Bike Preview")
     } catch let error {
         return Text("Failed to load preview \(error.localizedDescription)")
     }
