@@ -12,19 +12,20 @@ import OSLog
 @Model final class AuthenticatedUser: BikeIndexIdentifiable, CustomDebugStringConvertible {
     // TODO: Check if `identifier` can be Int
     @Attribute(.unique) private(set) var identifier: String
+    /// AuthenticatedUser controls a general reference.
     @Relationship(deleteRule: .cascade) var user: User?
 
     @Transient let uuid = UUID().uuidString
 
-    //    let bikeIds: [String]
+    /// Associate the bikes that are owned by this user (usually the one currently logged-in).
+    @Relationship(inverse: \Bike.authenticatedOwner)
+    var bikes: [Bike]
 
-    //    @Relationship(deleteRule: .cascade)
-    //    private(set) var memberships: [Organization] = []
-
-    init(identifier: String) {
+    /// 
+    init(identifier: String, bike_ids: [Int]) {
         self.identifier = identifier
-        Logger.model.debug("Authuser.init identifier: \(identifier)")
-    }
+        self.bikes = []
+  }
 
     var debugDescription: String {
         "AuthenticatedUser: \(uuid)" // Rails.identifier=(identifier), SwiftData.id=(id), user=(String(describing: user))" // , memberships=\(memberships)"
@@ -43,14 +44,19 @@ import OSLog
     @Relationship(inverse: \AuthenticatedUser.user)
     fileprivate(set) var parent: AuthenticatedUser?
 
-    init(username: String, name: String, email: String, additionalEmails: [String], createdAt: Date, image: URL? = nil, twitter: URL? = nil) {
+    @Relationship(inverse: \Bike.owner)
+    fileprivate(set) var bikes: [Bike]
+
+    init(email: String, username: String, name: String, additionalEmails: [String], createdAt: Date, image: URL? = nil, twitter: URL? = nil, parent: AuthenticatedUser? = nil, bikes: [Bike]) {
+        self.email = email
         self.username = username
         self.name = name
-        self.email = email.lowercased()
         self.additionalEmails = additionalEmails
         self.createdAt = createdAt
         self.image = image
         self.twitter = twitter
+        self.parent = parent
+        self.bikes = bikes
     }
 }
 
