@@ -120,7 +120,7 @@ final class UserRelationshipTests: XCTestCase {
         let authResults_preCreate = try container.mainContext.fetch(FetchDescriptor<AuthenticatedUser>())
         XCTAssertEqual(authResults_preCreate.count, 0)
 
-        let existingUser = User(username: "00d66fc4724cad", name: "Test User presave", email: "test@example.com", additionalEmails: [], createdAt: Date())
+        let existingUser = User(email: "test@example.com", username: "00d66fc4724cad", name: "Test User presave", additionalEmails: [], createdAt: Date(), parent: nil, bikes: [])
 
         let userResults_prefill_postcreate = try container.mainContext.fetch(FetchDescriptor<User>())
         XCTAssertEqual(userResults_prefill_postcreate.count, 0)
@@ -133,7 +133,7 @@ final class UserRelationshipTests: XCTestCase {
         container.mainContext.insert(existingUser)
 
 
-        let existingAuth = AuthenticatedUser(identifier: "456654")
+        let existingAuth = AuthenticatedUser(identifier: "456654", bikes: [])
 
         existingAuth.user = existingUser
 

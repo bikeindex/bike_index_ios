@@ -25,8 +25,10 @@ struct AuthenticatedUserResponse: Decodable, ResponseModelInstantiable {
     let memberships: [OrganizationResponse]
 
     func modelInstance() -> ModelInstance {
+        // AuthenticatedUser will be instantiated without bike model connections.
+        // To be added after queries can be made.
         ModelInstance(identifier: id,
-                      bike_ids: bike_ids)
+                      bikes: [])
     }
 
     struct UserResponse: Decodable, ResponseModelInstantiable {

@@ -340,7 +340,7 @@ struct RegisterBikeView: View {
 
         let user = User(email: "preview@bikeindex.org", username: "previewUser", name: "Preview User", additionalEmails: [], createdAt: Date(), image: nil, twitter: nil, parent: nil, bikes: [bike])
 
-        let auth = AuthenticatedUser(identifier: "1", bike_ids: [bike.identifier])
+        let auth = AuthenticatedUser(identifier: "1", bikes: [bike])
         auth.user = user
         container.mainContext.insert(auth)
 
@@ -366,7 +366,7 @@ struct RegisterBikeView: View {
 
         let user = User(email: "preview@bikeindex.org", username: "previewUser", name: "Preview User", additionalEmails: [], createdAt: Date(), image: nil, twitter: nil, parent: nil, bikes: [bike])
 
-        let auth = AuthenticatedUser(identifier: "1", bike_ids: [bike.identifier])
+        let auth = AuthenticatedUser(identifier: "1", bikes: [bike])
         auth.user = user
         container.mainContext.insert(auth)
 

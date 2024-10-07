@@ -21,8 +21,7 @@ import OSLog
     @Relationship(inverse: \Bike.authenticatedOwner)
     var bikes: [Bike]
 
-    /// 
-    init(identifier: String, bike_ids: [Int]) {
+    init(identifier: String, bikes: [Bike]) {
         self.identifier = identifier
         self.bikes = []
   }
