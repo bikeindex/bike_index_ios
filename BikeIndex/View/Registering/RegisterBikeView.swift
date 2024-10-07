@@ -338,9 +338,9 @@ struct RegisterBikeView: View {
         let container = try ModelContainer(for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
                                            configurations: config)
 
-        let user = User(username: "previewUser", name: "Preview User", email: "preview@bikeindex.org", additionalEmails: [], createdAt: Date(), image: nil, twitter: nil)
+        let user = User(email: "preview@bikeindex.org", username: "previewUser", name: "Preview User", additionalEmails: [], createdAt: Date(), image: nil, twitter: nil, parent: nil, bikes: [bike])
 
-        let auth = AuthenticatedUser(identifier: "1")
+        let auth = AuthenticatedUser(identifier: "1", bike_ids: [bike.identifier])
         auth.user = user
         container.mainContext.insert(auth)
 
@@ -364,9 +364,9 @@ struct RegisterBikeView: View {
         let container = try ModelContainer(for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
                                            configurations: config)
 
-        let user = User(username: "previewUser", name: "Preview User", email: "preview@bikeindex.org", additionalEmails: [], createdAt: Date(), image: nil, twitter: nil)
+        let user = User(email: "preview@bikeindex.org", username: "previewUser", name: "Preview User", additionalEmails: [], createdAt: Date(), image: nil, twitter: nil, parent: nil, bikes: [bike])
 
-        let auth = AuthenticatedUser(identifier: "1")
+        let auth = AuthenticatedUser(identifier: "1", bike_ids: [bike.identifier])
         auth.user = user
         container.mainContext.insert(auth)
 
