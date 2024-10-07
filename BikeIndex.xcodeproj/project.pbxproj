@@ -132,6 +132,9 @@
 		0490A5EE2B26972600C4EC1E /* BikeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeResponse.swift; sourceTree = "<group>"; };
 		0490A5F02B269F7800C4EC1E /* AddBikeOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBikeOutput.swift; sourceTree = "<group>"; };
 		0494FD8B2B4250F70053C54F /* MainToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainToolbar.swift; sourceTree = "<group>"; };
+		0496C6702CB36BED00B88D1B /* Brewfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Brewfile; sourceTree = "<group>"; };
+		0496C6712CB36BF100B88D1B /* .ruby-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".ruby-version"; sourceTree = "<group>"; };
+		0496C6722CB36BF600B88D1B /* Gemfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Gemfile; sourceTree = "<group>"; };
 		049D347E2BB0DB8900E7F768 /* BicycleTypeSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BicycleTypeSelectionView.swift; sourceTree = "<group>"; };
 		04B660072B4309780055A056 /* AutocompleteManufacturerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutocompleteManufacturerResponse.swift; sourceTree = "<group>"; };
 		04B6600A2B43169E0055A056 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
@@ -365,6 +368,9 @@
 				04F4B90D2B098ADE009442B5 /* BikeIndexTests */,
 				04F4B9172B098ADE009442B5 /* BikeIndexUITests */,
 				0485E9C82B9E2FAE0071C48B /* SharedTests */,
+				0496C6702CB36BED00B88D1B /* Brewfile */,
+				0496C6722CB36BF600B88D1B /* Gemfile */,
+				0496C6712CB36BF100B88D1B /* .ruby-version */,
 				04F4B8F82B098ADB009442B5 /* Products */,
 			);
 			sourceTree = "<group>";
