@@ -36,7 +36,7 @@ This project uses SwiftUI and SwiftData. At this time iOS (iPhone) is the primar
 2. `brew install bundle`
     - Note: Brew bundle is separate from the Gem bundle
 3. `brew bundle install`
-4. `rbenv install local`
+4. `rbenv install`
 5. `bundle install`
 
 At this point the full suite of tools should be installed and available.
