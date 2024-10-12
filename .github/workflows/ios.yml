@@ -26,6 +26,10 @@ jobs:
           echo "API_REDIRECT_URI = ${{ vars.API_REDIRECT_URI }}" >> BikeIndex-development.xcconfig
           echo "DEVELOPMENT_TEAM = ${{ vars.DEVELOPMENT_TEAM }}" >> BikeIndex-development.xcconfig
           echo "PRODUCT_BUNDLE_IDENTIFIER = ${{ vars.PRODUCT_BUNDLE_IDENTIFIER }}" >> BikeIndex-development.xcconfig
+      - uses: actions/upload-artifact@v4
+        with:
+          name: config
+          path: BikeIndex-development.xcconfig
       - run: |
           xcodebuild -showBuildSettings -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
           bundle exec fastlane ios tests
