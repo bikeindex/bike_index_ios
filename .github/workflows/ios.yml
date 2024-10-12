@@ -21,11 +21,11 @@ jobs:
         env:
           API_SECRET: ${{ secrets.API_SECRET }}
           API_CLIENT_ID: ${{ secrets.API_CLIENT_ID }}
-          API_HOST: ${{ secrets.API_HOST }}
-          API_PORT: ${{ secrets.API_PORT }}
-          API_REDIRECT_URI: ${{ secrets.API_REDIRECT_URI }}
-          DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
-          PRODUCT_BUNDLE_IDENTIFIER: ${{ secrets.PRODUCT_BUNDLE_IDENTIFIER }}
+          API_HOST: ${{ vars.API_HOST }}
+          API_PORT: ${{ vars.API_PORT }}
+          API_REDIRECT_URI: ${{ vars.API_REDIRECT_URI }}
+          DEVELOPMENT_TEAM: ${{ vars.DEVELOPMENT_TEAM }}
+          PRODUCT_BUNDLE_IDENTIFIER: ${{ vars.PRODUCT_BUNDLE_IDENTIFIER }}
         run: |
           echo "API_SECRET = $SUPER_SECRET" >> BikeIndex-development.xcconfig
           echo "API_CLIENT_ID = $API_CLIENT_ID" >> BikeIndex-development.xcconfig
