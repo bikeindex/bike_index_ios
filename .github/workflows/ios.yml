@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: Run tests with fastlane
-    runs-on: macos-15-arm64
+    runs-on: macos-15
 
     steps:
       - name: Checkout
