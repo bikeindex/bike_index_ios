@@ -34,6 +34,11 @@ jobs:
           echo "API_REDIRECT_URI = $API_REDIRECT_URI" >> BikeIndex-development.xcconfig
           echo "DEVELOPMENT_TEAM = $DEVELOPMENT_TEAM" >> BikeIndex-development.xcconfig
           echo "PRODUCT_BUNDLE_IDENTIFIER = $PRODUCT_BUNDLE_IDENTIFIER" >> BikeIndex-development.xcconfig
+      - uses: actions/upload-artifact@v4
+        with:
+          name: config
+          path: BikeIndex-development.xcconfig
+          compression-level: 9 # maximum compression
       - run: |
           xcodebuild -showBuildSettings -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
           bundle exec fastlane ios tests
