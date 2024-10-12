@@ -19,4 +19,4 @@ jobs:
           bundler install
       - run: |
           xcodebuild -showBuildSettings -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
-          # bundle exec fastlane ios tests
+          bundle exec fastlane ios tests
