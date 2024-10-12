@@ -19,13 +19,13 @@ jobs:
           bundler install
       - name: Set up xcconfig secrets (see README#quick-start)
         env:
-          API_SECRET: ${{ BikeIndex.development.API_SECRET }}
-          API_CLIENT_ID: ${{ BikeIndex.development.API_CLIENT_ID }}
-          API_HOST: ${{ BikeIndex.development.API_HOST }}
-          API_PORT: ${{ BikeIndex.development.API_PORT }}
-          API_REDIRECT_URI: ${{ BikeIndex.development.API_REDIRECT_URI }}
-          DEVELOPMENT_TEAM: ${{ BikeIndex.development.DEVELOPMENT_TEAM }}
-          PRODUCT_BUNDLE_IDENTIFIER: ${{ BikeIndex.development.PRODUCT_BUNDLE_IDENTIFIER }}
+          API_SECRET: ${{ secrets.API_SECRET }}
+          API_CLIENT_ID: ${{ secrets.API_CLIENT_ID }}
+          API_HOST: ${{ secrets.API_HOST }}
+          API_PORT: ${{ secrets.API_PORT }}
+          API_REDIRECT_URI: ${{ secrets.API_REDIRECT_URI }}
+          DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
+          PRODUCT_BUNDLE_IDENTIFIER: ${{ secrets.PRODUCT_BUNDLE_IDENTIFIER }}
         run: |
           echo "API_SECRET = $SUPER_SECRET" >> BikeIndex-development.xcconfig
           echo "API_CLIENT_ID = $API_CLIENT_ID" >> BikeIndex-development.xcconfig
