@@ -19,8 +19,8 @@ platform :ios do
   desc "Run unit tests"
   lane :tests do
     run_tests(project: "BikeIndex.xcodeproj",
-              devices: ["iPhone 16", "iPhone 16 Plus",
-                        "iPad (10th generation)"],
+              devices: ["iPhone 16 (18.0)", "iPhone 16 Plus (18.0)",
+                        "iPad (10th generation) (18.0)"],
               scheme: "Debug (development)")
   end
 end

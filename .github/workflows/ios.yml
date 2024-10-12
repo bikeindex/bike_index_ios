@@ -17,6 +17,23 @@ jobs:
       - run: |
           brew bundle install
           bundler install
+      - name: Set up xcconfig secrets (see README#quick-start)
+        env:
+          API_SECRET: ${{ BikeIndex.development.API_SECRET }}
+          API_CLIENT_ID: ${{ BikeIndex.development.API_CLIENT_ID }}
+          API_HOST: ${{ BikeIndex.development.API_HOST }}
+          API_PORT: ${{ BikeIndex.development.API_PORT }}
+          API_REDIRECT_URI: ${{ BikeIndex.development.API_REDIRECT_URI }}
+          DEVELOPMENT_TEAM: ${{ BikeIndex.development.DEVELOPMENT_TEAM }}
+          PRODUCT_BUNDLE_IDENTIFIER: ${{ BikeIndex.development.PRODUCT_BUNDLE_IDENTIFIER }}
+        run: |
+          echo "API_SECRET = $SUPER_SECRET" >> BikeIndex-development.xcconfig
+          echo "API_CLIENT_ID = $API_CLIENT_ID" >> BikeIndex-development.xcconfig
+          echo "API_HOST = $API_HOST" >> BikeIndex-development.xcconfig
+          echo "API_PORT = $API_PORT" >> BikeIndex-development.xcconfig
+          echo "API_REDIRECT_URI = $API_REDIRECT_URI" >> BikeIndex-development.xcconfig
+          echo "DEVELOPMENT_TEAM = $DEVELOPMENT_TEAM" >> BikeIndex-development.xcconfig
+          echo "PRODUCT_BUNDLE_IDENTIFIER = $PRODUCT_BUNDLE_IDENTIFIER" >> BikeIndex-development.xcconfig
       - run: |
           xcodebuild -showBuildSettings -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
           bundle exec fastlane ios tests
