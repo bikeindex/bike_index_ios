@@ -27,7 +27,7 @@ jobs:
           DEVELOPMENT_TEAM: ${{ vars.DEVELOPMENT_TEAM }}
           PRODUCT_BUNDLE_IDENTIFIER: ${{ vars.PRODUCT_BUNDLE_IDENTIFIER }}
         run: |
-          echo "API_SECRET = $SUPER_SECRET" >> BikeIndex-development.xcconfig
+          echo "API_SECRET = $API_SECRET" >> BikeIndex-development.xcconfig
           echo "API_CLIENT_ID = $API_CLIENT_ID" >> BikeIndex-development.xcconfig
           echo "API_HOST = $API_HOST" >> BikeIndex-development.xcconfig
           echo "API_PORT = $API_PORT" >> BikeIndex-development.xcconfig
