@@ -10,22 +10,29 @@ jobs:
   build:
     name: Run tests with fastlane
     runs-on: macos-15
-
+    outputs:
+      xcresult_path: ${{ steps.fastlane-ios-tests.outputs.xcresult_path }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - run: |
+      - name: Install tools
+        run: |
           brew bundle install
           bundler install
-      - name: Set up xcconfig secrets (see README#quick-start)
+      - name: Set up xcconfig secrets (see README.md#quick-start)
         env:
           BIKE_INDEX_DEVELOPMENT_XCCONFIG: ${{ secrets.BIKE_INDEX_DEVELOPMENT_XCCONFIG }}
         run: |
           echo "$BIKE_INDEX_DEVELOPMENT_XCCONFIG" >> BikeIndex-development.xcconfig
+      - name: List available simulators
+        run: xcodebuild -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
+      - name: Run tests
+        id: fastlane-ios-tests
+        run: |
+          bundle exec fastlane ios tests
+          bundle exec fastlane run lane_context SCAN_GENERATED_XCRESULT_PATH >> $XCRESULT_PATH
+          echo "xcresult_path=$XCRESULT_PATH" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v4
         with:
-          name: config
-          path: BikeIndex-development.xcconfig
-      - run: |
-          xcodebuild -showBuildSettings -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
-          bundle exec fastlane ios tests
+          name: TestResult.xcresult
+          path: xcresult_path
