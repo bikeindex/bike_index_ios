@@ -29,8 +29,8 @@ jobs:
       - name: Run tests
         id: fastlane-ios-tests
         run: bundle exec fastlane ios tests
-      - name: Upload xcresult
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: TestResult.xcresult
           path: "fastlane/test_output/Debug (development).xcresult"
+          compression-level: 9 # maximum compression
