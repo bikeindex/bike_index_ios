@@ -32,7 +32,8 @@ jobs:
           bundle exec fastlane ios tests
           bundle exec fastlane run lane_context SCAN_GENERATED_XCRESULT_PATH >> $XCRESULT_PATH
           echo "xcresult_path=$XCRESULT_PATH" >> "$GITHUB_OUTPUT"
-      - uses: actions/upload-artifact@v4
+      - name: Upload xcresult
+        uses: actions/upload-artifact@v4
         with:
           name: TestResult.xcresult
           path: xcresult_path
