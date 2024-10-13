@@ -21,6 +21,7 @@ platform :ios do
     run_tests(project: "BikeIndex.xcodeproj",
               devices: ["iPhone 16", "iPhone 16 Plus",
                         "iPad (10th generation)"],
-              scheme: "Debug (development)")
+              scheme: "Debug (development)",
+              result_bundle: true)
   end
 end
