@@ -27,6 +27,7 @@ jobs:
       - name: Run tests
         id: fastlane-ios-tests
         run: bundle exec fastlane ios tests
+      - run: pwd
       - uses: actions/upload-artifact@v4
         with:
           name: TestResult.xcresult
