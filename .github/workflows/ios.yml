@@ -27,11 +27,9 @@ jobs:
       - name: Run tests
         id: fastlane-ios-tests
         run: bundle exec fastlane ios tests
-      - run: pwd
-        if: always()
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: TestResult.xcresult
+          name: test_output.zip
           path: "fastlane/test_output/*"
           compression-level: 9 # maximum compression
