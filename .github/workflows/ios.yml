@@ -36,4 +36,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: TestResult.xcresult
-          path: {{ needs.fastlane-ios-tests.outputs.xcresult_path }}
+          path: ${{ needs.fastlane-ios-tests.outputs.xcresult_path }}
