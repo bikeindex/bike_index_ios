@@ -1,12 +1,12 @@
 # Bike Index
 
-![GitHub License](https://img.shields.io/github/license/bikeindex/bike_index_ios)
+![GitHub License](https://img.shields.io/github/license/bikeindex/bike_index_ios) | [![iOS Test Suite](https://github.com/bikeindex/bike_index_ios/actions/workflows/ios.yml/badge.svg)](https://github.com/bikeindex/bike_index_ios/actions/workflows/ios.yml)
 
 > [!IMPORTANT]
 > This project is incomplete and under active development.
 > No guarantees are provided.
 
-iOS client for bikeindex.org
+iOS client for [bikeindex.org](https://bikeindex.org)
 
 ## Quick Start
 

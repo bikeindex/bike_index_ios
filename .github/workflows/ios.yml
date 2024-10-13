@@ -1,0 +1,35 @@
+name: iOS Test Suite
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Run tests with fastlane
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install tools
+        run: |
+          brew bundle install
+          bundler install
+      - name: Set up xcconfig secrets (see README.md#quick-start)
+        env:
+          BIKE_INDEX_DEVELOPMENT_XCCONFIG: ${{ secrets.BIKE_INDEX_DEVELOPMENT_XCCONFIG }}
+        run: |
+          echo "$BIKE_INDEX_DEVELOPMENT_XCCONFIG" >> BikeIndex-development.xcconfig
+      - name: List available simulators
+        run: xcodebuild -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
+      - name: Run tests
+        id: fastlane-ios-tests
+        run: bundle exec fastlane ios tests
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test_output.zip
+          path: "fastlane/test_output/*"
+          compression-level: 9 # maximum compression
