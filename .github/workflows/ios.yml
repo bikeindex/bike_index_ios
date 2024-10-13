@@ -28,8 +28,9 @@ jobs:
         run: xcodebuild -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
       - name: Run tests
         id: fastlane-ios-tests
+        run: bundle exec fastlane ios tests
+      - name: Find test output
         run: |
-          bundle exec fastlane ios tests
           bundle exec fastlane run lane_context SCAN_GENERATED_XCRESULT_PATH >> $XCRESULT_PATH
           echo "xcresult_path=$XCRESULT_PATH" >> "$GITHUB_OUTPUT"
           echo "$XCRESULT_PATH"
