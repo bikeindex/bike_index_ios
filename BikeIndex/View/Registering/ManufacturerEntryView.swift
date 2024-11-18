@@ -65,7 +65,6 @@ struct ManufacturerEntryView: View {
                         try? modelContext.save()
                     }
 
-
                     Logger.views.debug("ManufacturerEntryView received response \(String(describing: autocompleteResponse), privacy: .public)")
 
                 case .failure(let failure):
@@ -140,6 +139,8 @@ struct ManufacturerEntryView: View {
         mockAutocompleteManufacturers.forEach { manufacturer in
             mockContainer.mainContext.insert(manufacturer)
         }
+
+        try? mockContainer.mainContext.save()
 
         return Section {
             Text("Search text count is \(searchTextBinding.wrappedValue.count). Searching? \(String(describing: state.wrappedValue))")

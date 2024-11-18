@@ -308,14 +308,18 @@ struct RegisterBikeView: View {
                 return
             }
 
-            let bikeModel = registrationResponseSource.bike.modelInstance()
-            modelContext.insert(bikeModel)
-            self.validationModel = AddBikeOutput(show: true, actions: {
-                /// Access dismiss directly.
-                /// If ``RegisterBikeView`` captures the Environment object in a var it will conflict with the
-                /// NavigableWebViews and cause an infinite loop. (I think that's the cause).
-                Environment(\.dismiss).wrappedValue.callAsFunction()
-            }, message: "", title: "Success!")
+            do {
+                let bikeModel = registrationResponseSource.bike.modelInstance()
+                modelContext.insert(bikeModel)
+
+                try? modelContext.save()
+                self.validationModel = AddBikeOutput(show: true, actions: {
+                    /// Access dismiss directly.
+                    /// If ``RegisterBikeView`` captures the Environment object in a var it will conflict with the
+                    /// NavigableWebViews and cause an infinite loop. (I think that's the cause).
+                    Environment(\.dismiss).wrappedValue.callAsFunction()
+                }, message: "", title: "Success!")
+            }
 
         case .failure(let failure):
             Logger.views.error("Failed to register bike with model \(String(reflecting: bikeRegistration)), endpoint \(String(reflecting: endpoint))")
@@ -338,9 +342,9 @@ struct RegisterBikeView: View {
         let container = try ModelContainer(for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
                                            configurations: config)
 
-        let user = User(username: "previewUser", name: "Preview User", email: "preview@bikeindex.org", additionalEmails: [], createdAt: Date(), image: nil, twitter: nil)
+        let user = User(email: "preview@bikeindex.org", username: "previewUser", name: "Preview User", additionalEmails: [], createdAt: Date(), image: nil, twitter: nil, parent: nil, bikes: [bike])
 
-        let auth = AuthenticatedUser(identifier: "1")
+        let auth = AuthenticatedUser(identifier: "1", bikes: [bike])
         auth.user = user
         container.mainContext.insert(auth)
 
@@ -364,9 +368,9 @@ struct RegisterBikeView: View {
         let container = try ModelContainer(for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
                                            configurations: config)
 
-        let user = User(username: "previewUser", name: "Preview User", email: "preview@bikeindex.org", additionalEmails: [], createdAt: Date(), image: nil, twitter: nil)
+        let user = User(email: "preview@bikeindex.org", username: "previewUser", name: "Preview User", additionalEmails: [], createdAt: Date(), image: nil, twitter: nil, parent: nil, bikes: [bike])
 
-        let auth = AuthenticatedUser(identifier: "1")
+        let auth = AuthenticatedUser(identifier: "1", bikes: [bike])
         auth.user = user
         container.mainContext.insert(auth)
 
