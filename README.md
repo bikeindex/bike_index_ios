@@ -1,10 +1,12 @@
 # Bike Index
 
+![GitHub License](https://img.shields.io/github/license/bikeindex/bike_index_ios) | [![iOS Test Suite](https://github.com/bikeindex/bike_index_ios/actions/workflows/ios.yml/badge.svg)](https://github.com/bikeindex/bike_index_ios/actions/workflows/ios.yml)
+
 > [!IMPORTANT]
 > This project is incomplete and under active development.
 > No guarantees are provided.
 
-iOS client for bikeindex.org
+iOS client for [bikeindex.org](https://bikeindex.org)
 
 ## Quick Start
 
@@ -23,10 +25,25 @@ To get started:
 
 ### Development
 
-- Requirements: Xcode 15.1
+- Requirements: Xcode 16.0
 - Target deployment: iOS 17.2
 
 This project uses SwiftUI and SwiftData. At this time iOS (iPhone) is the primary development target with a long-term goal to include iPad and Mac support.
+
+###### Set up suite of tools
+
+1. Install brew
+2. `brew install bundle`
+    - Note: Brew bundle is separate from the Gem bundle
+3. `brew bundle install`
+4. `rbenv install`
+5. `bundle install`
+
+At this point the full suite of tools should be installed and available.
+
+#### Tests
+
+Set up the local suite of tools and run `bundle exec fastlane ios tests`.
 
 ## License
 
