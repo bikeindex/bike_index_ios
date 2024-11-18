@@ -58,9 +58,13 @@ struct ManufacturerEntryView: View {
                         return
                     }
 
-                    for manufacturer in autocompleteResponse.matches {
-                        modelContext.insert(manufacturer.modelInstance())
+                    do {
+                        for manufacturer in autocompleteResponse.matches {
+                            modelContext.insert(manufacturer.modelInstance())
+                        }
+                        try? modelContext.save()
                     }
+
 
                     Logger.views.debug("ManufacturerEntryView received response \(String(describing: autocompleteResponse), privacy: .public)")
 
