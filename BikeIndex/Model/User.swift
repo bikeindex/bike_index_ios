@@ -17,7 +17,7 @@ import OSLog
 
     @Transient let uuid = UUID().uuidString
 
-    /// Associate the bikes that are owned by this user (usually the one currently logged-in).
+    /// Associate the bikes that are owned by a user (usually the one currently logged-in).
     @Relationship(inverse: \Bike.authenticatedOwner)
     var bikes: [Bike]
 
