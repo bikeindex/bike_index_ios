@@ -100,7 +100,10 @@ final class ContentModel {
 
             let bikeIdentifiers = myProfileSource.bike_ids
 
-            modelContext.insert(myProfile)
+            do {
+                modelContext.insert(myProfile)
+                try? modelContext.save()
+            }
 
             let predicate = #Predicate<Bike> { model in
                 bikeIdentifiers.contains(model.identifier)
@@ -137,9 +140,13 @@ final class ContentModel {
                 return
             }
 
-            for bike in myBikesSource.bikes {
-                let model = bike.modelInstance()
-                modelContext.insert(model)
+            do {
+                for bike in myBikesSource.bikes {
+                    let model = bike.modelInstance()
+                    modelContext.insert(model)
+                }
+
+                try? modelContext.save()
             }
 
         case .failure(let failure):
@@ -181,6 +188,7 @@ final class ContentModel {
         let bike = output.modelInstance()
 
         container.mainContext.insert(bike)
+        try? container.mainContext.save()
 
         return ContentView()
             .environment(client)
