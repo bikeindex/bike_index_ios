@@ -180,6 +180,20 @@ final class BikeIndexUITests: XCTestCase {
         XCTAssertTrue(forwardButton.isEnabled)
     }
 
+    func test_serial_page_navigation() throws {
+        app.launch()
+        try signIn(app: app)
+
+        let registerBikeButton = app.buttons["Register a bike"]
+        _ = registerBikeButton.waitForExistence(timeout: timeout)
+        registerBikeButton.tap()
+
+        let goToOurSerialPage = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Every bike has a unique"))
+        if goToOurSerialPage.element.waitForExistence(timeout: timeout) {
+            goToOurSerialPage.element.tap()
+        }
+    }
+
     // MARK: - Helpers
 
     func back() {
