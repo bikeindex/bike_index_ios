@@ -10,9 +10,11 @@ import OSLog
 
 extension XCTestCase {
     func signIn(app: XCUIApplication) throws {
+        let timeout: TimeInterval = 10
+
         // Step 1: Open the Sign In Page
         let signIn = app.buttons["SignIn"]
-        let result = signIn.waitForExistence(timeout: 2)
+        let result = signIn.waitForExistence(timeout: timeout)
 
         guard result else {
             Logger.tests.debug("Already signed-in, skipping UI-test sign-in.")
@@ -28,20 +30,20 @@ extension XCTestCase {
 
         // Step 2: Fill credentials and proceed
         let usernameField = app.webViews.firstMatch.textFields["Email"]
-        if usernameField.waitForExistence(timeout: 2) {
+        if usernameField.waitForExistence(timeout: timeout) {
             usernameField.tap()
             usernameField.typeText(testUsername)
         } else {
             XCTFail("Couldn't find email field")
         }
         let passwordField = app.webViews.firstMatch.secureTextFields["Password"]
-        if passwordField.waitForExistence(timeout: 2) {
+        if passwordField.waitForExistence(timeout: timeout) {
             passwordField.tap()
             passwordField.typeText(testPassword)
         }
 
         let loginButton = app.webViews.firstMatch.buttons["Log in"]
-        _ = loginButton.waitForExistence(timeout: 2)
+        _ = loginButton.waitForExistence(timeout: timeout)
         loginButton.tap()
     }
 
