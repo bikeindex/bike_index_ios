@@ -147,8 +147,8 @@
 		04C7BC6F2B535E330091493C /* BikeStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeStatus.swift; sourceTree = "<group>"; };
 		04C7BC712B5361220091493C /* RegisterMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterMode.swift; sourceTree = "<group>"; };
 		04C7BC762B536C150091493C /* StolenRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StolenRecord.swift; sourceTree = "<group>"; };
-		04CA5AD92D013A5400BD572A /* Test-credentials.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Test-credentials.xcconfig"; sourceTree = "<group>"; };
-		04CA5ADC2D013A7200BD572A /* Test-credentials-template.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Test-credentials-template.xcconfig"; sourceTree = "<group>"; };
+		04CA5AD92D013A5400BD572A /* Test-credentials.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Test-credentials.xcconfig"; sourceTree = "<group>"; };
+		04CA5ADC2D013A7200BD572A /* Test-credentials-template.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Test-credentials-template.xcconfig"; sourceTree = "<group>"; };
 		04CA5AE02D013BAA00BD572A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		04CA5AE22D014CC800BD572A /* AuthenticatedUITestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedUITestCase.swift; sourceTree = "<group>"; };
 		04EA110C2B2502660024CDDD /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
