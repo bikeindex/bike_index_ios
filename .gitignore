@@ -1,7 +1,11 @@
 # This project assumes you already have a system-wide ignore file
 # such as one provided by https://gitignore.io configured for 'xcode'
+
+# App secrets!
 BikeIndex-development.xcconfig
 BikeIndex-production.xcconfig
+# Test app secrets!
+SharedTests/Test-credentials.xcconfig
 
 # Fastlane recommended ignore:
 # https://docs.fastlane.tools/best-practices/source-control/
