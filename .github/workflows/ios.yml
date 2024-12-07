@@ -22,7 +22,7 @@ jobs:
           BIKE_INDEX_DEVELOPMENT_XCCONFIG: ${{ secrets.BIKE_INDEX_DEVELOPMENT_XCCONFIG }}
         run: |
           echo "$BIKE_INDEX_DEVELOPMENT_XCCONFIG" >> BikeIndex-development.xcconfig
-      - name: Set up xcconfig UI test credentials
+      - name: Set up xcconfig UI test credentials (see README.md#UI-Test-configuration)
         env:
           BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
         run: |

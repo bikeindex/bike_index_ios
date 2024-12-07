@@ -30,10 +30,6 @@ To get started:
 
 This project uses SwiftUI and SwiftData. At this time iOS (iPhone) is the primary development target with a long-term goal to include iPad and Mac support.
 
-###### Run an individual test case
-
-Fastlane scan can run a single test case such as: `bundle exec fastlane scan --only-testing "BikeIndexUITests/ManufacturerKeyboardUITestCase"`.
-
 ###### Set up suite of tools
 
 1. Install brew
@@ -47,7 +43,20 @@ At this point the full suite of tools should be installed and available.
 
 #### Tests
 
-Set up the local suite of tools and run `bundle exec fastlane ios tests`.
+Test-driven development is an important tool for this project. In your local environment run the tests with Xcode, or set up the local suite of tools to install fastlane and run `bundle exec fastlane ios tests`.
+
+##### UI Test configuration
+
+Running UI Tests from Xcode may cache logged-in state. Set up a credentials xcconfig file to ensure UI tests are always able to log-in and proceed (for both Xcode and fastlane invocations).
+
+1. Copy the SharedTests/Test-credentials-template.xcconfig file to SharedTests/Test-credentials.xcconfig.
+2. Edit the source to add a test username and password that are valid credentials for the server configured by corresponding build scheme (see: BikeIndex-development.xcconfig) you'll be using.
+3. In the simulator erase all content and settings to clear out any previous credentials.
+4. Run the UI tests through Xcode or `bundle exec fastlane scan --only-testing "BikeIndexUITests"`!
+
+##### Run an individual test case
+
+Fastlane scan can run a single test case such as: `bundle exec fastlane scan --only-testing "BikeIndexUITests/ManufacturerKeyboardUITestCase"`.
 
 ## License
 
