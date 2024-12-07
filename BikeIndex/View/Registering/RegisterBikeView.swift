@@ -44,7 +44,7 @@ struct RegisterBikeView: View {
     // MARK:  UI State
 
     /// Used for serial\_page link
-    @State var link: URL?
+    @State var showSerialsPage = false
 
     // MARK: Authoritative State
 
@@ -129,7 +129,7 @@ struct RegisterBikeView: View {
             } footer: {
                 TextLink(base: client.configuration.host, link: .serials)
                     .environment(\.openURL, OpenURLAction { URL in
-                        link = URL
+                        showSerialsPage = true
                         return .handled
                     })
             }
@@ -282,9 +282,12 @@ struct RegisterBikeView: View {
                 Logger.views.info("Failed to find authenticated users with email, skiping association of ownerEmail. Authenticated users has count \(authenticatedUsers.count)")
             }
         }
-        .navigationDestination(item: $link) { url in
-            NavigableWebView(url: .constant(url))
-                .environment(client)
+        .navigationDestination(isPresented: $showSerialsPage) {
+            NavigableWebView(
+                constantLink: .serials,
+                host: client.configuration.host
+            )
+            .environment(client)
         }
     }
 

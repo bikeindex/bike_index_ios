@@ -13,7 +13,7 @@ struct DebugMenu: View {
     @Environment(Client.self) var client
 
     @State var secretHidden = true
-    @State var selectedUrl: URL?
+    @State var showOAuthApplicationsPage = false
 
     var body: some View {
         Form {
@@ -48,14 +48,17 @@ struct DebugMenu: View {
             } footer: {
                 TextLink(base: client.configuration.host, link: .oauthApplications)
                     .environment(\.openURL, OpenURLAction(handler: { url in
-                        selectedUrl = url
+                        showOAuthApplicationsPage = true
                         return .handled
                     }))
             }
         }
-        .navigationDestination(item: $selectedUrl) { url in
-            NavigableWebView(url: .constant(url))
-                .environment(client)
+        .navigationDestination(isPresented: $showOAuthApplicationsPage) {
+            NavigableWebView(
+                constantLink: .oauthApplications,
+                host: client.configuration.host
+            )
+            .environment(client)
         }
         .navigationTitle("API Configuration")
     }
