@@ -30,6 +30,10 @@ To get started:
 
 This project uses SwiftUI and SwiftData. At this time iOS (iPhone) is the primary development target with a long-term goal to include iPad and Mac support.
 
+###### Run an individual test case
+
+Fastlane scan can run a single test case such as: `bundle exec fastlane scan --only-testing "BikeIndexUITests/ManufacturerKeyboardUITestCase"`.
+
 ###### Set up suite of tools
 
 1. Install brew
