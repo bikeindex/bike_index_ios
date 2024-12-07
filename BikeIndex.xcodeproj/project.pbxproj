@@ -18,7 +18,6 @@
 		040FA32E2BCCB7F5000C4B18 /* ManufacturerKeyboardUITestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040FA32D2BCCB7F5000C4B18 /* ManufacturerKeyboardUITestCase.swift */; };
 		041CCD8C2BC2E0D300A3A9A8 /* BikeRegistration+Propulsion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041CCD8B2BC2E0D300A3A9A8 /* BikeRegistration+Propulsion.swift */; };
 		041CCD8E2BC2E36300A3A9A8 /* RegistrationPropulsionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041CCD8D2BC2E36300A3A9A8 /* RegistrationPropulsionTests.swift */; };
-		042724CA2B85714D008BEDBC /* SingleBikeResponse_mock.json in Resources */ = {isa = PBXBuildFile; fileRef = 04C7BC652B53514C0091493C /* SingleBikeResponse_mock.json */; };
 		043033282B3E285F00FD126F /* StolenRecordEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033272B3E285F00FD126F /* StolenRecordEntryView.swift */; };
 		0430332A2B3E5EEB00FD126F /* Countries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033292B3E5EEB00FD126F /* Countries.swift */; };
 		0430332C2B3E642200FD126F /* Binding+Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0430332B2B3E642200FD126F /* Binding+Optional.swift */; };
@@ -623,7 +622,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				04F4B9012B098ADE009442B5 /* Assets.xcassets in Resources */,
-				042724CA2B85714D008BEDBC /* SingleBikeResponse_mock.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
