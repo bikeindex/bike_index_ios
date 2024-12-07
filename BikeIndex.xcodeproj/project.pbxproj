@@ -89,6 +89,7 @@
 		04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04F4B95D2B0990CE009442B5 /* KeychainSwift */; };
 		04F4B9612B0996EC009442B5 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B9602B0996EC009442B5 /* Logger.swift */; };
 		04F4B9632B0998F6009442B5 /* ClientConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B9622B0998F6009442B5 /* ClientConfiguration.swift */; };
+		04FA3D632D02922700BF54E6 /* AcknowledgementRepositoryWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FA3D622D02922700BF54E6 /* AcknowledgementRepositoryWebView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -199,6 +200,7 @@
 		04F4B95A2B098C3C009442B5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04F4B9602B0996EC009442B5 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		04F4B9622B0998F6009442B5 /* ClientConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientConfiguration.swift; sourceTree = "<group>"; };
+		04FA3D622D02922700BF54E6 /* AcknowledgementRepositoryWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementRepositoryWebView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -257,6 +259,7 @@
 				0452C6B22B4A630500AD572C /* DebugMenu.swift */,
 				0452C6AF2B4A608E00AD572C /* AcknowledgementsListView.swift */,
 				0452C6B92B4A72FD00AD572C /* AcknowledgementPackageDetailView.swift */,
+				04FA3D622D02922700BF54E6 /* AcknowledgementRepositoryWebView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -673,6 +676,7 @@
 				04F2C63A2B4B00CD009E0A37 /* BikeDetailView.swift in Sources */,
 				0490A5F12B269F7800C4EC1E /* AddBikeOutput.swift in Sources */,
 				04F4B9392B098B9C009442B5 /* Client.swift in Sources */,
+				04FA3D632D02922700BF54E6 /* AcknowledgementRepositoryWebView.swift in Sources */,
 				04C7BC772B536C150091493C /* StolenRecord.swift in Sources */,
 				043033362B40C34800FD126F /* ContentButtonView.swift in Sources */,
 				046B0A372B251E58006519A7 /* AppIconPicker.swift in Sources */,
