@@ -27,8 +27,6 @@ jobs:
           BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
         run: |
           echo "$BIKE_INDEX_TEST_CREDENTIALS" >> SharedTests/Test-credentials.xcconfig
-      - name: Debug
-        run: wc SharedTests/Test-credentials.xcconfig
       - name: List available simulators
         run: xcodebuild -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
       - name: Run tests
