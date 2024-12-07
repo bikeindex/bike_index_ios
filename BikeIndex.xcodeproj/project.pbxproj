@@ -47,10 +47,6 @@
 		04C7BC702B535E330091493C /* BikeStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C7BC6F2B535E330091493C /* BikeStatus.swift */; };
 		04C7BC722B5361220091493C /* RegisterMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C7BC712B5361220091493C /* RegisterMode.swift */; };
 		04C7BC772B536C150091493C /* StolenRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C7BC762B536C150091493C /* StolenRecord.swift */; };
-		04CA5ADA2D013A5400BD572A /* Test-credentials.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04CA5AD92D013A5400BD572A /* Test-credentials.xcconfig */; };
-		04CA5ADB2D013A5400BD572A /* Test-credentials.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04CA5AD92D013A5400BD572A /* Test-credentials.xcconfig */; };
-		04CA5ADD2D013A7200BD572A /* Test-credentials-template.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04CA5ADC2D013A7200BD572A /* Test-credentials-template.xcconfig */; };
-		04CA5ADE2D013A7200BD572A /* Test-credentials-template.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04CA5ADC2D013A7200BD572A /* Test-credentials-template.xcconfig */; };
 		04CA5AE32D014CC800BD572A /* AuthenticatedUITestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CA5AE22D014CC800BD572A /* AuthenticatedUITestCase.swift */; };
 		04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 04E1343D2B4B718200CE88DD /* WebViewKit */; };
 		04EA110E2B2502660024CDDD /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA110C2B2502660024CDDD /* API.swift */; };
@@ -636,8 +632,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				04F4B9322B098B5A009442B5 /* README.md in Resources */,
-				04CA5ADA2D013A5400BD572A /* Test-credentials.xcconfig in Resources */,
-				04CA5ADD2D013A7200BD572A /* Test-credentials-template.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -645,8 +639,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04CA5ADB2D013A5400BD572A /* Test-credentials.xcconfig in Resources */,
-				04CA5ADE2D013A7200BD572A /* Test-credentials-template.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
