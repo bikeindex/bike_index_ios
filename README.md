@@ -12,9 +12,9 @@ iOS client for [bikeindex.org](https://bikeindex.org)
 
 To get started:
 
-1. Copy the BikeIndex-template file into BikeIndex-development and BikeIndex-production
+1. Copy the BikeIndex-template.xcconfig file into BikeIndex-development.xcconfig and BikeIndex-production.xcconfig files.
 	- BikeIndex-development is used for the `Debug (development)` build scheme. This should use your local development instance.
-	- BikeIndex-production is used for the `Debug (production)` build scheme and for archive/release builds.
+	- BikeIndex-production is used for the `Debug (production)` build scheme and for archive/release builds. This is only required for releases.
 2. Follow the template instructions to provide your own application configuration
 	- Sign in to https://bikeindex.org/oauth/applications and create an application
 	- or sign in to your local instance and create an API key
