@@ -80,8 +80,11 @@ struct RegisterBikeView: View {
             if mode == .myStolenBike {
                 Section {
                     NavigationLink {
-                        NavigableWebView(url: BikeIndexLink.stolenBikeFAQ.link(base: client.configuration.host))
-                            .environment(client)
+                        NavigableWebView(
+                            constantLink: .stolenBikeFAQ,
+                            host: client.configuration.host
+                        )
+                        .environment(client)
                     } label: {
                         Text("⚠️ How to get your stolen bike back")
                     }
@@ -280,7 +283,7 @@ struct RegisterBikeView: View {
             }
         }
         .navigationDestination(item: $link) { url in
-            NavigableWebView(url: url)
+            NavigableWebView(url: .constant(url))
                 .environment(client)
         }
     }
