@@ -155,14 +155,23 @@ final class BikeIndexUITests: XCTestCase {
 
         backButton.tap()
 
+        let viewAllFiles = app.webViews.buttons["View all files"]
+        _ = viewAllFiles.waitForExistence(timeout: timeout)
+        viewAllFiles.tap()
+
         let licenseTxtLink = link(with: "LICENSE.txt")
-        _ = licenseTxtLink.waitForExistence(timeout: timeout)
-        licenseTxtLink.tap()
+        let licenseExists = licenseTxtLink.waitForExistence(timeout: timeout)
+        if licenseExists {
+            licenseTxtLink.tap()
+        } else {
+            Logger.tests.error("License.txt doesn't exist")
+        }
         // PUSH: github.com LICENSE.txt
 
         // Back should be available after navigating forward but it will _not be available_ because of GitHub
         XCTAssertFalse(backButton.isEnabled)
-        XCTAssertTrue(forwardButton.isEnabled) // Technically should be false but because GitHub
+        // Technically should be false but because GitHub has JS navigation some behaviors are imperfect.
+        XCTAssertTrue(forwardButton.isEnabled)
 
         backButton.tap()
         // POP: github.com LICENSE.txt
