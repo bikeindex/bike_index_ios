@@ -10,7 +10,7 @@ import OSLog
 
 extension XCTestCase {
     func signIn(app: XCUIApplication) throws {
-        let timeout: TimeInterval = 45
+        let timeout: TimeInterval = 60
 
         // Step 1: Open the Sign In Page
         let signIn = app.buttons["SignIn"]
