@@ -1,0 +1,19 @@
+# For more information about this configuration visit
+# https://docs.fastlane.tools/actions/scan/#scanfile
+
+# In general, you can use the options available
+# fastlane scan --help
+
+project("BikeIndex.xcodeproj")
+
+scheme("Debug (development)")
+
+devices([
+	"iPhone 16 (18.0)",
+	"iPhone 16 Plus (18.0)",
+	"iPad (10th generation) (18.0)"
+])
+
+skip_build(true)
+
+result_bundle(true)

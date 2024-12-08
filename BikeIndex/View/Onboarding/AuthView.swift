@@ -62,7 +62,7 @@ struct AuthView: View {
             }
             .sheet(isPresented: $displaySignIn, content: {
                 NavigationStack {
-                    NavigableWebView(url: oAuthUrl,
+                    NavigableWebView(url: .constant(oAuthUrl!),
                                      navigator: HistoryNavigator(child: authNavigationDelegate))
                     .environment(client)
                     .navigationTitle("Sign in")

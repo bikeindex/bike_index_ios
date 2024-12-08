@@ -31,29 +31,41 @@ struct SettingsView: View {
             if client.authenticated {
                 Section {
                     NavigationLink {
-                        NavigableWebView(url: BikeIndexLink.accountUserSettings.link(base: client.configuration.host))
-                            .navigationTitle("User Settings")
+                        NavigableWebView(
+                            constantLink: .accountUserSettings,
+                            host: client.configuration.host
+                        )
+                        .navigationTitle("User Settings")
                     } label: {
                         Label("User Settings", systemImage: "person.crop.circle")
                     }
 
                     NavigationLink {
-                        NavigableWebView(url: BikeIndexLink.accountPassword.link(base: client.configuration.host))
-                            .navigationTitle("Password")
+                        NavigableWebView(
+                            constantLink: .accountPassword,
+                            host: client.configuration.host
+                        )
+                        .navigationTitle("Password")
                     } label: {
                         Label("Password", systemImage: "key")
                     }
 
                     NavigationLink {
-                        NavigableWebView(url: BikeIndexLink.accountSharingPersonalPage.link(base: client.configuration.host))
-                            .navigationTitle("Sharing + Personal Page")
+                        NavigableWebView(
+                            constantLink: .accountSharingPersonalPage,
+                            host: client.configuration.host
+                        )
+                        .navigationTitle("Sharing + Personal Page")
                     } label: {
                         Label("Sharing + Personal Page", systemImage: "shared.with.you")
                     }
 
                     NavigationLink {
-                        NavigableWebView(url: BikeIndexLink.accountRegistrationOrganization.link(base: client.configuration.host))
-                            .navigationTitle("Registration Organization")
+                        NavigableWebView(
+                            constantLink: .accountRegistrationOrganization,
+                            host: client.configuration.host
+                        )
+                        .navigationTitle("Registration Organization")
                     } label: {
                         Label("Registration Organization", systemImage: "person.badge.shield.checkmark")
                     }
@@ -69,8 +81,11 @@ struct SettingsView: View {
                     .tint(Color.highlightPrimary)
 
                     NavigationLink {
-                        NavigableWebView(url: BikeIndexLink.deleteAccount.link(base: client.configuration.host))
-                            .navigationTitle("Delete Account")
+                        NavigableWebView(
+                            constantLink: .deleteAccount,
+                            host: client.configuration.host
+                        )
+                        .navigationTitle("Delete Account")
                     } label: {
                         Label("Delete Account", systemImage: "trash.fill")
                             .tint(Color.highlightPrimary)
@@ -106,14 +121,20 @@ struct SettingsView: View {
                     Label("Acknowledgements", systemImage: "character.book.closed")
                 }
                 NavigationLink {
-                    NavigableWebView(url: BikeIndexLink.privacyPolicy.link(base: client.configuration.host))
-                        .navigationTitle("Privacy Policy")
+                    NavigableWebView(
+                        constantLink: .privacyPolicy,
+                        host: client.configuration.host
+                    )
+                    .navigationTitle("Privacy Policy")
                 } label: {
                     Label("Privacy Policy", systemImage: "shield.checkered")
                 }
                 NavigationLink {
-                    NavigableWebView(url: BikeIndexLink.termsOfService.link(base: client.configuration.host))
-                        .navigationTitle("Terms of Service")
+                    NavigableWebView(
+                        constantLink: .termsOfService,
+                        host: client.configuration.host
+                    )
+                    .navigationTitle("Terms of Service")
                 } label: {
                     Label("Terms of Service", systemImage: "text.book.closed")
                 }

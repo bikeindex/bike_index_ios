@@ -11,17 +11,19 @@ import WebViewKit
 struct AcknowledgementListItemView: View {
     @Environment(Client.self) private var client
     var package: AcknowledgementPackage
-    @State private var repositoryUrl: URL?
+    @State private var showRepositoryUrl = false
 
     var body: some View {
         NavigationLink {
             ScrollView {
-                AcknowledgementPackageDetailView(package: package, url: $repositoryUrl)
-                    .navigationBarTitleDisplayMode(.inline)
+                AcknowledgementPackageDetailView(
+                    package: package,
+                    showRepositoryUrl: $showRepositoryUrl
+                )
+                .navigationBarTitleDisplayMode(.inline)
             }
-            .navigationDestination(item: $repositoryUrl) { url in
-                NavigableWebView(url: url)
-                    .environment(client)
+            .navigationDestination(isPresented: $showRepositoryUrl) {
+                AcknowledgementRepositoryWebView(package: package)
             }
         } label: {
             VStack(alignment: .leading) {

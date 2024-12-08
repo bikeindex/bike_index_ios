@@ -9,6 +9,10 @@ import SwiftUI
 import WebKit
 import WebViewKit
 
+/// Display an inline URL with backward/forward page controls.
+/// Useful as a web view _instead of_ SFSafariViewController because we rely on hybrid web authentication
+/// until a fully native UI can be completed.
+/// The State variable for the `url` **must** not be modified anywhere else.
 struct NavigableWebView: View {
     @Environment(Client.self) var client
 
@@ -20,9 +24,9 @@ struct NavigableWebView: View {
         self.navigator = navigator
     }
 
-    init(url: URL? = nil, navigator: HistoryNavigator = HistoryNavigator()) {
-        self._url = Binding.constant(url ?? URL(string: "about:blank")!)
-        self.navigator = navigator
+    init(constantLink: BikeIndexLink, host: URL) {
+        self._url = Binding.constant(constantLink.link(base: host))
+        self.navigator = HistoryNavigator()
     }
 
     var body: some View {

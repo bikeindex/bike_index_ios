@@ -13,7 +13,7 @@ struct AcknowledgementPackage: Identifiable, Hashable {
     let title: String
     let license: License
     let copyright: String
-    let repository: URL?
+    let repository: URL
 
     func fullLicense() -> String {
         license.with(copyright: copyright)
@@ -26,25 +26,25 @@ extension AcknowledgementPackage {
         AcknowledgementPackage(title: "Bike Index",
                                license: .gnuAfferoGPLv3,
                                copyright: "2023 © Bike Index, a 501(c)(3) nonprofit - EIN 81-4296194",
-                               repository: URL(string: "https://github.com/bikeindex/bike_index")),
+                               repository: URL(string: "https://github.com/bikeindex/bike_index")!),
         AcknowledgementPackage(title: "Bike Index iOS",
                                license: .gnuAfferoGPLv3,
                                copyright: "2023 © Bike Index, a 501(c)(3) nonprofit - EIN 81-4296194",
-                               repository: URL(string: "https://github.com/bikeindex/bike_index_ios")),
+                               repository: URL(string: "https://github.com/bikeindex/bike_index_ios")!),
 
         // MARK: MIT
         AcknowledgementPackage(title: "KeychainSwift",
                                license: .mit,
                                copyright: "Copyright © 2015 - 2021 Evgenii Neumerzhitckii",
-                               repository: URL(string: "https://github.com/evgenyneu/keychain-swift")),
+                               repository: URL(string: "https://github.com/evgenyneu/keychain-swift")!),
         AcknowledgementPackage(title: "URLEncodedForm",
                                license: .mit,
                                copyright: "Copyright © 2023 Scott Moon",
-                               repository: URL(string: "https://github.com/forXifLess/URLEncodedForm")),
+                               repository: URL(string: "https://github.com/forXifLess/URLEncodedForm")!),
         AcknowledgementPackage(title: "WebViewKit",
                                license: .mit,
                                copyright: "Copyright © 2022 Daniel Saidi",
-                               repository: URL(string: "https://github.com/danielsaidi/WebViewKit")),
+                               repository: URL(string: "https://github.com/danielsaidi/WebViewKit")!),
     ]
 
     static var gnuAfferoGPLv3Packages: [AcknowledgementPackage] {

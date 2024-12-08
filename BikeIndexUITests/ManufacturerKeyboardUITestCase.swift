@@ -7,6 +7,7 @@
 
 import XCTest
 
+@MainActor
 final class ManufacturerKeyboardUITestCase: XCTestCase {
     let timeout: TimeInterval = 10
     let app = XCUIApplication()
@@ -27,7 +28,7 @@ final class ManufacturerKeyboardUITestCase: XCTestCase {
     func test_ManufacturerEntryView_keyboard_control() throws {
         app.launch()
 
-        signin()
+        try signIn(app: app)
 
         let registerABike = app.buttons["Register a bike"]
         _ = registerABike.waitForExistence(timeout: timeout)
@@ -44,15 +45,4 @@ final class ManufacturerKeyboardUITestCase: XCTestCase {
         manufacturerEntryView.typeText("is")
         manufacturerEntryView.typeText("")
     }
-
-    // MARK: - Helpers
-
-    func signin() {
-        let signIn = app.buttons["SignIn"]
-        let result = signIn.waitForExistence(timeout: 2)
-        if result {
-            signIn.tap()
-        }
-    }
-
 }
