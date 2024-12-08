@@ -9,6 +9,7 @@ import XCTest
 import OSLog
 
 extension XCTestCase {
+    @MainActor
     func signIn(app: XCUIApplication) throws {
         let timeout: TimeInterval = 120
 
@@ -18,6 +19,7 @@ extension XCTestCase {
 
         guard result else {
             Logger.tests.debug("Already signed-in, skipping UI-test sign-in.")
+            snapshot("0-failed-to-find-SignIn")
             return
         }
 

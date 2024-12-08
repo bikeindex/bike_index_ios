@@ -7,6 +7,7 @@
 
 import XCTest
 
+@MainActor
 final class ManufacturerKeyboardUITestCase: XCTestCase {
     let timeout: TimeInterval = 10
     let app = XCUIApplication()
