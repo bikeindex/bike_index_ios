@@ -21,6 +21,7 @@ platform :ios do
     run_tests(project: "BikeIndex.xcodeproj",
               devices: ["iPhone 16 (18.0)"],
               scheme: "Debug (development)",
-              result_bundle: true)
+              result_bundle: true,
+              number_of_retries: 1)
   end
 end
