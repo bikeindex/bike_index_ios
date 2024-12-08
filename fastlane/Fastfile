@@ -23,6 +23,7 @@ platform :ios do
                 # "iPhone 16 Plus (18.0)",
                 #        "iPad (10th generation) (18.0)"],
               scheme: "Debug (development)",
+              reset_simulator: true,
               result_bundle: true,
               include_simulator_logs: true,
               number_of_retries: 1)
