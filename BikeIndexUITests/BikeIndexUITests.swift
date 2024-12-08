@@ -15,13 +15,11 @@ final class BikeIndexUITests: XCTestCase {
     lazy var backButton = app.navigationBars.buttons.element(boundBy: 0)
 
     override func setUpWithError() throws {
-        setupSnapshot(app)
         continueAfterFailure = false
     }
 
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
-        snapshot("1-error-ocurred")
     }
 
     func testExample() throws {
