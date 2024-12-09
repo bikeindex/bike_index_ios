@@ -25,6 +25,9 @@ platform :ios do
                 "iPad (10th generation) (18.0)"
               ],
               scheme: "Debug (development)",
-              result_bundle: true)
+              reset_simulator: true,
+              result_bundle: true,
+              include_simulator_logs: true,
+              number_of_retries: 1)
   end
 end
