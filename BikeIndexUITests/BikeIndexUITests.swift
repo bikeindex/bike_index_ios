@@ -16,6 +16,7 @@ final class BikeIndexUITests: XCTestCase {
 
     override func setUpWithError() throws {
         continueAfterFailure = false
+        XCUIDevice.shared.orientation = .portrait
     }
 
     override func tearDownWithError() throws {
@@ -99,8 +100,6 @@ final class BikeIndexUITests: XCTestCase {
     func test_acknowledgements_webView_navigation_history() throws {
         app.launch()
         try signIn(app: app)
-
-        XCUIDevice.shared.orientation = .portrait
 
         // SETUP
 
