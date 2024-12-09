@@ -11,11 +11,9 @@ import OSLog
 extension XCTestCase {
     @MainActor
     func signIn(app: XCUIApplication) throws {
-        let timeout: TimeInterval = 30
-
         // Step 1: Open the Sign In Page
         let signIn = app.buttons["SignIn"]
-        let result = signIn.waitForExistence(timeout: timeout)
+        let result = signIn.waitForExistence(timeout: 2)
 
         guard result else {
             Logger.tests.debug("Already signed-in, skipping UI-test sign-in.")
@@ -23,6 +21,8 @@ extension XCTestCase {
         }
 
         signIn.tap()
+
+        let timeout: TimeInterval = 30
 
         let uiTestBundle = try XCTUnwrap(Bundle(identifier: "org.bikeindex.BikeIndexUITests"))
         let infoDictionary = try XCTUnwrap(uiTestBundle.infoDictionary)
