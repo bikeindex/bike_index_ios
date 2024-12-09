@@ -51,6 +51,7 @@ Running UI Tests from Xcode may cache logged-in state. Set up a credentials xcco
 
 1. Copy the SharedTests/Test-credentials-template.xcconfig file to SharedTests/Test-credentials.xcconfig.
 2. Edit the source to add a test username and password that are valid credentials for the server configured by corresponding build scheme (see: BikeIndex-development.xcconfig) you'll be using.
+	- This test account must have already authorized the Bike Index OAuth app used in your corresponding build scheme's .xcconfig.
 3. In the simulator erase all content and settings to clear out any previous credentials.
 4. Run the UI tests through Xcode or `bundle exec fastlane scan --only-testing "BikeIndexUITests"`!
 
