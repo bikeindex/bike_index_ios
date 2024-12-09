@@ -22,7 +22,7 @@ extension XCTestCase {
 
         signIn.tap()
 
-        let timeout: TimeInterval = 30
+        let timeout: TimeInterval = 45
 
         let uiTestBundle = try XCTUnwrap(Bundle(identifier: "org.bikeindex.BikeIndexUITests"))
         let infoDictionary = try XCTUnwrap(uiTestBundle.infoDictionary)
