@@ -100,6 +100,8 @@ final class BikeIndexUITests: XCTestCase {
         app.launch()
         try signIn(app: app)
 
+        XCUIDevice.shared.orientation = .portrait
+
         // SETUP
 
         let settings = app.buttons["Settings"]
