@@ -98,7 +98,29 @@ final class ContentModel {
             let myProfile = myProfileSource.modelInstance()
             myProfile.user = myProfileSource.user.modelInstance()
 
-            modelContext.insert(myProfile)
+            do {
+                modelContext.insert(myProfile)
+                try? modelContext.save()
+            }
+
+            let myBikeIdentifiers = myProfileSource.bike_ids
+            let predicate = #Predicate<Bike> { model in
+                myBikeIdentifiers.contains(model.identifier)
+            }
+            let descriptor = FetchDescriptor<Bike>(predicate: predicate)
+
+            do {
+                let bikes = try modelContext.fetch(descriptor)
+                bikes.forEach {
+                    $0.authenticatedOwner = myProfile
+                    $0.owner = myProfile.user
+                }
+                myProfile.bikes = bikes
+
+                try? modelContext.save()
+            } catch {
+                Logger.model.debug("Attempting to associate AuthenticatedUser.bike_ids with bikes on disk but failed to find any. Using identifiers: \(myBikeIdentifiers)")
+            }
 
         case .failure(let failure):
             Logger.model.error("\(type(of: self)).\(#function) - Failed with \(failure)")
@@ -120,9 +142,13 @@ final class ContentModel {
                 return
             }
 
-            for bike in myBikesSource.bikes {
-                let model = bike.modelInstance()
-                modelContext.insert(model)
+            do {
+                for bike in myBikesSource.bikes {
+                    let model = bike.modelInstance()
+                    modelContext.insert(model)
+                }
+
+                try? modelContext.save()
             }
 
         case .failure(let failure):
@@ -164,6 +190,7 @@ final class ContentModel {
         let bike = output.modelInstance()
 
         container.mainContext.insert(bike)
+        try? container.mainContext.save()
 
         return ContentView()
             .environment(client)
