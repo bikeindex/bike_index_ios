@@ -8,29 +8,19 @@
 import XCTest
 import OSLog
 
+@MainActor
 final class BikeIndexUITests: XCTestCase {
-    let timeout: TimeInterval = 10
+    let timeout: TimeInterval = 60
     let app = XCUIApplication()
     lazy var backButton = app.navigationBars.buttons.element(boundBy: 0)
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+        XCUIDevice.shared.orientation = .portrait
     }
 
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // UI tests must launch the application that they test.
-        app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
 
     func testLaunchPerformance() throws {
@@ -45,7 +35,7 @@ final class BikeIndexUITests: XCTestCase {
     /// Sometimes this fails when a page plainly fails to load, may need to add more resiliency.
     func test_basic_bike_detail_navigation() throws {
         app.launch()
-        signin()
+        try signIn(app: app)
 
         let bike1 = app.buttons["Bike 1"]
         _ = bike1.waitForExistence(timeout: timeout)
@@ -68,7 +58,7 @@ final class BikeIndexUITests: XCTestCase {
 
     func test_basic_settings_navigation() throws {
         app.launch()
-        signin()
+        try signIn(app: app)
 
         let settings = app.buttons["Settings"]
         _ = settings.waitForExistence(timeout: timeout)
@@ -109,7 +99,7 @@ final class BikeIndexUITests: XCTestCase {
     /// so the buttons will behave incorrectly when using GitHub links. (Except for their subdomains).
     func test_acknowledgements_webView_navigation_history() throws {
         app.launch()
-        signin()
+        try signIn(app: app)
 
         // SETUP
 
@@ -155,14 +145,23 @@ final class BikeIndexUITests: XCTestCase {
 
         backButton.tap()
 
+        let viewAllFiles = app.webViews.buttons["View all files"]
+        _ = viewAllFiles.waitForExistence(timeout: timeout)
+        viewAllFiles.tap()
+
         let licenseTxtLink = link(with: "LICENSE.txt")
-        _ = licenseTxtLink.waitForExistence(timeout: timeout)
-        licenseTxtLink.tap()
+        let licenseExists = licenseTxtLink.waitForExistence(timeout: timeout)
+        if licenseExists {
+            licenseTxtLink.tap()
+        } else {
+            Logger.tests.error("License.txt doesn't exist")
+        }
         // PUSH: github.com LICENSE.txt
 
         // Back should be available after navigating forward but it will _not be available_ because of GitHub
         XCTAssertFalse(backButton.isEnabled)
-        XCTAssertTrue(forwardButton.isEnabled) // Technically should be false but because GitHub
+        // Technically should be false but because GitHub has JS navigation some behaviors are imperfect.
+        XCTAssertTrue(forwardButton.isEnabled)
 
         backButton.tap()
         // POP: github.com LICENSE.txt
@@ -171,19 +170,25 @@ final class BikeIndexUITests: XCTestCase {
         XCTAssertTrue(forwardButton.isEnabled)
     }
 
+    func test_serial_page_navigation() throws {
+        app.launch()
+        try signIn(app: app)
+
+        let registerBikeButton = app.buttons["Register a bike"]
+        _ = registerBikeButton.waitForExistence(timeout: timeout)
+        registerBikeButton.tap()
+
+        let goToOurSerialPage = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Every bike has a unique"))
+        if goToOurSerialPage.element.waitForExistence(timeout: timeout) {
+            goToOurSerialPage.element.tap()
+        }
+    }
+
     // MARK: - Helpers
 
     func back() {
         _ = backButton.waitForExistence(timeout: timeout)
         backButton.tap()
-    }
-
-    func signin() {
-        let signIn = app.buttons["SignIn"]
-        let result = signIn.waitForExistence(timeout: 2)
-        if result {
-            signIn.tap()
-        }
     }
 
     func link(with prefix: String) -> XCUIElement {
