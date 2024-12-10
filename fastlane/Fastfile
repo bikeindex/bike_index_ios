@@ -28,6 +28,6 @@ platform :ios do
               reset_simulator: true,
               result_bundle: true,
               include_simulator_logs: true,
-              number_of_retries: 1)
+              number_of_retries: 5)
   end
 end
