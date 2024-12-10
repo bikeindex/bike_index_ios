@@ -26,7 +26,6 @@ platform :ios do
               ],
               scheme: "Debug (development)",
               reset_simulator: true,
-              reinstall_app: true,
               result_bundle: true,
               include_simulator_logs: true,
               number_of_retries: 1)
