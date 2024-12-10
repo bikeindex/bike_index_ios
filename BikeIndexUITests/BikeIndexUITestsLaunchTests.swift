@@ -15,6 +15,7 @@ final class BikeIndexUITestsLaunchTests: XCTestCase {
 
     override func setUpWithError() throws {
         continueAfterFailure = false
+        XCUIDevice.shared.orientation = .portrait
     }
 
     func testLaunch() throws {
