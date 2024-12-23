@@ -11,6 +11,10 @@ import OSLog
 
 final class ContentModel {
 
+    enum Error: LocalizedError {
+        case failed // TODO: Fill-in error scenarios
+    }
+
     @MainActor
     func fetchProfile(client: Client, modelContext: ModelContext) async throws {
         guard client.authenticated else {
@@ -23,7 +27,7 @@ final class ContentModel {
         case .success(let success):
             guard let myProfileSource = success as? AuthenticatedUserResponse else {
                 Logger.model.debug("ContentController.fetchProfile failed to parse profile from \(String(reflecting: success), privacy: .public)")
-                return
+                throw Error.failed
             }
 
             let myProfile = myProfileSource.modelInstance()
@@ -53,6 +57,7 @@ final class ContentModel {
             }
         case .failure(let failure):
             Logger.model.error("\(type(of: self)).\(#function) - Failed with \(failure)")
+            throw failure
         }
     }
 
