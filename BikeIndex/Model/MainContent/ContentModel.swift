@@ -29,26 +29,28 @@ final class ContentModel {
             let myProfile = myProfileSource.modelInstance()
             myProfile.user = myProfileSource.user.modelInstance()
 
-            do {
+            // 1. Write the AuthenticatedUser
+            // 2. Write the User
+            // 3. Find any cached bikes known-to-be-owned by this user and link them.
+            try modelContext.transaction {
                 modelContext.insert(myProfile)
-                try? modelContext.save()
+                if let user = myProfile.user {
+                    modelContext.insert(user)
+                }
+
+                let myBikeIdentifiers = myProfileSource.bike_ids
+                let predicate = #Predicate<Bike> { model in
+                    myBikeIdentifiers.contains(model.identifier)
+                }
+                let descriptor = FetchDescriptor<Bike>(predicate: predicate)
+
+                let bikes = try modelContext.fetch(descriptor)
+                bikes.forEach {
+                    $0.authenticatedOwner = myProfile
+                    $0.owner = myProfile.user
+                }
+                myProfile.bikes = bikes
             }
-
-            let myBikeIdentifiers = myProfileSource.bike_ids
-            let predicate = #Predicate<Bike> { model in
-                myBikeIdentifiers.contains(model.identifier)
-            }
-            let descriptor = FetchDescriptor<Bike>(predicate: predicate)
-
-            let bikes = try modelContext.fetch(descriptor)
-            bikes.forEach {
-                $0.authenticatedOwner = myProfile
-                $0.owner = myProfile.user
-            }
-            myProfile.bikes = bikes
-
-            try modelContext.save()
-
         case .failure(let failure):
             Logger.model.error("\(type(of: self)).\(#function) - Failed with \(failure)")
         }
@@ -69,12 +71,12 @@ final class ContentModel {
                 return
             }
 
-            for bike in myBikesSource.bikes {
-                let model = bike.modelInstance()
-                modelContext.insert(model)
+            try modelContext.transaction {
+                for bike in myBikesSource.bikes {
+                    let model = bike.modelInstance()
+                    modelContext.insert(model)
+                }
             }
-
-            try modelContext.save()
 
         case .failure(let failure):
             Logger.model.error("\(type(of: self)).\(#function) - Failed with \(failure)")
