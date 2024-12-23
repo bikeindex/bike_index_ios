@@ -12,7 +12,7 @@ import OSLog
 final class ContentModel {
 
     @MainActor
-    func fetchProfile(client: Client, modelContext: ModelContext) async {
+    func fetchProfile(client: Client, modelContext: ModelContext) async throws {
         guard client.authenticated else {
             return
         }
@@ -40,18 +40,14 @@ final class ContentModel {
             }
             let descriptor = FetchDescriptor<Bike>(predicate: predicate)
 
-            do {
-                let bikes = try modelContext.fetch(descriptor)
-                bikes.forEach {
-                    $0.authenticatedOwner = myProfile
-                    $0.owner = myProfile.user
-                }
-                myProfile.bikes = bikes
-
-                try? modelContext.save()
-            } catch {
-                Logger.model.debug("Attempting to associate AuthenticatedUser.bike_ids with bikes on disk but failed to find any. Using identifiers: \(myBikeIdentifiers)")
+            let bikes = try modelContext.fetch(descriptor)
+            bikes.forEach {
+                $0.authenticatedOwner = myProfile
+                $0.owner = myProfile.user
             }
+            myProfile.bikes = bikes
+
+            try modelContext.save()
 
         case .failure(let failure):
             Logger.model.error("\(type(of: self)).\(#function) - Failed with \(failure)")
@@ -59,7 +55,7 @@ final class ContentModel {
     }
 
     @MainActor
-    func fetchBikes(client: Client, modelContext: ModelContext) async {
+    func fetchBikes(client: Client, modelContext: ModelContext) async throws {
         guard client.authenticated else {
             return
         }
@@ -73,14 +69,12 @@ final class ContentModel {
                 return
             }
 
-            do {
-                for bike in myBikesSource.bikes {
-                    let model = bike.modelInstance()
-                    modelContext.insert(model)
-                }
-
-                try? modelContext.save()
+            for bike in myBikesSource.bikes {
+                let model = bike.modelInstance()
+                modelContext.insert(model)
             }
+
+            try modelContext.save()
 
         case .failure(let failure):
             Logger.model.error("\(type(of: self)).\(#function) - Failed with \(failure)")

@@ -70,10 +70,18 @@ struct ContentView: View {
             }
         }
        .task {
-           await contentModel.fetchProfile(client: client,
-                                           modelContext: modelContext)
-           await contentModel.fetchBikes(client: client,
-                                         modelContext: modelContext)
+           do {
+               try await contentModel.fetchProfile(client: client,
+                                               modelContext: modelContext)
+           } catch {
+               Logger.model.error("Failed to fetch profile with \(error)")
+           }
+           do {
+               try await contentModel.fetchBikes(client: client,
+                                                 modelContext: modelContext)
+           } catch {
+               Logger.model.error("Failed to fetch user's bikes with \(error)")
+           }
         }
     }
 }
