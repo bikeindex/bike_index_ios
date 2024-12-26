@@ -11,12 +11,8 @@ import OSLog
 
 final class ContentModel {
 
-    enum Error: LocalizedError {
-        case failed // TODO: Fill-in error scenarios
-    }
-
     @MainActor
-    func fetchProfile(client: Client, modelContext: ModelContext) async throws {
+    func fetchProfile(client: Client, modelContext: ModelContext) async throws(MainContentError) {
         guard client.authenticated else {
             return
         }
@@ -27,7 +23,7 @@ final class ContentModel {
         case .success(let success):
             guard let myProfileSource = success as? AuthenticatedUserResponse else {
                 Logger.model.debug("ContentController.fetchProfile failed to parse profile from \(String(reflecting: success), privacy: .public)")
-                throw Error.failed
+                throw MainContentError.failed(message: "Failed to parse fetched profile.")
             }
 
             let myProfile = myProfileSource.modelInstance()
@@ -36,33 +32,37 @@ final class ContentModel {
             // 1. Write the AuthenticatedUser
             // 2. Write the User
             // 3. Find any cached bikes known-to-be-owned by this user and link them.
-            try modelContext.transaction {
-                modelContext.insert(myProfile)
-                if let user = myProfile.user {
-                    modelContext.insert(user)
-                }
+            do {
+                try modelContext.transaction {
+                    modelContext.insert(myProfile)
+                    if let user = myProfile.user {
+                        modelContext.insert(user)
+                    }
 
-                let myBikeIdentifiers = myProfileSource.bike_ids
-                let predicate = #Predicate<Bike> { model in
-                    myBikeIdentifiers.contains(model.identifier)
-                }
-                let descriptor = FetchDescriptor<Bike>(predicate: predicate)
+                    let myBikeIdentifiers = myProfileSource.bike_ids
+                    let predicate = #Predicate<Bike> { model in
+                        myBikeIdentifiers.contains(model.identifier)
+                    }
+                    let descriptor = FetchDescriptor<Bike>(predicate: predicate)
 
-                let bikes = try modelContext.fetch(descriptor)
-                bikes.forEach {
-                    $0.authenticatedOwner = myProfile
-                    $0.owner = myProfile.user
+                    let bikes = try modelContext.fetch(descriptor)
+                    bikes.forEach {
+                        $0.authenticatedOwner = myProfile
+                        $0.owner = myProfile.user
+                    }
+                    myProfile.bikes = bikes
                 }
-                myProfile.bikes = bikes
+            } catch (let swiftError) {
+                throw MainContentError.swiftError(swiftError)
             }
         case .failure(let failure):
             Logger.model.error("\(type(of: self)).\(#function) - Failed with \(failure)")
-            throw failure
+            throw MainContentError.swiftError(failure)
         }
     }
 
     @MainActor
-    func fetchBikes(client: Client, modelContext: ModelContext) async throws {
+    func fetchBikes(client: Client, modelContext: ModelContext) async throws(MainContentError) {
         guard client.authenticated else {
             return
         }
@@ -76,11 +76,16 @@ final class ContentModel {
                 return
             }
 
-            try modelContext.transaction {
-                for bike in myBikesSource.bikes {
-                    let model = bike.modelInstance()
-                    modelContext.insert(model)
+            do {
+                try modelContext.transaction {
+                    // TODO: Look up bikes by identifier (distinct from SwiftData.id)
+                    for bike in myBikesSource.bikes {
+                        let model = bike.modelInstance()
+                        modelContext.insert(model)
+                    }
                 }
+            } catch (let swiftError) {
+                throw MainContentError.swiftError(swiftError)
             }
 
         case .failure(let failure):
