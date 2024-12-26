@@ -25,7 +25,7 @@
 		043033362B40C34800FD126F /* ContentButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033352B40C34800FD126F /* ContentButtonView.swift */; };
 		043033382B41367100FD126F /* MainContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043033372B41367100FD126F /* MainContent.swift */; };
 		0430333D2B41402800FD126F /* ProportionalLazyVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0430333C2B41402800FD126F /* ProportionalLazyVGrid.swift */; };
-		0448501B2D18F8B500E41B1A /* ContentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0448501A2D18F8B500E41B1A /* ContentModel.swift */; };
+		0448501B2D18F8B500E41B1A /* MainContentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0448501A2D18F8B500E41B1A /* MainContentModel.swift */; };
 		0452C6B02B4A608E00AD572C /* AcknowledgementsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0452C6AF2B4A608E00AD572C /* AcknowledgementsListView.swift */; };
 		0452C6B32B4A630500AD572C /* DebugMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0452C6B22B4A630500AD572C /* DebugMenu.swift */; };
 		0452C6B62B4A64D800AD572C /* LicenseEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0452C6B52B4A64D800AD572C /* LicenseEnum.swift */; };
@@ -119,7 +119,7 @@
 		043033352B40C34800FD126F /* ContentButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentButtonView.swift; sourceTree = "<group>"; };
 		043033372B41367100FD126F /* MainContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainContent.swift; sourceTree = "<group>"; };
 		0430333C2B41402800FD126F /* ProportionalLazyVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProportionalLazyVGrid.swift; sourceTree = "<group>"; };
-		0448501A2D18F8B500E41B1A /* ContentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentModel.swift; sourceTree = "<group>"; };
+		0448501A2D18F8B500E41B1A /* MainContentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainContentModel.swift; sourceTree = "<group>"; };
 		0452C6AF2B4A608E00AD572C /* AcknowledgementsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementsListView.swift; sourceTree = "<group>"; };
 		0452C6B22B4A630500AD572C /* DebugMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMenu.swift; sourceTree = "<group>"; };
 		0452C6B52B4A64D800AD572C /* LicenseEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseEnum.swift; sourceTree = "<group>"; };
@@ -255,7 +255,7 @@
 		0448501C2D18F8CA00E41B1A /* MainContent */ = {
 			isa = PBXGroup;
 			children = (
-				0448501A2D18F8B500E41B1A /* ContentModel.swift */,
+				0448501A2D18F8B500E41B1A /* MainContentModel.swift */,
 				046C5D442D1DEAD200002C55 /* MainContentModel+Error.swift */,
 			);
 			path = MainContent;
@@ -681,7 +681,7 @@
 				0430332F2B3E64C300FD126F /* US_States.swift in Sources */,
 				0430332A2B3E5EEB00FD126F /* Countries.swift in Sources */,
 				04F2C63A2B4B00CD009E0A37 /* BikeDetailView.swift in Sources */,
-				0448501B2D18F8B500E41B1A /* ContentModel.swift in Sources */,
+				0448501B2D18F8B500E41B1A /* MainContentModel.swift in Sources */,
 				0490A5F12B269F7800C4EC1E /* AddBikeOutput.swift in Sources */,
 				04F4B9392B098B9C009442B5 /* Client.swift in Sources */,
 				04FA3D632D02922700BF54E6 /* AcknowledgementRepositoryWebView.swift in Sources */,

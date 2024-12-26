@@ -17,8 +17,8 @@ struct ContentView: View {
     @State var path = NavigationPath()
 
     // Data handling and error handling
-    var contentModel = ContentModel()
-    @State var lastError: ContentModel.MainContentError?
+    var contentModel = MainContentModel()
+    @State var lastError: MainContentModel.MainContentError?
     @State var showError: Bool = false
 
     @Query private var bikes: [Bike]
@@ -93,7 +93,7 @@ struct ContentView: View {
         do {
             try await contentModel.fetchProfile(client: client,
                                                 modelContext: modelContext)
-        } catch let error as ContentModel.MainContentError {
+        } catch let error as MainContentModel.MainContentError {
             Logger.model.error("Failed to fetch profile: \(error)")
             lastError = error
             showError = true
@@ -106,7 +106,7 @@ struct ContentView: View {
         do {
             try await contentModel.fetchBikes(client: client,
                                               modelContext: modelContext)
-        } catch let error as ContentModel.MainContentError {
+        } catch let error as MainContentModel.MainContentError {
             Logger.model.error("Failed to user's bikes: \(error)")
             lastError = error
             showError = true

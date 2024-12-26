@@ -1,5 +1,5 @@
 //
-//  ContentModel.swift
+//  MainContentModel.swift
 //  BikeIndex
 //
 //  Created by Jack on 12/22/24.
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 import OSLog
 
-final class ContentModel {
+final class MainContentModel {
 
     @MainActor
     func fetchProfile(client: Client, modelContext: ModelContext) async throws(MainContentError) {

@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension ContentModel {
+extension MainContentModel {
     /// Some errors in MainContentModel are app-specific, others come from SwiftData.
     /// Represent both kinds of errors in this concrete type for SwiftUI.alert to utilize.
     public enum MainContentError: LocalizedError {
