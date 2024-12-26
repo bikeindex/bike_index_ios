@@ -77,7 +77,7 @@
 		04F4B9452B098BAA009442B5 /* SearchBikesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B93D2B098BA9009442B5 /* SearchBikesView.swift */; };
 		04F4B9462B098BAA009442B5 /* ManufacturerEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B93E2B098BAA009442B5 /* ManufacturerEntryView.swift */; };
 		04F4B9482B098BAA009442B5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B9402B098BAA009442B5 /* SettingsView.swift */; };
-		04F4B9492B098BAA009442B5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B9412B098BAA009442B5 /* ContentView.swift */; };
+		04F4B9492B098BAA009442B5 /* MainContentPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B9412B098BAA009442B5 /* MainContentPage.swift */; };
 		04F4B9502B098BB1009442B5 /* Bike.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B94A2B098BB1009442B5 /* Bike.swift */; };
 		04F4B9512B098BB1009442B5 /* FrameColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B94B2B098BB1009442B5 /* FrameColor.swift */; };
 		04F4B9522B098BB1009442B5 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4B94C2B098BB1009442B5 /* User.swift */; };
@@ -191,7 +191,7 @@
 		04F4B93D2B098BA9009442B5 /* SearchBikesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchBikesView.swift; sourceTree = "<group>"; };
 		04F4B93E2B098BAA009442B5 /* ManufacturerEntryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManufacturerEntryView.swift; sourceTree = "<group>"; };
 		04F4B9402B098BAA009442B5 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		04F4B9412B098BAA009442B5 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		04F4B9412B098BAA009442B5 /* MainContentPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainContentPage.swift; sourceTree = "<group>"; };
 		04F4B94A2B098BB1009442B5 /* Bike.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bike.swift; sourceTree = "<group>"; };
 		04F4B94B2B098BB1009442B5 /* FrameColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrameColor.swift; sourceTree = "<group>"; };
 		04F4B94C2B098BB1009442B5 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -244,7 +244,7 @@
 		043033342B40C32600FD126F /* MainContent */ = {
 			isa = PBXGroup;
 			children = (
-				04F4B9412B098BAA009442B5 /* ContentView.swift */,
+				04F4B9412B098BAA009442B5 /* MainContentPage.swift */,
 				043033352B40C34800FD126F /* ContentButtonView.swift */,
 				04F2C63B2B4B0127009E0A37 /* ContentBikeButton.swift */,
 				0494FD8B2B4250F70053C54F /* MainToolbar.swift */,
@@ -665,7 +665,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04F4B9542B098BB1009442B5 /* Manufacturer.swift in Sources */,
-				04F4B9492B098BAA009442B5 /* ContentView.swift in Sources */,
+				04F4B9492B098BAA009442B5 /* MainContentPage.swift in Sources */,
 				0430333D2B41402800FD126F /* ProportionalLazyVGrid.swift in Sources */,
 				04F4B9432B098BAA009442B5 /* AuthView.swift in Sources */,
 				04EA111B2B2503B40024CDDD /* BikeRegisteredQuery.swift in Sources */,

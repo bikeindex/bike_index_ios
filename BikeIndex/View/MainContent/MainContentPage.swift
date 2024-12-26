@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  MainContentPage.swift
 //  BikeIndex
 //
 //  Created by Jack on 11/18/23.
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 import OSLog
 
-struct ContentView: View {
+struct MainContentPage: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
@@ -131,7 +131,7 @@ struct ContentView: View {
         let container = try ModelContainer(for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
                                            configurations: config)
 
-        return ContentView()
+        return MainContentPage()
             .environment(client)
             .modelContainer(container)
     } catch let error {
@@ -155,7 +155,7 @@ struct ContentView: View {
         container.mainContext.insert(bike)
         try? container.mainContext.save()
 
-        return ContentView()
+        return MainContentPage()
             .environment(client)
             .modelContainer(container)
     } catch let error {

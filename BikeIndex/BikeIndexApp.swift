@@ -38,7 +38,7 @@ struct BikeIndexApp: App {
     var body: some Scene {
         WindowGroup {
             if client.authenticated {
-                ContentView()
+                MainContentPage()
                     .tint(Color.accentColor)
             } else {
                 AuthView()
