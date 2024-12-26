@@ -12,7 +12,7 @@ import OSLog
 final class MainContentModel {
 
     @MainActor
-    func fetchProfile(client: Client, modelContext: ModelContext) async throws(MainContentError) {
+    func fetchProfile(client: Client, modelContext: ModelContext) async throws(Error) {
         guard client.authenticated else {
             return
         }
@@ -23,7 +23,7 @@ final class MainContentModel {
         case .success(let success):
             guard let myProfileSource = success as? AuthenticatedUserResponse else {
                 Logger.model.debug("ContentController.fetchProfile failed to parse profile from \(String(reflecting: success), privacy: .public)")
-                throw MainContentError.failed(message: "Failed to parse fetched profile.")
+                throw Error.failed(message: "Failed to parse fetched profile.")
             }
 
             let myProfile = myProfileSource.modelInstance()
@@ -53,16 +53,16 @@ final class MainContentModel {
                     myProfile.bikes = bikes
                 }
             } catch (let swiftError) {
-                throw MainContentError.swiftError(swiftError)
+                throw Error.swiftError(swiftError)
             }
         case .failure(let failure):
             Logger.model.error("\(type(of: self)).\(#function) - Failed with \(failure)")
-            throw MainContentError.swiftError(failure)
+            throw Error.swiftError(failure)
         }
     }
 
     @MainActor
-    func fetchBikes(client: Client, modelContext: ModelContext) async throws(MainContentError) {
+    func fetchBikes(client: Client, modelContext: ModelContext) async throws(Error) {
         guard client.authenticated else {
             return
         }
@@ -85,7 +85,7 @@ final class MainContentModel {
                     }
                 }
             } catch (let swiftError) {
-                throw MainContentError.swiftError(swiftError)
+                throw Error.swiftError(swiftError)
             }
 
         case .failure(let failure):

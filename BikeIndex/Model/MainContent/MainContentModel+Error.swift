@@ -10,9 +10,9 @@ import Foundation
 extension MainContentModel {
     /// Some errors in MainContentModel are app-specific, others come from SwiftData.
     /// Represent both kinds of errors in this concrete type for SwiftUI.alert to utilize.
-    public enum MainContentError: LocalizedError {
+    public enum Error: LocalizedError {
         case failed(message: String)
-        case swiftError(Error)
+        case swiftError(Swift.Error)
 
         var errorDescription: String? {
             switch self {
