@@ -27,7 +27,7 @@ import OSLog
   }
 
     var debugDescription: String {
-        "AuthenticatedUser: \(uuid)" // Rails.identifier=(identifier), SwiftData.id=(id), user=(String(describing: user))" // , memberships=\(memberships)"
+        "AuthenticatedUser: \(uuid)"
     }
 }
 
@@ -66,8 +66,10 @@ import OSLog
     var accessToken: Token
     var userIsOrganizationAdmin: Bool
 
-    //    @Relationship(deleteRule: .cascade, inverse: \AuthenticatedUser.memberships)
-    //    var authorizedUsers: [AuthenticatedUser]? = []
+    /* TODO: Fill-in Organization relationships and functionality
+        @Relationship(deleteRule: .cascade, inverse: \AuthenticatedUser.memberships)
+        var authorizedUsers: [AuthenticatedUser]? = []
+     */
 
     init(name: String, slug: String, identifier: Int, accessToken: Token, userIsOrganizationAdmin: Bool) {
         Logger.model.debug("Org.init w/ identifier \(identifier)")
