@@ -40,6 +40,14 @@
 		0490A5F12B269F7800C4EC1E /* AddBikeOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490A5F02B269F7800C4EC1E /* AddBikeOutput.swift */; };
 		0494FD8C2B4250F70053C54F /* MainToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0494FD8B2B4250F70053C54F /* MainToolbar.swift */; };
 		049D347F2BB0DB8900E7F768 /* BicycleTypeSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049D347E2BB0DB8900E7F768 /* BicycleTypeSelectionView.swift */; };
+		04ABEBB92D1F35B400E30577 /* PreviewGallery in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBB82D1F35B400E30577 /* PreviewGallery */; };
+		04ABEBBB2D1F35B400E30577 /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */; };
+		04ABEBBD2D1F35B400E30577 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBC2D1F35B400E30577 /* SnapshottingTests */; };
+		04ABEBC02D1F370800E30577 /* BikeIndexAppPreviewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04ABEBBF2D1F370800E30577 /* BikeIndexAppPreviewTest.swift */; };
+		04ABEBC22D1F398300E30577 /* BikeIndexAppAccessibilityPreviewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04ABEBC12D1F398300E30577 /* BikeIndexAppAccessibilityPreviewTest.swift */; };
+		04ABEBC52D1F399E00E30577 /* Snapshotting in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBC42D1F399E00E30577 /* Snapshotting */; };
+		04ABEBC62D1F399E00E30577 /* Snapshotting in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBC42D1F399E00E30577 /* Snapshotting */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		04ABEBC82D1F399E00E30577 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBC72D1F399E00E30577 /* SnapshottingTests */; };
 		04B660082B4309780055A056 /* AutocompleteManufacturerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B660072B4309780055A056 /* AutocompleteManufacturerResponse.swift */; };
 		04B6600B2B43169E0055A056 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B6600A2B43169E0055A056 /* WelcomeView.swift */; };
 		04C736EE2B8180FD00D2BDA3 /* ClientRefreshTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C736ED2B8180FD00D2BDA3 /* ClientRefreshTests.swift */; };
@@ -105,6 +113,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		04ABEBC92D1F399E00E30577 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				04ABEBC62D1F399E00E30577 /* Snapshotting in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		040FA32D2BCCB7F5000C4B18 /* ManufacturerKeyboardUITestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManufacturerKeyboardUITestCase.swift; sourceTree = "<group>"; };
 		041CCD8B2BC2E0D300A3A9A8 /* BikeRegistration+Propulsion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BikeRegistration+Propulsion.swift"; sourceTree = "<group>"; };
@@ -139,6 +161,9 @@
 		0496C6712CB36BF100B88D1B /* .ruby-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".ruby-version"; sourceTree = "<group>"; };
 		0496C6722CB36BF600B88D1B /* Gemfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Gemfile; sourceTree = "<group>"; };
 		049D347E2BB0DB8900E7F768 /* BicycleTypeSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BicycleTypeSelectionView.swift; sourceTree = "<group>"; };
+		04ABEBBE2D1F360E00E30577 /* Debug (bikeindex.org).xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Debug (bikeindex.org).xctestplan"; sourceTree = "<group>"; };
+		04ABEBBF2D1F370800E30577 /* BikeIndexAppPreviewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeIndexAppPreviewTest.swift; sourceTree = "<group>"; };
+		04ABEBC12D1F398300E30577 /* BikeIndexAppAccessibilityPreviewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeIndexAppAccessibilityPreviewTest.swift; sourceTree = "<group>"; };
 		04B660072B4309780055A056 /* AutocompleteManufacturerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutocompleteManufacturerResponse.swift; sourceTree = "<group>"; };
 		04B6600A2B43169E0055A056 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		04C736EC2B817FDC00D2BDA3 /* AllTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = AllTests.xctestplan; sourceTree = "<group>"; };
@@ -205,6 +230,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04ABEBB92D1F35B400E30577 /* PreviewGallery in Frameworks */,
+				04ABEBBB2D1F35B400E30577 /* SnapshotPreferences in Frameworks */,
 				04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */,
 				04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */,
 				04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */,
@@ -215,6 +242,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04ABEBBD2D1F35B400E30577 /* SnapshottingTests in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -222,6 +250,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04ABEBC82D1F399E00E30577 /* SnapshottingTests in Frameworks */,
+				04ABEBC52D1F399E00E30577 /* Snapshotting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,11 +319,19 @@
 		0485E9C82B9E2FAE0071C48B /* SharedTests */ = {
 			isa = PBXGroup;
 			children = (
+				04C736EC2B817FDC00D2BDA3 /* AllTests.xctestplan */,
 				046B0A3C2B251E91006519A7 /* Logger+Tests.swift */,
 				04CA5AD92D013A5400BD572A /* Test-credentials.xcconfig */,
 				04CA5ADC2D013A7200BD572A /* Test-credentials-template.xcconfig */,
 			);
 			path = SharedTests;
+			sourceTree = "<group>";
+		};
+		04ABEBC32D1F399E00E30577 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		04B660062B4309630055A056 /* Manufacturer */ = {
@@ -370,7 +408,6 @@
 		04F4B8EE2B098ADB009442B5 = {
 			isa = PBXGroup;
 			children = (
-				04C736EC2B817FDC00D2BDA3 /* AllTests.xctestplan */,
 				04F4B9312B098B5A009442B5 /* README.md */,
 				04F4B9292B098B44009442B5 /* BikeIndex-development.xcconfig */,
 				04F4B9272B098B44009442B5 /* BikeIndex-production.xcconfig */,
@@ -382,6 +419,7 @@
 				0496C6702CB36BED00B88D1B /* Brewfile */,
 				0496C6722CB36BF600B88D1B /* Gemfile */,
 				0496C6712CB36BF100B88D1B /* .ruby-version */,
+				04ABEBC32D1F399E00E30577 /* Frameworks */,
 				04F4B8F82B098ADB009442B5 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -425,6 +463,7 @@
 		04F4B90D2B098ADE009442B5 /* BikeIndexTests */ = {
 			isa = PBXGroup;
 			children = (
+				04ABEBBE2D1F360E00E30577 /* Debug (bikeindex.org).xctestplan */,
 				046B0A3E2B251E92006519A7 /* BikeIndexOrgApiV3Tests.swift */,
 				046B0A3D2B251E91006519A7 /* UserRelationshipTests.swift */,
 				04706F2C2CE99FF500C55831 /* ManufacturerTests.swift */,
@@ -434,6 +473,7 @@
 				04F4B92D2B098B4F009442B5 /* OAuthTests.swift */,
 				04C736ED2B8180FD00D2BDA3 /* ClientRefreshTests.swift */,
 				041CCD8D2BC2E36300A3A9A8 /* RegistrationPropulsionTests.swift */,
+				04ABEBBF2D1F370800E30577 /* BikeIndexAppPreviewTest.swift */,
 			);
 			path = BikeIndexTests;
 			sourceTree = "<group>";
@@ -441,6 +481,7 @@
 		04F4B9172B098ADE009442B5 /* BikeIndexUITests */ = {
 			isa = PBXGroup;
 			children = (
+				04ABEBC12D1F398300E30577 /* BikeIndexAppAccessibilityPreviewTest.swift */,
 				04CA5AE02D013BAA00BD572A /* Info.plist */,
 				04F4B9182B098ADE009442B5 /* BikeIndexUITests.swift */,
 				04CA5AE22D014CC800BD572A /* AuthenticatedUITestCase.swift */,
@@ -530,6 +571,8 @@
 				04F4B95D2B0990CE009442B5 /* KeychainSwift */,
 				04EA11212B2504340024CDDD /* URLEncodedForm */,
 				04E1343D2B4B718200CE88DD /* WebViewKit */,
+				04ABEBB82D1F35B400E30577 /* PreviewGallery */,
+				04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */,
 			);
 			productName = BikeIndex;
 			productReference = 04F4B8F72B098ADB009442B5 /* BikeIndex.app */;
@@ -560,6 +603,7 @@
 				04F4B9102B098ADE009442B5 /* Sources */,
 				04F4B9112B098ADE009442B5 /* Frameworks */,
 				04F4B9122B098ADE009442B5 /* Resources */,
+				04ABEBC92D1F399E00E30577 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -607,6 +651,7 @@
 				04F4B95C2B0990CE009442B5 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				04EA11202B2504340024CDDD /* XCRemoteSwiftPackageReference "URLEncodedForm" */,
 				04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */,
+				04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */,
 			);
 			productRefGroup = 04F4B8F82B098ADB009442B5 /* Products */;
 			projectDirPath = "";
@@ -719,6 +764,7 @@
 				040123632B817BD50045FECE /* UserTests.swift in Sources */,
 				041CCD8E2BC2E36300A3A9A8 /* RegistrationPropulsionTests.swift in Sources */,
 				040123642B817BD50045FECE /* BikeModelTests.swift in Sources */,
+				04ABEBC02D1F370800E30577 /* BikeIndexAppPreviewTest.swift in Sources */,
 				0401235E2B817BD50045FECE /* BikeIndexOrgApiV3Tests.swift in Sources */,
 				0401235F2B817BD50045FECE /* BikeRegistrationTests.swift in Sources */,
 				04C736EE2B8180FD00D2BDA3 /* ClientRefreshTests.swift in Sources */,
@@ -735,6 +781,7 @@
 			files = (
 				04F4B91B2B098ADE009442B5 /* BikeIndexUITestsLaunchTests.swift in Sources */,
 				0485E9C72B9E2FA70071C48B /* Logger+Tests.swift in Sources */,
+				04ABEBC22D1F398300E30577 /* BikeIndexAppAccessibilityPreviewTest.swift in Sources */,
 				04CA5AE32D014CC800BD572A /* AuthenticatedUITestCase.swift in Sources */,
 				04F4B9192B098ADE009442B5 /* BikeIndexUITests.swift in Sources */,
 				040FA32E2BCCB7F5000C4B18 /* ManufacturerKeyboardUITestCase.swift in Sources */,
@@ -1239,6 +1286,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/EmergeTools/SnapshotPreviews";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.10.20;
+			};
+		};
 		04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/danielsaidi/WebViewKit.git";
@@ -1266,6 +1321,31 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		04ABEBB82D1F35B400E30577 /* PreviewGallery */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			productName = PreviewGallery;
+		};
+		04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			productName = SnapshotPreferences;
+		};
+		04ABEBBC2D1F35B400E30577 /* SnapshottingTests */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			productName = SnapshottingTests;
+		};
+		04ABEBC42D1F399E00E30577 /* Snapshotting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			productName = Snapshotting;
+		};
+		04ABEBC72D1F399E00E30577 /* SnapshottingTests */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			productName = SnapshottingTests;
+		};
 		04E1343D2B4B718200CE88DD /* WebViewKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */;
