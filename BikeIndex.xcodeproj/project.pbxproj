@@ -44,6 +44,10 @@
 		04ABEBBB2D1F35B400E30577 /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */; };
 		04ABEBBD2D1F35B400E30577 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBC2D1F35B400E30577 /* SnapshottingTests */; };
 		04ABEBC02D1F370800E30577 /* BikeIndexAppPreviewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04ABEBBF2D1F370800E30577 /* BikeIndexAppPreviewTest.swift */; };
+		04ABEBC22D1F398300E30577 /* BikeIndexAppAccessibilityPreviewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04ABEBC12D1F398300E30577 /* BikeIndexAppAccessibilityPreviewTest.swift */; };
+		04ABEBC52D1F399E00E30577 /* Snapshotting in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBC42D1F399E00E30577 /* Snapshotting */; };
+		04ABEBC62D1F399E00E30577 /* Snapshotting in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBC42D1F399E00E30577 /* Snapshotting */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		04ABEBC82D1F399E00E30577 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBC72D1F399E00E30577 /* SnapshottingTests */; };
 		04B660082B4309780055A056 /* AutocompleteManufacturerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B660072B4309780055A056 /* AutocompleteManufacturerResponse.swift */; };
 		04B6600B2B43169E0055A056 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B6600A2B43169E0055A056 /* WelcomeView.swift */; };
 		04C736EE2B8180FD00D2BDA3 /* ClientRefreshTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C736ED2B8180FD00D2BDA3 /* ClientRefreshTests.swift */; };
@@ -109,6 +113,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		04ABEBC92D1F399E00E30577 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				04ABEBC62D1F399E00E30577 /* Snapshotting in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		040FA32D2BCCB7F5000C4B18 /* ManufacturerKeyboardUITestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManufacturerKeyboardUITestCase.swift; sourceTree = "<group>"; };
 		041CCD8B2BC2E0D300A3A9A8 /* BikeRegistration+Propulsion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BikeRegistration+Propulsion.swift"; sourceTree = "<group>"; };
@@ -145,6 +163,7 @@
 		049D347E2BB0DB8900E7F768 /* BicycleTypeSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BicycleTypeSelectionView.swift; sourceTree = "<group>"; };
 		04ABEBBE2D1F360E00E30577 /* Debug (bikeindex.org).xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Debug (bikeindex.org).xctestplan"; sourceTree = "<group>"; };
 		04ABEBBF2D1F370800E30577 /* BikeIndexAppPreviewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeIndexAppPreviewTest.swift; sourceTree = "<group>"; };
+		04ABEBC12D1F398300E30577 /* BikeIndexAppAccessibilityPreviewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeIndexAppAccessibilityPreviewTest.swift; sourceTree = "<group>"; };
 		04B660072B4309780055A056 /* AutocompleteManufacturerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutocompleteManufacturerResponse.swift; sourceTree = "<group>"; };
 		04B6600A2B43169E0055A056 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		04C736EC2B817FDC00D2BDA3 /* AllTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = AllTests.xctestplan; sourceTree = "<group>"; };
@@ -231,6 +250,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04ABEBC82D1F399E00E30577 /* SnapshottingTests in Frameworks */,
+				04ABEBC52D1F399E00E30577 /* Snapshotting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -304,6 +325,13 @@
 				04CA5ADC2D013A7200BD572A /* Test-credentials-template.xcconfig */,
 			);
 			path = SharedTests;
+			sourceTree = "<group>";
+		};
+		04ABEBC32D1F399E00E30577 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		04B660062B4309630055A056 /* Manufacturer */ = {
@@ -391,6 +419,7 @@
 				0496C6702CB36BED00B88D1B /* Brewfile */,
 				0496C6722CB36BF600B88D1B /* Gemfile */,
 				0496C6712CB36BF100B88D1B /* .ruby-version */,
+				04ABEBC32D1F399E00E30577 /* Frameworks */,
 				04F4B8F82B098ADB009442B5 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -452,6 +481,7 @@
 		04F4B9172B098ADE009442B5 /* BikeIndexUITests */ = {
 			isa = PBXGroup;
 			children = (
+				04ABEBC12D1F398300E30577 /* BikeIndexAppAccessibilityPreviewTest.swift */,
 				04CA5AE02D013BAA00BD572A /* Info.plist */,
 				04F4B9182B098ADE009442B5 /* BikeIndexUITests.swift */,
 				04CA5AE22D014CC800BD572A /* AuthenticatedUITestCase.swift */,
@@ -573,6 +603,7 @@
 				04F4B9102B098ADE009442B5 /* Sources */,
 				04F4B9112B098ADE009442B5 /* Frameworks */,
 				04F4B9122B098ADE009442B5 /* Resources */,
+				04ABEBC92D1F399E00E30577 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -750,6 +781,7 @@
 			files = (
 				04F4B91B2B098ADE009442B5 /* BikeIndexUITestsLaunchTests.swift in Sources */,
 				0485E9C72B9E2FA70071C48B /* Logger+Tests.swift in Sources */,
+				04ABEBC22D1F398300E30577 /* BikeIndexAppAccessibilityPreviewTest.swift in Sources */,
 				04CA5AE32D014CC800BD572A /* AuthenticatedUITestCase.swift in Sources */,
 				04F4B9192B098ADE009442B5 /* BikeIndexUITests.swift in Sources */,
 				040FA32E2BCCB7F5000C4B18 /* ManufacturerKeyboardUITestCase.swift in Sources */,
@@ -1300,6 +1332,16 @@
 			productName = SnapshotPreferences;
 		};
 		04ABEBBC2D1F35B400E30577 /* SnapshottingTests */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			productName = SnapshottingTests;
+		};
+		04ABEBC42D1F399E00E30577 /* Snapshotting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			productName = Snapshotting;
+		};
+		04ABEBC72D1F399E00E30577 /* SnapshottingTests */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
 			productName = SnapshottingTests;
