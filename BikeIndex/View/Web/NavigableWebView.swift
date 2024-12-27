@@ -78,6 +78,7 @@ struct NavigableWebView: View {
         url: .constant(URL(string: "https://bikeindex.org")!),
         navigator: HistoryNavigator()
     )
+    .environment(try! Client())
 }
 
 extension NavigableWebView {
