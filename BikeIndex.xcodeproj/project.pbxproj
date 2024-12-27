@@ -40,6 +40,9 @@
 		0490A5F12B269F7800C4EC1E /* AddBikeOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490A5F02B269F7800C4EC1E /* AddBikeOutput.swift */; };
 		0494FD8C2B4250F70053C54F /* MainToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0494FD8B2B4250F70053C54F /* MainToolbar.swift */; };
 		049D347F2BB0DB8900E7F768 /* BicycleTypeSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049D347E2BB0DB8900E7F768 /* BicycleTypeSelectionView.swift */; };
+		04ABEBB92D1F35B400E30577 /* PreviewGallery in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBB82D1F35B400E30577 /* PreviewGallery */; };
+		04ABEBBB2D1F35B400E30577 /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */; };
+		04ABEBBD2D1F35B400E30577 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBC2D1F35B400E30577 /* SnapshottingTests */; };
 		04B660082B4309780055A056 /* AutocompleteManufacturerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B660072B4309780055A056 /* AutocompleteManufacturerResponse.swift */; };
 		04B6600B2B43169E0055A056 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B6600A2B43169E0055A056 /* WelcomeView.swift */; };
 		04C736EE2B8180FD00D2BDA3 /* ClientRefreshTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C736ED2B8180FD00D2BDA3 /* ClientRefreshTests.swift */; };
@@ -139,6 +142,7 @@
 		0496C6712CB36BF100B88D1B /* .ruby-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".ruby-version"; sourceTree = "<group>"; };
 		0496C6722CB36BF600B88D1B /* Gemfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Gemfile; sourceTree = "<group>"; };
 		049D347E2BB0DB8900E7F768 /* BicycleTypeSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BicycleTypeSelectionView.swift; sourceTree = "<group>"; };
+		04ABEBBE2D1F360E00E30577 /* Debug (bikeindex.org).xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Debug (bikeindex.org).xctestplan"; sourceTree = "<group>"; };
 		04B660072B4309780055A056 /* AutocompleteManufacturerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutocompleteManufacturerResponse.swift; sourceTree = "<group>"; };
 		04B6600A2B43169E0055A056 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		04C736EC2B817FDC00D2BDA3 /* AllTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = AllTests.xctestplan; sourceTree = "<group>"; };
@@ -205,6 +209,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04ABEBB92D1F35B400E30577 /* PreviewGallery in Frameworks */,
+				04ABEBBB2D1F35B400E30577 /* SnapshotPreferences in Frameworks */,
 				04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */,
 				04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */,
 				04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */,
@@ -215,6 +221,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04ABEBBD2D1F35B400E30577 /* SnapshottingTests in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,6 +377,7 @@
 		04F4B8EE2B098ADB009442B5 = {
 			isa = PBXGroup;
 			children = (
+				04ABEBBE2D1F360E00E30577 /* Debug (bikeindex.org).xctestplan */,
 				04C736EC2B817FDC00D2BDA3 /* AllTests.xctestplan */,
 				04F4B9312B098B5A009442B5 /* README.md */,
 				04F4B9292B098B44009442B5 /* BikeIndex-development.xcconfig */,
@@ -530,6 +538,8 @@
 				04F4B95D2B0990CE009442B5 /* KeychainSwift */,
 				04EA11212B2504340024CDDD /* URLEncodedForm */,
 				04E1343D2B4B718200CE88DD /* WebViewKit */,
+				04ABEBB82D1F35B400E30577 /* PreviewGallery */,
+				04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */,
 			);
 			productName = BikeIndex;
 			productReference = 04F4B8F72B098ADB009442B5 /* BikeIndex.app */;
@@ -607,6 +617,7 @@
 				04F4B95C2B0990CE009442B5 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				04EA11202B2504340024CDDD /* XCRemoteSwiftPackageReference "URLEncodedForm" */,
 				04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */,
+				04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */,
 			);
 			productRefGroup = 04F4B8F82B098ADB009442B5 /* Products */;
 			projectDirPath = "";
@@ -1239,6 +1250,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:EmergeTools/SnapshotPreviews.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.10.20;
+			};
+		};
 		04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/danielsaidi/WebViewKit.git";
@@ -1266,6 +1285,21 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		04ABEBB82D1F35B400E30577 /* PreviewGallery */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			productName = PreviewGallery;
+		};
+		04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			productName = SnapshotPreferences;
+		};
+		04ABEBBC2D1F35B400E30577 /* SnapshottingTests */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			productName = SnapshottingTests;
+		};
 		04E1343D2B4B718200CE88DD /* WebViewKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */;
