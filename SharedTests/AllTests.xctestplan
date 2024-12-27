@@ -30,31 +30,7 @@
     {
       "parallelizable" : true,
       "skippedTests" : [
-        "BikeIndexAppAccessibilityPreviewTest",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/AcknowledgementPackageDetailView.swift-0-17()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/AcknowledgementsListView.swift-0-13()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/AcknowledgementsListView.swift:AcknowledgementListItemView-0-12()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/AppIconPicker.swift:App Icon Direct UIImage Access-0-9()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/AppIconPicker.swift:App Icon Picker View-0-10()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/AuthView.swift-0-2()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/BicycleTypeSelectionView.swift-0-21()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/BikeDetailView.swift-0-8()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/ContentBikeButton.swift-0-18()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/ContentView.swift:1 Bike Preview-0-1()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/ContentView.swift:Empty data-0-0()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/DebugMenu.swift-0-14()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/ManufacturerEntryView.swift-0-19()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/NavigableWebView.swift-0-5()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/RegisterBikeView.swift:Normal Mode Preview-0-6()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/RegisterBikeView.swift:Stolen Mode Preview-0-7()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/SearchBikesView.swift-0-15()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/SettingsView.swift-0-20()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/StolenRecordEntryView.swift-0-16()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/TextLink.swift-0-11()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/VerticalPicker.swift-0-3()",
-        "BikeIndexAppAccessibilityPreviewTest\/BikeIndex\/WelcomeView.swift-0-4()",
-        "BikeIndexAppAccessibilityPreviewTest\/WebViewKit\/SafariWebView.swift-0-22()",
-        "BikeIndexAppAccessibilityPreviewTest\/WebViewKit\/WebView.swift-0-23()"
+        "BikeIndexAppAccessibilityPreviewTest"
       ],
       "target" : {
         "containerPath" : "container:BikeIndex.xcodeproj",
