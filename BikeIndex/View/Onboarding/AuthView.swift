@@ -27,15 +27,19 @@ fileprivate extension ClientConfiguration {
 /// This means that Proxyman will not show app authentication in the "Bike Index" app. You will have to look for the
 /// host or across all networking in Proxyman!
 struct AuthView: View {
-    /// api client for performing auth
+    /// API client for performing auth
     @Environment(Client.self) var client
     @Environment(\.dismiss) var dismiss
 
     @State private var displaySignIn = false
+    /// Object to intercept authentication events from the sign-in webview and forward them to Client
     private var authNavigationDelegate = AuthNavigationDelegate()
 
+    @State private var path = NavigationPath()
+    @State private var showDebugMenu = false
+
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             WelcomeView()
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
@@ -52,8 +56,8 @@ struct AuthView: View {
                 
 #if DEBUG
                 ToolbarItem(placement: .topBarLeading) {
-                    NavigationLink {
-                        SettingsView()
+                    Button {
+                        path.append(Nav.debugSettings)
                     } label: {
                         Label("Settings", systemImage: "gearshape")
                     }
@@ -76,9 +80,16 @@ struct AuthView: View {
                     }
                 }
             })
-
             .navigationTitle("Welcome to Bike Index")
             .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(for: Nav.self) { navSelection in
+                switch navSelection {
+                case .debugSettings:
+                    SettingsView(path: $path)
+                        .accessibilityIdentifier("Settings")
+                        
+                }
+            }
         }
         .onAppear {
             authNavigationDelegate.client = client
@@ -87,6 +98,12 @@ struct AuthView: View {
 
     private var oAuthUrl: URL? {
         OAuth.authorize(queryItems: client.configuration.authorizeQueryItems).request(for: client.api.configuration).url
+    }
+
+    enum Nav: Identifiable {
+        var id: Self { self }
+
+        case debugSettings
     }
 }
 
