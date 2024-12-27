@@ -296,6 +296,7 @@
 		0485E9C82B9E2FAE0071C48B /* SharedTests */ = {
 			isa = PBXGroup;
 			children = (
+				04C736EC2B817FDC00D2BDA3 /* AllTests.xctestplan */,
 				046B0A3C2B251E91006519A7 /* Logger+Tests.swift */,
 				04CA5AD92D013A5400BD572A /* Test-credentials.xcconfig */,
 				04CA5ADC2D013A7200BD572A /* Test-credentials-template.xcconfig */,
@@ -377,8 +378,6 @@
 		04F4B8EE2B098ADB009442B5 = {
 			isa = PBXGroup;
 			children = (
-				04ABEBBE2D1F360E00E30577 /* Debug (bikeindex.org).xctestplan */,
-				04C736EC2B817FDC00D2BDA3 /* AllTests.xctestplan */,
 				04F4B9312B098B5A009442B5 /* README.md */,
 				04F4B9292B098B44009442B5 /* BikeIndex-development.xcconfig */,
 				04F4B9272B098B44009442B5 /* BikeIndex-production.xcconfig */,
@@ -433,6 +432,7 @@
 		04F4B90D2B098ADE009442B5 /* BikeIndexTests */ = {
 			isa = PBXGroup;
 			children = (
+				04ABEBBE2D1F360E00E30577 /* Debug (bikeindex.org).xctestplan */,
 				046B0A3E2B251E92006519A7 /* BikeIndexOrgApiV3Tests.swift */,
 				046B0A3D2B251E91006519A7 /* UserRelationshipTests.swift */,
 				04706F2C2CE99FF500C55831 /* ManufacturerTests.swift */,
