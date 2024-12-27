@@ -25,7 +25,6 @@
     {
       "parallelizable" : true,
       "skippedTests" : [
-        "BikeModelTests\/testReadingAndWritingJson()",
         "BikeModelTests\/test_reading_writing_json()"
       ],
       "target" : {

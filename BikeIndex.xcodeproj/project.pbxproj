@@ -1288,7 +1288,7 @@
 /* Begin XCRemoteSwiftPackageReference section */
 		04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@github.com:EmergeTools/SnapshotPreviews.git";
+			repositoryURL = "https://github.com/EmergeTools/SnapshotPreviews";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.10.20;
