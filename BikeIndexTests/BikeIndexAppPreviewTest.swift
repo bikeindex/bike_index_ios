@@ -11,12 +11,12 @@ import SnapshottingTests
 class BikeIndexAppPreviewTest: SnapshotTest {
 
     // Return the type names of previews like "MyApp.MyView._Previews" to selectively render only some previews
-    func snapshotPreviews() -> [String]? {
+    override class func snapshotPreviews() -> [String]? {
         return nil
     }
 
     // Use this to exclude some previews from generating
-    func excludedSnapshotPreviews() -> [String]? {
+    override class func excludedSnapshotPreviews() -> [String]? {
         return nil
     }
 }
