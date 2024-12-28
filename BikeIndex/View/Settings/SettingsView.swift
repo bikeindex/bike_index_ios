@@ -191,17 +191,11 @@ struct SettingsView: View {
 }
 
 #Preview {
-    return NavigationStack {
-        var path = NavigationPath()
-        let pathBinding = Binding {
-            path
-        } set: { newPath in
-            path = newPath
-        }
-
+    @Previewable @State var path = NavigationPath()
+    NavigationStack(path: $path) {
         SettingsView(
             iconsModel: AlternateIconsModel(),
-            path: pathBinding
+            path: $path
         )
         .environment(try! Client())
     }
