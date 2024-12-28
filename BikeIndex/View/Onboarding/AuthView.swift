@@ -40,8 +40,7 @@ struct AuthView: View {
 
     var body: some View {
         NavigationStack(path: $path) {
-            WelcomeView()
-            .toolbar {
+            WelcomeView().toolbar {
                 ToolbarItem(placement: .bottomBar) {
                     Button {
                         displaySignIn = true
@@ -53,7 +52,7 @@ struct AuthView: View {
                     }
                     .buttonStyle(.borderedProminent)
                 }
-                
+
 #if DEBUG
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
@@ -87,7 +86,6 @@ struct AuthView: View {
                 case .debugSettings:
                     SettingsView(path: $path)
                         .accessibilityIdentifier("Settings")
-                        
                 }
             }
         }

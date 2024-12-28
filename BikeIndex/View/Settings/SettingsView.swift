@@ -80,7 +80,7 @@ struct SettingsView: View {
                 }
             }
 
-            #if DEBUG
+#if DEBUG
             Section {
                 Button {
                     path.append(SettingsSelection.debugMenu)
@@ -95,7 +95,7 @@ struct SettingsView: View {
             } header: {
                 Text("Developer")
             }
-            #endif
+#endif
 
             Section {
                 Link(destination: MailToLink.contactUs.link) {
