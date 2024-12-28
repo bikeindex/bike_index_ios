@@ -45,6 +45,10 @@ extension AcknowledgementPackage {
                                license: .mit,
                                copyright: "Copyright © 2022 Daniel Saidi",
                                repository: URL(string: "https://github.com/danielsaidi/WebViewKit")!),
+        AcknowledgementPackage(title: "SnapshotPreviews",
+                               license: .mit,
+                               copyright: "Copyright © 2023 Emerge Tools",
+                               repository: URL(string: "https://github.com/EmergeTools/SnapshotPreviews")!)
     ]
 
     static var gnuAfferoGPLv3Packages: [AcknowledgementPackage] {

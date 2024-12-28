@@ -7,6 +7,9 @@
 
 import SwiftUI
 import OSLog
+#if DEBUG
+import PreviewGallery
+#endif
 
 struct SettingsView: View {
     @Environment(Client.self) var client
@@ -98,11 +101,20 @@ struct SettingsView: View {
             }
 
             #if DEBUG
-            NavigationLink {
-                DebugMenu()
-                    .environment(client)
-            } label: {
-                Label("Debug menu", systemImage: "ladybug.circle")
+            Section {
+                NavigationLink {
+                    DebugMenu()
+                        .environment(client)
+                } label: {
+                    Label("Debug menu", systemImage: "ladybug.circle")
+                }
+                NavigationLink {
+                    PreviewGallery()
+                } label: {
+                    Label("Preview Gallery", systemImage: "eye.circle")
+                }
+            } header: {
+                Text("Developer")
             }
             #endif
 
