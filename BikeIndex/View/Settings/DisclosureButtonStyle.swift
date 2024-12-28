@@ -13,7 +13,6 @@ struct DisclosureButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         HStack {
             configuration.label
-                .foregroundStyle(Color.accentColor)
             Spacer()
             Image(systemName: "chevron.forward")
                 .foregroundColor(
