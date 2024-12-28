@@ -21,9 +21,7 @@ struct SettingsView: View {
         Form {
             if iconsModel.hasAlternates {
                 Section {
-                    Button {
-                        path.append(SettingsSelection.alternateIcons)
-                    } label: {
+                    NavigationLink(value: SettingsSelection.alternateIcons) {
                         Label {
                             Text("App Icon")
                         } icon: {
@@ -36,27 +34,19 @@ struct SettingsView: View {
 
             if client.authenticated {
                 Section {
-                    Button {
-                        path.append(SettingsSelection.userSettings)
-                    } label: {
+                    NavigationLink(value: SettingsSelection.userSettings) {
                         Label("User Settings", systemImage: "person.crop.circle")
                     }
 
-                    Button {
-                        path.append(SettingsSelection.password)
-                    } label: {
+                    NavigationLink(value: SettingsSelection.password) {
                         Label("Password", systemImage: "key")
                     }
 
-                    Button {
-                        path.append(SettingsSelection.sharingPersonalPage)
-                    } label: {
+                    NavigationLink(value: SettingsSelection.sharingPersonalPage) {
                         Label("Sharing + Personal Page", systemImage: "shared.with.you")
                     }
 
-                    Button {
-                        path.append(SettingsSelection.registrationOrganization)
-                    } label: {
+                    NavigationLink(value: SettingsSelection.registrationOrganization) {
                         Label("Registration Organization", systemImage: "person.badge.shield.checkmark")
                     }
 
@@ -67,9 +57,7 @@ struct SettingsView: View {
                     }
                     .tint(Color.highlightPrimary)
 
-                    Button {
-                        path.append(SettingsSelection.deleteAccount)
-                    } label: {
+                    NavigationLink(value: SettingsSelection.deleteAccount) {
                         Label("Delete Account", systemImage: "trash.fill")
                             .tint(Color.highlightPrimary)
                             .foregroundStyle(Color.highlightPrimary)
@@ -82,14 +70,10 @@ struct SettingsView: View {
 
 #if DEBUG
             Section {
-                Button {
-                    path.append(SettingsSelection.debugMenu)
-                } label: {
+                NavigationLink(value: SettingsSelection.debugMenu) {
                     Label("Debug menu", systemImage: "ladybug.circle")
                 }
-                Button {
-                    path.append(SettingsSelection.previewGallery)
-                } label: {
+                NavigationLink(value: SettingsSelection.previewGallery) {
                     Label("Preview Gallery", systemImage: "eye.circle")
                 }
             } header: {
@@ -102,21 +86,15 @@ struct SettingsView: View {
                     Label("Contact Us", systemImage: "envelope")
                 }
 
-                Button {
-                    path.append(SettingsSelection.acknowledgements)
-                } label: {
+                NavigationLink(value: SettingsSelection.acknowledgements) {
                     Label("Acknowledgements", systemImage: "character.book.closed")
                 }
 
-                Button {
-                    path.append(SettingsSelection.privacyPolicy)
-                } label: {
+                NavigationLink(value: SettingsSelection.privacyPolicy) {
                     Label("Privacy Policy", systemImage: "shield.checkered")
                 }
 
-                Button {
-                    path.append(SettingsSelection.termsOfService)
-                } label: {
+                NavigationLink(value: SettingsSelection.termsOfService) {
                     Label("Terms of Service", systemImage: "text.book.closed")
                 }
             }
@@ -132,7 +110,6 @@ struct SettingsView: View {
                 .padding(.top)
             }
         }
-        .buttonStyle(DisclosureButtonStyle())
         .navigationTitle("Settings")
         .navigationDestination(for: SettingsSelection.self) { selection in
             switch selection {
