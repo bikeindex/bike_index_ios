@@ -55,9 +55,7 @@ struct AuthView: View {
 
 #if DEBUG
                 ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        path.append(Nav.debugSettings)
-                    } label: {
+                    NavigationLink(value: Nav.debugSettings) {
                         Label("Settings", systemImage: "gearshape")
                     }
                 }
