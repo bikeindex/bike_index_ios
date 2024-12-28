@@ -132,6 +132,7 @@ struct SettingsView: View {
                 .padding(.top)
             }
         }
+        .buttonStyle(DisclosureButtonStyle())
         .navigationTitle("Settings")
         .navigationDestination(for: SettingsSelection.self) { selection in
             switch selection {

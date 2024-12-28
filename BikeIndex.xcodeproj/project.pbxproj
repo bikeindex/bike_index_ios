@@ -30,6 +30,7 @@
 		0452C6B62B4A64D800AD572C /* LicenseEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0452C6B52B4A64D800AD572C /* LicenseEnum.swift */; };
 		0452C6BA2B4A72FD00AD572C /* AcknowledgementPackageDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0452C6B92B4A72FD00AD572C /* AcknowledgementPackageDetailView.swift */; };
 		0452C6BC2B4A7DFE00AD572C /* AcknowledgementPackage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0452C6BB2B4A7DFE00AD572C /* AcknowledgementPackage.swift */; };
+		0454C8202D1F956A00F50F53 /* DisclosureButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0454C81F2D1F94B100F50F53 /* DisclosureButtonStyle.swift */; };
 		046B0A372B251E58006519A7 /* AppIconPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A352B251E58006519A7 /* AppIconPicker.swift */; };
 		046B0A382B251E58006519A7 /* TextLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A362B251E58006519A7 /* TextLink.swift */; };
 		046B0A3A2B251E67006519A7 /* AlternateIconsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046B0A392B251E67006519A7 /* AlternateIconsModel.swift */; };
@@ -144,6 +145,7 @@
 		0452C6B52B4A64D800AD572C /* LicenseEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseEnum.swift; sourceTree = "<group>"; };
 		0452C6B92B4A72FD00AD572C /* AcknowledgementPackageDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementPackageDetailView.swift; sourceTree = "<group>"; };
 		0452C6BB2B4A7DFE00AD572C /* AcknowledgementPackage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementPackage.swift; sourceTree = "<group>"; };
+		0454C81F2D1F94B100F50F53 /* DisclosureButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclosureButtonStyle.swift; sourceTree = "<group>"; };
 		046B0A352B251E58006519A7 /* AppIconPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppIconPicker.swift; sourceTree = "<group>"; };
 		046B0A362B251E58006519A7 /* TextLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextLink.swift; sourceTree = "<group>"; };
 		046B0A392B251E67006519A7 /* AlternateIconsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlternateIconsModel.swift; sourceTree = "<group>"; };
@@ -287,6 +289,7 @@
 				0452C6AF2B4A608E00AD572C /* AcknowledgementsListView.swift */,
 				0452C6B92B4A72FD00AD572C /* AcknowledgementPackageDetailView.swift */,
 				04FA3D622D02922700BF54E6 /* AcknowledgementRepositoryWebView.swift */,
+				0454C81F2D1F94B100F50F53 /* DisclosureButtonStyle.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -751,6 +754,7 @@
 				04F4B9632B0998F6009442B5 /* ClientConfiguration.swift in Sources */,
 				04B660082B4309780055A056 /* AutocompleteManufacturerResponse.swift in Sources */,
 				04EA110E2B2502660024CDDD /* API.swift in Sources */,
+				0454C8202D1F956A00F50F53 /* DisclosureButtonStyle.swift in Sources */,
 				04F4B9552B098BB1009442B5 /* BicycleType.swift in Sources */,
 				04EA11142B2502AF0024CDDD /* AuthenticatedUserResponse.swift in Sources */,
 				049D347F2BB0DB8900E7F768 /* BicycleTypeSelectionView.swift in Sources */,
