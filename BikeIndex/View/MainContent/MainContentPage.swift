@@ -22,7 +22,6 @@ struct MainContentPage: View {
     @State var showError: Bool = false
 
     @Query private var bikes: [Bike]
-    @Query private var authenticatedUsers: [AuthenticatedUser]
 
     var body: some View {
         NavigationStack(path: $path) {
