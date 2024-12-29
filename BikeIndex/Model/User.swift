@@ -9,13 +9,12 @@ import Foundation
 import SwiftData
 import OSLog
 
-@Model final class AuthenticatedUser: BikeIndexIdentifiable, CustomDebugStringConvertible {
+/// Only one authenticated user can exist at a time.
+@Model final class AuthenticatedUser: BikeIndexIdentifiable {
     // TODO: Check if `identifier` can be Int
     @Attribute(.unique) private(set) var identifier: String
     /// AuthenticatedUser controls a general reference.
     @Relationship(deleteRule: .cascade) var user: User?
-
-    @Transient let uuid = UUID().uuidString
 
     /// Associate the bikes that are owned by a user (usually the one currently logged-in).
     @Relationship(inverse: \Bike.authenticatedOwner)
@@ -24,10 +23,6 @@ import OSLog
     init(identifier: String, bikes: [Bike]) {
         self.identifier = identifier
         self.bikes = []
-  }
-
-    var debugDescription: String {
-        "AuthenticatedUser: \(uuid)"
     }
 }
 
