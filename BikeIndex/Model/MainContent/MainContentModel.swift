@@ -73,12 +73,11 @@ final class MainContentModel {
         case .success(let success):
             guard let myBikesSource = success as? MultipleBikeResponseContainer else {
                 Logger.model.debug("ContentController.fetchBikes failed to parse bikes from \(String(reflecting: success), privacy: .public)")
-                return
+                throw Error.failed(message: "Failed to parse fetched bikes.")
             }
 
             do {
                 try modelContext.transaction {
-                    // TODO: Look up bikes by identifier (distinct from SwiftData.id)
                     for bike in myBikesSource.bikes {
                         let model = bike.modelInstance()
                         modelContext.insert(model)
@@ -90,6 +89,7 @@ final class MainContentModel {
 
         case .failure(let failure):
             Logger.model.error("\(type(of: self)).\(#function) - Failed with \(failure)")
+            throw Error.swiftError(failure)
         }
     }
 }
