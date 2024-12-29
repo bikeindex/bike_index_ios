@@ -29,16 +29,26 @@ final class MainContentModel {
             let myProfile = myProfileSource.modelInstance()
             myProfile.user = myProfileSource.user.modelInstance()
 
+            // 0. Destroy all other authenticated users
             // 1. Write the AuthenticatedUser
             // 2. Write the User
             // 3. Find any cached bikes known-to-be-owned by this user and link them.
             do {
                 try modelContext.transaction {
+                    // 0.
+                    let knownGoodId = myProfileSource.id
+                    let inactiveAuthUserPredicate = #Predicate<AuthenticatedUser> { model in
+                        model.identifier != knownGoodId
+                    }
+                    try modelContext.delete(model: AuthenticatedUser.self, where: inactiveAuthUserPredicate)
+
+                    // 1. and 2.
                     modelContext.insert(myProfile)
                     if let user = myProfile.user {
                         modelContext.insert(user)
                     }
 
+                    // 3.
                     let myBikeIdentifiers = myProfileSource.bike_ids
                     let predicate = #Predicate<Bike> { model in
                         myBikeIdentifiers.contains(model.identifier)
