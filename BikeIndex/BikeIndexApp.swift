@@ -10,6 +10,7 @@ import SwiftData
 
 @main
 struct BikeIndexApp: App {
+    /// Create a Client instance for stateful networking.
     @State private var client: Client = {
         do {
             return try Client()
@@ -18,6 +19,7 @@ struct BikeIndexApp: App {
         }
     }()
 
+    /// Set up SwiftData
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Bike.self,
@@ -35,6 +37,7 @@ struct BikeIndexApp: App {
         }
     }()
 
+    /// Set up App
     var body: some Scene {
         WindowGroup {
             if client.authenticated {
