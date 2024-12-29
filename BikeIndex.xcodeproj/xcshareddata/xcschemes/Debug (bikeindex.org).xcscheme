@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:Debug (bikeindex.org).xctestplan"
+            reference = "container:BikeIndexTests/Debug (bikeindex.org).xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
