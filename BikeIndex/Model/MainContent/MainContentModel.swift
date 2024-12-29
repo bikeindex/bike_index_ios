@@ -88,8 +88,16 @@ final class MainContentModel {
 
             do {
                 try modelContext.transaction {
+                    let ownerResults = try modelContext.fetch(FetchDescriptor(predicate: #Predicate<AuthenticatedUser> { _ in true }))
+                    assert(ownerResults.count == 1)
+                    guard let owner = ownerResults.first else {
+                        throw Error.failed(message: "Failed to fetch authenticated user.")
+                    }
+
                     for bike in myBikesSource.bikes {
                         let model = bike.modelInstance()
+                        model.authenticatedOwner = owner
+                        model.owner = owner.user
                         modelContext.insert(model)
                     }
                 }
