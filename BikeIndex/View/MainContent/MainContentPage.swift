@@ -39,8 +39,11 @@ struct MainContentPage: View {
                 } else {
                     ProportionalLazyVGrid {
                         ForEach(Array(bikes.enumerated()), id: \.element) { (index, bike) in
-                            ContentBikeButtonView(path: $path, bike: bike)
-                                .accessibilityIdentifier("Bike \(index + 1)")
+                            ContentBikeButtonView(
+                                path: $path,
+                                bikeIdentifier: bike.identifier
+                            )
+                            .accessibilityIdentifier("Bike \(index + 1)")
                         }
                     }
                     .padding()
