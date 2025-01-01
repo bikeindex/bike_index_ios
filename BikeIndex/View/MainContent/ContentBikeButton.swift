@@ -9,8 +9,8 @@ import SwiftUI
 import SwiftData
 
 struct ContentBikeButtonView: View {
-    @Binding private var path: NavigationPath
-    @Query private var bikeQuery: [Bike]
+    @Binding var path: NavigationPath
+    @Query var bikeQuery: [Bike]
 
     init(path: Binding<NavigationPath>, bikeIdentifier: Int) {
         self._path = path
@@ -25,6 +25,7 @@ struct ContentBikeButtonView: View {
 
     var body: some View {
         if let bike = bikeQuery.first, bikeQuery.count == 1 {
+            // TODO: Replace this button with a NavigationLink
             Button(action: {
                 /// NOTE: @Observable (includes @Model) instances should **NOT** be used for NavigationPath:
                 /// via https://stackoverflow.com/a/75713254
@@ -60,19 +61,19 @@ struct ContentBikeButtonView: View {
 
                     HStack {
                         Text(bike.title)
-                        Text(bike.authenticatedOwner?.identifier ?? "y")
-                        Text(bike.owner?.name ?? "x")
                     }
                 }
             })
         } else {
-            Text("Bike query failed")
+            Text("Bike query failed, query has: \(bikeQuery.count)")
         }
     }
 }
 
-/*
+
 #Preview {
+    @Previewable @State var navigationPath = NavigationPath()
+
     let sampleBike1 = Bike(
         identifier: 1,
         primaryColor: FrameColor.bareMetal,
@@ -138,14 +139,32 @@ struct ContentBikeButtonView: View {
     )
 
     let samples = [sampleBike1, sampleBike2, sampleBike3, sampleBike4]
+    let sampleIdentifiers = samples.map { $0.identifier }
 
-    ScrollView {
-        ProportionalLazyVGrid {
-            ForEach(samples) { bike in
-                ContentBikeButtonView(path: .constant(NavigationPath()),
-                                      bikeIdentifier: bike.identifier)
+    do {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let mockContainer = try ModelContainer(
+            for: Bike.self,
+            configurations: config
+        )
+
+        for model in samples {
+            try mockContainer.mainContext.insert(model)
+        }
+        try mockContainer.mainContext.save()
+
+        return ScrollView {
+            ProportionalLazyVGrid {
+                ForEach(sampleIdentifiers, id: \.self) {
+                    ContentBikeButtonView(path: $navigationPath,
+                                          bikeIdentifier: $0)
+                }
             }
         }
+        .modelContainer(mockContainer)
+
+    } catch (let error) {
+        return Text("Preview Error: \(error)")
     }
 }
-*/
+
