@@ -75,8 +75,8 @@ import MapKit
         /// The range of supported years for Bike models
         static let yearRange = 1900..<2100
 
-        /// The range of **displayable** years for Bike models aka "inclusive 1900-2025"
-        static let displayableYearRange = 1900..<2026
+        /// The range of **displayable** years for Bike models aka "inclusive 1900-2026"
+        static let displayableYearRange = 1900..<2027
     }
 
     init(identifier: Int,

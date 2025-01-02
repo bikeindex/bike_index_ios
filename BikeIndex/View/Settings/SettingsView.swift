@@ -15,81 +15,49 @@ struct SettingsView: View {
     @Environment(Client.self) var client
 
     @State var iconsModel = AlternateIconsModel()
+    @Binding var path: NavigationPath
 
     var body: some View {
         Form {
             if iconsModel.hasAlternates {
                 Section {
-                    NavigationLink {
-                        AppIconPicker(model: $iconsModel)
-                    } label: {
-                        Label(title: { Text("App Icon") }, icon: {
+                    NavigationLink(value: SettingsSelection.alternateIcons) {
+                        Label {
+                            Text("App Icon")
+                        } icon: {
                             Image(uiImage: iconsModel.selectedAppIcon.image)
                                 .appIcon(scale: .small)
-                        })
+                        }
                     }
                 }
             }
 
             if client.authenticated {
                 Section {
-                    NavigationLink {
-                        NavigableWebView(
-                            constantLink: .accountUserSettings,
-                            host: client.configuration.host
-                        )
-                        .navigationTitle("User Settings")
-                    } label: {
+                    NavigationLink(value: SettingsSelection.userSettings) {
                         Label("User Settings", systemImage: "person.crop.circle")
                     }
 
-                    NavigationLink {
-                        NavigableWebView(
-                            constantLink: .accountPassword,
-                            host: client.configuration.host
-                        )
-                        .navigationTitle("Password")
-                    } label: {
+                    NavigationLink(value: SettingsSelection.password) {
                         Label("Password", systemImage: "key")
                     }
 
-                    NavigationLink {
-                        NavigableWebView(
-                            constantLink: .accountSharingPersonalPage,
-                            host: client.configuration.host
-                        )
-                        .navigationTitle("Sharing + Personal Page")
-                    } label: {
+                    NavigationLink(value: SettingsSelection.sharingPersonalPage) {
                         Label("Sharing + Personal Page", systemImage: "shared.with.you")
                     }
 
-                    NavigationLink {
-                        NavigableWebView(
-                            constantLink: .accountRegistrationOrganization,
-                            host: client.configuration.host
-                        )
-                        .navigationTitle("Registration Organization")
-                    } label: {
+                    NavigationLink(value: SettingsSelection.registrationOrganization) {
                         Label("Registration Organization", systemImage: "person.badge.shield.checkmark")
                     }
 
                     Button(action: client.destroySession) {
-                        // Hack in an empty destination to achieve the disclosure indicator
-                        NavigationLink(destination: EmptyView()) {
-                            Label("Sign out", systemImage: "figure.walk.departure")
-                                .tint(Color.highlightPrimary)
-                                .foregroundStyle(Color.highlightPrimary)
-                        }
+                        Label("Sign out", systemImage: "figure.walk.departure")
+                            .tint(Color.highlightPrimary)
+                            .foregroundStyle(Color.highlightPrimary)
                     }
                     .tint(Color.highlightPrimary)
 
-                    NavigationLink {
-                        NavigableWebView(
-                            constantLink: .deleteAccount,
-                            host: client.configuration.host
-                        )
-                        .navigationTitle("Delete Account")
-                    } label: {
+                    NavigationLink(value: SettingsSelection.deleteAccount) {
                         Label("Delete Account", systemImage: "trash.fill")
                             .tint(Color.highlightPrimary)
                             .foregroundStyle(Color.highlightPrimary)
@@ -100,54 +68,33 @@ struct SettingsView: View {
                 }
             }
 
-            #if DEBUG
+#if DEBUG
             Section {
-                NavigationLink {
-                    DebugMenu()
-                        .environment(client)
-                } label: {
+                NavigationLink(value: SettingsSelection.debugMenu) {
                     Label("Debug menu", systemImage: "ladybug.circle")
                 }
-                NavigationLink {
-                    PreviewGallery()
-                } label: {
+                NavigationLink(value: SettingsSelection.previewGallery) {
                     Label("Preview Gallery", systemImage: "eye.circle")
                 }
             } header: {
                 Text("Developer")
             }
-            #endif
+#endif
 
             Section {
-                Button("Contact Us", systemImage: "envelope") {
-                    /// Access openURL directly.
-                    /// If ``SettingsView`` captures the Environment object in a var it will conflict with the
-                    /// NavigationLink's web views and cause an infinite loop. (I think that's the cause).
-                    Environment(\.openURL).wrappedValue(MailToLink.contactUs.link)
+                Link(destination: MailToLink.contactUs.link) {
+                    Label("Contact Us", systemImage: "envelope")
                 }
-                .buttonStyle(PlainButtonStyle())
 
-                NavigationLink {
-                    AcknowledgementsListView()
-                } label: {
+                NavigationLink(value: SettingsSelection.acknowledgements) {
                     Label("Acknowledgements", systemImage: "character.book.closed")
                 }
-                NavigationLink {
-                    NavigableWebView(
-                        constantLink: .privacyPolicy,
-                        host: client.configuration.host
-                    )
-                    .navigationTitle("Privacy Policy")
-                } label: {
+
+                NavigationLink(value: SettingsSelection.privacyPolicy) {
                     Label("Privacy Policy", systemImage: "shield.checkered")
                 }
-                NavigationLink {
-                    NavigableWebView(
-                        constantLink: .termsOfService,
-                        host: client.configuration.host
-                    )
-                    .navigationTitle("Terms of Service")
-                } label: {
+
+                NavigationLink(value: SettingsSelection.termsOfService) {
                     Label("Terms of Service", systemImage: "text.book.closed")
                 }
             }
@@ -164,13 +111,93 @@ struct SettingsView: View {
             }
         }
         .navigationTitle("Settings")
+        .navigationDestination(for: SettingsSelection.self) { selection in
+            switch selection {
+            case .alternateIcons:
+                AppIconPicker(model: $iconsModel)
+            case .userSettings:
+                NavigableWebView(
+                    constantLink: .accountUserSettings,
+                    host: client.configuration.host
+                )
+                .navigationTitle("User Settings")
+            case .password:
+                NavigableWebView(
+                    constantLink: .accountPassword,
+                    host: client.configuration.host
+                )
+                .navigationTitle("Password")
+            case .sharingPersonalPage:
+                NavigableWebView(
+                    constantLink: .accountSharingPersonalPage,
+                    host: client.configuration.host
+                )
+                .navigationTitle("Sharing + Personal Page")
+            case .registrationOrganization:
+                NavigableWebView(
+                    constantLink: .accountRegistrationOrganization,
+                    host: client.configuration.host
+                )
+                .navigationTitle("Registration Organization")
+            case .deleteAccount:
+                NavigableWebView(
+                    constantLink: .deleteAccount,
+                    host: client.configuration.host
+                )
+                .navigationTitle("Delete Account")
+#if DEBUG
+            case .debugMenu:
+                DebugMenu()
+                    .environment(client)
+            case .previewGallery:
+                PreviewGallery()
+#endif
+            case .acknowledgements:
+                AcknowledgementsListView()
+            case .privacyPolicy:
+                NavigableWebView(
+                    constantLink: .privacyPolicy,
+                    host: client.configuration.host
+                )
+                .navigationTitle("Privacy Policy")
+            case .termsOfService:
+                NavigableWebView(
+                    constantLink: .termsOfService,
+                    host: client.configuration.host
+                )
+                .navigationTitle("Terms of Service")
+            }
+        }
+    }
+
+    /// Excluding signOut and contactUs which don't navigate internally
+    enum SettingsSelection: Hashable, Identifiable {
+        var id: Self { self }
+
+        case alternateIcons
+        case userSettings
+        case password
+        case sharingPersonalPage
+        case registrationOrganization
+        case deleteAccount
+#if DEBUG
+        case debugMenu
+        case previewGallery
+#endif
+        case acknowledgements
+        case privacyPolicy
+        case termsOfService
     }
 }
 
 #Preview {
-    return NavigationStack {
-        SettingsView(iconsModel: AlternateIconsModel())
-            .environment(try! Client())
+    @Previewable @State var path = NavigationPath()
+    NavigationStack(path: $path) {
+        SettingsView(
+            iconsModel: AlternateIconsModel(),
+            path: $path
+        )
+        .environment(try! Client())
     }
 }
 

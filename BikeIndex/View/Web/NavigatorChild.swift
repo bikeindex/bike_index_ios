@@ -13,7 +13,9 @@ open class NavigatorChild: NSObject, WKNavigationDelegate {
 
     init(child: NavigatorChild? = nil) {
         self.child = child
-        Logger.views.debug("Created Navigator instance with child \(child, privacy: .public)")
+        if child != nil {
+            Logger.views.debug("Created Navigator instance with child \(child, privacy: .public)")
+        }
     }
 
     // MARK: - Navigation Delegate
