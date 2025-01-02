@@ -25,13 +25,7 @@ struct ContentBikeButtonView: View {
 
     var body: some View {
         if let bike = bikeQuery.first, bikeQuery.count == 1 {
-            // TODO: Replace this button with a NavigationLink
-            Button(action: {
-                /// NOTE: @Observable (includes @Model) instances should **NOT** be used for NavigationPath:
-                /// via https://stackoverflow.com/a/75713254
-                /// Use the persistent id instead
-                path.append(bike.persistentModelID)
-            }, label: {
+            NavigationLink(value: bike.persistentModelID) {
                 VStack {
                     ZStack {
                         AsyncImage(url: bike.largeImage) { image in
@@ -63,7 +57,7 @@ struct ContentBikeButtonView: View {
                         Text(bike.title)
                     }
                 }
-            })
+            }
         } else {
             Text("Bike query failed, query has: \(bikeQuery.count)")
         }
