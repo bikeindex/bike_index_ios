@@ -42,6 +42,7 @@
 		0490A5F12B269F7800C4EC1E /* AddBikeOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490A5F02B269F7800C4EC1E /* AddBikeOutput.swift */; };
 		0494FD8C2B4250F70053C54F /* MainToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0494FD8B2B4250F70053C54F /* MainToolbar.swift */; };
 		049D347F2BB0DB8900E7F768 /* BicycleTypeSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049D347E2BB0DB8900E7F768 /* BicycleTypeSelectionView.swift */; };
+		04A9DFB42D26117300DBDDD5 /* DebugDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A9DFB32D26117300DBDDD5 /* DebugDataView.swift */; };
 		04ABEBB92D1F35B400E30577 /* PreviewGallery in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBB82D1F35B400E30577 /* PreviewGallery */; };
 		04ABEBBB2D1F35B400E30577 /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */; };
 		04ABEBBD2D1F35B400E30577 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBC2D1F35B400E30577 /* SnapshottingTests */; };
@@ -165,6 +166,7 @@
 		0496C6712CB36BF100B88D1B /* .ruby-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".ruby-version"; sourceTree = "<group>"; };
 		0496C6722CB36BF600B88D1B /* Gemfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Gemfile; sourceTree = "<group>"; };
 		049D347E2BB0DB8900E7F768 /* BicycleTypeSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BicycleTypeSelectionView.swift; sourceTree = "<group>"; };
+		04A9DFB32D26117300DBDDD5 /* DebugDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugDataView.swift; sourceTree = "<group>"; };
 		04ABEBBE2D1F360E00E30577 /* Debug (bikeindex.org).xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Debug (bikeindex.org).xctestplan"; sourceTree = "<group>"; };
 		04ABEBBF2D1F370800E30577 /* BikeIndexAppPreviewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeIndexAppPreviewTest.swift; sourceTree = "<group>"; };
 		04ABEBC12D1F398300E30577 /* BikeIndexAppAccessibilityPreviewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeIndexAppAccessibilityPreviewTest.swift; sourceTree = "<group>"; };
@@ -338,6 +340,14 @@
 				04CA5ADC2D013A7200BD572A /* Test-credentials-template.xcconfig */,
 			);
 			path = SharedTests;
+			sourceTree = "<group>";
+		};
+		04A9DFB22D26116200DBDDD5 /* Debug */ = {
+			isa = PBXGroup;
+			children = (
+				04A9DFB32D26117300DBDDD5 /* DebugDataView.swift */,
+			);
+			path = Debug;
 			sourceTree = "<group>";
 		};
 		04ABEBC32D1F399E00E30577 /* Frameworks */ = {
@@ -541,6 +551,7 @@
 				0452C6B12B4A62FE00AD572C /* Settings */,
 				04F4B93C2B098BA9009442B5 /* VerticalPicker.swift */,
 				0430333C2B41402800FD126F /* ProportionalLazyVGrid.swift */,
+				04A9DFB22D26116200DBDDD5 /* Debug */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -729,6 +740,7 @@
 				0448501B2D18F8B500E41B1A /* MainContentModel.swift in Sources */,
 				0490A5F12B269F7800C4EC1E /* AddBikeOutput.swift in Sources */,
 				04F4B9392B098B9C009442B5 /* Client.swift in Sources */,
+				04A9DFB42D26117300DBDDD5 /* DebugDataView.swift in Sources */,
 				04FA3D632D02922700BF54E6 /* AcknowledgementRepositoryWebView.swift in Sources */,
 				04C7BC772B536C150091493C /* StolenRecord.swift in Sources */,
 				043033362B40C34800FD126F /* ContentButtonView.swift in Sources */,

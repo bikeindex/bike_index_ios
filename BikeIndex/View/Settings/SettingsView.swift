@@ -76,6 +76,10 @@ struct SettingsView: View {
                 NavigationLink(value: SettingsSelection.previewGallery) {
                     Label("Preview Gallery", systemImage: "eye.circle")
                 }
+                NavigationLink(value: SettingsSelection.databaseGallery) {
+                    Label("Database Gallery",
+                          systemImage: "cylinder.split.1x2")
+                }
             } header: {
                 Text("Developer")
             }
@@ -151,6 +155,8 @@ struct SettingsView: View {
                     .environment(client)
             case .previewGallery:
                 PreviewGallery()
+            case .databaseGallery:
+                DebugDataView()
 #endif
             case .acknowledgements:
                 AcknowledgementsListView()
@@ -183,6 +189,7 @@ struct SettingsView: View {
 #if DEBUG
         case debugMenu
         case previewGallery
+        case databaseGallery
 #endif
         case acknowledgements
         case privacyPolicy
