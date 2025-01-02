@@ -19,60 +19,80 @@ struct DebugDataView: View {
     var body: some View {
         Form {
             // MARK: - AuthenticatedUsers
-            Section {
-                ForEach(authenticatedUsers) { authUser in
-                    VStack(alignment: .leading) {
-                        Text("ID: \(authUser.identifier)")
-                        Text("User [UUID]: \(authUser.user?.persistentModelID.storeIdentifier ?? "Empty")")
-                        Text("Bikes [ID]: \(String(describing: authUser.bikes.map(\.identifier)))")
-                    }
-                }
-            } header: {
-                Text("Authenticated Users")
+            DataModelDebugView(models: authenticatedUsers) { authUser in
+                Text("ID: \(authUser.identifier)")
+                Text("User [UUID]: \(authUser.user?.persistentModelID.storeIdentifier ?? "Empty")")
+                Text("Bikes [ID]: \(String(describing: authUser.bikes.map(\.identifier)))")
             }
 
             // MARK: - Users
-            Section {
-                LazyVGrid(columns: Array(repeating: GridItem(), count: users.count)) {
-                    ForEach(users) { user in
-                        GridRow {
-                            VStack(alignment: .leading) {
-                                Text("Email: \(user.email)")
-                                Text("UUID: \(user.persistentModelID.storeIdentifier ?? "Empty")")
-                                Text("Username: \(user.name)")
-                                Text("Additional Emails: \(String(describing: user.additionalEmails))")
-                                Text("Created At: \(user.createdAt.description)")
-                                Text("Image: \(String(describing: user.image))")
-                                Text("Twitter: \(String(describing: user.twitter))")
-                            }
-                        }
-                    }
-                }
-            } header: {
-                Text("Users")
+            DataModelDebugView(models: users) { user in
+                Text("Email: \(user.email)")
+                Text("UUID: \(user.persistentModelID.storeIdentifier ?? "Empty")")
+                Text("Username: \(user.name)")
+                Text("Additional Emails: \(String(describing: user.additionalEmails))")
+                Text("Created At: \(user.createdAt.description)")
+                Text("Image: \(String(describing: user.image))")
+                Text("Twitter: \(String(describing: user.twitter))")
             }
 
             // MARK: - Bikes
-            Section {
-                LazyVGrid(columns: Array(repeating: GridItem(), count: bikes.count)) {
-                    ForEach(bikes) { bike in
-                        GridRow {
-                            VStack(alignment: .leading) {
-                                Text("ID: \(bike.identifier, format: .number.grouping(.never))")
-                                Text("Owner [UUID]: \(bike.owner?.persistentModelID.storeIdentifier ?? "Empty")")
-                                Text("Auth Owner [ID]: \(bike.authenticatedOwner?.identifier ?? "Empty")")
-                                Text("Description: \(bike.bikeDescription)")
-                                Text("Frame Model: \(bike.frameModel)")
-                                Text("Color Primary: \(String(describing: bike.frameColorPrimary))")
-                                // TODO: Continue Bike fields...
-                            }
-                        }
-                    }
-                }
-            } header: {
-                Text("Bikes")
+            DataModelDebugView(models: bikes) { bike in
+                Text("ID: \(bike.identifier, format: .number.grouping(.never))")
+                Text("Owner [UUID]: \(bike.owner?.persistentModelID.storeIdentifier ?? "Empty")")
+                Text("Auth Owner [ID]: \(bike.authenticatedOwner?.identifier ?? "Empty")")
+                Text("Description: \(bike.bikeDescription)")
+                Text("Frame Model: \(bike.frameModel)")
+                Text("Color Primary: \(String(describing: bike.frameColorPrimary))")
+                // TODO: Continue Bike fields...
             }
 
+            // MARK: - Organizations
+            DataModelDebugView(models: organizations) { organization in
+                Text("Name: \(organization.name)")
+                Text("ID: \(organization.identifier)")
+                Text("Slug: \(organization.slug)")
+                Text("Admin?: \(organization.userIsOrganizationAdmin.description)")
+            }
+
+            // MARK: - AutocompleteManufacturers
+            DataModelDebugView(models: manufacturers) { manufacturer in
+                Text("ID: \(manufacturer.identifier)")
+                Text("Text: \(manufacturer.text)")
+                Text("Category: \(manufacturer.category)")
+                Text("Slug: \(manufacturer.slug)")
+                Text("Priority: \(manufacturer.priority)")
+                Text("Search ID: \(manufacturer.searchId)")
+            }
+        }
+    }
+}
+
+struct DataModelDebugView<Model: PersistentModel, Content: View>: View {
+    var models: [Model]
+
+    @ViewBuilder
+    var content: (Model) -> Content
+
+    var body: some View {
+        Section {
+            LazyVGrid(columns: Array(repeating: GridItem(), count: 1)) {
+                ForEach(models) { item in
+                    GridRow {
+                        VStack(alignment: .leading) {
+                            content(item)
+                        }.frame(
+                            minWidth: 0,
+                            maxWidth: .infinity,
+                            minHeight: 0,
+                            maxHeight: .infinity,
+                            alignment: .topLeading
+                        )
+                    }
+                }
+            }
+        } header: {
+            Text("\(Model.self)")
         }
     }
 }
