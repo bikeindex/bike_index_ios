@@ -15,8 +15,24 @@ struct DebugMenu: View {
     @State var secretHidden = true
     @State var showOAuthApplicationsPage = false
 
+    static var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        formatter.dateStyle = .none
+        return formatter
+    }
+
     var body: some View {
         Form {
+            if let expirationDate = client.auth?.expiration
+            {
+                Section {
+                    Text("OAuth Token expires at: \(DebugMenu.dateFormatter.string(from: expirationDate))")
+                } header: {
+                    Text("Session")
+                }
+            }
+
             Section {
                 Text("Host:\n`\(client.configuration.host.description)`")
                 Text("Port:\n`\(String(client.configuration.port))`")
@@ -65,9 +81,16 @@ struct DebugMenu: View {
 }
 
 #Preview {
+    let client = try! Client()
+    client.auth = OAuthToken(accessToken: "",
+                             tokenType: "",
+                             expiresIn: TimeInterval(60 * 60),
+                             refreshToken: "",
+                             scope: [],
+                             createdAt: Date())
     return NavigationStack {
         DebugMenu()
-            .environment(try! Client())
+            .environment(client)
     }
 }
 #endif

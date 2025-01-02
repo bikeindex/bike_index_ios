@@ -11,6 +11,9 @@ import MapKit
 
 @Model final class Bike {
     @Attribute(.unique) var identifier: Int
+    @Relationship var owner: User?
+    @Relationship var authenticatedOwner: AuthenticatedUser?
+
     var bikeDescription: String?
     var frameModel: String?
 
