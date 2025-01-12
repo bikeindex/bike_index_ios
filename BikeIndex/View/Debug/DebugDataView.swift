@@ -128,7 +128,7 @@ struct DataModelDebugView<Model: PersistentModel, Content: View>: View {
                 }
             }
         } header: {
-            Text("\(models.count) of \(Model.self)")
+            Text("^[\(models.count) \(Model.displayName)](inflect: true)")
         }
     }
 }
@@ -145,6 +145,26 @@ struct DataModelDebugView<Model: PersistentModel, Content: View>: View {
             .modelContainer(mockContainer)
     } catch {
         return Text(error.localizedDescription)
+    }
+}
+
+extension PersistentModel {
+    public static var displayName: String {
+        String(describing: self)
+            .titleCase()
+    }
+}
+
+extension String {
+    // Attribution: https://stackoverflow.com/a/50202999/
+    func titleCase() -> String {
+        return self
+            .replacingOccurrences(of: "([A-Z])",
+                                  with: " $1",
+                                  options: .regularExpression,
+                                  range: range(of: self))
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .capitalized // If input is in llamaCase
     }
 }
 #endif
