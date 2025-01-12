@@ -41,28 +41,46 @@ struct DebugDataView: View {
                 Text("ID: \(bike.identifier, format: .number.grouping(.never))")
                 Text("Owner [UUID]: \(bike.owner?.persistentModelID.storeIdentifier ?? "Empty")")
                 Text("Auth Owner [ID]: \(bike.authenticatedOwner?.identifier ?? "Empty")")
-                Text("Description: \(bike.bikeDescription)")
+                Text("Description: \(bike.bikeDescription ?? "")")
                 Text("Frame Model: \(bike.frameModel)")
-                Text("Color Primary: \(String(describing: bike.frameColorPrimary))")
-                Text("Frame Color Secondary: \(frameColorSecondary)")
-                Text("Frame Color Tertiary: \(frameColorTertiary)")
-                Text("Frame Colors: \(frameColors)")
-                Text("Manufacturer Name: \(manufacturerName)")
-                Text("Year: \(year)")
-                Text("Type Of Cycle: \(typeOfCycle)")
-                Text("Type Of Propulsion: \(typeOfPropulsion)")
-                Text("Serial: \(serial)")
-                Text("Status: \(status)")
-                Text("Stolen Coordinates: \(stolenCoordinates)")
-                Text("Stolen Coordinate Latitude: \(stolenCoordinateLatitude)")
-                Text("Stolen Coordinate Longitude: \(stolenCoordinateLongitude)")
-                Text("Stolen Location: \(stolenLocation)")
-                Text("Date Stolen: \(dateStolen)")
-                Text("Large Image: \(largeImage)")
-                Text("Thumb: \(thumb)")
-                Text("Url: \(url)")
-                Text("Api Url: \(apiUrl)")
-                Text("Public Images: \(publicImages)")
+                Text("Color Primary: \(bike.frameColorPrimary))")
+                if let frameColorSecondary = bike.frameColorSecondary {
+                    Text("Frame Color Secondary: \(frameColorSecondary))")
+                }
+                if let frameColorTertiary = bike.frameColorTertiary {
+                    Text("Frame Color Tertiary: \(frameColorTertiary))")
+                }
+                Text("Frame Colors: \(bike.frameColors)")
+                Text("Manufacturer Name: \(bike.manufacturerName)")
+                if let year = bike.year {
+                    Text("Year: \(year))")
+                }
+                Text("Type Of Cycle: \(bike.typeOfCycle)")
+                Text("Type Of Propulsion: \(bike.typeOfPropulsion)")
+                if let serial = bike.serial {
+                    Text("Serial: \(serial))")
+                }
+                Text("Status: \(bike.status)")
+                if let stolenCoordinates = bike.stolenCoordinates {
+                    Text("Stolen Coordinates: \(stolenCoordinates))")
+                }
+                if let stolenLocation = bike.stolenLocation {
+                    Text("Stolen Location: \(stolenLocation))")
+                }
+                if let dateStolen = bike.dateStolen {
+                    Text("Date Stolen: \(dateStolen))")
+                }
+                if let largeImage = bike.largeImage {
+                    Text("Large Image: \(largeImage))")
+                }
+                if let thumb = bike.thumb {
+                    Text("Thumb: \(thumb))")
+                }
+                Text("Url: \(bike.url)")
+                if let apiUrl = bike.apiUrl {
+                    Text("Api Url: \(apiUrl))")
+                }
+                Text("Public Images: \(bike.publicImages)")
             }
 
             // MARK: - Organizations
