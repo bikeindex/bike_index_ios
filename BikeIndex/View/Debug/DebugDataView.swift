@@ -44,7 +44,25 @@ struct DebugDataView: View {
                 Text("Description: \(bike.bikeDescription)")
                 Text("Frame Model: \(bike.frameModel)")
                 Text("Color Primary: \(String(describing: bike.frameColorPrimary))")
-                // TODO: Continue Bike fields...
+                Text("Frame Color Secondary: \(frameColorSecondary)")
+                Text("Frame Color Tertiary: \(frameColorTertiary)")
+                Text("Frame Colors: \(frameColors)")
+                Text("Manufacturer Name: \(manufacturerName)")
+                Text("Year: \(year)")
+                Text("Type Of Cycle: \(typeOfCycle)")
+                Text("Type Of Propulsion: \(typeOfPropulsion)")
+                Text("Serial: \(serial)")
+                Text("Status: \(status)")
+                Text("Stolen Coordinates: \(stolenCoordinates)")
+                Text("Stolen Coordinate Latitude: \(stolenCoordinateLatitude)")
+                Text("Stolen Coordinate Longitude: \(stolenCoordinateLongitude)")
+                Text("Stolen Location: \(stolenLocation)")
+                Text("Date Stolen: \(dateStolen)")
+                Text("Large Image: \(largeImage)")
+                Text("Thumb: \(thumb)")
+                Text("Url: \(url)")
+                Text("Api Url: \(apiUrl)")
+                Text("Public Images: \(publicImages)")
             }
 
             // MARK: - Organizations
@@ -92,7 +110,7 @@ struct DataModelDebugView<Model: PersistentModel, Content: View>: View {
                 }
             }
         } header: {
-            Text("\(Model.self)")
+            Text("\(models.count) of \(Model.self)")
         }
     }
 }
