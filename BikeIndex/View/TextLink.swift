@@ -22,9 +22,9 @@ enum MailToLink: Identifiable {
             let subject = URLQueryItem(name: "subject", value: "iOS App Help Request")
             var queryItems: [URLQueryItem] = [subject]
 
-            if let info = Bundle.main.infoDictionary,
-               let marketingVersion = info["CFBundleShortVersionString"],
-               let buildNumber = info["CFBundleVersion"]
+            let info = AppVersionInfo()
+            if let marketingVersion = info.marketingVersion,
+               let buildNumber = info.buildNumber
             {
                 let body = URLQueryItem(name: "body", value: "\r\n\r\nVersion: \(marketingVersion) (\(buildNumber))")
                 queryItems.append(body)
