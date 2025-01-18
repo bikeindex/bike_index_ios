@@ -56,7 +56,7 @@ struct MainContentPage: View {
             .navigationDestination(for: MainContent.self) { selection in
                 switch selection {
                 case .settings:
-                    SettingsView(path: $path)
+                    SettingsPage(path: $path)
                         .accessibilityIdentifier("Settings")
                 case .registerBike:
                     RegisterBikeView(mode: .myOwnBike)

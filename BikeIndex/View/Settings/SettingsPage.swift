@@ -1,5 +1,5 @@
 //
-//  SettingsView.swift
+//  SettingsPage.swift
 //  BikeIndex
 //
 //  Created by Jack on 11/18/23.
@@ -11,7 +11,7 @@ import OSLog
 import PreviewGallery
 #endif
 
-struct SettingsView: View {
+struct SettingsPage: View {
     @Environment(Client.self) var client
 
     @State var iconsModel = AlternateIconsModel()
@@ -200,7 +200,7 @@ struct SettingsView: View {
 #Preview {
     @Previewable @State var path = NavigationPath()
     NavigationStack(path: $path) {
-        SettingsView(
+        SettingsPage(
             iconsModel: AlternateIconsModel(),
             path: $path
         )
