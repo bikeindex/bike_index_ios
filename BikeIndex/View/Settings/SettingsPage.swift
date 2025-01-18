@@ -106,12 +106,7 @@ struct SettingsPage: View {
                 Text("About")
             }
             footer: {
-                HStack {
-                    Spacer()
-                    Text("Made with 💝 in Pittsburgh, PA")
-                    Spacer()
-                }
-                .padding(.top)
+                SettingsAttributionCaption()
             }
         }
         .navigationTitle("Settings")
