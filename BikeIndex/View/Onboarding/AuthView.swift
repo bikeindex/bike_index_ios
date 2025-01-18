@@ -82,7 +82,7 @@ struct AuthView: View {
             .navigationDestination(for: Nav.self) { navSelection in
                 switch navSelection {
                 case .debugSettings:
-                    SettingsView(path: $path)
+                    SettingsPage(path: $path)
                         .accessibilityIdentifier("Settings")
                 }
             }
