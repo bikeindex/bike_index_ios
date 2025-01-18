@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  MainContentPage.swift
 //  BikeIndex
 //
 //  Created by Jack on 11/18/23.
@@ -9,18 +9,19 @@ import SwiftUI
 import SwiftData
 import OSLog
 
-struct ContentView: View {
+struct MainContentPage: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
     // Control the navigation hierarchy for all views after this one
     @State var path = NavigationPath()
 
-    // Internal display
-    var contentModel = ContentModel()
+    // Data handling and error handling
+    var contentModel = MainContentModel()
+    @State var lastError: MainContentModel.Error?
+    @State var showError: Bool = false
 
     @Query private var bikes: [Bike]
-    @Query private var authenticatedUsers: [AuthenticatedUser]
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -38,8 +39,11 @@ struct ContentView: View {
                 } else {
                     ProportionalLazyVGrid {
                         ForEach(Array(bikes.enumerated()), id: \.element) { (index, bike) in
-                            ContentBikeButtonView(path: $path, bike: bike)
-                                .accessibilityIdentifier("Bike \(index + 1)")
+                            ContentBikeButtonView(
+                                path: $path,
+                                bikeIdentifier: bike.identifier
+                            )
+                            .accessibilityIdentifier("Bike \(index + 1)")
                         }
                     }
                     .padding()
@@ -68,68 +72,55 @@ struct ContentView: View {
                     BikeDetailView(bike: bike)
                 }
             }
+            .alert(isPresented: $showError, error: lastError) {
+                Text("Error occurred")
+            }
         }
        .task {
-           await contentModel.fetchProfile(client: client,
-                                           modelContext: modelContext)
-           await contentModel.fetchBikes(client: client,
-                                         modelContext: modelContext)
+           await fetchMainContentData()
+        }
+    }
+
+    /// 1. Fetch profile data
+    ///     - Report error and return if any problems occur
+    /// 2. Fetch profile's bikes data
+    ///     - Report error and return if any problems occur
+    /// Unfortunately I don't see any way around the Xcode 16.0 / Swift 6 "'as' test is always true" compiler warning.
+    /// Resources:
+    /// - https://stackoverflow.com/questions/79019378/swift-6-how-to-use-typed-throws-inside-a-task
+    /// - https://dandylyons.github.io/posts/typed-error-handling/
+    /// - https://forums.swift.org/t/struct-mystruct-error-does-not-conform-to-errorcodeprotocol/17103
+    /// - https://www.hackingwithswift.com/swift/6.0/typed-throws
+    private func fetchMainContentData() async {
+        do {
+            try await contentModel.fetchProfile(client: client,
+                                                modelContext: modelContext)
+        } catch let error as MainContentModel.Error {
+            Logger.model.error("Failed to fetch profile: \(error)")
+            lastError = error
+            showError = true
+            return
+        } catch {
+            Logger.model.error("Unhandled error encountered: \(error)")
+            return
+        }
+
+        do {
+            try await contentModel.fetchBikes(client: client,
+                                              modelContext: modelContext)
+        } catch let error as MainContentModel.Error {
+            Logger.model.error("Failed to user's bikes: \(error)")
+            lastError = error
+            showError = true
+            return
+        } catch {
+            Logger.model.error("Failed to fetch user's bikes with \(error)")
+            return
         }
     }
 }
 
-final class ContentModel {
 
-    @MainActor
-    func fetchProfile(client: Client, modelContext: ModelContext) async {
-        guard client.authenticated else {
-            return
-        }
-
-        let fetch_v3_me = await client.api.get(Me.`self`)
-
-        switch fetch_v3_me {
-        case .success(let success):
-            guard let myProfileSource = success as? AuthenticatedUserResponse else {
-                Logger.model.debug("ContentController.fetchProfile failed to parse profile from \(String(reflecting: success), privacy: .public)")
-                return
-            }
-
-            let myProfile = myProfileSource.modelInstance()
-            myProfile.user = myProfileSource.user.modelInstance()
-
-            modelContext.insert(myProfile)
-
-        case .failure(let failure):
-            Logger.model.error("\(type(of: self)).\(#function) - Failed with \(failure)")
-        }
-    }
-
-    @MainActor
-    func fetchBikes(client: Client, modelContext: ModelContext) async {
-        guard client.authenticated else {
-            return
-        }
-
-        let fetchMyBikes = await client.api.get(Me.bikes)
-
-        switch fetchMyBikes {
-        case .success(let success):
-            guard let myBikesSource = success as? MultipleBikeResponseContainer else {
-                Logger.model.debug("ContentController.fetchBikes failed to parse bikes from \(String(reflecting: success), privacy: .public)")
-                return
-            }
-
-            for bike in myBikesSource.bikes {
-                let model = bike.modelInstance()
-                modelContext.insert(model)
-            }
-
-        case .failure(let failure):
-            Logger.model.error("\(type(of: self)).\(#function) - Failed with \(failure)")
-        }
-    }
-}
 
 // MARK: - Previews
 
@@ -142,7 +133,7 @@ final class ContentModel {
         let container = try ModelContainer(for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
                                            configurations: config)
 
-        return ContentView()
+        return MainContentPage()
             .environment(client)
             .modelContainer(container)
     } catch let error {
@@ -164,8 +155,9 @@ final class ContentModel {
         let bike = output.modelInstance()
 
         container.mainContext.insert(bike)
+        try? container.mainContext.save()
 
-        return ContentView()
+        return MainContentPage()
             .environment(client)
             .modelContainer(container)
     } catch let error {

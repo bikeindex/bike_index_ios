@@ -9,25 +9,20 @@ import Foundation
 import SwiftData
 import OSLog
 
-@Model final class AuthenticatedUser: BikeIndexIdentifiable, CustomDebugStringConvertible {
+/// Only one authenticated user can exist at a time.
+@Model final class AuthenticatedUser: BikeIndexIdentifiable {
     // TODO: Check if `identifier` can be Int
     @Attribute(.unique) private(set) var identifier: String
+    /// AuthenticatedUser controls a general reference.
     @Relationship(deleteRule: .cascade) var user: User?
 
-    @Transient let uuid = UUID().uuidString
+    /// Associate the bikes that are owned by a user (usually the one currently logged-in).
+    @Relationship(inverse: \Bike.authenticatedOwner)
+    var bikes: [Bike]
 
-    //    let bikeIds: [String]
-
-    //    @Relationship(deleteRule: .cascade)
-    //    private(set) var memberships: [Organization] = []
-
-    init(identifier: String) {
+    init(identifier: String, bikes: [Bike]) {
         self.identifier = identifier
-        Logger.model.debug("Authuser.init identifier: \(identifier)")
-    }
-
-    var debugDescription: String {
-        "AuthenticatedUser: \(uuid)" // Rails.identifier=(identifier), SwiftData.id=(id), user=(String(describing: user))" // , memberships=\(memberships)"
+        self.bikes = []
     }
 }
 
@@ -43,14 +38,19 @@ import OSLog
     @Relationship(inverse: \AuthenticatedUser.user)
     fileprivate(set) var parent: AuthenticatedUser?
 
-    init(username: String, name: String, email: String, additionalEmails: [String], createdAt: Date, image: URL? = nil, twitter: URL? = nil) {
+    @Relationship(inverse: \Bike.owner)
+    fileprivate(set) var bikes: [Bike]
+
+    init(email: String, username: String, name: String, additionalEmails: [String], createdAt: Date, image: URL? = nil, twitter: URL? = nil, parent: AuthenticatedUser? = nil, bikes: [Bike]) {
+        self.email = email
         self.username = username
         self.name = name
-        self.email = email.lowercased()
         self.additionalEmails = additionalEmails
         self.createdAt = createdAt
         self.image = image
         self.twitter = twitter
+        self.parent = parent
+        self.bikes = bikes
     }
 }
 
@@ -61,8 +61,10 @@ import OSLog
     var accessToken: Token
     var userIsOrganizationAdmin: Bool
 
-    //    @Relationship(deleteRule: .cascade, inverse: \AuthenticatedUser.memberships)
-    //    var authorizedUsers: [AuthenticatedUser]? = []
+    /* TODO: Fill-in Organization relationships and functionality
+        @Relationship(deleteRule: .cascade, inverse: \AuthenticatedUser.memberships)
+        var authorizedUsers: [AuthenticatedUser]? = []
+     */
 
     init(name: String, slug: String, identifier: Int, accessToken: Token, userIsOrganizationAdmin: Bool) {
         Logger.model.debug("Org.init w/ identifier \(identifier)")

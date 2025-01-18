@@ -82,6 +82,8 @@ final class BikeIndexUITests: XCTestCase {
 
         back()
 
+        app.swipeUp()
+
         let privacyPolicy = app.buttons["Privacy Policy"]
         _ = privacyPolicy.waitForExistence(timeout: timeout)
         privacyPolicy.tap()

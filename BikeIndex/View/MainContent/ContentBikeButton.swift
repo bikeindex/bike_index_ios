@@ -6,52 +6,68 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentBikeButtonView: View {
     @Binding var path: NavigationPath
-    var bike: Bike
+    @Query var bikeQuery: [Bike]
+
+    init(path: Binding<NavigationPath>, bikeIdentifier: Int) {
+        self._path = path
+
+        let predicate = #Predicate<Bike> { model in
+            model.identifier == bikeIdentifier
+        }
+
+        let descriptor = FetchDescriptor<Bike>(predicate: predicate)
+        _bikeQuery = Query(descriptor)
+    }
 
     var body: some View {
-        Button(action: {
-            /// NOTE: @Observable (includes @Model) instances should **NOT** be used for NavigationPath:
-            /// via https://stackoverflow.com/a/75713254
-            /// Use the persistent id instead
-            path.append(bike.persistentModelID)
-        }, label: {
-            VStack {
-                ZStack {
-                    AsyncImage(url: bike.largeImage) { image in
-                        image
-                            .resizable()
-                            .scaledToFill()
-                    } placeholder: {
-                        Image(systemName: "bicycle")
-                            .resizable()
-                            .scaledToFit()
-                            .padding()
-                            .frame(minWidth: 100,
-                                   maxWidth: .infinity,
-                                   minHeight: 100,
-                                   maxHeight: .infinity)
-                            .tint(Color.white)
-                            .background(Color.accentColor, in: RoundedRectangle(cornerRadius: 24))
+        if let bike = bikeQuery.first, bikeQuery.count == 1 {
+            NavigationLink(value: bike.persistentModelID) {
+                VStack {
+                    ZStack {
+                        AsyncImage(url: bike.largeImage) { image in
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        } placeholder: {
+                            Image(systemName: "bicycle")
+                                .resizable()
+                                .scaledToFit()
+                                .padding()
+                                .frame(minWidth: 100,
+                                       maxWidth: .infinity,
+                                       minHeight: 100,
+                                       maxHeight: .infinity)
+                                .tint(Color.white)
+                                .background(Color.accentColor, in: RoundedRectangle(cornerRadius: 24))
 
+                        }
+                    }
+                    .frame(minWidth: 100,
+                           maxWidth: .infinity,
+                           minHeight: 100,
+                           maxHeight: .infinity)
+                    .aspectRatio(1.0, contentMode: .fit)
+                    .clipShape(RoundedRectangle(cornerRadius: 24))
+
+                    HStack {
+                        Text(bike.title)
                     }
                 }
-                .frame(minWidth: 100,
-                       maxWidth: .infinity,
-                       minHeight: 100,
-                       maxHeight: .infinity)
-                .aspectRatio(1.0, contentMode: .fit)
-                .clipShape(RoundedRectangle(cornerRadius: 24))
-
-                Text(bike.title)
             }
-        })
+        } else {
+            Text("Bike query failed, query has: \(bikeQuery.count)")
+        }
     }
 }
 
+
 #Preview {
+    @Previewable @State var navigationPath = NavigationPath()
+
     let sampleBike1 = Bike(
         identifier: 1,
         primaryColor: FrameColor.bareMetal,
@@ -117,13 +133,32 @@ struct ContentBikeButtonView: View {
     )
 
     let samples = [sampleBike1, sampleBike2, sampleBike3, sampleBike4]
+    let sampleIdentifiers = samples.map { $0.identifier }
 
-    return ScrollView {
-        ProportionalLazyVGrid {
-            ForEach(samples) { bike in
-                ContentBikeButtonView(path: .constant(NavigationPath()),
-                                      bike: bike)
+    do {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let mockContainer = try ModelContainer(
+            for: Bike.self,
+            configurations: config
+        )
+
+        for model in samples {
+            try mockContainer.mainContext.insert(model)
+        }
+        try mockContainer.mainContext.save()
+
+        return ScrollView {
+            ProportionalLazyVGrid {
+                ForEach(sampleIdentifiers, id: \.self) {
+                    ContentBikeButtonView(path: $navigationPath,
+                                          bikeIdentifier: $0)
+                }
             }
         }
+        .modelContainer(mockContainer)
+
+    } catch (let error) {
+        return Text("Preview Error: \(error)")
     }
 }
+
