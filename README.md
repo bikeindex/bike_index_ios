@@ -1,12 +1,12 @@
 # Bike Index
 
-![GitHub License](https://img.shields.io/github/license/bikeindex/bike_index_ios) | [![iOS Test Suite](https://github.com/bikeindex/bike_index_ios/actions/workflows/ios.yml/badge.svg)](https://github.com/bikeindex/bike_index_ios/actions/workflows/ios.yml)
-
-> [!IMPORTANT]
-> This project is incomplete and under active development.
-> No guarantees are provided.
+![GitHub License](https://img.shields.io/github/license/bikeindex/bike_index_ios) [![iOS Test Suite](https://github.com/bikeindex/bike_index_ios/actions/workflows/ios.yml/badge.svg)](https://github.com/bikeindex/bike_index_ios/actions/workflows/ios.yml) ![iTunes App Store](https://img.shields.io/itunes/v/6477746994?label=Latest%20App%20Store%20release)
 
 iOS client for [bikeindex.org](https://bikeindex.org)
+
+### TestFlight
+
+The public beta for pre-release builds is available at https://testflight.apple.com/join/TVaDioGl. Pre-release builds may not always be available.
 
 ## Quick Start
 
@@ -28,7 +28,7 @@ To get started:
 - Requirements: Xcode 16.0
 - Target deployment: iOS 17.2
 
-This project uses SwiftUI and SwiftData. At this time iOS (iPhone) is the primary development target with a long-term goal to include iPad and Mac support.
+This project uses SwiftUI and SwiftData. At this time iOS (iPhone) is the primary development target with a goal to include iPad and Mac support.
 
 ###### Set up suite of tools
 
@@ -58,6 +58,10 @@ Running UI Tests from Xcode may cache logged-in state. Set up a credentials xcco
 ##### Run an individual test case
 
 Fastlane scan can run a single test case such as: `bundle exec fastlane scan --only-testing "BikeIndexUITests/ManufacturerKeyboardUITestCase"`.
+
+## Sponsorship
+
+Bike Index is a 501(c)(3) nonprofit: https://bikeindex.org/why-donate
 
 ## License
 
