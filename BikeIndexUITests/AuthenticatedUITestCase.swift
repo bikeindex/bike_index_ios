@@ -24,6 +24,7 @@ extension XCTestCase {
 
         let timeout: TimeInterval = 120
 
+        // Configure these values in SharedTests/Test-credentials.xcconfig (see adjacent template file)
         let uiTestBundle = try XCTUnwrap(Bundle(identifier: "org.bikeindex.BikeIndexUITests"))
         let infoDictionary = try XCTUnwrap(uiTestBundle.infoDictionary)
         let testUsername = try XCTUnwrap(infoDictionary["TEST_USERNAME"] as? String)
