@@ -147,9 +147,11 @@ final class BikeIndexUITests: XCTestCase {
 
         backButton.tap()
 
+        // Conditional because iPad has enough space to display LICENSE.txt without tapping "View all files"
         let viewAllFiles = app.webViews.buttons["View all files"]
-        _ = viewAllFiles.waitForExistence(timeout: timeout)
-        viewAllFiles.tap()
+        if viewAllFiles.waitForExistence(timeout: timeout) {
+            viewAllFiles.tap()
+        }
 
         let licenseTxtLink = link(with: "LICENSE.txt")
         let licenseExists = licenseTxtLink.waitForExistence(timeout: timeout)
