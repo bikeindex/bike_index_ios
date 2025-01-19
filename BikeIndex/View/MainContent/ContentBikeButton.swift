@@ -135,30 +135,25 @@ struct ContentBikeButtonView: View {
     let samples = [sampleBike1, sampleBike2, sampleBike3, sampleBike4]
     let sampleIdentifiers = samples.map { $0.identifier }
 
-    do {
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let mockContainer = try ModelContainer(
-            for: Bike.self,
-            configurations: config
-        )
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let mockContainer = try! ModelContainer(
+        for: Bike.self,
+        configurations: config
+    )
 
-        for model in samples {
-            try mockContainer.mainContext.insert(model)
-        }
-        try mockContainer.mainContext.save()
+    samples.forEach { model in
+        mockContainer.mainContext.insert(model)
+    }
+    try! mockContainer.mainContext.save()
 
-        return ScrollView {
-            ProportionalLazyVGrid {
-                ForEach(sampleIdentifiers, id: \.self) {
-                    ContentBikeButtonView(path: $navigationPath,
-                                          bikeIdentifier: $0)
-                }
+    return ScrollView {
+        ProportionalLazyVGrid {
+            ForEach(sampleIdentifiers, id: \.self) {
+                ContentBikeButtonView(path: $navigationPath,
+                                      bikeIdentifier: $0)
             }
         }
-        .modelContainer(mockContainer)
-
-    } catch (let error) {
-        return Text("Preview Error: \(error)")
     }
+    .modelContainer(mockContainer)
 }
 
