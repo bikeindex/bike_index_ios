@@ -5,9 +5,9 @@
 //  Created by Jack on 11/18/23.
 //
 
-import SwiftUI
-import SwiftData
 import OSLog
+import SwiftData
+import SwiftUI
 
 struct ManufacturerEntryView: View {
     @Environment(\.modelContext) private var modelContext
@@ -20,7 +20,10 @@ struct ManufacturerEntryView: View {
 
     @Query var manufacturers: [AutocompleteManufacturer]
 
-    init(bike: Binding<Bike>, manufacturerSearchText: Binding<String>, state: FocusState<EditState?>.Binding) {
+    init(
+        bike: Binding<Bike>, manufacturerSearchText: Binding<String>,
+        state: FocusState<EditState?>.Binding
+    ) {
         _bike = bike
         _manufacturerSearchText = manufacturerSearchText
         _state = state
@@ -50,11 +53,17 @@ struct ManufacturerEntryView: View {
             }
 
             Task {
-                let fetch_manufacturer = await client.api.get(Autocomplete.manufacturer(query: newQuery))
+                let fetch_manufacturer = await client.api.get(
+                    Autocomplete.manufacturer(query: newQuery))
                 switch fetch_manufacturer {
                 case .success(let success):
-                    guard let autocompleteResponse = success as? AutocompleteManufacturerContainerResponse else {
-                        Logger.views.debug("ManufacturerEntryView search failed to parse response from \(String(reflecting: success), privacy: .public)")
+                    guard
+                        let autocompleteResponse = success
+                            as? AutocompleteManufacturerContainerResponse
+                    else {
+                        Logger.views.debug(
+                            "ManufacturerEntryView search failed to parse response from \(String(reflecting: success), privacy: .public)"
+                        )
                         return
                     }
 
@@ -65,10 +74,14 @@ struct ManufacturerEntryView: View {
                         try? modelContext.save()
                     }
 
-                    Logger.views.debug("ManufacturerEntryView received response \(String(describing: autocompleteResponse), privacy: .public)")
+                    Logger.views.debug(
+                        "ManufacturerEntryView received response \(String(describing: autocompleteResponse), privacy: .public)"
+                    )
 
                 case .failure(let failure):
-                    Logger.views.error("ManufacturerEntryView search failed with \(String(reflecting: failure), privacy: .public)")
+                    Logger.views.error(
+                        "ManufacturerEntryView search failed with \(String(reflecting: failure), privacy: .public)"
+                    )
                 }
             }
         }
@@ -115,11 +128,13 @@ struct ManufacturerEntryView: View {
     }
 
     var searchText = ""
-    let searchTextBinding = Binding(get: {
-        searchText
-    }, set: {
-        searchText = $0
-    })
+    let searchTextBinding = Binding(
+        get: {
+            searchText
+        },
+        set: {
+            searchText = $0
+        })
 
     let state = FocusState<ManufacturerEntryView.EditState?>()
 
@@ -127,14 +142,21 @@ struct ManufacturerEntryView: View {
         let client = try Client()
 
         let mockAutocompleteManufacturers = [
-            AutocompleteManufacturer(text: "Aaaaaaaa", category: "", slug: "aaa", priority: 1, searchId: "aaa", identifier: 1),
-            AutocompleteManufacturer(text: "Bbbbbbbb", category: "", slug: "bbb", priority: 1, searchId: "bbb", identifier: 1),
-            AutocompleteManufacturer(text: "Cccccccc", category: "", slug: "ccc", priority: 1, searchId: "ccc", identifier: 1),
+            AutocompleteManufacturer(
+                text: "Aaaaaaaa", category: "", slug: "aaa", priority: 1, searchId: "aaa",
+                identifier: 1),
+            AutocompleteManufacturer(
+                text: "Bbbbbbbb", category: "", slug: "bbb", priority: 1, searchId: "bbb",
+                identifier: 1),
+            AutocompleteManufacturer(
+                text: "Cccccccc", category: "", slug: "ccc", priority: 1, searchId: "ccc",
+                identifier: 1),
         ]
 
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let mockContainer = try ModelContainer(for: AutocompleteManufacturer.self, Bike.self,
-                                               configurations: config)
+        let mockContainer = try ModelContainer(
+            for: AutocompleteManufacturer.self, Bike.self,
+            configurations: config)
 
         mockAutocompleteManufacturers.forEach { manufacturer in
             mockContainer.mainContext.insert(manufacturer)
@@ -143,11 +165,15 @@ struct ManufacturerEntryView: View {
         try? mockContainer.mainContext.save()
 
         return Section {
-            Text("Search text count is \(searchTextBinding.wrappedValue.count). Searching? \(String(describing: state.wrappedValue))")
+            Text(
+                "Search text count is \(searchTextBinding.wrappedValue.count). Searching? \(String(describing: state.wrappedValue))"
+            )
 
-            ManufacturerEntryView(bike: bikeBinding,
-                                  manufacturerSearchText: searchTextBinding,
-                                  state: state.projectedValue)
+            ManufacturerEntryView(
+                bike: bikeBinding,
+                manufacturerSearchText: searchTextBinding,
+                state: state.projectedValue
+            )
             .environment(client)
             .modelContainer(mockContainer)
         }

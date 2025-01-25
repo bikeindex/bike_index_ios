@@ -53,22 +53,30 @@ final class API {
     func get(_ endpoint: APIEndpoint) async -> Result<(any Decodable), Error> {
         var request = endpoint.request(for: configuration)
         if endpoint.authorized, let accessToken = configuration.accessToken {
-            request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)])
+            request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
+            )
         }
 
         do {
             let (data, response) = try await session.data(for: request)
             try (response as? HTTPURLResponse)?.validate(with: data)
 
-            Logger.api.debug("\(type(of: self)).\(#function) fetched \(String(reflecting: request.url?.absoluteString ?? "nil url"))")
-            Logger.api.debug("\(type(of: self)).\(#function) fetched response \(String(reflecting: response))")
-            Logger.api.debug("\(type(of: self)).\(#function) fetched data \(String(data: data, encoding: .utf8) ?? "<failed to stringify data>")")
+            Logger.api.debug(
+                "\(type(of: self)).\(#function) fetched \(String(reflecting: request.url?.absoluteString ?? "nil url"))"
+            )
+            Logger.api.debug(
+                "\(type(of: self)).\(#function) fetched response \(String(reflecting: response))")
+            Logger.api.debug(
+                "\(type(of: self)).\(#function) fetched data \(String(data: data, encoding: .utf8) ?? "<failed to stringify data>")"
+            )
 
             return Result {
                 try JSONDecoder().decode(endpoint.responseModel, from: data)
             }
         } catch {
-            Logger.api.error("\(#function) failed to fetch \(String(describing: request.url)) with error \(error)")
+            Logger.api.error(
+                "\(#function) failed to fetch \(String(describing: request.url)) with error \(error)"
+            )
             return .failure(error)
         }
     }
@@ -77,12 +85,15 @@ final class API {
     func post(_ endpoint: APIEndpoint) async -> Result<(any Decodable), Error> {
         var request = endpoint.request(for: configuration)
         if endpoint.authorized, let accessToken = configuration.accessToken {
-            request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)])
+            request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
+            )
         }
 
         do {
             guard let requestModel = endpoint.requestModel else {
-                Logger.api.error("\(#function) Failed to find model for POST body encoding for endpoint \(String(reflecting: endpoint))")
+                Logger.api.error(
+                    "\(#function) Failed to find model for POST body encoding for endpoint \(String(reflecting: endpoint))"
+                )
                 return .failure(APIError.postMissingContents(endpoint: endpoint))
             }
             request.httpBody = try URLEncodedFormEncoder().encode(requestModel)
@@ -102,7 +113,9 @@ final class API {
                 try JSONDecoder().decode(endpoint.responseModel, from: data)
             }
         } catch {
-            Logger.api.error("\(#function) failed to fetch \(String(describing: request.url))) with error \(error)")
+            Logger.api.error(
+                "\(#function) failed to fetch \(String(describing: request.url))) with error \(error)"
+            )
             return .failure(error)
         }
     }
@@ -131,7 +144,7 @@ extension HTTPURLResponse {
     var cacheHit: Bool {
         statusCode == 304
     }
-    
+
     var clientError: Bool {
         statusCode >= 400 && statusCode < 500
     }

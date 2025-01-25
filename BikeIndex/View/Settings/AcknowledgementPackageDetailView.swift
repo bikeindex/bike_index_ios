@@ -15,11 +15,13 @@ struct AcknowledgementPackageDetailView: View {
         Text(package.fullLicense())
             .toolbar {
                 ToolbarItemGroup(placement: .topBarTrailing) {
-                    Button(action: {
-                        showRepositoryUrl = true
-                    }, label: {
-                        Label("Open Repository", systemImage: "link")
-                    })
+                    Button(
+                        action: {
+                            showRepositoryUrl = true
+                        },
+                        label: {
+                            Label("Open Repository", systemImage: "link")
+                        })
                 }
             }
             .navigationTitle(package.title)
@@ -27,17 +29,19 @@ struct AcknowledgementPackageDetailView: View {
 }
 
 #Preview {
-    let package = AcknowledgementPackage(title: "BikeIndex iOS",
-                                         license: .gnuAfferoGPLv3,
-                                         copyright: "2023 © Bike Index, a 501(c)(3) nonprofit - EIN 81-4296194",
-                                         repository: URL(string: "https://github.com/bikeindex/bike_index_ios")!)
+    let package = AcknowledgementPackage(
+        title: "BikeIndex iOS",
+        license: .gnuAfferoGPLv3,
+        copyright: "2023 © Bike Index, a 501(c)(3) nonprofit - EIN 81-4296194",
+        repository: URL(string: "https://github.com/bikeindex/bike_index_ios")!)
     let showUrl: Binding<Bool> = Binding {
         false
-    } set: { _ in }
+    } set: { _ in
+    }
 
     return NavigationStack {
         AcknowledgementPackageDetailView(package: package, showRepositoryUrl: showUrl)
-        .navigationTitle("BikeIndex iOS")
-        .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("BikeIndex iOS")
+            .navigationBarTitleDisplayMode(.inline)
     }
 }

@@ -5,8 +5,8 @@
 //  Created by Jack on 11/18/23.
 //
 
-import SwiftUI
 import OSLog
+import SwiftUI
 
 struct AppIconView: ViewModifier {
     var scale: Scale
@@ -61,7 +61,7 @@ extension Image {
                     title: { Text("App Icon") },
                     icon: {
                         Image(uiImage: UIImage(named: "AppIcon-in-app").unsafelyUnwrapped)
-                        .appIcon(scale: .small)
+                            .appIcon(scale: .small)
                     }
                 )
             }

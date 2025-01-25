@@ -6,6 +6,7 @@
 //
 
 import XCTest
+
 @testable import BikeIndex
 
 final class BikeRegistrationTests: XCTestCase {
@@ -18,11 +19,12 @@ final class BikeRegistrationTests: XCTestCase {
         let bike = output.modelInstance()
 
         bike.frameColorTertiary = .covered
-        let registrationModel = BikeRegistration(bike: bike,
-                                                 mode: .myOwnBike,
-                                                 stolen: nil,
-                                                 propulsion: nil,
-                                                 ownerEmail: "")
+        let registrationModel = BikeRegistration(
+            bike: bike,
+            mode: .myOwnBike,
+            stolen: nil,
+            propulsion: nil,
+            ownerEmail: "")
 
         XCTAssertEqual(registrationModel.primary_frame_color, "green")
         XCTAssertEqual(registrationModel.secondary_frame_color, "blue")

@@ -6,10 +6,10 @@
 //
 
 import Foundation
-import OSLog
-import WebKit
 import KeychainSwift
+import OSLog
 import URLEncodedForm
+import WebKit
 
 /// Instances created by Client at runtime to provide the full information for EndpointProvider instances.
 /// This allows safe API access.
@@ -57,14 +57,18 @@ typealias QueryItemTuple = (name: String, value: String)
     var refreshTimer: Timer?
     var refreshRunLoop: RunLoop
 
-    init(keychain: KeychainSwift = KeychainSwift(),
-         refreshRunLoop: RunLoop = RunLoop.main) throws {
+    init(
+        keychain: KeychainSwift = KeychainSwift(),
+        refreshRunLoop: RunLoop = RunLoop.main
+    ) throws {
         self.keychain = keychain
         self.refreshRunLoop = refreshRunLoop
         let configuration = try ClientConfiguration.bundledConfig()
-        self.api = API(configuration: EndpointConfiguration(accessToken: "",
-                                                            host: configuration.host),
-                       session: session)
+        self.api = API(
+            configuration: EndpointConfiguration(
+                accessToken: "",
+                host: configuration.host),
+            session: session)
         self.configuration = configuration
         loadLastToken()
     }
@@ -85,7 +89,8 @@ typealias QueryItemTuple = (name: String, value: String)
     /// Load any persisted OAuth Token and attempt to use it to continue the last session.
     private func loadLastToken() {
         if let lastKnownToken = KeychainSwift().get(Keychain.oauthToken),
-           let rawData = lastKnownToken.data(using: .utf8) {
+            let rawData = lastKnownToken.data(using: .utf8)
+        {
             do {
                 let lastKnownAuth = try JSONDecoder().decode(OAuthToken.self, from: rawData)
 
@@ -95,7 +100,9 @@ typealias QueryItemTuple = (name: String, value: String)
 
                 setupRefreshTimer()
 
-                Logger.api.debug("Client.\(#function) found existing valid token \(String(describing: lastKnownAuth), privacy: .private)")
+                Logger.api.debug(
+                    "Client.\(#function) found existing valid token \(String(describing: lastKnownAuth), privacy: .private)"
+                )
             } catch {
                 Logger.api.debug("Failed to find existing auth")
             }
@@ -130,9 +137,11 @@ typealias QueryItemTuple = (name: String, value: String)
             KeychainSwift().delete(Keychain.oauthToken)
             accessToken = nil
             auth = nil
-            api = API(configuration: EndpointConfiguration(accessToken: "",
-                                                           host: configuration.host),
-                      session: session)
+            api = API(
+                configuration: EndpointConfiguration(
+                    accessToken: "",
+                    host: configuration.host),
+                session: session)
         }
     }
 
@@ -149,15 +158,20 @@ typealias QueryItemTuple = (name: String, value: String)
     /// - Returns: True if processing proceeded normally. False if any errors occurred.
     @discardableResult func accept(authCallback: URL) async -> Bool {
         guard let scheme = authCallback.scheme, scheme + "://" == configuration.redirectUri else {
-            Logger.api.debug("\(#function) exiting because \(authCallback.scheme ?? "", privacy: .sensitive) does not match the redirectUri")
+            Logger.api.debug(
+                "\(#function) exiting because \(authCallback.scheme ?? "", privacy: .sensitive) does not match the redirectUri"
+            )
             return false
         }
 
         let components = URLComponents(string: authCallback.absoluteString)
         guard let queryItems = components?.queryItems,
-              let code = queryItems.first(where: { $0.name == Constants.code }),
-              let newToken = code.value else {
-            Logger.api.debug("\(#function) exiting for lack of query item 'code' from callback \(authCallback, privacy: .sensitive)")
+            let code = queryItems.first(where: { $0.name == Constants.code }),
+            let newToken = code.value
+        else {
+            Logger.api.debug(
+                "\(#function) exiting for lack of query item 'code' from callback \(authCallback, privacy: .sensitive)"
+            )
             return false
         }
         accessToken = newToken
@@ -168,7 +182,7 @@ typealias QueryItemTuple = (name: String, value: String)
             ("client_secret", configuration.secret),
             ("code", newToken),
             ("grant_type", "authorization_code"),
-            ("redirect_uri", configuration.redirectUri)
+            ("redirect_uri", configuration.redirectUri),
         ].map { (item: QueryItemTuple) in
             URLQueryItem(name: item.name, value: item.value)
         }
@@ -186,7 +200,9 @@ typealias QueryItemTuple = (name: String, value: String)
                 let data = try JSONEncoder().encode(fullTokenAuth)
                 self.keychain.set(data, forKey: Keychain.oauthToken)
             } catch {
-                Logger.client.error("Failed to persist /oauth/token to keychain after fetching successfully, continuing")
+                Logger.client.error(
+                    "Failed to persist /oauth/token to keychain after fetching successfully, continuing"
+                )
             }
         case .failure(let failure):
             Logger.client.error("Failed to fetch /oauth/token \(failure)")
@@ -211,11 +227,12 @@ typealias QueryItemTuple = (name: String, value: String)
             fatalError()
         }
         let bufferedExpirationInterval = (auth.expiration - 60 * 3).timeIntervalSinceNow
-        let timer = Timer(timeInterval: bufferedExpirationInterval,
-                          target: self,
-                          selector: #selector(self.refreshToken(timer:)),
-                          userInfo: ["token": auth],
-                          repeats: false)
+        let timer = Timer(
+            timeInterval: bufferedExpirationInterval,
+            target: self,
+            selector: #selector(self.refreshToken(timer:)),
+            userInfo: ["token": auth],
+            repeats: false)
         refreshRunLoop.add(timer, forMode: .default)
         refreshTimer = timer
     }
@@ -254,7 +271,9 @@ typealias QueryItemTuple = (name: String, value: String)
                     let data = try JSONEncoder().encode(refreshedToken)
                     self.keychain.set(data, forKey: Keychain.oauthToken)
                 } catch {
-                    Logger.client.error("Failed to persist /oauth/token to keychain after fetching successfully, continuing")
+                    Logger.client.error(
+                        "Failed to persist /oauth/token to keychain after fetching successfully, continuing"
+                    )
                 }
             case .failure(let failure):
                 Logger.client.error("Failed to fetch /oauth/token \(failure)")

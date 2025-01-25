@@ -13,23 +13,26 @@ struct ContentButtonView: View {
     var item: ContentButton
 
     var body: some View {
-        Button(action: {
-            switch item {
-            case .registerBike:
-                path.append(MainContent.registerBike)
-            case .alertBike:
-                path.append(MainContent.lostBike)
-            case .search:
-                path.append(MainContent.searchBikes)
+        Button(
+            action: {
+                switch item {
+                case .registerBike:
+                    path.append(MainContent.registerBike)
+                case .alertBike:
+                    path.append(MainContent.lostBike)
+                case .search:
+                    path.append(MainContent.searchBikes)
+                }
+            },
+            label: {
+                Text(item.title)
+                    .padding(.leading, 10)
+                Spacer()
+                Text("»")
+                    .bold()
+                    .padding(.trailing, 10)
             }
-        }, label: {
-            Text(item.title)
-                .padding(.leading, 10)
-            Spacer()
-            Text("»")
-                .bold()
-                .padding(.trailing, 10)
-        })
+        )
         .accessibilityIdentifier(item.title)
         .multilineTextAlignment(.leading)
         .frame(maxWidth: .infinity, minHeight: 40)

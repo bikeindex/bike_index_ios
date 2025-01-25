@@ -5,8 +5,9 @@
 //  Created by Jack on 11/18/23.
 //
 
-import SwiftUI
 import OSLog
+import SwiftUI
+
 #if DEBUG
 import PreviewGallery
 #endif
@@ -47,7 +48,9 @@ struct SettingsPage: View {
                     }
 
                     NavigationLink(value: SettingsSelection.registrationOrganization) {
-                        Label("Registration Organization", systemImage: "person.badge.shield.checkmark")
+                        Label(
+                            "Registration Organization",
+                            systemImage: "person.badge.shield.checkmark")
                     }
 
                     Button(action: client.destroySession) {
@@ -68,7 +71,7 @@ struct SettingsPage: View {
                 }
             }
 
-#if DEBUG
+            #if DEBUG
             Section {
                 NavigationLink(value: SettingsSelection.debugMenu) {
                     Label("Debug menu", systemImage: "ladybug.circle")
@@ -77,13 +80,14 @@ struct SettingsPage: View {
                     Label("Preview Gallery", systemImage: "eye.circle")
                 }
                 NavigationLink(value: SettingsSelection.databaseGallery) {
-                    Label("Database Gallery",
-                          systemImage: "cylinder.split.1x2")
+                    Label(
+                        "Database Gallery",
+                        systemImage: "cylinder.split.1x2")
                 }
             } header: {
                 Text("Developer")
             }
-#endif
+            #endif
 
             Section {
                 Link(destination: MailToLink.contactUs.link) {
@@ -101,11 +105,9 @@ struct SettingsPage: View {
                 NavigationLink(value: SettingsSelection.termsOfService) {
                     Label("Terms of Service", systemImage: "text.book.closed")
                 }
-            }
-            header: {
+            } header: {
                 Text("About")
-            }
-            footer: {
+            } footer: {
                 SettingsAttributionCaption()
             }
         }
@@ -144,7 +146,7 @@ struct SettingsPage: View {
                     host: client.configuration.host
                 )
                 .navigationTitle("Delete Account")
-#if DEBUG
+            #if DEBUG
             case .debugMenu:
                 DebugMenu()
                     .environment(client)
@@ -152,7 +154,7 @@ struct SettingsPage: View {
                 PreviewGallery()
             case .databaseGallery:
                 DebugDataView()
-#endif
+            #endif
             case .acknowledgements:
                 AcknowledgementsListView()
             case .privacyPolicy:
@@ -181,11 +183,11 @@ struct SettingsPage: View {
         case sharingPersonalPage
         case registrationOrganization
         case deleteAccount
-#if DEBUG
+        #if DEBUG
         case debugMenu
         case previewGallery
         case databaseGallery
-#endif
+        #endif
         case acknowledgements
         case privacyPolicy
         case termsOfService
@@ -203,8 +205,8 @@ struct SettingsPage: View {
     }
 }
 
-fileprivate extension ClientConfiguration {
-    var oAuthLink: URL {
+extension ClientConfiguration {
+    fileprivate var oAuthLink: URL {
         host.appending(path: "oauth/applications")
     }
 }

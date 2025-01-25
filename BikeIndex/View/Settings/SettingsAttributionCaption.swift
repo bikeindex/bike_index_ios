@@ -17,7 +17,8 @@ struct SettingsAttributionCaption: View {
             VStack {
                 Text("Made with 💝 in Pittsburgh, PA")
                 if let marketingVersion = appVersion.marketingVersion,
-                   let buildNumber = appVersion.buildNumber {
+                    let buildNumber = appVersion.buildNumber
+                {
                     Text("Version \(marketingVersion) (\(buildNumber))")
                         .font(.caption)
                 }

@@ -5,8 +5,8 @@
 //  Created by Jack on 11/18/23.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 @main
 struct BikeIndexApp: App {
@@ -26,7 +26,7 @@ struct BikeIndexApp: App {
             Organization.self,
             User.self,
             AuthenticatedUser.self,
-            AutocompleteManufacturer.self
+            AutocompleteManufacturer.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
