@@ -43,9 +43,13 @@ At this point the full suite of tools should be installed and available.
 
 ###### Swift Format
 
+Formatting is done with [swiftlang/swift-format](https://github.com/swiftlang/swift-format/)
+
 Lint with: `swift format lint --recursive  BikeIndex/ BikeIndexTests BikeIndexUITests`
 
-Format with: `swift format format --in-place --configuration swift-format-configuration.json --recursive  BikeIndex/ BikeIndexTests BikeIndexUITests`
+Format with: `swift format --in-place --recursive  BikeIndex/ BikeIndexTests BikeIndexUITests`
+
+The configuration will be loaded by default from [.swift-format](.swift-format)
 
 #### Tests
 
