@@ -21,16 +21,19 @@ struct WelcomeView: View {
             HStack {
                 Image(uiImage: iconsModel.selectedAppIcon.image)
                     .appIcon(scale: .large)
-                    .frame(maxWidth: .infinity,
-                           maxHeight: 200)
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: 200)
                 Spacer()
             }
 
-            Text("The world's largest and most effective bicycle registry and stolen bike recovery platform.")
-                .font(.headline)
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: .infinity, alignment: .center)
-                .padding()
+            Text(
+                "The world's largest and most effective bicycle registry and stolen bike recovery platform."
+            )
+            .font(.headline)
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .padding()
             Spacer()
         }
         .toolbarTitleDisplayMode(.large)

@@ -41,7 +41,6 @@ enum PropulsionType: String, Codable, CaseIterable, Identifiable {
 
 }
 
-
 /// Raw values correspond to the 'Slug' used in the API
 enum BicycleType: String, Codable, CaseIterable, Identifiable {
     case bike = "bike"
@@ -121,28 +120,28 @@ extension BicycleType {
     var canBeElectric: Bool {
         switch self {
         case .bike,
-             .tandem,
-             .unicycle,
-             .tricycle,
-             .stroller,
-             .recumbent,
-             .trailer,
-             .wheelchair,
-             .cargo,
-             .tallBike,
-             .pennyFarthing,
-             .cargoRear,
-             .cargoTrike,
-             .cargoTrikeRear:
+            .tandem,
+            .unicycle,
+            .tricycle,
+            .stroller,
+            .recumbent,
+            .trailer,
+            .wheelchair,
+            .cargo,
+            .tallBike,
+            .pennyFarthing,
+            .cargoRear,
+            .cargoTrike,
+            .cargoTrikeRear:
             return true
         case .trailBehind:
             return false
         case .pediCab:
             return true
         case .eScooter:
-            return true // FIXED true
+            return true  // FIXED true
         case .personalMobility:
-            return true // FIXED true
+            return true  // FIXED true
         case .nonEScooter:
             return false
         case .nonESkateboard:
@@ -154,23 +153,23 @@ extension BicycleType {
     var pedalAssistAndThrottle: Bool {
         switch self {
         case .bike,
-                .tandem,
-                .unicycle,
-                .tricycle:
+            .tandem,
+            .unicycle,
+            .tricycle:
             return true
         case .stroller:
             return false
         case .recumbent:
             return true
         case .trailer,
-                .wheelchair:
+            .wheelchair:
             return false
-        case    .cargo,
-                .tallBike,
-                .pennyFarthing,
-                .cargoRear,
-                .cargoTrike,
-                .cargoTrikeRear:
+        case .cargo,
+            .tallBike,
+            .pennyFarthing,
+            .cargoRear,
+            .cargoTrike,
+            .cargoTrikeRear:
             return true
         case .trailBehind:
             return false

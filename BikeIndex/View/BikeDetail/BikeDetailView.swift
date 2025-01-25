@@ -5,10 +5,10 @@
 //  Created by Jack on 1/7/24.
 //
 
+import SwiftData
 import SwiftUI
 import WebKit
 import WebViewKit
-import SwiftData
 
 struct BikeDetailView: View {
     @Environment(Client.self) var client
@@ -33,7 +33,7 @@ struct BikeDetailView: View {
                     }
                 }
             })
-        .navigationTitle(bike.title)
+            .navigationTitle(bike.title)
     }
 }
 

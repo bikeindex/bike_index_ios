@@ -5,8 +5,9 @@
 //  Created by Jack on 11/18/23.
 //
 
-import XCTest
 import MapKit
+import XCTest
+
 @testable import BikeIndex
 
 final class BikeModelTests: XCTestCase {
@@ -27,9 +28,10 @@ final class BikeModelTests: XCTestCase {
 
         XCTAssertEqual(bike.status, .stolen)
         let stolenCoordinates = try XCTUnwrap(bike.stolenCoordinates)
-        XCTAssertEqual(stolenCoordinates.distance(from: CLLocation(latitude: 45.53, longitude: -122.69)),
-                       CLLocationDistance(integerLiteral: 0))
-        XCTAssertEqual(bike.dateStolen, Date(timeIntervalSince1970: 1376719200))
+        XCTAssertEqual(
+            stolenCoordinates.distance(from: CLLocation(latitude: 45.53, longitude: -122.69)),
+            CLLocationDistance(integerLiteral: 0))
+        XCTAssertEqual(bike.dateStolen, Date(timeIntervalSince1970: 1_376_719_200))
 
         XCTAssertNil(bike.thumb)
         XCTAssertEqual(bike.url, URL(string: "https://bikeindex.org/bikes/20348"))
@@ -41,9 +43,9 @@ final class BikeModelTests: XCTestCase {
     func test_reading_writing_json() throws {
         let rawJsonData = try XCTUnwrap(MockData.sampleBikeJson.data(using: .utf8))
         let parsedModel = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
-        
+
         let bike = parsedModel.modelInstance()
-        
+
         let registrationInstance = BikeRegistration(
             bike: bike,
             mode: .myOwnBike,
@@ -57,4 +59,3 @@ final class BikeModelTests: XCTestCase {
         XCTAssertEqual(MockData.sampleBikeJson, modelString)
     }
 }
-

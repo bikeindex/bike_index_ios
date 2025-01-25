@@ -5,8 +5,8 @@
 //  Created by Jack on 1/14/24.
 //
 
-import WebKit
 import OSLog
+import WebKit
 
 @Observable class HistoryNavigator: NavigatorChild {
 
@@ -38,4 +38,3 @@ import OSLog
         child?.webView(webView, didCommit: navigation)
     }
 }
-

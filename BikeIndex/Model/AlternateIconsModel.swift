@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import Observation
 import OSLog
+import Observation
 import UIKit
 
 /// Represents icons in Assets/AppIcons asset catalog.
@@ -66,13 +66,13 @@ enum AppIcon: String, CaseIterable, Identifiable {
     }
 }
 
-
 @Observable final class AlternateIconsModel {
     private(set) var selectedAppIcon: AppIcon
 
     init() {
-        if let iconName = UIApplication.shared.alternateIconName, 
-            let appIcon = AppIcon(rawValue: iconName) {
+        if let iconName = UIApplication.shared.alternateIconName,
+            let appIcon = AppIcon(rawValue: iconName)
+        {
             selectedAppIcon = appIcon
         } else {
             selectedAppIcon = .primary

@@ -24,10 +24,11 @@ struct DebugMenu: View {
 
     var body: some View {
         Form {
-            if let expirationDate = client.auth?.expiration
-            {
+            if let expirationDate = client.auth?.expiration {
                 Section {
-                    Text("OAuth Token expires at: \(DebugMenu.dateFormatter.string(from: expirationDate))")
+                    Text(
+                        "OAuth Token expires at: \(DebugMenu.dateFormatter.string(from: expirationDate))"
+                    )
                 } header: {
                     Text("Session")
                 }
@@ -63,10 +64,12 @@ struct DebugMenu: View {
                 Text("OAuth")
             } footer: {
                 TextLink(base: client.configuration.host, link: .oauthApplications)
-                    .environment(\.openURL, OpenURLAction(handler: { url in
-                        showOAuthApplicationsPage = true
-                        return .handled
-                    }))
+                    .environment(
+                        \.openURL,
+                        OpenURLAction(handler: { url in
+                            showOAuthApplicationsPage = true
+                            return .handled
+                        }))
             }
         }
         .navigationDestination(isPresented: $showOAuthApplicationsPage) {
@@ -82,12 +85,13 @@ struct DebugMenu: View {
 
 #Preview {
     let client = try! Client()
-    client.auth = OAuthToken(accessToken: "",
-                             tokenType: "",
-                             expiresIn: TimeInterval(60 * 60),
-                             refreshToken: "",
-                             scope: [],
-                             createdAt: Date())
+    client.auth = OAuthToken(
+        accessToken: "",
+        tokenType: "",
+        expiresIn: TimeInterval(60 * 60),
+        refreshToken: "",
+        scope: [],
+        createdAt: Date())
     return NavigationStack {
         DebugMenu()
             .environment(client)

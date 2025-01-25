@@ -5,25 +5,27 @@
 //  Created by Jack on 4/7/24.
 //
 
-import XCTest
 import OSLog
 import URLEncodedForm
+import XCTest
+
 @testable import BikeIndex
 
 final class RegistrationPropulsionTests: XCTestCase {
 
     let urlFormEncoder = URLEncodedFormEncoder()
     /// Used to compose models and test the output.
-    let baseBike = Bike(identifier: 1234,
-                        primaryColor: .bareMetal,
-                        manufacturerName: "",
-                        typeOfCycle: .bike,
-                        typeOfPropulsion: .footPedal,
-                        status: .withOwner,
-                        stolenCoordinateLatitude: 0,
-                        stolenCoordinateLongitude: 0,
-                        url: URL(string: "about:blank")!,
-                        publicImages: [])
+    let baseBike = Bike(
+        identifier: 1234,
+        primaryColor: .bareMetal,
+        manufacturerName: "",
+        typeOfCycle: .bike,
+        typeOfPropulsion: .footPedal,
+        status: .withOwner,
+        stolenCoordinateLatitude: 0,
+        stolenCoordinateLongitude: 0,
+        url: URL(string: "about:blank")!,
+        publicImages: [])
 
     func test_propulsion_invalid_states_var_closed() throws {
         var propulsion = BikeRegistration.Propulsion(

@@ -36,15 +36,15 @@ struct ClientConfiguration {
     /// Please see BikeIndex-template.xcconfig for instructions to provide these values.
     static func bundledConfig() throws -> Self {
         guard let info = Bundle.main.infoDictionary,
-              let clientId = info["API_CLIENT_ID"] as? String,
-              let secret = info["API_SECRET"] as? String,
-              let hostString = (info["API_HOST"] as? String)?
-            .replacing("\\/\\/", with: "//"),
-              var host = URL(string: hostString),
-              let portString = info["API_PORT"] as? String,
-              let port = UInt16(portString),
-              let redirectUri = (info["API_REDIRECT_URI"] as? String)?
-            .replacing("\\/\\/", with: "//")
+            let clientId = info["API_CLIENT_ID"] as? String,
+            let secret = info["API_SECRET"] as? String,
+            let hostString = (info["API_HOST"] as? String)?
+                .replacing("\\/\\/", with: "//"),
+            var host = URL(string: hostString),
+            let portString = info["API_PORT"] as? String,
+            let port = UInt16(portString),
+            let redirectUri = (info["API_REDIRECT_URI"] as? String)?
+                .replacing("\\/\\/", with: "//")
         else {
             throw ClientConfigurationError.failedToLoadBundle
         }
@@ -58,11 +58,12 @@ struct ClientConfiguration {
             }
         }
 
-        return ClientConfiguration(host: host,
-                                   port: port,
-                                   clientId: clientId,
-                                   secret: secret,
-                                   redirectUri: redirectUri)
+        return ClientConfiguration(
+            host: host,
+            port: port,
+            clientId: clientId,
+            secret: secret,
+            redirectUri: redirectUri)
     }
 
     enum ClientConfigurationError: Error {

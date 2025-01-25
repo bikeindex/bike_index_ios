@@ -16,7 +16,10 @@ import SwiftData
     var searchId: String
     @Attribute(.unique) var identifier: Int
 
-    init(text: String, category: String, slug: String, priority: Int, searchId: String, identifier: Int) {
+    init(
+        text: String, category: String, slug: String, priority: Int, searchId: String,
+        identifier: Int
+    ) {
         self.text = text
         self.category = category
         self.slug = slug

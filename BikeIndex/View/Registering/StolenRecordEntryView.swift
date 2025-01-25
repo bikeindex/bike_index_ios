@@ -29,11 +29,12 @@ struct StolenRecordEntryView: View {
                 }
             }
 
-            TextField("Address or intersection", text: Binding($record.address, replacingNilWith: ""))
+            TextField(
+                "Address or intersection", text: Binding($record.address, replacingNilWith: ""))
             TextField("City", text: $record.city)
             TextField("Postal Code", text: Binding($record.zipcode, replacingNilWith: ""))
 
-            if let country = record.country, 
+            if let country = record.country,
                 country == Countries.us.isoCode
             {
                 Picker("State", selection: $record.state) {

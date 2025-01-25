@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import SwiftData
 import MapKit
+import SwiftData
 
 @Model final class Bike {
     @Attribute(.unique) var identifier: Int
@@ -79,27 +79,29 @@ import MapKit
         static let displayableYearRange = 1900..<2027
     }
 
-    init(identifier: Int,
-         bikeDescription: String? = nil,
-         frameModel: String? = nil,
-         primaryColor: FrameColor,
-         secondaryColor: FrameColor? = nil,
-         tertiaryColor: FrameColor? = nil,
-         manufacturerName: String,
-         year: Int? = nil,
-         typeOfCycle: BicycleType,
-         typeOfPropulsion: PropulsionType,
-         serial: String? = nil,
-         status: BikeStatus,
-         stolenCoordinateLatitude: CLLocationDegrees,
-         stolenCoordinateLongitude: CLLocationDegrees,
-         stolenLocation: String? = nil,
-         dateStolen: Date? = nil,
-         largeImage: URL? = nil,
-         thumb: URL? = nil,
-         url: URL,
-         apiUrl: URL? = nil,
-         publicImages: [String]) {
+    init(
+        identifier: Int,
+        bikeDescription: String? = nil,
+        frameModel: String? = nil,
+        primaryColor: FrameColor,
+        secondaryColor: FrameColor? = nil,
+        tertiaryColor: FrameColor? = nil,
+        manufacturerName: String,
+        year: Int? = nil,
+        typeOfCycle: BicycleType,
+        typeOfPropulsion: PropulsionType,
+        serial: String? = nil,
+        status: BikeStatus,
+        stolenCoordinateLatitude: CLLocationDegrees,
+        stolenCoordinateLongitude: CLLocationDegrees,
+        stolenLocation: String? = nil,
+        dateStolen: Date? = nil,
+        largeImage: URL? = nil,
+        thumb: URL? = nil,
+        url: URL,
+        apiUrl: URL? = nil,
+        publicImages: [String]
+    ) {
         self.identifier = identifier
         self.bikeDescription = bikeDescription
         self.frameModel = frameModel

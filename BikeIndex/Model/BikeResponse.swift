@@ -17,7 +17,6 @@ struct MultipleBikeResponseContainer: Decodable {
     var bikes: [BikeResponse]
 }
 
-
 // MARK: -
 
 struct BikeResponse: ResponseModelInstantiable {
@@ -56,9 +55,10 @@ struct BikeResponse: ResponseModelInstantiable {
         let stolenCoordinateLongitude: CLLocationDegrees
 
         if let stolen_coordinates,
-           stolen_coordinates.count == 2,
-           let lat = stolen_coordinates.first,
-           let lon = stolen_coordinates.last {
+            stolen_coordinates.count == 2,
+            let lat = stolen_coordinates.first,
+            let lon = stolen_coordinates.last
+        {
             stolenCoordinateLatitude = lat
             stolenCoordinateLongitude = lon
         } else {
@@ -69,7 +69,8 @@ struct BikeResponse: ResponseModelInstantiable {
 
         let firstColor = frame_colors.first.flatMap { FrameColor(rawValue: $0) } ?? .black
 
-        var secondColor: FrameColor?, thirdColor: FrameColor?
+        var secondColor: FrameColor?
+        var thirdColor: FrameColor?
         if frame_colors.count > 1 {
             secondColor = FrameColor(rawValue: frame_colors[1])
         }
@@ -77,25 +78,26 @@ struct BikeResponse: ResponseModelInstantiable {
             thirdColor = FrameColor(rawValue: frame_colors[2])
         }
 
-        return Bike(identifier: id ?? Int.min,
-                    bikeDescription: description,
-                    frameModel: frame_model,
-                    primaryColor: firstColor,
-                    secondaryColor: secondColor,
-                    tertiaryColor: thirdColor,
-                    manufacturerName: manufacturer_name,
-                    year: year,
-                    typeOfCycle: cycle_type_slug,
-                    typeOfPropulsion: propulsion_type_slug,
-                    serial: serial,
-                    status: status,
-                    stolenCoordinateLatitude: stolenCoordinateLatitude,
-                    stolenCoordinateLongitude: stolenCoordinateLongitude,
-                    dateStolen: dateStolen,
-                    largeImage: large_img,
-                    thumb: thumb,
-                    url: url,
-                    apiUrl: api_url,
-                    publicImages: public_images ?? [])
+        return Bike(
+            identifier: id ?? Int.min,
+            bikeDescription: description,
+            frameModel: frame_model,
+            primaryColor: firstColor,
+            secondaryColor: secondColor,
+            tertiaryColor: thirdColor,
+            manufacturerName: manufacturer_name,
+            year: year,
+            typeOfCycle: cycle_type_slug,
+            typeOfPropulsion: propulsion_type_slug,
+            serial: serial,
+            status: status,
+            stolenCoordinateLatitude: stolenCoordinateLatitude,
+            stolenCoordinateLongitude: stolenCoordinateLongitude,
+            dateStolen: dateStolen,
+            largeImage: large_img,
+            thumb: thumb,
+            url: url,
+            apiUrl: api_url,
+            publicImages: public_images ?? [])
     }
 }

@@ -5,8 +5,8 @@
 //  Created by Jack on 11/18/23.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 protocol SearchValue {
     var value: String { get }
@@ -19,8 +19,8 @@ protocol Displayable {
 /// Represents auto-completable 'chips' that are distinct UI elements
 enum SearchTerm: SearchValue, Displayable {
     case color(FrameColor)
-    case motorized // aka electric
-    case manufacturer(AutocompleteManufacturer) // TODO: Replace with canonical Manufacturer model
+    case motorized  // aka electric
+    case manufacturer(AutocompleteManufacturer)  // TODO: Replace with canonical Manufacturer model
     case type(BicycleType)
 
     var value: String {
@@ -75,26 +75,28 @@ struct SearchBikesView: View {
                 }
                 .padding(.leading, 8)
 
-                Button(action: {
-//                    client.queryGlobal(
-//                        // fill in endpoint and params
-//                        context: modelContext
-//                    )
-                }, label: {
-                    Image(systemName: "magnifyingglass")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .padding(18)
-                        .accessibilityLabel("Search")
-                        .frame(maxWidth: 60)
-                        .frame(maxHeight: 60)
-                        .scaledToFill()
-                })
+                Button(
+                    action: {
+                        //                    client.queryGlobal(
+                        //                        // fill in endpoint and params
+                        //                        context: modelContext
+                        //                    )
+                    },
+                    label: {
+                        Image(systemName: "magnifyingglass")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .padding(18)
+                            .accessibilityLabel("Search")
+                            .frame(maxWidth: 60)
+                            .frame(maxHeight: 60)
+                            .scaledToFill()
+                    }
+                )
                 .foregroundStyle(Color.white)
                 .background(Color.blue)
                 .padding(.trailing, 8)
             }
-
 
             // TODO: Replace this with our own vertical picker
             VerticalPicker(activeMode: $searchMode)
@@ -111,13 +113,16 @@ struct SearchBikesView: View {
         let client = try Client()
 
         return NavigationStack {
-            SearchBikesView(searchTerms: .constant([.color(.red)]),
-                            serialNumberSearch: .constant(""),
-                            searchMode: .constant(.withinHundredMiles))
-                .environment(client)
-                .modelContainer(for: Bike.self,
-                                inMemory: true,
-                                isAutosaveEnabled: false)
+            SearchBikesView(
+                searchTerms: .constant([.color(.red)]),
+                serialNumberSearch: .constant(""),
+                searchMode: .constant(.withinHundredMiles)
+            )
+            .environment(client)
+            .modelContainer(
+                for: Bike.self,
+                inMemory: true,
+                isAutosaveEnabled: false)
         }
     } catch let error {
         return Text("Failed to load preview \(error.localizedDescription)")

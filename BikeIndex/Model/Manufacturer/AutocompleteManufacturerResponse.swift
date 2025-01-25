@@ -24,11 +24,12 @@ struct AutocompleteManufacturerResponse: ResponseModelInstantiable {
     typealias ModelInstance = AutocompleteManufacturer
 
     func modelInstance() -> ModelInstance {
-        AutocompleteManufacturer(text: text,
-                                 category: category,
-                                 slug: slug,
-                                 priority: priority,
-                                 searchId: search_id,
-                                 identifier: id)
+        AutocompleteManufacturer(
+            text: text,
+            category: category,
+            slug: slug,
+            priority: priority,
+            searchId: search_id,
+            identifier: id)
     }
 }

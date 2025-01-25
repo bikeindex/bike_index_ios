@@ -5,8 +5,8 @@
 //  Created by Jack on 4/13/24.
 //
 
-import UIKit
 import SwiftUI
+import UIKit
 
 struct CameraCaptureButton: UIViewRepresentable {
     typealias UIViewType = UIButton
@@ -25,7 +25,7 @@ struct CameraCaptureButton: UIViewRepresentable {
         uiView.intrinsicContentSize
     }
 
-    func updateUIView(_ uiView: UIViewType, context: Context) { }
+    func updateUIView(_ uiView: UIViewType, context: Context) {}
 
     // MARK: - UIKit bridging
 

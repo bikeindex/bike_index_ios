@@ -5,8 +5,8 @@
 //  Created by Jack on 12/4/24.
 //
 
-import XCTest
 import OSLog
+import XCTest
 
 extension XCTestCase {
     @MainActor

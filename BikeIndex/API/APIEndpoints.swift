@@ -8,8 +8,8 @@
 import Foundation
 import OSLog
 
-fileprivate let api = "api"
-fileprivate let v3 = "v3"
+private let api = "api"
+private let v3 = "v3"
 
 /// Convenience default empty object endpoints that will not provide any request model.
 struct EmptyPost: Postable {}
@@ -36,9 +36,9 @@ enum OAuth: APIEndpoint {
     var method: HttpMethod {
         switch self {
         case .authorize, .token, .refresh:
-                .post
+            .post
         case .logout:
-                .get
+            .get
         }
     }
 
@@ -76,7 +76,7 @@ enum OAuth: APIEndpoint {
     func request(for config: EndpointConfigurationProvider) -> URLRequest {
         var url = config.host.appending(components: path)
         switch self {
-        case .authorize(queryItems: let queryItems):
+        case .authorize(let queryItems):
             url.append(queryItems: queryItems)
         case .token(let queryItems):
             url.append(queryItems: queryItems)
@@ -167,7 +167,7 @@ enum Bikes: APIEndpoint {
     /// Fetch bike details via `v3/bikes/{id}`
     case bikes(identifier: BikeId)
     /// Update a bike
-    case putBikes(identifier: BikeId, form: Postable) // aka v3/bikes/{id} also available with no parameter
+    case putBikes(identifier: BikeId, form: Postable)  // aka v3/bikes/{id} also available with no parameter
     case check_if_registered
     case recover(identifier: BikeId)
     case image(identifier: BikeId)
@@ -228,7 +228,7 @@ enum Bikes: APIEndpoint {
 }
 
 enum Me: APIEndpoint {
-    case `self` // v3/me
+    case `self`  // v3/me
     case bikes
 
     var path: [String] {
@@ -312,7 +312,7 @@ enum Autocomplete: APIEndpoint {
 
 enum Manufacturers: APIEndpoint {
     case all
-    case get(identifier: BikeId) // aka v3/manufacturers/{id}, also available with no parameter
+    case get(identifier: BikeId)  // aka v3/manufacturers/{id}, also available with no parameter
 
     var path: [String] {
         switch self {
