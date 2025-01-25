@@ -41,6 +41,12 @@ This project uses SwiftUI and SwiftData. At this time iOS (iPhone) is the primar
 
 At this point the full suite of tools should be installed and available.
 
+###### Swift Format
+
+Lint with: `swift format lint --recursive  BikeIndex/ BikeIndexTests BikeIndexUITests`
+
+Format with: `swift format format --in-place --configuration swift-format-configuration.json --recursive  BikeIndex/ BikeIndexTests BikeIndexUITests`
+
 #### Tests
 
 Test-driven development is an important tool for this project. In your local environment run the tests with Xcode, or set up the local suite of tools to install fastlane and run `bundle exec fastlane ios tests`.
