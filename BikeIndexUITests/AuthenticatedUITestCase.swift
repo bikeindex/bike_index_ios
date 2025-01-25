@@ -30,6 +30,13 @@ extension XCTestCase {
         let testUsername = try XCTUnwrap(infoDictionary["TEST_USERNAME"] as? String)
         let testPassword = try XCTUnwrap(infoDictionary["TEST_PASSWORD"] as? String)
 
+        XCTAssertEqual(app.webViews.count, 1, "Assuming only 1 web view is displayed.")
+
+        /// If the Authorized Applications ever lapses (https://bikeindex.org/oauth/authorized_applications) then
+        /// the CI runner will begin to fail tests and should have this prompt in the sign-in page.
+        let guardAgainstAuthorizationRequired = app.webViews.firstMatch.staticTexts["AUTHORIZATION REQUIRED"]
+        guardAgainstAuthorizationRequired.waitForNonExistence(timeout: timeout)
+
         // Step 2: Fill credentials and proceed
         let usernameField = app.webViews.firstMatch.textFields["Email"]
         if usernameField.waitForExistence(timeout: timeout) {
