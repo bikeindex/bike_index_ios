@@ -41,6 +41,10 @@ This project uses SwiftUI and SwiftData. At this time iOS (iPhone) is the primar
 
 At this point the full suite of tools should be installed and available.
 
+###### Git hooks
+
+Git hooks are in the local [.githooks](.githooks) directory and can be connected with `git config --local core.hooksPath .githooks/`. These files should be marked executable already.
+
 ###### Swift Format
 
 Formatting is done with [swiftlang/swift-format](https://github.com/swiftlang/swift-format/)
