@@ -61,7 +61,7 @@ import SwiftData
     @Attribute(.unique) var identifier: Int
     var name: String
     var slug: String
-  var accessToken: Token
+    var accessToken: Token
     var userIsOrganizationAdmin: Bool
 
     // TODO: Fill-in Organization relationships and functionality
