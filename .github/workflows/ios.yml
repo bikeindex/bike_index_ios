@@ -38,3 +38,28 @@ jobs:
           name: test_output.zip
           path: "fastlane/test_output/*"
           compression-level: 9 # maximum compression
+
+  build:
+    name: Validate archive
+    runs-on: macos-15
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install tools
+        run: |
+          brew bundle install
+          bundler install
+      - name: Set up xcconfig secrets (see README.md#quick-start)
+        env:
+          BIKE_INDEX_DEVELOPMENT_XCCONFIG: ${{ secrets.BIKE_INDEX_DEVELOPMENT_XCCONFIG }}
+        run: |
+          echo "$BIKE_INDEX_DEVELOPMENT_XCCONFIG" >> BikeIndex-development.xcconfig
+      - name: Set up xcconfig UI test credentials (see README.md#UI-Test-configuration)
+        env:
+          BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
+        run: |
+          echo "$BIKE_INDEX_TEST_CREDENTIALS" >> SharedTests/Test-credentials.xcconfig
+      - name: Build and validate archive
+        id: fastlane-gym-archive
+        run: bundle exec fastlane gym
