@@ -20,6 +20,7 @@ extension XCTestCase {
             let authorizeButton = app.webViews.firstMatch.buttons["Authorize"]
             if authorizeButton.waitForExistence(timeout: timeout) {
                 authorizeButton.tap()
+                authorizeButton.tap()
             }
         }
     }
@@ -81,6 +82,7 @@ extension XCTestCase {
 
         let authorizeButton = app.webViews.firstMatch.buttons["Authorize"]
         if authorizeButton.waitForExistence(timeout: timeout) {
+            authorizeButton.tap()
             authorizeButton.tap()
         }
     }
