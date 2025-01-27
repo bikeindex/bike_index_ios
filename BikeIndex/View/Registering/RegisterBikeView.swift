@@ -16,6 +16,7 @@ struct RegisterBikeView: View {
     // @Environment(\.dismiss) private var dismiss // Can't use with NavigableWebView for serial or how-to-recover links
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
+    @Environment(\.dismiss) var dismiss
 
     // MARK: Shadow State
 
@@ -323,7 +324,7 @@ struct RegisterBikeView: View {
                     /// Access dismiss directly.
                     /// If ``RegisterBikeView`` captures the Environment object in a var it will conflict with the
                     /// NavigableWebViews and cause an infinite loop. (I think that's the cause).
-                    Environment(\.dismiss).wrappedValue.callAsFunction()
+                    dismiss()
                 }, message: "", title: "Success!")
             }
 
