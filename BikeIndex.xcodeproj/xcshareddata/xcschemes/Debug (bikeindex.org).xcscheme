@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:BikeIndexTests/Debug (bikeindex.org).xctestplan"
+            reference = "container:UnitTests/Debug (bikeindex.org).xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -40,8 +40,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "04F4B9092B098ADE009442B5"
-               BuildableName = "BikeIndexTests.xctest"
-               BlueprintName = "BikeIndexTests"
+               BuildableName = "UnitTests.xctest"
+               BlueprintName = "UnitTests"
                ReferencedContainer = "container:BikeIndex.xcodeproj">
             </BuildableReference>
             <SkippedTests>
@@ -59,8 +59,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "04F4B9132B098ADE009442B5"
-               BuildableName = "BikeIndexUITests.xctest"
-               BlueprintName = "BikeIndexUITests"
+               BuildableName = "UITests.xctest"
+               BlueprintName = "UITests"
                ReferencedContainer = "container:BikeIndex.xcodeproj">
             </BuildableReference>
          </TestableReference>

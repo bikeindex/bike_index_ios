@@ -1,6 +1,6 @@
 //
 //  UserRelationshipTests.swift
-//  BikeIndexTests
+//  UnitTests
 //
 //  Created by Jack on 11/29/23.
 //

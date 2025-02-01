@@ -1,6 +1,6 @@
 //
 //  BikeIndexUITestsLaunchTests.swift
-//  BikeIndexUITests
+//  UITests
 //
 //  Created by Jack on 11/18/23.
 //
