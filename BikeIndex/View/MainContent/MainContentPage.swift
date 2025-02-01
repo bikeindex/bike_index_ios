@@ -57,6 +57,7 @@ struct MainContentPage: View {
                 switch selection {
                 case .settings:
                     SettingsPage(path: $path)
+                        .environment(client)
                         .accessibilityIdentifier("Settings")
                 case .registerBike:
                     RegisterBikeView(mode: .myOwnBike)
