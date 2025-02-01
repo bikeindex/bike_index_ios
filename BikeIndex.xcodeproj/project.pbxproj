@@ -55,8 +55,8 @@
 		0496C6712CB36BF100B88D1B /* .ruby-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".ruby-version"; sourceTree = "<group>"; };
 		0496C6722CB36BF600B88D1B /* Gemfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Gemfile; sourceTree = "<group>"; };
 		04F4B8F72B098ADB009442B5 /* BikeIndex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BikeIndex.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		04F4B90A2B098ADE009442B5 /* BikeIndexTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BikeIndexTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		04F4B9142B098ADE009442B5 /* BikeIndexUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BikeIndexUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		04F4B90A2B098ADE009442B5 /* UnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		04F4B9142B098ADE009442B5 /* UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		04F4B9272B098B44009442B5 /* BikeIndex-production.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "BikeIndex-production.xcconfig"; sourceTree = "<group>"; };
 		04F4B9282B098B44009442B5 /* BikeIndex-template.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "BikeIndex-template.xcconfig"; sourceTree = "<group>"; };
 		04F4B9292B098B44009442B5 /* BikeIndex-development.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "BikeIndex-development.xcconfig"; sourceTree = "<group>"; };
@@ -78,35 +78,35 @@
 			membershipExceptions = (
 				"Debug (bikeindex.org).xctestplan",
 			);
-			target = 04F4B9092B098ADE009442B5 /* BikeIndexTests */;
+			target = 04F4B9092B098ADE009442B5 /* UnitTests */;
 		};
 		04CDF16A2D3C344800F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 04F4B9132B098ADE009442B5 /* BikeIndexUITests */;
+			target = 04F4B9132B098ADE009442B5 /* UITests */;
 		};
 		04CDF1722D3C344C00F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"Logger+Tests.swift",
 			);
-			target = 04F4B9092B098ADE009442B5 /* BikeIndexTests */;
+			target = 04F4B9092B098ADE009442B5 /* UnitTests */;
 		};
 		04CDF1732D3C344C00F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"Logger+Tests.swift",
 			);
-			target = 04F4B9132B098ADE009442B5 /* BikeIndexUITests */;
+			target = 04F4B9132B098ADE009442B5 /* UITests */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		04CDF1012D3C344100F90515 /* BikeIndex */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF1442D3C344100F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = BikeIndex; sourceTree = "<group>"; };
-		04CDF1502D3C344500F90515 /* BikeIndexTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF15C2D3C344500F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = BikeIndexTests; sourceTree = "<group>"; };
-		04CDF1632D3C344800F90515 /* BikeIndexUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF16A2D3C344800F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = BikeIndexUITests; sourceTree = "<group>"; };
+		04CDF1502D3C344500F90515 /* UnitTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF15C2D3C344500F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = UnitTests; sourceTree = "<group>"; };
+		04CDF1632D3C344800F90515 /* UITests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF16A2D3C344800F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = UITests; sourceTree = "<group>"; };
 		04CDF16F2D3C344C00F90515 /* SharedTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF1722D3C344C00F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 04CDF1732D3C344C00F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = SharedTests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -158,8 +158,8 @@
 				04F4B9272B098B44009442B5 /* BikeIndex-production.xcconfig */,
 				04F4B9282B098B44009442B5 /* BikeIndex-template.xcconfig */,
 				04CDF1012D3C344100F90515 /* BikeIndex */,
-				04CDF1502D3C344500F90515 /* BikeIndexTests */,
-				04CDF1632D3C344800F90515 /* BikeIndexUITests */,
+				04CDF1502D3C344500F90515 /* UnitTests */,
+				04CDF1632D3C344800F90515 /* UITests */,
 				04CDF16F2D3C344C00F90515 /* SharedTests */,
 				0496C6702CB36BED00B88D1B /* Brewfile */,
 				0496C6722CB36BF600B88D1B /* Gemfile */,
@@ -173,8 +173,8 @@
 			isa = PBXGroup;
 			children = (
 				04F4B8F72B098ADB009442B5 /* BikeIndex.app */,
-				04F4B90A2B098ADE009442B5 /* BikeIndexTests.xctest */,
-				04F4B9142B098ADE009442B5 /* BikeIndexUITests.xctest */,
+				04F4B90A2B098ADE009442B5 /* UnitTests.xctest */,
+				04F4B9142B098ADE009442B5 /* UITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -209,9 +209,9 @@
 			productReference = 04F4B8F72B098ADB009442B5 /* BikeIndex.app */;
 			productType = "com.apple.product-type.application";
 		};
-		04F4B9092B098ADE009442B5 /* BikeIndexTests */ = {
+		04F4B9092B098ADE009442B5 /* UnitTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 04F4B9212B098ADE009442B5 /* Build configuration list for PBXNativeTarget "BikeIndexTests" */;
+			buildConfigurationList = 04F4B9212B098ADE009442B5 /* Build configuration list for PBXNativeTarget "UnitTests" */;
 			buildPhases = (
 				04F4B9062B098ADE009442B5 /* Sources */,
 				04F4B9072B098ADE009442B5 /* Frameworks */,
@@ -223,16 +223,16 @@
 				04F4B90C2B098ADE009442B5 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				04CDF1502D3C344500F90515 /* BikeIndexTests */,
+				04CDF1502D3C344500F90515 /* UnitTests */,
 			);
-			name = BikeIndexTests;
+			name = UnitTests;
 			productName = BikeIndexTests;
-			productReference = 04F4B90A2B098ADE009442B5 /* BikeIndexTests.xctest */;
+			productReference = 04F4B90A2B098ADE009442B5 /* UnitTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		04F4B9132B098ADE009442B5 /* BikeIndexUITests */ = {
+		04F4B9132B098ADE009442B5 /* UITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 04F4B9242B098ADE009442B5 /* Build configuration list for PBXNativeTarget "BikeIndexUITests" */;
+			buildConfigurationList = 04F4B9242B098ADE009442B5 /* Build configuration list for PBXNativeTarget "UITests" */;
 			buildPhases = (
 				04F4B9102B098ADE009442B5 /* Sources */,
 				04F4B9112B098ADE009442B5 /* Frameworks */,
@@ -245,11 +245,11 @@
 				04F4B9162B098ADE009442B5 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				04CDF1632D3C344800F90515 /* BikeIndexUITests */,
+				04CDF1632D3C344800F90515 /* UITests */,
 			);
-			name = BikeIndexUITests;
+			name = UITests;
 			productName = BikeIndexUITests;
-			productReference = 04F4B9142B098ADE009442B5 /* BikeIndexUITests.xctest */;
+			productReference = 04F4B9142B098ADE009442B5 /* UITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -295,8 +295,8 @@
 			projectRoot = "";
 			targets = (
 				04F4B8F62B098ADB009442B5 /* BikeIndex */,
-				04F4B9092B098ADE009442B5 /* BikeIndexTests */,
-				04F4B9132B098ADE009442B5 /* BikeIndexUITests */,
+				04F4B9092B098ADE009442B5 /* UnitTests */,
+				04F4B9132B098ADE009442B5 /* UITests */,
 			);
 		};
 /* End PBXProject section */
@@ -478,7 +478,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.bikeindex.BikeIndexTests;
+				PRODUCT_BUNDLE_IDENTIFIER = org.bikeindex.UnitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -724,7 +724,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.bikeindex.BikeIndexTests;
+				PRODUCT_BUNDLE_IDENTIFIER = org.bikeindex.UnitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -745,7 +745,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.bikeindex.BikeIndexTests;
+				PRODUCT_BUNDLE_IDENTIFIER = org.bikeindex.UnitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -826,7 +826,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		04F4B9212B098ADE009442B5 /* Build configuration list for PBXNativeTarget "BikeIndexTests" */ = {
+		04F4B9212B098ADE009442B5 /* Build configuration list for PBXNativeTarget "UnitTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04F4B9222B098ADE009442B5 /* Debug (development) */,
@@ -836,7 +836,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		04F4B9242B098ADE009442B5 /* Build configuration list for PBXNativeTarget "BikeIndexUITests" */ = {
+		04F4B9242B098ADE009442B5 /* Build configuration list for PBXNativeTarget "UITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04F4B9252B098ADE009442B5 /* Debug (development) */,

@@ -30,7 +30,7 @@
       "target" : {
         "containerPath" : "container:BikeIndex.xcodeproj",
         "identifier" : "04F4B9092B098ADE009442B5",
-        "name" : "BikeIndexTests"
+        "name" : "UnitTests"
       }
     },
     {
@@ -38,7 +38,7 @@
       "target" : {
         "containerPath" : "container:BikeIndex.xcodeproj",
         "identifier" : "04F4B9132B098ADE009442B5",
-        "name" : "BikeIndexUITests"
+        "name" : "UITests"
       }
     }
   ],

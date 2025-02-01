@@ -1,6 +1,6 @@
 //
 //  RegistrationPropulsionTests.swift
-//  BikeIndexTests
+//  UnitTests
 //
 //  Created by Jack on 4/7/24.
 //
