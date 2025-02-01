@@ -226,7 +226,7 @@
 				04CDF1502D3C344500F90515 /* UnitTests */,
 			);
 			name = UnitTests;
-			productName = BikeIndexTests;
+			productName = UnitTests;
 			productReference = 04F4B90A2B098ADE009442B5 /* UnitTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
@@ -248,7 +248,7 @@
 				04CDF1632D3C344800F90515 /* UITests */,
 			);
 			name = UITests;
-			productName = BikeIndexUITests;
+			productName = UITests;
 			productReference = 04F4B9142B098ADE009442B5 /* UITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
