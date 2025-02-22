@@ -53,7 +53,7 @@ struct SettingsPage: View {
                             systemImage: "person.badge.shield.checkmark")
                     }
 
-                    Button(action: client.destroySession) {
+                    Button(action: logout) {
                         Label("Sign out", systemImage: "figure.walk.departure")
                             .tint(Color.highlightPrimary)
                             .foregroundStyle(Color.highlightPrimary)
@@ -171,6 +171,11 @@ struct SettingsPage: View {
                 .navigationTitle("Terms of Service")
             }
         }
+    }
+
+    func logout() {
+        path = NavigationPath()
+        client.destroySession()
     }
 
     /// Excluding signOut and contactUs which don't navigate internally

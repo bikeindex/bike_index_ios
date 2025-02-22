@@ -22,7 +22,10 @@ struct BikeRegistration: Encodable {
     let color: String
     let primary_frame_color: String
 
-    let test: Bool
+    #if DEBUG
+    /// Test bikes do not send registration emails and are automatically removed.
+    var test = true
+    #endif
 
     // MARK: Optional fields
     var owner_email_is_phone_number: Bool?
@@ -72,7 +75,6 @@ struct BikeRegistration: Encodable {
         self.owner_email = owner_email
         self.primary_frame_color = primary_frame_color.rawValue.lowercased()
         self.color = primary_frame_color.rawValue.lowercased()
-        self.test = test
         self.owner_email_is_phone_number = owner_email_is_phone_number
         self.organization_slug = organization_slug
         self.cycle_type_name = cycle_type_name
@@ -114,8 +116,7 @@ struct BikeRegistration: Encodable {
         self.manufacturer = bike.manufacturerName
         self.primary_frame_color = bike.frameColorPrimary.rawValue.lowercased()
         self.color = bike.frameColorPrimary.rawValue.lowercased()
-        self.owner_email = ownerEmail  // Bike<->User relationships are not yet established
-        self.test = false
+        self.owner_email = ownerEmail
 
         // Non-required fields
         self.secondary_frame_color = bike.frameColorSecondary?.rawValue.lowercased()
@@ -135,7 +136,7 @@ struct BikeRegistration: Encodable {
             self.stolen_record = nil
         }
 
-        // Unsupported fields for future work
+        // TODO: Unsupported fields, support in future changes
         self.owner_email_is_phone_number = nil
         self.organization_slug = nil
         self.no_duplicate = nil
@@ -235,8 +236,8 @@ struct BikeRegistration: Encodable {
         try container.encodeIfPresent(self.stolen_record, forKey: .stolen_record)
         try container.encodeIfPresent(self.components, forKey: .components)
 
-        #if !RELEASE
-        try container.encode(true, forKey: .test)
+        #if DEBUG
+        try container.encode(test, forKey: .test)
         #endif
 
         // Propulsion subtype
