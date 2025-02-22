@@ -65,13 +65,12 @@ struct AuthenticatedUserResponse: Decodable, ResponseModelInstantiable {
         let organization_access_token: String
         let user_is_organization_admin: Bool
 
-        func modelInstance() -> Organization {
-            Organization(
-                name: organization_name,
-                slug: organization_slug,
-                identifier: organization_id,
-                accessToken: organization_access_token,
-                userIsOrganizationAdmin: user_is_organization_admin)
+        func modelInstance() -> ModelInstance {
+            Organization(name: organization_name,
+                         slug: organization_slug,
+                         identifier: organization_id,
+                         accessToken: organization_access_token,
+                         userIsOrganizationAdmin: user_is_organization_admin)
         }
     }
 }
