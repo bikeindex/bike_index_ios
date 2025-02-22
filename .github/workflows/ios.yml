@@ -42,7 +42,7 @@ jobs:
   validate-archive:
     name: Validate archive
     runs-on: macos-15
-    if: startsWith(github.ref, 'refs/tags/v')
+    # if: startsWith(github.ref, 'refs/tags/v') # Remove main-branch-only checks until this is ready to merge
     steps:
       - name: Checkout
         uses: actions/checkout@v4
