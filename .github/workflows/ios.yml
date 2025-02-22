@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  fastlane-tests:
     name: Run tests with fastlane
     runs-on: macos-15
     steps:
@@ -39,7 +39,7 @@ jobs:
           path: "fastlane/test_output/*"
           compression-level: 9 # maximum compression
 
-  build:
+  validate-archive:
     name: Validate archive
     runs-on: macos-15
     if: startsWith(github.ref, 'refs/tags/v')
