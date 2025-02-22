@@ -74,3 +74,12 @@ enum ContentButton: String, Identifiable, Codable, CaseIterable {
         }
     }
 }
+
+#Preview("All Content Button Previews") {
+    let path: Binding = .constant(NavigationPath())
+    ScrollView {
+        ForEach(ContentButton.allCases) { item in
+            ContentButtonView(path: path, item: item)
+        }
+    }
+}
