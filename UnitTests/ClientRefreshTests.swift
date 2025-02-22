@@ -1,18 +1,19 @@
 //
 //  ClientRefreshTests.swift
-//  BikeIndexTests
+//  UnitTests
 //
 //  Created by Jack on 2/17/24.
 //
 
-import XCTest
 import OSLog
+import XCTest
+
 @testable import BikeIndex
 
 enum TestableState {
     case unauthenticated
     case authenticated
-    case renewing /// aka expired
+    case renewing/// aka expired
 }
 
 /// Additional behavior to enable testing
@@ -20,7 +21,8 @@ class TestableClient: Client {
     var state: TestableState = .unauthenticated
 
     func setAuth(_ token: OAuthToken) {
-        Logger.tests.info("TestableClient assigned new setAuth to \(String(describing: token), privacy: .public)")
+        Logger.tests.info(
+            "TestableClient assigned new setAuth to \(String(describing: token), privacy: .public)")
 
         self.auth = token
         self.state = .authenticated
@@ -71,34 +73,41 @@ final class ClientRefreshTests: XCTestCase {
         client.api.configuration.accessToken = client.auth?.accessToken
         XCTAssertEqual(client.state, .authenticated)
 
-        let expectation = XCTestExpectation(description: "Token renewal must activate a refresh request")
+        let expectation = XCTestExpectation(
+            description: "Token renewal must activate a refresh request")
 
         // NEW token
         let newAccessToken = UUID().uuidString
         let newRefreshToken = UUID().uuidString
-        let newToken = OAuthToken(accessToken: newAccessToken,
-                                  tokenType: "Bearer",
-                                  expiresIn: expirationInterval + 1,
-                                  refreshToken: newRefreshToken,
-                                  scope: Scope.allCases,
-                                  createdAt: Date())
+        let newToken = OAuthToken(
+            accessToken: newAccessToken,
+            tokenType: "Bearer",
+            expiresIn: expirationInterval + 1,
+            refreshToken: newRefreshToken,
+            scope: Scope.allCases,
+            createdAt: Date())
 
         Logger.tests.info("starting waiter")
 
         let safeClient = try XCTUnwrap(client)
-        let timer = Timer(timeInterval: expirationInterval,
-                          target: safeClient,
-                          selector: #selector(safeClient.refreshToken(timer:)),
-                          userInfo: ["token": newToken,
-                                     "expectation": expectation],
-                          repeats: false)
-        safeClient.refreshRunLoop.add(timer,
-                                      forMode: .default)
+        let timer = Timer(
+            timeInterval: expirationInterval,
+            target: safeClient,
+            selector: #selector(safeClient.refreshToken(timer:)),
+            userInfo: [
+                "token": newToken,
+                "expectation": expectation,
+            ],
+            repeats: false)
+        safeClient.refreshRunLoop.add(
+            timer,
+            forMode: .default)
         safeClient.refreshTimer = timer
 
         Logger.tests.info("Expectation is \(expectation)")
-        let result = waiter.wait(for: [expectation],
-                                 timeout: expirationInterval * 2)
+        let result = waiter.wait(
+            for: [expectation],
+            timeout: expirationInterval * 2)
 
         switch result {
         case .completed:

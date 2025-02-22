@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import SwiftData
 import OSLog
+import SwiftData
 
 /// Only one authenticated user can exist at a time.
 @Model final class AuthenticatedUser: BikeIndexIdentifiable {
@@ -41,7 +41,10 @@ import OSLog
     @Relationship(inverse: \Bike.owner)
     fileprivate(set) var bikes: [Bike]
 
-    init(email: String, username: String, name: String, additionalEmails: [String], createdAt: Date, image: URL? = nil, twitter: URL? = nil, parent: AuthenticatedUser? = nil, bikes: [Bike]) {
+    init(
+        email: String, username: String, name: String, additionalEmails: [String], createdAt: Date,
+        image: URL? = nil, twitter: URL? = nil, parent: AuthenticatedUser? = nil, bikes: [Bike]
+    ) {
         self.email = email
         self.username = username
         self.name = name
@@ -61,12 +64,14 @@ import OSLog
     var accessToken: Token
     var userIsOrganizationAdmin: Bool
 
-    /* TODO: Fill-in Organization relationships and functionality
-        @Relationship(deleteRule: .cascade, inverse: \AuthenticatedUser.memberships)
-        var authorizedUsers: [AuthenticatedUser]? = []
-     */
+    // TODO: Fill-in Organization relationships and functionality
+    //    @Relationship(deleteRule: .cascade, inverse: \AuthenticatedUser.memberships)
+    //    var authorizedUsers: [AuthenticatedUser]? = []
 
-    init(name: String, slug: String, identifier: Int, accessToken: Token, userIsOrganizationAdmin: Bool) {
+    init(
+        name: String, slug: String, identifier: Int, accessToken: Token,
+        userIsOrganizationAdmin: Bool
+    ) {
         Logger.model.debug("Org.init w/ identifier \(identifier)")
         self.name = name
         self.slug = slug
@@ -75,4 +80,3 @@ import OSLog
         self.userIsOrganizationAdmin = userIsOrganizationAdmin
     }
 }
-

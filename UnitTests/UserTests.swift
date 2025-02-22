@@ -1,13 +1,14 @@
 //
 //  UserTests.swift
-//  BikeIndexTests
+//  UnitTests
 //
 //  Created by Jack on 11/25/23.
 //
 
-import XCTest
-import SwiftData
 import OSLog
+import SwiftData
+import XCTest
+
 @testable import BikeIndex
 
 final class UserTests: XCTestCase {
@@ -15,7 +16,8 @@ final class UserTests: XCTestCase {
     func test_user() throws {
         let input = MockData.userJson
         let inputData = try XCTUnwrap(input.data(using: .utf8))
-        let response_user = try JSONDecoder().decode(AuthenticatedUserResponse.UserResponse.self, from: inputData)
+        let response_user = try JSONDecoder().decode(
+            AuthenticatedUserResponse.UserResponse.self, from: inputData)
         let user = response_user.modelInstance()
 
         XCTAssertEqual(user.username, "00d66fc4724cad")
@@ -23,16 +25,17 @@ final class UserTests: XCTestCase {
         XCTAssertEqual(user.email, "test@example.com")
         XCTAssertEqual(user.additionalEmails, [])
         XCTAssertNil(user.twitter)
-        XCTAssertEqual(user.createdAt, Date(timeIntervalSince1970: 1694235377))
+        XCTAssertEqual(user.createdAt, Date(timeIntervalSince1970: 1_694_235_377))
         XCTAssertNil(user.image)
     }
 
-    @MainActor 
+    @MainActor
     func test_authenticated_user() throws {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
 
-        let container = try ModelContainer(for: AuthenticatedUser.self,
-                                           configurations: config)
+        let container = try ModelContainer(
+            for: AuthenticatedUser.self,
+            configurations: config)
 
         let input = MockData.authenticatedUserJson
 
@@ -56,7 +59,7 @@ final class UserTests: XCTestCase {
         XCTAssertEqual(user.email, "test@example.com")
         XCTAssertEqual(user.additionalEmails, [])
         XCTAssertNil(user.twitter)
-        XCTAssertEqual(user.createdAt, Date(timeIntervalSince1970: 1694235377))
+        XCTAssertEqual(user.createdAt, Date(timeIntervalSince1970: 1_694_235_377))
         XCTAssertNil(user.image)
 
         authenticatedUser.user = user

@@ -38,8 +38,9 @@ struct BicycleTypeSelectionView: View {
                 // electric is always off for scooter/skateboard
                 // electric is always active for e-scooter, personal mobility
                 if bike.typeOfCycle.canBeElectric {
-                    Toggle("⚡️ Electric (motorized)",
-                           isOn: $propulsion.isElectric)
+                    Toggle(
+                        "⚡️ Electric (motorized)",
+                        isOn: $propulsion.isElectric)
 
                     if bike.typeOfCycle.pedalAssistAndThrottle {
                         // not applicable for stroller/wheelchair/e-scooter/personal-mobility

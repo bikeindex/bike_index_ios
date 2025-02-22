@@ -5,8 +5,8 @@
 //  Created by Jack on 1/1/25.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 #if DEBUG
 struct DebugDataView: View {
@@ -137,7 +137,8 @@ struct DataModelDebugView<Model: PersistentModel, Content: View>: View {
     do {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let mockContainer = try ModelContainer(
-            for: Bike.self, User.self, AuthenticatedUser.self, Organization.self, AutocompleteManufacturer.self,
+            for: Bike.self, User.self, AuthenticatedUser.self, Organization.self,
+            AutocompleteManufacturer.self,
             configurations: config
         )
 
@@ -158,13 +159,16 @@ extension PersistentModel {
 extension String {
     // Attribution: https://stackoverflow.com/a/50202999/
     func titleCase() -> String {
-        return self
-            .replacingOccurrences(of: "([A-Z])",
-                                  with: " $1",
-                                  options: .regularExpression,
-                                  range: range(of: self))
+        return
+            self
+            .replacingOccurrences(
+                of: "([A-Z])",
+                with: " $1",
+                options: .regularExpression,
+                range: range(of: self)
+            )
             .trimmingCharacters(in: .whitespacesAndNewlines)
-            .capitalized // If input is in llamaCase
+            .capitalized  // If input is in llamaCase
     }
 }
 #endif

@@ -1,12 +1,12 @@
 //
 //  BikeIndexUITests.swift
-//  BikeIndexUITests
+//  UITests
 //
 //  Created by Jack on 11/18/23.
 //
 
-import XCTest
 import OSLog
+import XCTest
 
 @MainActor
 final class BikeIndexUITests: XCTestCase {
@@ -182,7 +182,8 @@ final class BikeIndexUITests: XCTestCase {
         _ = registerBikeButton.waitForExistence(timeout: timeout)
         registerBikeButton.tap()
 
-        let goToOurSerialPage = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Every bike has a unique"))
+        let goToOurSerialPage = app.staticTexts.matching(
+            NSPredicate(format: "label BEGINSWITH %@", "Every bike has a unique"))
         if goToOurSerialPage.element.waitForExistence(timeout: timeout) {
             goToOurSerialPage.element.tap()
         }

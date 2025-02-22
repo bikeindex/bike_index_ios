@@ -1,12 +1,12 @@
 //
 //  BikeIndexAppPreviewTest.swift
-//  BikeIndexTests
+//  UnitTests
 //
 //  Created by Jack on 12/27/24.
 //
 
-import XCTest
 import SnapshottingTests
+import XCTest
 
 class BikeIndexAppPreviewTest: SnapshotTest {
 

@@ -5,9 +5,9 @@
 //  Created by Jack on 12/22/24.
 //
 
-import SwiftUI
-import SwiftData
 import OSLog
+import SwiftData
+import SwiftUI
 
 final class MainContentModel {
 
@@ -22,7 +22,9 @@ final class MainContentModel {
         switch fetch_v3_me {
         case .success(let success):
             guard let myProfileSource = success as? AuthenticatedUserResponse else {
-                Logger.model.debug("ContentController.fetchProfile failed to parse profile from \(String(reflecting: success), privacy: .public)")
+                Logger.model.debug(
+                    "ContentController.fetchProfile failed to parse profile from \(String(reflecting: success), privacy: .public)"
+                )
                 throw Error.failed(message: "Failed to parse fetched profile.")
             }
 
@@ -40,7 +42,8 @@ final class MainContentModel {
                     let inactiveAuthUserPredicate = #Predicate<AuthenticatedUser> { model in
                         model.identifier != knownGoodId
                     }
-                    try modelContext.delete(model: AuthenticatedUser.self, where: inactiveAuthUserPredicate)
+                    try modelContext.delete(
+                        model: AuthenticatedUser.self, where: inactiveAuthUserPredicate)
 
                     // 1. and 2.
                     modelContext.insert(myProfile)
@@ -82,13 +85,16 @@ final class MainContentModel {
         switch fetchMyBikes {
         case .success(let success):
             guard let myBikesSource = success as? MultipleBikeResponseContainer else {
-                Logger.model.debug("ContentController.fetchBikes failed to parse bikes from \(String(reflecting: success), privacy: .public)")
+                Logger.model.debug(
+                    "ContentController.fetchBikes failed to parse bikes from \(String(reflecting: success), privacy: .public)"
+                )
                 throw Error.failed(message: "Failed to parse fetched bikes.")
             }
 
             do {
                 try modelContext.transaction {
-                    let ownerResults = try modelContext.fetch(FetchDescriptor(predicate: #Predicate<AuthenticatedUser> { _ in true }))
+                    let ownerResults = try modelContext.fetch(
+                        FetchDescriptor(predicate: #Predicate<AuthenticatedUser> { _ in true }))
                     assert(ownerResults.count == 1)
                     guard let owner = ownerResults.first else {
                         throw Error.failed(message: "Failed to fetch authenticated user.")

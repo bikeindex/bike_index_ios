@@ -1,14 +1,15 @@
 //
 //  ManufacturerTests.swift
-//  BikeIndexTests
+//  UnitTests
 //
 //  Created by Jack on 11/16/24.
 //
 
-import XCTest
+import OSLog
 import SwiftData
 import Testing
-import OSLog
+import XCTest
+
 @testable import BikeIndex
 
 struct ManufacturerTests {
@@ -34,7 +35,9 @@ struct ManufacturerTests {
         let descriptor = FetchDescriptor<AutocompleteManufacturer>()
 
         // https://developer.apple.com/documentation/swiftdata/maintaining-a-local-copy-of-server-data
-        #expect(await container.mainContext.autosaveEnabled, "Autosave must be enabled for deduplication")
+        #expect(
+            await container.mainContext.autosaveEnabled,
+            "Autosave must be enabled for deduplication")
         let manufacturer_preCreate = try await container.mainContext.fetch(descriptor)
         #expect(manufacturer_preCreate.count == 0)
 
@@ -55,10 +58,13 @@ struct ManufacturerTests {
             try await container.mainContext.save()
         }
         let fetch_postDuplicateInsert = try await container.mainContext.fetch(descriptor)
-        #expect(fetch_postDuplicateInsert.count == 1,
-                "Duplicate found, \(fetch_postDuplicateInsert.map(\.id)), \(fetch_postDuplicateInsert.map(\.identifier))")
-        #expect(manufacturer_postInsert.first?.text == "Jamis 2",
-                "Only one entry should be present and should have the latest `text` value.")
+        #expect(
+            fetch_postDuplicateInsert.count == 1,
+            "Duplicate found, \(fetch_postDuplicateInsert.map(\.id)), \(fetch_postDuplicateInsert.map(\.identifier))"
+        )
+        #expect(
+            manufacturer_postInsert.first?.text == "Jamis 2",
+            "Only one entry should be present and should have the latest `text` value.")
     }
 
 }

@@ -1,0 +1,2 @@
+# Check and warn of any linter violations
+swift format lint --recursive BikeIndex/ UnitTests/ UITests/

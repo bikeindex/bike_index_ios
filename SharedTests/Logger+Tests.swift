@@ -1,6 +1,6 @@
 //
 //  Logger+Tests.swift
-//  BikeIndexTests
+//  UnitTests
 //
 //  Created by Jack on 11/26/23.
 //

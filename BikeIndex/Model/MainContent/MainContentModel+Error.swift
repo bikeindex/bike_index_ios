@@ -18,7 +18,7 @@ extension MainContentModel {
             switch self {
             case .swiftError(let error):
                 return error.localizedDescription
-            case .failed(message: let message):
+            case .failed(let message):
                 return message
             }
         }
@@ -27,7 +27,7 @@ extension MainContentModel {
             switch self {
             case .swiftError(let error):
                 return (error as NSError).localizedFailureReason
-            case.failed(_):
+            case .failed(_):
                 return nil
             }
         }
@@ -36,7 +36,7 @@ extension MainContentModel {
             switch self {
             case .swiftError(let error):
                 return (error as NSError).localizedRecoverySuggestion
-            case.failed(_):
+            case .failed(_):
                 return nil
             }
         }
@@ -45,7 +45,7 @@ extension MainContentModel {
             switch self {
             case .swiftError(let error):
                 return (error as NSError).helpAnchor
-            case.failed(_):
+            case .failed(_):
                 return nil
             }
         }

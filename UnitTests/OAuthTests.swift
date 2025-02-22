@@ -1,11 +1,12 @@
 //
-//  BikeIndexTests.swift
-//  BikeIndexTests
+//  OAuthTests.swift
+//  UnitTests
 //
 //  Created by Jack on 11/18/23.
 //
 
 import XCTest
+
 @testable import BikeIndex
 
 final class OAuthTests: XCTestCase {
@@ -20,7 +21,7 @@ final class OAuthTests: XCTestCase {
         XCTAssertEqual(output.expiresIn, 3_600)
         XCTAssertEqual(output.refreshToken, "-Y8FDaHbr3F6KauqtFINsPvIjziN9DCIbdGEy8GS-tM")
         XCTAssertEqual(output.scope, Scope.allCases)
-        XCTAssertEqual(output.createdAt.timeIntervalSince1970, 1698883930)
+        XCTAssertEqual(output.createdAt.timeIntervalSince1970, 1_698_883_930)
 
     }
 }

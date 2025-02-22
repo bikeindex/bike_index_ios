@@ -1,13 +1,14 @@
 //
 //  UserRelationshipTests.swift
-//  BikeIndexTests
+//  UnitTests
 //
 //  Created by Jack on 11/29/23.
 //
 
-import XCTest
-import SwiftData
 import OSLog
+import SwiftData
+import XCTest
+
 @testable import BikeIndex
 
 @MainActor
@@ -18,8 +19,9 @@ final class UserRelationshipTests: XCTestCase {
     func test_authenticated_user_new_session_and_parsing() throws {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
 
-        let container = try ModelContainer(for: User.self, Organization.self, AuthenticatedUser.self,
-                                           configurations: config)
+        let container = try ModelContainer(
+            for: User.self, Organization.self, AuthenticatedUser.self,
+            configurations: config)
         let input = MockData.authenticatedUserJson
 
         let userResults0 = try container.mainContext.fetch(FetchDescriptor<User>())
@@ -53,21 +55,22 @@ final class UserRelationshipTests: XCTestCase {
         XCTAssert(username == "00d66fc4724cad")
 
         let name: String = user.name
-//        Logger.tests.debug("Found user.name \(name), assertion \(name == "Test User")")
+        //        Logger.tests.debug("Found user.name \(name), assertion \(name == "Test User")")
         XCTAssert(name == "Test User")
 
-//        let additionalEmails: [String] = user.additionalEmails
-//        XCTAssertTrue(additionalEmails.isEmpty)
+        //        let additionalEmails: [String] = user.additionalEmails
+        //        XCTAssertTrue(additionalEmails.isEmpty)
 
         XCTAssertNil(user.twitter)
 
-//        let createdAt: Date = user.createdAt
-//        XCTAssert(createdAt == Date(timeIntervalSince1970: 1694235377))
+        //        let createdAt: Date = user.createdAt
+        //        XCTAssert(createdAt == Date(timeIntervalSince1970: 1694235377))
 
         XCTAssertNil(user.image)
 
         let authIdentifier = authenticatedUser.identifier
-        Logger.tests.debug("Found authIdentifier \(authIdentifier), assertion \(authIdentifier == "591441")")
+        Logger.tests.debug(
+            "Found authIdentifier \(authIdentifier), assertion \(authIdentifier == "591441")")
         XCTAssert(authIdentifier == "456654")
 
         /*
@@ -102,36 +105,48 @@ final class UserRelationshipTests: XCTestCase {
     func test_authenticated_user_new_session_overwrite() throws {
         let config = ModelConfiguration(isStoredInMemoryOnly: true, allowsSave: true)
 
-        let container = try ModelContainer(for: User.self, Organization.self, AuthenticatedUser.self,
-                                           configurations: config)
+        let container = try ModelContainer(
+            for: User.self, Organization.self, AuthenticatedUser.self,
+            configurations: config)
         Logger.model.trace("Container.id is \(config.id)")
         let input = MockData.authenticatedUserJson
 
         XCTAssertTrue(container.mainContext.autosaveEnabled)
 
-        NotificationCenter.default.addObserver(forName: ModelContext.willSave, object: container.mainContext, queue: nil) { notif in
-            Logger.views.error("Received will-save notification: \(notif.userInfo?.debugDescription ?? "<empty>", privacy: .public)")
-            Logger.views.error("Received will-save notification: \(notif.debugDescription, privacy: .public)")
+        NotificationCenter.default.addObserver(
+            forName: ModelContext.willSave, object: container.mainContext, queue: nil
+        ) { notif in
+            Logger.views.error(
+                "Received will-save notification: \(notif.userInfo?.debugDescription ?? "<empty>", privacy: .public)"
+            )
+            Logger.views.error(
+                "Received will-save notification: \(notif.debugDescription, privacy: .public)")
         }
 
         let userResults_preCreate = try container.mainContext.fetch(FetchDescriptor<User>())
         XCTAssertEqual(userResults_preCreate.count, 0)
 
-        let authResults_preCreate = try container.mainContext.fetch(FetchDescriptor<AuthenticatedUser>())
+        let authResults_preCreate = try container.mainContext.fetch(
+            FetchDescriptor<AuthenticatedUser>())
         XCTAssertEqual(authResults_preCreate.count, 0)
 
-        let existingUser = User(email: "test@example.com", username: "00d66fc4724cad", name: "Test User presave", additionalEmails: [], createdAt: Date(), parent: nil, bikes: [])
+        let existingUser = User(
+            email: "test@example.com", username: "00d66fc4724cad", name: "Test User presave",
+            additionalEmails: [], createdAt: Date(), parent: nil, bikes: [])
 
-        let userResults_prefill_postcreate = try container.mainContext.fetch(FetchDescriptor<User>())
+        let userResults_prefill_postcreate = try container.mainContext.fetch(
+            FetchDescriptor<User>())
         XCTAssertEqual(userResults_prefill_postcreate.count, 0)
 
-        let authResults_prefill_postCreate = try container.mainContext.fetch(FetchDescriptor<AuthenticatedUser>())
+        let authResults_prefill_postCreate = try container.mainContext.fetch(
+            FetchDescriptor<AuthenticatedUser>())
         XCTAssertEqual(authResults_prefill_postCreate.count, 0)
 
-        let expect_user_prefill = XCTestExpectation(description: "Must prefill User before decoding")
-        let expect_authUser_prefill = XCTestExpectation(description: "Must prefill AuthenticatedUser before decoding")
+        let expect_user_prefill = XCTestExpectation(
+            description: "Must prefill User before decoding")
+        let expect_authUser_prefill = XCTestExpectation(
+            description: "Must prefill AuthenticatedUser before decoding")
         container.mainContext.insert(existingUser)
-
 
         let existingAuth = AuthenticatedUser(identifier: "456654", bikes: [])
 
@@ -139,7 +154,8 @@ final class UserRelationshipTests: XCTestCase {
 
         container.mainContext.insert(existingAuth)
 
-        let authResults_post_prefill = try container.mainContext.fetch(FetchDescriptor<AuthenticatedUser>())
+        let authResults_post_prefill = try container.mainContext.fetch(
+            FetchDescriptor<AuthenticatedUser>())
         XCTAssertEqual(authResults_post_prefill.count, 1)
 
         let userResults_post_prefill = try container.mainContext.fetch(FetchDescriptor<User>())
@@ -161,7 +177,9 @@ final class UserRelationshipTests: XCTestCase {
         XCTAssertNil(responseAuthUser.user)
         let expectation = XCTestExpectation(description: "SwiftData operations will complete.")
 
-        Logger.tests.debug("attaching responseUser to responseAuth - \(String(reflecting: responseUser), privacy: .public)")
+        Logger.tests.debug(
+            "attaching responseUser to responseAuth - \(String(reflecting: responseUser), privacy: .public)"
+        )
         responseAuthUser.user = responseUser
 
         let authResults1 = try container.mainContext.fetch(FetchDescriptor<AuthenticatedUser>())
@@ -182,8 +200,8 @@ final class UserRelationshipTests: XCTestCase {
 
         Logger.model.trace("@@º Attempting to inflate authenticatedUser.user)")
 
-//        let usersUser = try XCTUnwrap(responseAuthUser.user)
-//        Logger.tests.debug("User is \(usersUser.username, privacy: .public)")
+        //        let usersUser = try XCTUnwrap(responseAuthUser.user)
+        //        Logger.tests.debug("User is \(usersUser.username, privacy: .public)")
 
         XCTAssertEqual(responseAuthUser.user?.username, "00d66fc4724cad")
 
@@ -193,10 +211,9 @@ final class UserRelationshipTests: XCTestCase {
 
         XCTAssertNil(responseAuthUser.user?.twitter)
 
-        XCTAssertEqual(responseAuthUser.user?.createdAt, Date(timeIntervalSince1970: 1694235377))
+        XCTAssertEqual(responseAuthUser.user?.createdAt, Date(timeIntervalSince1970: 1_694_235_377))
 
         XCTAssertNil(responseAuthUser.user?.image)
-
 
         let authResults2 = try container.mainContext.fetch(FetchDescriptor<AuthenticatedUser>())
         XCTAssertEqual(authResults2.count, 1)

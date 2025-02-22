@@ -30,25 +30,33 @@ struct NavigableWebView: View {
     }
 
     var body: some View {
-        WebView(url: url,
-                configuration: client.webConfiguration) {
+        WebView(
+            url: url,
+            configuration: client.webConfiguration
+        ) {
             #if !RELEASE
             $0.isInspectable = true
             #endif
             navigator.wkWebView = $0
             $0.navigationDelegate = navigator
         }
-        .onChange(of: url, { _, newValue in
-            // When the binding changes, navigate to the new page.
-            navigator.wkWebView?.load(URLRequest(url: newValue))
-        })
-        .onChange(of: navigator.wkWebView?.url, { oldValue, newValue in
-            // After a user action causes a change, update the binding.
-            // This allows assigning new values to the binding to navigate to.
-            if let newValue, newValue != url {
-                url = newValue
+        .onChange(
+            of: url,
+            { _, newValue in
+                // When the binding changes, navigate to the new page.
+                navigator.wkWebView?.load(URLRequest(url: newValue))
             }
-        })
+        )
+        .onChange(
+            of: navigator.wkWebView?.url,
+            { oldValue, newValue in
+                // After a user action causes a change, update the binding.
+                // This allows assigning new values to the binding to navigate to.
+                if let newValue, newValue != url {
+                    url = newValue
+                }
+            }
+        )
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Group {
