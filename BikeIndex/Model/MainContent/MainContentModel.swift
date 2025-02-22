@@ -13,6 +13,14 @@ import SwiftUI
 @MainActor
 final class MainContentModel {
 
+    /// Fetch profile information from /me endpoint.
+    /// The top level objects returned from /me are: id, user, bike\_ids, and memberships.
+    /// - Separate AuthenticatedUser and User models will be created.
+    /// - Any known (cached) bikes will be associated.
+    /// - TODO: Add support for organization membership fetches.
+    /// - Parameters:
+    ///     - client: Network client
+    ///     - modelContext: SwiftData model context to perform database operations within.
     func fetchProfile(client: Client, modelContext: ModelContext) async throws(Error) {
         if client.authenticated == false {
             throw unauthenticatedError
