@@ -95,6 +95,8 @@ enum OAuth: APIEndpoint {
 }
 
 enum Organizations: APIEndpoint {
+    /// TODO: "Add an Organization to Bike Index"
+    /// https://bikeindex.org/documentation/api_v3#!/organizations/POST_version_organizations_format_post_0
     case `self`(form: Postable)
 
     var path: [String] {

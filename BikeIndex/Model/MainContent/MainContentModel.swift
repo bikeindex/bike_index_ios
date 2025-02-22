@@ -134,12 +134,4 @@ final class MainContentModel {
             throw Error.swiftError(failure)
         }
     }
-
-    func fetchOrganizationMembership(client: Client, modelContext: ModelContext) async throws(Error) {
-        if client.authenticated == false {
-            throw unauthenticatedError
-        }
-
-        // TODO: Implement organization fetching
-    }
 }
