@@ -7,14 +7,28 @@
 
 import SwiftUI
 
-struct ContentButtonView: View {
-    @Environment(\.colorScheme) var colorScheme
-    @Binding var path: NavigationPath
-    var item: ContentButton
+extension MainContentPage {
+    struct MenuButtonStyle: ButtonStyle {
+        @Environment(\.colorScheme) var colorScheme
 
-    var body: some View {
-        Button(
-            action: {
+        func makeBody(configuration: Configuration) -> some View {
+            configuration.label
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity,
+                       minHeight: 40,
+                       maxHeight: 80)
+                .foregroundStyle(.white)
+                .background(colorScheme == .light ? .black : .secondary)
+                .padding(.horizontal, 8)
+        }
+    }
+
+    struct ContentButtonView: View {
+        @Binding var path: NavigationPath
+        var item: ContentButton
+
+        var body: some View {
+            Button(action: {
                 switch item {
                 case .registerBike:
                     path.append(MainContent.registerBike)
@@ -23,54 +37,44 @@ struct ContentButtonView: View {
                 case .search:
                     path.append(MainContent.searchBikes)
                 }
-            },
-            label: {
-                Text(item.title)
-                    .padding(.leading, 10)
-                Spacer()
-                Text("»")
-                    .bold()
-                    .padding(.trailing, 10)
-            }
-        )
-        .accessibilityIdentifier(item.title)
-        .multilineTextAlignment(.leading)
-        .frame(maxWidth: .infinity, minHeight: 40)
-        .tint(.white)
-        .background(colorScheme == .light ? .black : .secondary)
-        .padding(.horizontal, 8)
-    }
-}
-
-enum ContentButton: String, Identifiable, Codable, CaseIterable {
-    var id: String { self.rawValue }
-
-    /// This is my bike
-    case registerBike
-    /// I lost my bike
-    case alertBike
-    /// Search!
-    case search
-
-    var icon: ImageResource {
-        switch self {
-        case .registerBike:
-            return .iconRegister
-        case .alertBike:
-            return .iconAlert
-        case .search:
-            return .stolenRegistry
+            }, label: {
+                MenuLabel(title: item.title)
+            })
+            .buttonStyle(MainContentPage.MenuButtonStyle())
+            .accessibilityIdentifier(item.title)
         }
     }
 
-    var title: String {
-        switch self {
-        case .registerBike:
-            return "Register a bike"
-        case .alertBike:
-            return "Register a stolen bike"
-        case .search:
-            return "Search"
+    enum ContentButton: String, Identifiable, Codable, CaseIterable {
+        var id: String { self.rawValue }
+
+        /// This is my bike
+        case registerBike
+        /// I lost my bike
+        case alertBike
+        /// Search!
+        case search
+
+        var icon: ImageResource {
+            switch self {
+            case .registerBike:
+                return .iconRegister
+            case .alertBike:
+                return .iconAlert
+            case .search:
+                return .stolenRegistry
+            }
+        }
+
+        var title: String {
+            switch self {
+            case .registerBike:
+                return "Register a bike"
+            case .alertBike:
+                return "Register a stolen bike"
+            case .search:
+                return "Search"
+            }
         }
     }
 }
@@ -78,8 +82,8 @@ enum ContentButton: String, Identifiable, Codable, CaseIterable {
 #Preview("All Content Button Previews") {
     let path: Binding = .constant(NavigationPath())
     ScrollView {
-        ForEach(ContentButton.allCases) { item in
-            ContentButtonView(path: path, item: item)
+        ForEach(MainContentPage.ContentButton.allCases) { item in
+            MainContentPage.ContentButtonView(path: path, item: item)
         }
     }
 }

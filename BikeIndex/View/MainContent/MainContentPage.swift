@@ -22,6 +22,7 @@ struct MainContentPage: View {
     @State var showError: Bool = false
 
     @Query private var bikes: [Bike]
+    @Query private var organizations: [Organization]
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -31,6 +32,18 @@ struct MainContentPage: View {
                         ContentButtonView(
                             path: $path,
                             item: menuItem)
+                    }
+                    if organizations.isEmpty == false {
+                        Section {
+                            ForEach(organizations) { org in
+                                NavigationLink(value: org.persistentModelID) {
+                                    MenuLabel(title: org.name)
+                                }
+                                .buttonStyle(MenuButtonStyle())
+                            }
+                        } header: {
+                            Text("Organizations")
+                        }
                     }
                 }
 
