@@ -5,8 +5,8 @@
 //  Created by Jack on 11/23/23.
 //
 
-import SwiftUI
 import OSLog
+import SwiftUI
 
 enum MailToLink: Identifiable {
     case contactUs
@@ -24,13 +24,15 @@ enum MailToLink: Identifiable {
 
             let info = AppVersionInfo()
             if let marketingVersion = info.marketingVersion,
-               let buildNumber = info.buildNumber
+                let buildNumber = info.buildNumber
             {
-                let body = URLQueryItem(name: "body", value: "\r\n\r\nVersion: \(marketingVersion) (\(buildNumber))")
+                let body = URLQueryItem(
+                    name: "body", value: "\r\n\r\nVersion: \(marketingVersion) (\(buildNumber))")
                 queryItems.append(body)
             }
 
-            return base
+            return
+                base
                 .appending(path: recipient)
                 .appending(queryItems: queryItems)
         }
@@ -61,18 +63,22 @@ enum BikeIndexLink: Identifiable {
         case .oauthApplications:
             markdownSource = "[Edit your OAuth Applications at bikeindex.org](\(link(base: base)))"
         case .serials:
-            markdownSource = "Every bike has a unique serial number, it's how they are identified. To learn more or see some examples, [go to our serial page](\(link(base: base)))."
+            markdownSource =
+                "Every bike has a unique serial number, it's how they are identified. To learn more or see some examples, [go to our serial page](\(link(base: base)))."
         case .stolenBikeFAQ:
-            markdownSource = "Learn more about [How to get your stolen bike back](\(link(base: base)))"
+            markdownSource =
+                "Learn more about [How to get your stolen bike back](\(link(base: base)))"
         case .privacyPolicy, .termsOfService, .deleteAccount, .accountUserSettings,
-                .accountPassword, .accountSharingPersonalPage, .accountRegistrationOrganization:
+            .accountPassword, .accountSharingPersonalPage, .accountRegistrationOrganization:
             return AttributedString()
         }
 
         do {
             return try AttributedString(markdown: markdownSource)
         } catch {
-            Logger.views.error("Failed to create link from \(self.path, privacy: .public) on base \(base, privacy: .public)")
+            Logger.views.error(
+                "Failed to create link from \(self.path, privacy: .public) on base \(base, privacy: .public)"
+            )
             return AttributedString(stringLiteral: "Internal error creating link.")
         }
     }

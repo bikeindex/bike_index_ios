@@ -5,8 +5,8 @@
 //  Created by Jack on 12/4/24.
 //
 
-import XCTest
 import OSLog
+import XCTest
 
 extension XCTestCase {
     @MainActor
@@ -15,7 +15,8 @@ extension XCTestCase {
 
         /// If the Authorized Applications ever lapses (https://bikeindex.org/oauth/authorized_applications) then
         /// the CI runner will begin to fail tests and should have this prompt in the sign-in page.
-        let guardAgainstAuthorizationRequired = app.webViews.firstMatch.staticTexts["AUTHORIZATION REQUIRED"]
+        let guardAgainstAuthorizationRequired = app.webViews.firstMatch.staticTexts[
+            "AUTHORIZATION REQUIRED"]
         if guardAgainstAuthorizationRequired.waitForExistence(timeout: timeout) {
             let authorizeButton = app.webViews.firstMatch.buttons["Authorize"]
             if authorizeButton.waitForExistence(timeout: timeout) {
@@ -77,7 +78,8 @@ extension XCTestCase {
 
         /// If the Authorized Applications ever lapses (https://bikeindex.org/oauth/authorized_applications) then
         /// the CI runner will begin to fail tests and should have this prompt in the sign-in page.
-        let guardAgainstAuthorizationRequired = app.webViews.firstMatch.staticTexts["AUTHORIZATION REQUIRED"]
+        let guardAgainstAuthorizationRequired = app.webViews.firstMatch.staticTexts[
+            "AUTHORIZATION REQUIRED"]
         guardAgainstAuthorizationRequired.waitForNonExistence(timeout: timeout)
 
         let authorizeButton = app.webViews.firstMatch.buttons["Authorize"]

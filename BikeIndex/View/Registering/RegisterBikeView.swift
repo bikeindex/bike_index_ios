@@ -5,9 +5,9 @@
 //  Created by Jack on 11/18/23.
 //
 
-import SwiftUI
-import SwiftData
 import OSLog
+import SwiftData
+import SwiftUI
 import WebViewKit
 
 /// NOTE: Adopt @Focus State https://developer.apple.com/documentation/swiftui/focusstate
@@ -129,22 +129,27 @@ struct RegisterBikeView: View {
                 Text("Serial Number")
             } footer: {
                 TextLink(base: client.configuration.host, link: .serials)
-                    .environment(\.openURL, OpenURLAction { URL in
-                        showSerialsPage = true
-                        return .handled
-                    })
+                    .environment(
+                        \.openURL,
+                        OpenURLAction { URL in
+                            showSerialsPage = true
+                            return .handled
+                        })
             }
 
             // MARK: Bike type and propulsion
-            BicycleTypeSelectionView(bike: $bike,
-                                     traditionalBicycle: $traditionalBicycle,
-                                     propulsion: $propulsion)
+            BicycleTypeSelectionView(
+                bike: $bike,
+                traditionalBicycle: $traditionalBicycle,
+                propulsion: $propulsion)
 
             // MARK: Manufacturer
             Section {
-                ManufacturerEntryView(bike: $bike,
-                                      manufacturerSearchText: $manufacturerSearchText,
-                                      state: $manufacturerSearchState)
+                ManufacturerEntryView(
+                    bike: $bike,
+                    manufacturerSearchText: $manufacturerSearchText,
+                    state: $manufacturerSearchState
+                )
                 .environment(client)
                 .modelContext(modelContext)
             } header: {
@@ -182,9 +187,12 @@ struct RegisterBikeView: View {
                         Text(option.displayValue)
                     }
                 }
-                .onChange(of: colorPrimary, { oldValue, newValue in
-                    bike.frameColorPrimary = newValue
-                })
+                .onChange(
+                    of: colorPrimary,
+                    { oldValue, newValue in
+                        bike.frameColorPrimary = newValue
+                    }
+                )
                 .pickerStyle(.menu)
 
                 if bike.frameColors.count == 1 {
@@ -198,9 +206,12 @@ struct RegisterBikeView: View {
                             Text(option.displayValue)
                         }
                     }
-                    .onChange(of: colorSecondary, { oldValue, newValue in
-                        bike.frameColorSecondary = newValue
-                    })
+                    .onChange(
+                        of: colorSecondary,
+                        { oldValue, newValue in
+                            bike.frameColorSecondary = newValue
+                        }
+                    )
                     .pickerStyle(.menu)
                 }
                 if bike.frameColors.count == 2 {
@@ -218,9 +229,12 @@ struct RegisterBikeView: View {
                             Text(option.displayValue)
                         }
                     }
-                    .onChange(of: colorTertiary, { oldValue, newValue in
-                        bike.frameColorTertiary = newValue
-                    })
+                    .onChange(
+                        of: colorTertiary,
+                        { oldValue, newValue in
+                            bike.frameColorTertiary = newValue
+                        }
+                    )
                     .pickerStyle(.menu)
                     Button("Remove tertiary color") {
                         bike.frameColorTertiary = nil
@@ -231,7 +245,9 @@ struct RegisterBikeView: View {
             } header: {
                 Text("What color is the bike?")
             } footer: {
-                Text("The color of the frame and fork—not the wheels, cranks, or anything else. You can put a more detailed description in paint description (once you've registered), this is to get a general color to make searching easier")
+                Text(
+                    "The color of the frame and fork—not the wheels, cranks, or anything else. You can put a more detailed description in paint description (once you've registered), this is to get a general color to make searching easier"
+                )
             }
 
             // MARK: - Mode-special fields
@@ -258,19 +274,23 @@ struct RegisterBikeView: View {
                 } label: {
                     Text("Register")
                 }
-                .alert(validationModel.title,
-                       isPresented: $validationModel.show,
-                       actions: {
-                    Button("Okay") {
-                        validationModel.actions()
+                .alert(
+                    validationModel.title,
+                    isPresented: $validationModel.show,
+                    actions: {
+                        Button("Okay") {
+                            validationModel.actions()
+                        }
+                    },
+                    message: {
+                        Text(validationModel.message)
                     }
-                }, message: {
-                    Text(validationModel.message)
-                })
+                )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } footer: {
                 if !client.userCanRegisterBikes {
-                    Text("Oh no, your authorization doesn't include the ability to register a bike!")
+                    Text(
+                        "Oh no, your authorization doesn't include the ability to register a bike!")
                 }
             }
             .disabled(client.userCanRegisterBikes && requiredFieldsNotMet)
@@ -280,7 +300,9 @@ struct RegisterBikeView: View {
             if let user = authenticatedUsers.first?.user {
                 ownerEmail = user.email
             } else {
-                Logger.views.info("Failed to find authenticated users with email, skiping association of ownerEmail. Authenticated users has count \(authenticatedUsers.count)")
+                Logger.views.info(
+                    "Failed to find authenticated users with email, skiping association of ownerEmail. Authenticated users has count \(authenticatedUsers.count)"
+                )
             }
         }
         .navigationDestination(isPresented: $showSerialsPage) {
@@ -296,22 +318,30 @@ struct RegisterBikeView: View {
     /// Receive the result and persist the server's model
     /// Update the UI
     private func registerBike() async {
-        Logger.model.debug("\(#function) Registering bike w/ serial \(String(describing: bike.serial))")
-        Logger.model.debug("\(#function) Registering bike w/ manufacturerName \(String(describing: bike.manufacturerName))")
-        Logger.model.debug("\(#function) Registering bike w/ frameColors \(String(describing: bike.frameColors))")
-        Logger.model.debug("\(#function) Registering w/ owner email \(String(describing: ownerEmail))")
+        Logger.model.debug(
+            "\(#function) Registering bike w/ serial \(String(describing: bike.serial))")
+        Logger.model.debug(
+            "\(#function) Registering bike w/ manufacturerName \(String(describing: bike.manufacturerName))"
+        )
+        Logger.model.debug(
+            "\(#function) Registering bike w/ frameColors \(String(describing: bike.frameColors))")
+        Logger.model.debug(
+            "\(#function) Registering w/ owner email \(String(describing: ownerEmail))")
 
-        let bikeRegistration = BikeRegistration(bike: bike,
-                                                mode: mode,
-                                                stolen: stolenRecord,
-                                                propulsion: propulsion,
-                                                ownerEmail: ownerEmail)
+        let bikeRegistration = BikeRegistration(
+            bike: bike,
+            mode: mode,
+            stolen: stolenRecord,
+            propulsion: propulsion,
+            ownerEmail: ownerEmail)
         let endpoint = Bikes.postBikes(form: bikeRegistration)
         let response = await client.api.post(endpoint)
         switch response {
         case .success(let success):
             guard let registrationResponseSource = success as? SingleBikeResponseContainer else {
-                Logger.views.error("Failed to parse bike registtration successful response from \(String(reflecting: success))")
+                Logger.views.error(
+                    "Failed to parse bike registtration successful response from \(String(reflecting: success))"
+                )
                 return
             }
 
@@ -320,21 +350,30 @@ struct RegisterBikeView: View {
                 modelContext.insert(bikeModel)
 
                 try? modelContext.save()
-                self.validationModel = AddBikeOutput(show: true, actions: {
-                    /// Access dismiss directly.
-                    /// If ``RegisterBikeView`` captures the Environment object in a var it will conflict with the
-                    /// NavigableWebViews and cause an infinite loop. (I think that's the cause).
-                    dismiss()
-                }, message: "", title: "Success!")
+                self.validationModel = AddBikeOutput(
+                    show: true,
+                    actions: {
+                        /// Access dismiss directly.
+                        /// If ``RegisterBikeView`` captures the Environment object in a var it will conflict with the
+                        /// NavigableWebViews and cause an infinite loop. (I think that's the cause).
+                        dismiss()
+                    }, message: "", title: "Success!")
             }
 
         case .failure(let failure):
-            Logger.views.error("Failed to register bike with model \(String(reflecting: bikeRegistration)), endpoint \(String(reflecting: endpoint))")
-            Logger.views.error("Failed to register bike with failure \(String(reflecting: failure)), response \(String(reflecting: response))")
+            Logger.views.error(
+                "Failed to register bike with model \(String(reflecting: bikeRegistration)), endpoint \(String(reflecting: endpoint))"
+            )
+            Logger.views.error(
+                "Failed to register bike with failure \(String(reflecting: failure)), response \(String(reflecting: response))"
+            )
 
-            self.validationModel = AddBikeOutput(show: true, actions: {
+            self.validationModel = AddBikeOutput(
+                show: true,
+                actions: {
 
-            }, message: LocalizedStringKey(failure.localizedDescription), title: "Registering bike failed")
+                }, message: LocalizedStringKey(failure.localizedDescription),
+                title: "Registering bike failed")
         }
     }
 }
@@ -346,10 +385,14 @@ struct RegisterBikeView: View {
         let client = try Client()
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
 
-        let container = try ModelContainer(for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
-                                           configurations: config)
+        let container = try ModelContainer(
+            for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+            configurations: config)
 
-        let user = User(email: "preview@bikeindex.org", username: "previewUser", name: "Preview User", additionalEmails: [], createdAt: Date(), image: nil, twitter: nil, parent: nil, bikes: [bike])
+        let user = User(
+            email: "preview@bikeindex.org", username: "previewUser", name: "Preview User",
+            additionalEmails: [], createdAt: Date(), image: nil, twitter: nil, parent: nil,
+            bikes: [bike])
 
         let auth = AuthenticatedUser(identifier: "1", bikes: [bike])
         auth.user = user
@@ -372,10 +415,14 @@ struct RegisterBikeView: View {
         let client = try Client()
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
 
-        let container = try ModelContainer(for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
-                                           configurations: config)
+        let container = try ModelContainer(
+            for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+            configurations: config)
 
-        let user = User(email: "preview@bikeindex.org", username: "previewUser", name: "Preview User", additionalEmails: [], createdAt: Date(), image: nil, twitter: nil, parent: nil, bikes: [bike])
+        let user = User(
+            email: "preview@bikeindex.org", username: "previewUser", name: "Preview User",
+            additionalEmails: [], createdAt: Date(), image: nil, twitter: nil, parent: nil,
+            bikes: [bike])
 
         let auth = AuthenticatedUser(identifier: "1", bikes: [bike])
         auth.user = user

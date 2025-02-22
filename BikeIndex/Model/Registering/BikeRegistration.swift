@@ -47,7 +47,7 @@ struct BikeRegistration: Encodable {
     var handlebar_type_slug: String?
     var no_notify: Bool?
     var is_for_sale: Bool?
-    var frame_material: String? // replace with frame material enum?
+    var frame_material: String?  // replace with frame material enum?
     var external_image_urls: [URL]?
     var bike_sticker: String?
 
@@ -56,12 +56,59 @@ struct BikeRegistration: Encodable {
     var stolen_record: StolenRecord?
     var components: [Component]?
 
-    init(bike: Bike,
-         mode: RegisterMode,
-         stolen: StolenRecord?,
-         propulsion: Propulsion?,
-         ownerEmail: String)
-    {
+    init(
+        serial: String?, manufacturer: String, owner_email: String, primary_frame_color: FrameColor,
+        test: Bool = false, owner_email_is_phone_number: Bool? = nil,
+        organization_slug: String? = nil, cycle_type_name: BicycleType? = nil,
+        no_duplicate: Bool? = nil, rear_wheel_bsd: Int? = nil, rear_tire_narrow: Bool? = nil,
+        front_wheel_bsd: String? = nil, front_tire_narrow: Bool? = nil, frame_model: String? = nil,
+        year: UInt? = nil, description: String? = nil, secondary_frame_color: FrameColor? = nil,
+        tertiary_frame_color: FrameColor? = nil, rear_gear_type_slug: String? = nil,
+        front_gear_type_slug: String? = nil, extra_registration_number: String? = nil,
+        handlebar_type_slug: String? = nil, no_notify: Bool? = nil, is_for_sale: Bool? = nil,
+        frame_material: String, external_image_urls: [URL]? = nil, bike_sticker: String? = nil,
+        propulsion: Propulsion? = nil, stolen_record: StolenRecord? = nil,
+        components: [Component]? = nil
+    ) {
+        self.serial = serial ?? Serial.unknown
+        self.manufacturer = manufacturer
+        self.owner_email = owner_email
+        self.primary_frame_color = primary_frame_color.rawValue.lowercased()
+        self.color = primary_frame_color.rawValue.lowercased()
+        self.owner_email_is_phone_number = owner_email_is_phone_number
+        self.organization_slug = organization_slug
+        self.cycle_type_name = cycle_type_name
+        self.no_duplicate = no_duplicate
+        self.rear_wheel_bsd = rear_wheel_bsd
+        self.rear_tire_narrow = rear_tire_narrow
+        self.front_wheel_bsd = front_wheel_bsd
+        self.front_tire_narrow = front_tire_narrow
+        self.frame_model = frame_model
+        self.year = year
+        self.description = description
+        self.secondary_frame_color = secondary_frame_color?.rawValue.lowercased()
+        self.tertiary_frame_color = tertiary_frame_color?.rawValue.lowercased()
+        self.rear_gear_type_slug = rear_gear_type_slug
+        self.front_gear_type_slug = front_gear_type_slug
+        self.extra_registration_number = extra_registration_number
+        self.handlebar_type_slug = handlebar_type_slug
+        self.no_notify = no_notify
+        self.is_for_sale = is_for_sale
+        self.frame_material = frame_material
+        self.external_image_urls = external_image_urls
+        self.bike_sticker = bike_sticker
+        self.propulsion = propulsion
+        self.stolen_record = stolen_record
+        self.components = components
+    }
+
+    init(
+        bike: Bike,
+        mode: RegisterMode,
+        stolen: StolenRecord?,
+        propulsion: Propulsion?,
+        ownerEmail: String
+    ) {
         // If the serial number is absent then continue with a constant
         self.serial = bike.serial ?? Serial.unknown
 
@@ -161,7 +208,8 @@ struct BikeRegistration: Encodable {
         try container.encode(self.owner_email, forKey: .owner_email)
         try container.encode(self.color, forKey: .color)
         try container.encode(self.primary_frame_color, forKey: .primary_frame_color)
-        try container.encodeIfPresent(self.owner_email_is_phone_number, forKey: .owner_email_is_phone_number)
+        try container.encodeIfPresent(
+            self.owner_email_is_phone_number, forKey: .owner_email_is_phone_number)
         try container.encodeIfPresent(self.organization_slug, forKey: .organization_slug)
         try container.encodeIfPresent(self.cycle_type_name, forKey: .cycle_type_name)
         try container.encodeIfPresent(self.no_duplicate, forKey: .no_duplicate)
@@ -176,7 +224,8 @@ struct BikeRegistration: Encodable {
         try container.encodeIfPresent(self.tertiary_frame_color, forKey: .tertiary_frame_color)
         try container.encodeIfPresent(self.rear_gear_type_slug, forKey: .rear_gear_type_slug)
         try container.encodeIfPresent(self.front_gear_type_slug, forKey: .front_gear_type_slug)
-        try container.encodeIfPresent(self.extra_registration_number, forKey: .extra_registration_number)
+        try container.encodeIfPresent(
+            self.extra_registration_number, forKey: .extra_registration_number)
         try container.encodeIfPresent(self.handlebar_type_slug, forKey: .handlebar_type_slug)
         try container.encodeIfPresent(self.no_notify, forKey: .no_notify)
         try container.encodeIfPresent(self.is_for_sale, forKey: .is_for_sale)
@@ -197,7 +246,8 @@ struct BikeRegistration: Encodable {
                 try container.encode(propulsion.isElectric, forKey: .propulsion_type_motorized)
             } else {
                 try container.encode(propulsion.hasThrottle, forKey: .propulsion_type_throttle)
-                try container.encode(propulsion.hasPedalAssist, forKey: .propulsion_type_pedal_assist)
+                try container.encode(
+                    propulsion.hasPedalAssist, forKey: .propulsion_type_pedal_assist)
             }
         }
     }
@@ -205,7 +255,7 @@ struct BikeRegistration: Encodable {
 
 struct Component: Encodable {
     let manufacturer: String
-    let component_type:	String // replace with component-type / ctype enum
+    let component_type: String  // replace with component-type / ctype enum
     let model: String
     let year: Int
     let description: String

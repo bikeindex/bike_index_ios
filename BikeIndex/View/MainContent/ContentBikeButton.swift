@@ -5,8 +5,8 @@
 //  Created by Jack on 1/7/24.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct ContentBikeButtonView: View {
     @Binding var path: NavigationPath
@@ -37,19 +37,24 @@ struct ContentBikeButtonView: View {
                                 .resizable()
                                 .scaledToFit()
                                 .padding()
-                                .frame(minWidth: 100,
-                                       maxWidth: .infinity,
-                                       minHeight: 100,
-                                       maxHeight: .infinity)
+                                .frame(
+                                    minWidth: 100,
+                                    maxWidth: .infinity,
+                                    minHeight: 100,
+                                    maxHeight: .infinity
+                                )
                                 .tint(Color.white)
-                                .background(Color.accentColor, in: RoundedRectangle(cornerRadius: 24))
+                                .background(
+                                    Color.accentColor, in: RoundedRectangle(cornerRadius: 24))
 
                         }
                     }
-                    .frame(minWidth: 100,
-                           maxWidth: .infinity,
-                           minHeight: 100,
-                           maxHeight: .infinity)
+                    .frame(
+                        minWidth: 100,
+                        maxWidth: .infinity,
+                        minHeight: 100,
+                        maxHeight: .infinity
+                    )
                     .aspectRatio(1.0, contentMode: .fit)
                     .clipShape(RoundedRectangle(cornerRadius: 24))
 
@@ -63,7 +68,6 @@ struct ContentBikeButtonView: View {
         }
     }
 }
-
 
 #Preview {
     @Previewable @State var navigationPath = NavigationPath()
@@ -80,7 +84,7 @@ struct ContentBikeButtonView: View {
         largeImage: URL(string: "https://placekitten.com/200/200"),
         url: URL(string: "about:blank").unsafelyUnwrapped,
         publicImages: [
-            "https://placekitten.com/200/200",
+            "https://placekitten.com/200/200"
         ]
     )
 
@@ -96,7 +100,7 @@ struct ContentBikeButtonView: View {
         largeImage: URL(string: "https://placekitten.com/500/200"),
         url: URL(string: "about:blank").unsafelyUnwrapped,
         publicImages: [
-            "https://placekitten.com/200/200",
+            "https://placekitten.com/200/200"
         ]
     )
 
@@ -112,7 +116,7 @@ struct ContentBikeButtonView: View {
         largeImage: URL(string: "https://placekitten.com/200/500"),
         url: URL(string: "about:blank").unsafelyUnwrapped,
         publicImages: [
-            "https://placekitten.com/200/200",
+            "https://placekitten.com/200/200"
         ]
     )
 
@@ -128,7 +132,7 @@ struct ContentBikeButtonView: View {
         largeImage: nil,
         url: URL(string: "about:blank").unsafelyUnwrapped,
         publicImages: [
-            "https://placekitten.com/200/200",
+            "https://placekitten.com/200/200"
         ]
     )
 
@@ -149,11 +153,11 @@ struct ContentBikeButtonView: View {
     return ScrollView {
         ProportionalLazyVGrid {
             ForEach(sampleIdentifiers, id: \.self) {
-                ContentBikeButtonView(path: $navigationPath,
-                                      bikeIdentifier: $0)
+                ContentBikeButtonView(
+                    path: $navigationPath,
+                    bikeIdentifier: $0)
             }
         }
     }
     .modelContainer(mockContainer)
 }
-

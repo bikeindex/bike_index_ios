@@ -5,9 +5,9 @@
 //  Created by Jack on 11/18/23.
 //
 
-import SwiftUI
-import SwiftData
 import OSLog
+import SwiftData
+import SwiftUI
 
 struct MainContentPage: View {
     @Environment(\.modelContext) private var modelContext
@@ -28,8 +28,9 @@ struct MainContentPage: View {
             ScrollView {
                 LazyVGrid(columns: Array(repeating: GridItem(), count: 1)) {
                     ForEach(ContentButton.allCases, id: \.id) { menuItem in
-                        ContentButtonView(path: $path,
-                                          item: menuItem)
+                        ContentButtonView(
+                            path: $path,
+                            item: menuItem)
                     }
                 }
 
@@ -63,8 +64,10 @@ struct MainContentPage: View {
                 case .lostBike:
                     RegisterBikeView(mode: .myStolenBike)
                 case .searchBikes:
-                    NavigableWebView(url: .constant(URL(string: "https://bikeindex.org/bikes?stolenness=all")!))
-                        .environment(client)
+                    NavigableWebView(
+                        url: .constant(URL(string: "https://bikeindex.org/bikes?stolenness=all")!)
+                    )
+                    .environment(client)
                 }
             }
             .navigationDestination(for: PersistentIdentifier.self) { identifier in
@@ -76,8 +79,8 @@ struct MainContentPage: View {
                 Text("Error occurred")
             }
         }
-       .task {
-           await fetchMainContentData()
+        .task {
+            await fetchMainContentData()
         }
     }
 
@@ -93,8 +96,9 @@ struct MainContentPage: View {
     /// - https://www.hackingwithswift.com/swift/6.0/typed-throws
     private func fetchMainContentData() async {
         do {
-            try await contentModel.fetchProfile(client: client,
-                                                modelContext: modelContext)
+            try await contentModel.fetchProfile(
+                client: client,
+                modelContext: modelContext)
         } catch let error as MainContentModel.Error {
             Logger.model.error("Failed to fetch profile: \(error)")
             lastError = error
@@ -106,8 +110,9 @@ struct MainContentPage: View {
         }
 
         do {
-            try await contentModel.fetchBikes(client: client,
-                                              modelContext: modelContext)
+            try await contentModel.fetchBikes(
+                client: client,
+                modelContext: modelContext)
         } catch let error as MainContentModel.Error {
             Logger.model.error("Failed to user's bikes: \(error)")
             lastError = error
@@ -120,8 +125,6 @@ struct MainContentPage: View {
     }
 }
 
-
-
 // MARK: - Previews
 
 #Preview("Empty data") {
@@ -130,8 +133,9 @@ struct MainContentPage: View {
         let client = try Client()
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
 
-        let container = try ModelContainer(for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
-                                           configurations: config)
+        let container = try ModelContainer(
+            for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+            configurations: config)
 
         return MainContentPage()
             .environment(client)
@@ -147,8 +151,9 @@ struct MainContentPage: View {
         let client = try Client()
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
 
-        let container = try ModelContainer(for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
-                                           configurations: config)
+        let container = try ModelContainer(
+            for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+            configurations: config)
 
         let rawJsonData = MockData.sampleBikeJson.data(using: .utf8)!
         let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
