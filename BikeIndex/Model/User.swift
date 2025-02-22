@@ -41,10 +41,19 @@ import SwiftData
     @Relationship(inverse: \Bike.owner)
     fileprivate(set) var bikes: [Bike]
 
-    init(
-        email: String, username: String, name: String, additionalEmails: [String], createdAt: Date,
-        image: URL? = nil, twitter: URL? = nil, parent: AuthenticatedUser? = nil, bikes: [Bike]
-    ) {
+    @Relationship
+    var organizations: [Organization]
+
+    init(email: String,
+         username: String,
+         name: String,
+         additionalEmails: [String],
+         createdAt: Date,
+         image: URL? = nil,
+         twitter: URL? = nil,
+         parent: AuthenticatedUser? = nil,
+         bikes: [Bike],
+         organizations: [Organization]) {
         self.email = email
         self.username = username
         self.name = name
@@ -54,6 +63,7 @@ import SwiftData
         self.twitter = twitter
         self.parent = parent
         self.bikes = bikes
+        self.organizations = organizations
     }
 }
 
@@ -64,14 +74,7 @@ import SwiftData
     var accessToken: Token
     var userIsOrganizationAdmin: Bool
 
-    // TODO: Fill-in Organization relationships and functionality
-    //    @Relationship(deleteRule: .cascade, inverse: \AuthenticatedUser.memberships)
-    //    var authorizedUsers: [AuthenticatedUser]? = []
-
-    init(
-        name: String, slug: String, identifier: Int, accessToken: Token,
-        userIsOrganizationAdmin: Bool
-    ) {
+    init(name: String, slug: String, identifier: Int, accessToken: Token, userIsOrganizationAdmin: Bool) {
         Logger.model.debug("Org.init w/ identifier \(identifier)")
         self.name = name
         self.slug = slug

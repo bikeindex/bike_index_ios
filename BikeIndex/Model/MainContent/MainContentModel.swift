@@ -16,6 +16,7 @@ final class MainContentModel {
     /// Fetch profile information from /me endpoint.
     /// The top level objects returned from /me are: id, user, bike\_ids, and memberships.
     /// - Separate AuthenticatedUser and User models will be created.
+    /// All AuthenticatedUser models are deleted after successfully fetching this endpoint. User models are not deleted.
     /// - Any known (cached) bikes will be associated.
     /// - TODO: Add support for organization membership fetches.
     /// - Parameters:
@@ -43,7 +44,9 @@ final class MainContentModel {
             // 0. Destroy all other authenticated users
             // 1. Write the AuthenticatedUser
             // 2. Write the User
+            // 2.a Write the User's member Organizations
             // 3. Find any cached bikes known-to-be-owned by this user and link them.
+            // 4. Update Organization Membership relationships
             do {
                 try modelContext.transaction {
                     // 0.
@@ -57,6 +60,13 @@ final class MainContentModel {
                     // 1. and 2.
                     modelContext.insert(myProfile)
                     if let user = myProfile.user {
+                        /// 2.a. Convert ``AuthenticatedUserResponse/OrganizationResponse`` to ``Organization`` model.
+                        let organizations = myProfileSource.memberships.map { $0.modelInstance() }
+                        organizations.forEach {
+                            modelContext.insert($0)
+                        }
+                        user.organizations = organizations
+
                         modelContext.insert(user)
                     }
 

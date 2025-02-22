@@ -26,10 +26,9 @@ struct AuthenticatedUserResponse: Decodable, ResponseModelInstantiable {
 
     func modelInstance() -> ModelInstance {
         // AuthenticatedUser will be instantiated without bike model connections.
-        // To be added after queries can be made.
-        ModelInstance(
-            identifier: id,
-            bikes: [])
+        // Relationships must be added after queries can be made.
+        ModelInstance(identifier: id,
+                      bikes: [])
     }
 
     struct UserResponse: Decodable, ResponseModelInstantiable {
@@ -44,15 +43,15 @@ struct AuthenticatedUserResponse: Decodable, ResponseModelInstantiable {
         let twitter: URL?
 
         func modelInstance() -> User {
-            User(
-                email: email,
-                username: username,
-                name: name,
-                additionalEmails: secondary_emails,
-                createdAt: Date(timeIntervalSince1970: created_at),
-                image: image,
-                twitter: twitter,
-                bikes: [])
+            User(email: email,
+                 username: username,
+                 name: name,
+                 additionalEmails: secondary_emails,
+                 createdAt: Date(timeIntervalSince1970: created_at),
+                 image: image,
+                 twitter: twitter,
+                 bikes: [],
+                 organizations: [])
         }
     }
 
