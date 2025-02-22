@@ -9,12 +9,13 @@ import OSLog
 import SwiftData
 import SwiftUI
 
+/// ``Error`` type is defined in MainContentModel+Error.swift
+@MainActor
 final class MainContentModel {
 
-    @MainActor
     func fetchProfile(client: Client, modelContext: ModelContext) async throws(Error) {
-        guard client.authenticated else {
-            return
+        if client.authenticated == false {
+            throw unauthenticatedError
         }
 
         let fetch_v3_me = await client.api.get(Me.`self`)
@@ -74,10 +75,9 @@ final class MainContentModel {
         }
     }
 
-    @MainActor
     func fetchBikes(client: Client, modelContext: ModelContext) async throws(Error) {
-        guard client.authenticated else {
-            return
+        if client.authenticated == false {
+            throw unauthenticatedError
         }
 
         let fetchMyBikes = await client.api.get(Me.bikes)
@@ -115,5 +115,13 @@ final class MainContentModel {
             Logger.model.error("\(type(of: self)).\(#function) - Failed with \(failure)")
             throw Error.swiftError(failure)
         }
+    }
+
+    func fetchOrganizationMembership(client: Client, modelContext: ModelContext) async throws(Error) {
+        if client.authenticated == false {
+            throw unauthenticatedError
+        }
+
+        // TODO: Implement organization fetching
     }
 }

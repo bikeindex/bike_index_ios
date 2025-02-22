@@ -50,4 +50,9 @@ extension MainContentModel {
             }
         }
     }
+
+    /// Convenience type in the event that ``Client/authenticated`` is false during a ``MainContentModel`` operation.
+    var unauthenticatedError: Error {
+        return .failed(message: "You must be logged in to perform this action.")
+    }
 }

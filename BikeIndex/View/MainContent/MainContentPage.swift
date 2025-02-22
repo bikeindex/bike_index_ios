@@ -122,6 +122,19 @@ struct MainContentPage: View {
             Logger.model.error("Failed to fetch user's bikes with \(error)")
             return
         }
+
+        do {
+            try await contentModel.fetchOrganizationMembership(client: client,
+                                                               modelContext: modelContext)
+        } catch let error as MainContentModel.Error {
+            Logger.model.error("Failed to user's organizations: \(error)")
+            lastError = error
+            showError = true
+            return
+        } catch {
+            Logger.model.error("Failed to fetch user's organizations with \(error)")
+            return
+        }
     }
 }
 
