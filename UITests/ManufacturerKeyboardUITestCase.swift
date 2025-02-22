@@ -1,6 +1,6 @@
 //
 //  ManufacturerKeyboardUITestCase.swift
-//  BikeIndexUITests
+//  UITests
 //
 //  Created by Jack on 4/14/24.
 //
