@@ -75,7 +75,6 @@ import SwiftData
     var userIsOrganizationAdmin: Bool
 
     init(name: String, slug: String, identifier: Int, accessToken: Token, userIsOrganizationAdmin: Bool) {
-        Logger.model.debug("Org.init w/ identifier \(identifier)")
         self.name = name
         self.slug = slug
         self.identifier = identifier
