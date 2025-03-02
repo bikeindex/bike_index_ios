@@ -16,7 +16,6 @@ struct BikesStatusSection: View {
     init(path: Binding<NavigationPath>, status paramStatus: BikeStatus) {
         self._path = path
         self.status = paramStatus
-
         _bikes = Query(filter: #Predicate<Bike> { model in
             model.statusString == paramStatus.rawValue
         })
@@ -32,6 +31,12 @@ struct BikesStatusSection: View {
                 .accessibilityIdentifier("Bike \(index + 1)")
             }
             .padding()
+        }
+        .navigationDestination(for: PersistentIdentifier.self) { identifier in
+            if let bike = bikes.first(where: { $0.persistentModelID == identifier }) {
+                // TODO: This needs to be at the NavigationStack root level
+                BikeDetailView(bike: bike)
+            }
         }
     }
 }

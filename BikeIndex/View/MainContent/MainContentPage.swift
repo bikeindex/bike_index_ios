@@ -8,6 +8,7 @@
 import OSLog
 import SwiftData
 import SwiftUI
+import SectionedQuery
 
 struct MainContentPage: View {
     @Environment(\.modelContext) private var modelContext
@@ -21,7 +22,7 @@ struct MainContentPage: View {
     @State var lastError: MainContentModel.Error?
     @State var showError: Bool = false
 
-    @Query private var bikes: [Bike]
+    @SectionedQuery(\Bike.statusString) private var bikes: SectionedResults<String, Bike>
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -39,13 +40,13 @@ struct MainContentPage: View {
                         .padding()
                 } else {
                     ProportionalLazyVGrid {
-                        ForEach(Array(bikes.enumerated()), id: \.element) { (index, bike) in
-                            BikesStatusSection(path: $path,
-                                          status: bike.status)
-                            .border(.orange, width: 2)
+                        ForEach(bikes) { section in
+                            if let status = BikeStatus(rawValue: section.id) {
+                                BikesStatusSection(path: $path,
+                                                   status: status)
+                            }
                         }
                     }
-                    .border(.red, width: 2)
                 }
             }
             .toolbar {
@@ -66,11 +67,6 @@ struct MainContentPage: View {
                         url: .constant(URL(string: "https://bikeindex.org/bikes?stolenness=all")!)
                     )
                     .environment(client)
-                }
-            }
-            .navigationDestination(for: PersistentIdentifier.self) { identifier in
-                if let bike = bikes.first(where: { $0.persistentModelID == identifier }) {
-                    BikeDetailView(bike: bike)
                 }
             }
             .alert(isPresented: $showError, error: lastError) {
