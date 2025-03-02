@@ -33,12 +33,6 @@ struct BikesStatusSection: View {
             }
             .padding()
         }
-        .navigationDestination(for: PersistentIdentifier.self) { identifier in
-            if let bike = bikes.first(where: { $0.persistentModelID == identifier }) {
-                // TODO: This needs to be at the NavigationStack root level
-                BikeDetailView(bike: bike)
-            }
-        }
     }
 }
 

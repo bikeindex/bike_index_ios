@@ -53,7 +53,7 @@ struct MainContentPage: View {
             .toolbar {
                 MainToolbar(path: $path)
             }
-            .navigationTitle("Bike Index - \(bikes.count)")
+            .navigationTitle("Bike Index")
             .navigationDestination(for: MainContent.self) { selection in
                 switch selection {
                 case .settings:
@@ -70,6 +70,16 @@ struct MainContentPage: View {
                     .environment(client)
                 }
             }
+            .navigationDestination(for: PersistentIdentifier.self) { identifier in
+                ForEach(bikesByStatus) { section in
+                    if let bike = section.elements.first(where: {
+                        $0.persistentModelID == identifier
+                    }) {
+                        BikeDetailView(bike: bike)
+                    }
+                }
+            }
+
             .alert(isPresented: $showError, error: lastError) {
                 Text("Error occurred")
             }
