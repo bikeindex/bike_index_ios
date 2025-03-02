@@ -40,20 +40,18 @@ struct MainContentPage: View {
                 } else {
                     ProportionalLazyVGrid {
                         ForEach(Array(bikes.enumerated()), id: \.element) { (index, bike) in
-                            ContentBikeButtonView(
-                                path: $path,
-                                bikeIdentifier: bike.identifier
-                            )
-                            .accessibilityIdentifier("Bike \(index + 1)")
+                            ExtractedView(path: $path,
+                                          status: bike.status)
+                            .border(.orange, width: 2)
                         }
                     }
-                    .padding()
+                    .border(.red, width: 2)
                 }
             }
             .toolbar {
                 MainToolbar(path: $path)
             }
-            .navigationTitle("Bike Index")
+            .navigationTitle("Bike Index - \(bikes.count)")
             .navigationDestination(for: MainContent.self) { selection in
                 switch selection {
                 case .settings:
@@ -145,27 +143,71 @@ struct MainContentPage: View {
     }
 }
 
-#Preview("1 Bike Preview") {
+#Preview("Bikes by status") {
     // MARK: 1 Bike Preview
-    do {
-        let client = try Client()
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(
+        for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true))
 
-        let container = try ModelContainer(
-            for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
-            configurations: config)
+    MainContentPage()
+        .environment(try! Client())
+        .modelContainer(container)
+        .onAppear {
+            do {
+                for (index, status) in BikeStatus.allCases.enumerated() {
+                    let rawJsonData = MockData.sampleBikeJson.data(using: .utf8)!
+                    let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
+                    var bike = output.modelInstance()
 
-        let rawJsonData = MockData.sampleBikeJson.data(using: .utf8)!
-        let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
-        let bike = output.modelInstance()
+                    // Mock one of each status
+                    // but separate the identifiers
+                    bike.identifier = index
+                    bike.update(keyPath: \.status, to: status)
+                    // TODO: WHY ISN"T THIS UPDATING
+                    print("Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)")
 
-        container.mainContext.insert(bike)
-        try? container.mainContext.save()
+                    container.mainContext.insert(bike)
 
-        return MainContentPage()
-            .environment(client)
-            .modelContainer(container)
-    } catch let error {
-        return Text("Failed to load preview \(error.localizedDescription)")
+                    // TODO: WHY ISN"T THIS UPDATING
+                    print("POST_insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)")
+
+                }
+                try? container.mainContext.save()
+            } catch {
+                Logger.views.error("Encountered error \(error)")
+            }
+        }
+}
+
+struct ExtractedView: View {
+    @Binding var path: NavigationPath
+    private(set) var status: BikeStatus
+    @Query private var bikes: [Bike]
+
+    init(path: Binding<NavigationPath>, status paramStatus: BikeStatus) {
+        self._path = path
+        self.status = paramStatus
+
+        // Take 2
+        _bikes = Query(filter: #Predicate<Bike> { model in
+            model.statusString == paramStatus.rawValue
+        })
+    }
+
+    var body: some View {
+        if bikes.isEmpty {
+            Text("Empty! \(bikes.count) for \(status.rawValue)")
+        } else {
+            Section(status.rawValue.uppercased()) {
+                ForEach(Array(bikes.enumerated()), id: \.element) { (index, bike) in
+                    ContentBikeButtonView(
+                        path: $path,
+                        bikeIdentifier: bike.identifier
+                    )
+                    .accessibilityIdentifier("Bike \(index + 1)")
+                }
+                .padding()
+            }
+        }
     }
 }
