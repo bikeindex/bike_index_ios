@@ -16,9 +16,10 @@ struct BikesStatusSection: View {
     init(path: Binding<NavigationPath>, status paramStatus: BikeStatus) {
         self._path = path
         self.status = paramStatus
-        _bikes = Query(filter: #Predicate<Bike> { model in
-            model.statusString == paramStatus.rawValue
-        })
+        _bikes = Query(
+            filter: #Predicate<Bike> { model in
+                model.statusString == paramStatus.rawValue
+            })
     }
 
     var body: some View {
@@ -44,7 +45,8 @@ struct BikesStatusSection: View {
 #Preview {
     @Previewable @State var navigationPath = NavigationPath()
     NavigationStack {
-        BikesStatusSection(path: $navigationPath,
-                           status: .withOwner)
+        BikesStatusSection(
+            path: $navigationPath,
+            status: .withOwner)
     }
 }

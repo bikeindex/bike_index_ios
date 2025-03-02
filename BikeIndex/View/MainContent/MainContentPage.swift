@@ -6,9 +6,9 @@
 //
 
 import OSLog
+import SectionedQuery
 import SwiftData
 import SwiftUI
-import SectionedQuery
 
 struct MainContentPage: View {
     @Environment(\.modelContext) private var modelContext
@@ -42,8 +42,9 @@ struct MainContentPage: View {
                     ProportionalLazyVGrid {
                         ForEach(bikes) { section in
                             if let status = BikeStatus(rawValue: section.id) {
-                                BikesStatusSection(path: $path,
-                                                   status: status)
+                                BikesStatusSection(
+                                    path: $path,
+                                    status: status)
                             }
                         }
                     }
@@ -160,7 +161,9 @@ struct MainContentPage: View {
                     // but separate the identifiers
                     bike.identifier = index
                     bike.update(keyPath: \.status, to: status)
-                    print("Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)")
+                    print(
+                        "Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)"
+                    )
 
                     container.mainContext.insert(bike)
                 }
@@ -192,7 +195,9 @@ struct MainContentPage: View {
                     // but separate the identifiers
                     bike.identifier = index
                     bike.update(keyPath: \.status, to: status)
-                    print("Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)")
+                    print(
+                        "Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)"
+                    )
 
                     container.mainContext.insert(bike)
                 }

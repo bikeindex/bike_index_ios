@@ -14,9 +14,10 @@ struct ContentBikeButtonView: View {
 
     init(path: Binding<NavigationPath>, bikeIdentifier: Int) {
         self._path = path
-        _bikeQuery = Query(filter: #Predicate<Bike> { model in
-            model.identifier == bikeIdentifier
-        })
+        _bikeQuery = Query(
+            filter: #Predicate<Bike> { model in
+                model.identifier == bikeIdentifier
+            })
     }
 
     var body: some View {

@@ -37,7 +37,7 @@ enum BikeStatus: String, Codable, CaseIterable, Comparable, Identifiable {
         BikeStatus.stolen.rawValue: 2,
         BikeStatus.abandoned.rawValue: 3,
         BikeStatus.impounded.rawValue: 4,
-        BikeStatus.unregisteredParkingNotification.rawValue: 5
+        BikeStatus.unregisteredParkingNotification.rawValue: 5,
     ]
 
 }

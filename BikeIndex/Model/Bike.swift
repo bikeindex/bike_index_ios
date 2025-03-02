@@ -162,7 +162,6 @@ import SwiftData
         }
     }
 
-
 }
 
 extension Bike {
