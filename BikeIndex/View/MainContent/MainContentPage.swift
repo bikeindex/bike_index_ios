@@ -40,7 +40,7 @@ struct MainContentPage: View {
                 } else {
                     ProportionalLazyVGrid {
                         ForEach(Array(bikes.enumerated()), id: \.element) { (index, bike) in
-                            ExtractedView(path: $path,
+                            BikesStatusSection(path: $path,
                                           status: bike.status)
                             .border(.orange, width: 2)
                         }
@@ -125,8 +125,8 @@ struct MainContentPage: View {
 
 // MARK: - Previews
 
+// MARK: Empty Data Preview
 #Preview("Empty data") {
-    // MARK: Empty Data Preview
     do {
         let client = try Client()
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
@@ -143,8 +143,8 @@ struct MainContentPage: View {
     }
 }
 
-#Preview("Bikes by status") {
-    // MARK: 1 Bike Preview
+// MARK: Bikes by status (withOwner)
+#Preview("Bikes by status (withOwner)") {
     let container = try! ModelContainer(
         for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
         configurations: ModelConfiguration(isStoredInMemoryOnly: true))
@@ -154,23 +154,19 @@ struct MainContentPage: View {
         .modelContainer(container)
         .onAppear {
             do {
-                for (index, status) in BikeStatus.allCases.enumerated() {
-                    let rawJsonData = MockData.sampleBikeJson.data(using: .utf8)!
+                let rawJsonData = MockData.sampleBikeJson.data(using: .utf8)!
+                let statuses: [BikeStatus] = Array(repeating: .withOwner, count: 3)
+
+                for (index, status) in statuses.enumerated() {
                     let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
                     var bike = output.modelInstance()
-
                     // Mock one of each status
                     // but separate the identifiers
                     bike.identifier = index
                     bike.update(keyPath: \.status, to: status)
-                    // TODO: WHY ISN"T THIS UPDATING
                     print("Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)")
 
                     container.mainContext.insert(bike)
-
-                    // TODO: WHY ISN"T THIS UPDATING
-                    print("POST_insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)")
-
                 }
                 try? container.mainContext.save()
             } catch {
@@ -179,35 +175,34 @@ struct MainContentPage: View {
         }
 }
 
-struct ExtractedView: View {
-    @Binding var path: NavigationPath
-    private(set) var status: BikeStatus
-    @Query private var bikes: [Bike]
+// MARK: Bikes by status (all)
+#Preview("Bikes by status (all)") {
+    let container = try! ModelContainer(
+        for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true))
 
-    init(path: Binding<NavigationPath>, status paramStatus: BikeStatus) {
-        self._path = path
-        self.status = paramStatus
+    MainContentPage()
+        .environment(try! Client())
+        .modelContainer(container)
+        .onAppear {
+            do {
+                let rawJsonData = MockData.sampleBikeJson.data(using: .utf8)!
+                let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
 
-        // Take 2
-        _bikes = Query(filter: #Predicate<Bike> { model in
-            model.statusString == paramStatus.rawValue
-        })
-    }
+                for (index, status) in BikeStatus.allCases.enumerated() {
+                    var bike = output.modelInstance()
 
-    var body: some View {
-        if bikes.isEmpty {
-            Text("Empty! \(bikes.count) for \(status.rawValue)")
-        } else {
-            Section(status.rawValue.uppercased()) {
-                ForEach(Array(bikes.enumerated()), id: \.element) { (index, bike) in
-                    ContentBikeButtonView(
-                        path: $path,
-                        bikeIdentifier: bike.identifier
-                    )
-                    .accessibilityIdentifier("Bike \(index + 1)")
+                    // Mock one of each status
+                    // but separate the identifiers
+                    bike.identifier = index
+                    bike.update(keyPath: \.status, to: status)
+                    print("Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)")
+
+                    container.mainContext.insert(bike)
                 }
-                .padding()
+                try? container.mainContext.save()
+            } catch {
+                Logger.views.error("Encountered error \(error)")
             }
         }
-    }
 }
