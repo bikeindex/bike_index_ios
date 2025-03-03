@@ -23,7 +23,7 @@ struct BikesStatusSection: View {
     }
 
     var body: some View {
-        Section(status.rawValue.uppercased()) {
+        Section {
             ForEach(Array(bikes.enumerated()), id: \.element) { (index, bike) in
                 ContentBikeButtonView(
                     path: $path,
@@ -32,6 +32,12 @@ struct BikesStatusSection: View {
                 .accessibilityIdentifier("Bike \(index + 1)")
             }
             .padding()
+        } header: {
+            Text(status.rawValue.capitalized)
+                .padding([.top, .bottom], 4)
+                .frame(maxWidth: .infinity)
+                .font(.headline)
+                .background(.ultraThinMaterial)
         }
     }
 }
