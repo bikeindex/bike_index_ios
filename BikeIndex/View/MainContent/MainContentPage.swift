@@ -22,7 +22,9 @@ struct MainContentPage: View {
     @State var lastError: MainContentModel.Error?
     @State var showError: Bool = false
 
-    @SectionedQuery(\Bike.statusString)
+    @SectionedQuery(
+        \Bike.statusString,
+        sort: [SortDescriptor(\.statusString)])
     private var bikesByStatus: SectionedResults<String, Bike>
 
     var body: some View {
