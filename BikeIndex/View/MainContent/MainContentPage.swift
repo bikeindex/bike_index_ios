@@ -22,7 +22,8 @@ struct MainContentPage: View {
     @State var lastError: MainContentModel.Error?
     @State var showError: Bool = false
 
-    @SectionedQuery(\Bike.statusString) private var bikes: SectionedResults<String, Bike>
+    @SectionedQuery(\Bike.statusString)
+    private var bikesByStatus: SectionedResults<String, Bike>
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -35,12 +36,12 @@ struct MainContentPage: View {
                     }
                 }
 
-                if bikes.isEmpty {
+                if bikesByStatus.isEmpty {
                     ContentUnavailableView("No bikes registered", systemImage: "bicycle.circle")
                         .padding()
                 } else {
-                    ProportionalLazyVGrid {
-                        ForEach(bikes) { section in
+                    ProportionalLazyVGrid(pinnedViews: [.sectionHeaders]) {
+                        ForEach(bikesByStatus) { section in
                             if let status = BikeStatus(rawValue: section.id) {
                                 BikesStatusSection(
                                     path: $path,
