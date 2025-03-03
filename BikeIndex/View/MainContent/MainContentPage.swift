@@ -180,7 +180,7 @@ struct MainContentPage: View {
                 }
                 try? container.mainContext.save()
             } catch {
-                Logger.views.error("Encountered error \(error)")
+                print("Encountered error \(error)")
             }
         }
 }
@@ -214,7 +214,7 @@ struct MainContentPage: View {
                 }
                 try? container.mainContext.save()
             } catch {
-                Logger.views.error("Encountered error \(error)")
+                print("Encountered error \(error)")
             }
         }
 }
