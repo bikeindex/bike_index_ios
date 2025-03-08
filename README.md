@@ -25,7 +25,7 @@ To get started:
 
 ### Development
 
-- Requirements: Xcode 16.0
+- Requirements: Xcode 16.2
 - Target deployment: iOS 17.2
 
 This project uses SwiftUI and SwiftData. At this time iOS (iPhone) is the primary development target with a goal to include iPad and Mac support.
@@ -63,7 +63,7 @@ Test-driven development is an important tool for this project. In your local env
 
 Running UI Tests from Xcode may cache logged-in state. Set up a credentials xcconfig file to ensure UI tests are always able to log-in and proceed (for both Xcode and fastlane invocations).
 
-1. Copy the SharedTests/Test-credentials-template.xcconfig file to SharedTests/Test-credentials.xcconfig.
+1. Copy the `SharedTests/Test-credentials-template.xcconfig` file to `SharedTests/Test-credentials.xcconfig`.
 2. Edit the source to add a test username and password that are valid credentials for the server configured by corresponding build scheme (see: BikeIndex-development.xcconfig) you'll be using.
 	- This test account must have already authorized the Bike Index OAuth app used in your corresponding build scheme's .xcconfig.
 3. In the simulator erase all content and settings to clear out any previous credentials.
