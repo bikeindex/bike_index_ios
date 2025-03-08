@@ -74,13 +74,6 @@
 			);
 			target = 04F4B8F62B098ADB009442B5 /* BikeIndex */;
 		};
-		04CDF15C2D3C344500F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"Debug (bikeindex.org).xctestplan",
-			);
-			target = 04F4B9092B098ADE009442B5 /* UnitTests */;
-		};
 		04CDF16A2D3C344800F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -106,7 +99,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		04CDF1012D3C344100F90515 /* BikeIndex */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF1442D3C344100F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = BikeIndex; sourceTree = "<group>"; };
-		04CDF1502D3C344500F90515 /* UnitTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF15C2D3C344500F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = UnitTests; sourceTree = "<group>"; };
+		04CDF1502D3C344500F90515 /* UnitTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = UnitTests; sourceTree = "<group>"; };
 		04CDF1632D3C344800F90515 /* UITests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF16A2D3C344800F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = UITests; sourceTree = "<group>"; };
 		04CDF16F2D3C344C00F90515 /* SharedTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF1722D3C344C00F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 04CDF1732D3C344C00F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = SharedTests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
