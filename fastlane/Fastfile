@@ -20,9 +20,9 @@ platform :ios do
   lane :tests do
     run_tests(project: "BikeIndex.xcodeproj",
               devices: [
-                "iPhone 16 (18.0)",
-                "iPhone 16 Plus (18.0)",
-                "iPad (10th generation) (18.0)"
+                "iPhone 16 (18.2)",
+                "iPhone 16 Plus (18.2)",
+                "iPad (10th generation) (18.2)"
               ],
               scheme: "Debug (development)",
               reset_simulator: true,
