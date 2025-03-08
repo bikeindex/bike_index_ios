@@ -51,7 +51,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0454049D2D458CA40020A655 /* swift-format-configuration.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "swift-format-configuration.json"; sourceTree = "<group>"; };
 		0496C6702CB36BED00B88D1B /* Brewfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Brewfile; sourceTree = "<group>"; };
 		0496C6712CB36BF100B88D1B /* .ruby-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".ruby-version"; sourceTree = "<group>"; };
 		0496C6722CB36BF600B88D1B /* Gemfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Gemfile; sourceTree = "<group>"; };
@@ -165,7 +164,6 @@
 				0496C6702CB36BED00B88D1B /* Brewfile */,
 				0496C6722CB36BF600B88D1B /* Gemfile */,
 				0496C6712CB36BF100B88D1B /* .ruby-version */,
-				0454049D2D458CA40020A655 /* swift-format-configuration.json */,
 				04ABEBC32D1F399E00E30577 /* Frameworks */,
 				04F4B8F82B098ADB009442B5 /* Products */,
 			);
