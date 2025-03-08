@@ -40,6 +40,7 @@ protocol APIEndpoint {
 }
 
 /// API client to perform networking operations regardless of external state
+@MainActor
 final class API {
     var configuration: EndpointConfigurationProvider
     private(set) var session: URLSession
@@ -49,7 +50,6 @@ final class API {
         self.session = session
     }
 
-    @MainActor
     func get(_ endpoint: APIEndpoint) async -> Result<(any Decodable), Error> {
         var request = endpoint.request(for: configuration)
         if endpoint.authorized, let accessToken = configuration.accessToken {
