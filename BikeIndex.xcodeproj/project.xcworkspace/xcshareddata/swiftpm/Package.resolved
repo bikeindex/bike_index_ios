@@ -1,5 +1,5 @@
 {
-  "originHash" : "2f27dc9f0317b95a0228925900b15f87d94be14da2aae136f8e056ddcf63da90",
+  "originHash" : "70c1608ccd41988fbed45e9843d1c315e380525ef27a32b9ede486e2b5eca9f0",
   "pins" : [
     {
       "identity" : "accessibilitysnapshot",
@@ -60,8 +60,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/danielsaidi/WebViewKit.git",
       "state" : {
-        "revision" : "04fcd86336f4d254f0967b8cc7023af29dd7adce",
-        "version" : "0.4.0"
+        "revision" : "bae09cfa4bae29f22dcf9d98f197aba50b5dc4bb",
+        "version" : "0.5.0"
       }
     }
   ],
