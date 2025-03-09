@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Run tests with fastlane
+    name: Run iPhone 16 test suite with fastlane
     runs-on: macos-15
     steps:
       - name: Checkout
@@ -31,7 +31,71 @@ jobs:
         run: xcodebuild -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
       - name: Run tests
         id: fastlane-ios-tests
-        run: bundle exec fastlane ios tests
+        run: bundle exec fastlane ios tests_iphone16
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test_output
+          path: "fastlane/test_output/*"
+          compression-level: 9 # maximum compression
+
+  build:
+    name: Run iPhone 16 Plus test suite with fastlane
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install tools
+        run: |
+          brew bundle install
+          bundler install
+      - name: Set up xcconfig secrets (see README.md#quick-start)
+        env:
+          BIKE_INDEX_DEVELOPMENT_XCCONFIG: ${{ secrets.BIKE_INDEX_DEVELOPMENT_XCCONFIG }}
+        run: |
+          echo "$BIKE_INDEX_DEVELOPMENT_XCCONFIG" >> BikeIndex-development.xcconfig
+      - name: Set up xcconfig UI test credentials (see README.md#UI-Test-configuration)
+        env:
+          BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
+        run: |
+          echo "$BIKE_INDEX_TEST_CREDENTIALS" >> SharedTests/Test-credentials.xcconfig
+      - name: List available simulators
+        run: xcodebuild -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
+      - name: Run tests
+        id: fastlane-ios-tests
+        run: bundle exec fastlane ios tests_iphone16plus
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test_output
+          path: "fastlane/test_output/*"
+          compression-level: 9 # maximum compression
+
+  build:
+    name: Run iPad (10th generation) test suite with fastlane
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install tools
+        run: |
+          brew bundle install
+          bundler install
+      - name: Set up xcconfig secrets (see README.md#quick-start)
+        env:
+          BIKE_INDEX_DEVELOPMENT_XCCONFIG: ${{ secrets.BIKE_INDEX_DEVELOPMENT_XCCONFIG }}
+        run: |
+          echo "$BIKE_INDEX_DEVELOPMENT_XCCONFIG" >> BikeIndex-development.xcconfig
+      - name: Set up xcconfig UI test credentials (see README.md#UI-Test-configuration)
+        env:
+          BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
+        run: |
+          echo "$BIKE_INDEX_TEST_CREDENTIALS" >> SharedTests/Test-credentials.xcconfig
+      - name: List available simulators
+        run: xcodebuild -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
+      - name: Run tests
+        id: fastlane-ios-tests
+        run: bundle exec fastlane ios tests_ipad
       - uses: actions/upload-artifact@v4
         if: always()
         with:
