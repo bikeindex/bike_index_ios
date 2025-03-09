@@ -39,7 +39,6 @@ jobs:
           path: "fastlane/test_output/*"
           compression-level: 9 # maximum compression
 
-  build:
     name: Run iPhone 16 Plus test suite with fastlane
     runs-on: macos-15
     steps:
@@ -71,7 +70,6 @@ jobs:
           path: "fastlane/test_output/*"
           compression-level: 9 # maximum compression
 
-  build:
     name: Run iPad (10th generation) test suite with fastlane
     runs-on: macos-15
     steps:
