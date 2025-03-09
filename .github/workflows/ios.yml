@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Set Xcode 16.2
+        run: sudo xcode-select -p /Applications/Xcode_16.2.app
       - name: Install tools
         run: |
           brew bundle install
@@ -45,6 +47,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Set Xcode 16.2
+        run: sudo xcode-select -p /Applications/Xcode_16.2.app
       - name: Install tools
         run: |
           brew bundle install
@@ -77,6 +81,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Set Xcode 16.2
+        run: sudo xcode-select -p /Applications/Xcode_16.2.app
       - name: Install tools
         run: |
           brew bundle install
