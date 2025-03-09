@@ -23,6 +23,6 @@ result_bundle(true)
 
 reset_simulator(true)
 
-include_simulator_logs(true)
+include_simulator_logs(false)
 
 number_of_retries(3)
