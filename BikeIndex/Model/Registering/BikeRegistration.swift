@@ -29,7 +29,6 @@ struct BikeRegistration: Encodable {
 
     // MARK: Optional fields
     var owner_email_is_phone_number: Bool?
-    var organization_slug: String?
     var cycle_type_name: BicycleType?
     var no_duplicate: Bool?
     var rear_wheel_bsd: Int?
@@ -59,7 +58,7 @@ struct BikeRegistration: Encodable {
     init(
         serial: String?, manufacturer: String, owner_email: String, primary_frame_color: FrameColor,
         test: Bool = false, owner_email_is_phone_number: Bool? = nil,
-        organization_slug: String? = nil, cycle_type_name: BicycleType? = nil,
+        cycle_type_name: BicycleType? = nil,
         no_duplicate: Bool? = nil, rear_wheel_bsd: Int? = nil, rear_tire_narrow: Bool? = nil,
         front_wheel_bsd: String? = nil, front_tire_narrow: Bool? = nil, frame_model: String? = nil,
         year: UInt? = nil, description: String? = nil, secondary_frame_color: FrameColor? = nil,
@@ -76,7 +75,6 @@ struct BikeRegistration: Encodable {
         self.primary_frame_color = primary_frame_color.rawValue.lowercased()
         self.color = primary_frame_color.rawValue.lowercased()
         self.owner_email_is_phone_number = owner_email_is_phone_number
-        self.organization_slug = organization_slug
         self.cycle_type_name = cycle_type_name
         self.no_duplicate = no_duplicate
         self.rear_wheel_bsd = rear_wheel_bsd
@@ -138,7 +136,6 @@ struct BikeRegistration: Encodable {
 
         // TODO: Unsupported fields, support in future changes
         self.owner_email_is_phone_number = nil
-        self.organization_slug = nil
         self.no_duplicate = nil
         self.rear_wheel_bsd = nil
         self.rear_tire_narrow = nil
@@ -166,7 +163,6 @@ struct BikeRegistration: Encodable {
         case primary_frame_color
         case test
         case owner_email_is_phone_number
-        case organization_slug
         case cycle_type_name
         case no_duplicate
         case rear_wheel_bsd
@@ -210,7 +206,6 @@ struct BikeRegistration: Encodable {
         try container.encode(self.primary_frame_color, forKey: .primary_frame_color)
         try container.encodeIfPresent(
             self.owner_email_is_phone_number, forKey: .owner_email_is_phone_number)
-        try container.encodeIfPresent(self.organization_slug, forKey: .organization_slug)
         try container.encodeIfPresent(self.cycle_type_name, forKey: .cycle_type_name)
         try container.encodeIfPresent(self.no_duplicate, forKey: .no_duplicate)
         try container.encodeIfPresent(self.rear_wheel_bsd, forKey: .rear_wheel_bsd)

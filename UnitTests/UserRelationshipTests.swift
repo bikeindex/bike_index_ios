@@ -20,7 +20,7 @@ final class UserRelationshipTests: XCTestCase {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
 
         let container = try ModelContainer(
-            for: User.self, Organization.self, AuthenticatedUser.self,
+            for: User.self, AuthenticatedUser.self,
             configurations: config)
         let input = MockData.authenticatedUserJson
 
@@ -73,27 +73,6 @@ final class UserRelationshipTests: XCTestCase {
             "Found authIdentifier \(authIdentifier), assertion \(authIdentifier == "591441")")
         XCTAssert(authIdentifier == "456654")
 
-        /*
-        let memberships = authenticatedUser.memberships
-        let organization = try XCTUnwrap(authenticatedUser.memberships.first)
-        XCTAssertFalse(memberships.isEmpty)
-
-        let orgName: String = organization.name
-        XCTAssert(orgName == "Hogwarts School of Witchcraft and Wizardry")
-
-        XCTAssertEqual(organization.slug, "hogwarts")
-
-        XCTAssertEqual(organization.identifier, 818)
-
-        XCTAssertEqual(organization.accessToken, "bdcc3c3c85716167ce566ab1418ab13b")
-
-        XCTAssertTrue(organization.userIsOrganizationAdmin)
-
-         let memberResults = try container.mainContext.fetch(FetchDescriptor<Organization>())
-         XCTAssertEqual(memberResults.count, 1)
-
-         */
-
         let authResults2 = try container.mainContext.fetch(FetchDescriptor<AuthenticatedUser>())
         XCTAssertEqual(authResults2.count, 1)
 
@@ -106,7 +85,7 @@ final class UserRelationshipTests: XCTestCase {
         let config = ModelConfiguration(isStoredInMemoryOnly: true, allowsSave: true)
 
         let container = try ModelContainer(
-            for: User.self, Organization.self, AuthenticatedUser.self,
+            for: User.self, AuthenticatedUser.self,
             configurations: config)
         Logger.model.trace("Container.id is \(config.id)")
         let input = MockData.authenticatedUserJson
@@ -170,7 +149,6 @@ final class UserRelationshipTests: XCTestCase {
             .decode(AuthenticatedUserResponse.self, from: inputData)
 
         let responseUser = meResponse.user.modelInstance()
-        _ = meResponse.memberships.map { $0.modelInstance() }
         let responseAuthUser = meResponse.modelInstance()
 
         XCTAssertNil(responseAuthUser.id.storeIdentifier)

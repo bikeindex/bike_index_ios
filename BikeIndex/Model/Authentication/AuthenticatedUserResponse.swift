@@ -22,7 +22,6 @@ struct AuthenticatedUserResponse: Decodable, ResponseModelInstantiable {
     let id: String
     let user: UserResponse
     let bike_ids: [Int]
-    let memberships: [OrganizationResponse]
 
     func modelInstance() -> ModelInstance {
         // AuthenticatedUser will be instantiated without bike model connections.
@@ -53,25 +52,6 @@ struct AuthenticatedUserResponse: Decodable, ResponseModelInstantiable {
                 image: image,
                 twitter: twitter,
                 bikes: [])
-        }
-    }
-
-    struct OrganizationResponse: Decodable, ResponseModelInstantiable {
-        typealias ModelInstance = Organization
-
-        let organization_id: Int
-        let organization_slug: String
-        let organization_name: String
-        let organization_access_token: String
-        let user_is_organization_admin: Bool
-
-        func modelInstance() -> Organization {
-            Organization(
-                name: organization_name,
-                slug: organization_slug,
-                identifier: organization_id,
-                accessToken: organization_access_token,
-                userIsOrganizationAdmin: user_is_organization_admin)
         }
     }
 }

@@ -94,32 +94,6 @@ enum OAuth: APIEndpoint {
     }
 }
 
-enum Organizations: APIEndpoint {
-    case `self`(form: Postable)
-
-    var path: [String] {
-        [api, v3, "organizations"]
-    }
-
-    var method: HttpMethod {
-        .post
-    }
-
-    var authorized: Bool { true }
-
-    var requestModel: Encodable? {
-        nil
-    }
-
-    var responseModel: Decodable.Type {
-        OAuthToken.self
-    }
-
-    func request(for config: EndpointConfigurationProvider) -> URLRequest {
-        URLRequest(url: config.host)
-    }
-}
-
 enum Search: APIEndpoint {
     case `self`
     case count
