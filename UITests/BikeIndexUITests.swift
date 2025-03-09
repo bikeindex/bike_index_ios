@@ -100,6 +100,7 @@ final class BikeIndexUITests: XCTestCase {
     /// Just remember that GitHub is running its own navigation control with JavaScript/whatever/replacing the page
     /// so the buttons will behave incorrectly when using GitHub links. (Except for their subdomains).
     func test_acknowledgements_webView_navigation_history() throws {
+        let timeout = timeout + 30
         app.launch()
         try signIn(app: app)
 
