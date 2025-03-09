@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  tests_iphone16:
     name: Run iPhone 16 test suite with fastlane
     runs-on: macos-15
     steps:
@@ -39,6 +39,7 @@ jobs:
           path: "fastlane/test_output/*"
           compression-level: 9 # maximum compression
 
+  tests_iphone16plus:
     name: Run iPhone 16 Plus test suite with fastlane
     runs-on: macos-15
     steps:
@@ -70,6 +71,7 @@ jobs:
           path: "fastlane/test_output/*"
           compression-level: 9 # maximum compression
 
+  tests_ipad:
     name: Run iPad (10th generation) test suite with fastlane
     runs-on: macos-15
     steps:
