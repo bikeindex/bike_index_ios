@@ -36,7 +36,7 @@ import SwiftData
     var typeOfPropulsion: PropulsionType
 
     /// Nil if the serial number is missing.
-    /// There are various concepts of abasent serial numbers
+    /// There are various concepts of absent serial numbers
     /// such as "unknown" and also "made\_without\_serial" for certain older bikes.
     var serial: String?
 
@@ -132,7 +132,7 @@ import SwiftData
         frameColorPrimary = .black
 
         manufacturerName = ""
-        serial = ""
+        serial = nil
         status = .withOwner
         typeOfCycle = .bike
         typeOfPropulsion = .footPedal
