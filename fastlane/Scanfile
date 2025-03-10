@@ -21,6 +21,8 @@ skip_build(true)
 
 result_bundle(true)
 
+reinstall_app(true)
+
 reset_simulator(true)
 
 include_simulator_logs(false)
