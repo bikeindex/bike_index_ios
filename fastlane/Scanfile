@@ -10,7 +10,7 @@ scheme("Debug (development)")
 
 # Scanfile contains defaults and these can be overridden by Fastfile
 # or CLI arguments
-ios_version = "(18.0)"
+ios_version = "(18.2)"
 devices([
 	"iPhone 16 #{ios_version}",
 	"iPhone 16 Plus #{ios_version}",
