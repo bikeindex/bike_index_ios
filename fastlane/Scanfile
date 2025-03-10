@@ -17,13 +17,15 @@ devices([
 	"iPad (10th generation) #{ios_version}"
 ])
 
-skip_build(true)
+clean(true)
 
 result_bundle(true)
 
 reinstall_app(true)
 
 reset_simulator(true)
+
+force_quit_simulator(true)
 
 include_simulator_logs(false)
 
