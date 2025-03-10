@@ -11,7 +11,7 @@ import XCTest
 extension XCTestCase {
     @MainActor
     func attemptOAuthAuthorize(app: XCUIApplication) throws {
-        let timeout: TimeInterval = 20
+        let timeout: TimeInterval = 10
 
         /// If the Authorized Applications ever lapses (https://bikeindex.org/oauth/authorized_applications) then
         /// the CI runner will begin to fail tests and should have this prompt in the sign-in page.
@@ -74,7 +74,7 @@ extension XCTestCase {
 
     @MainActor
     func authorizeOAuthApplication(app: XCUIApplication) throws {
-        let timeout: TimeInterval = 20
+        let timeout: TimeInterval = 10
 
         /// If the Authorized Applications ever lapses (https://bikeindex.org/oauth/authorized_applications) then
         /// the CI runner will begin to fail tests and should have this prompt in the sign-in page.

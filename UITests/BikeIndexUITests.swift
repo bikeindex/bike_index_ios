@@ -10,7 +10,7 @@ import XCTest
 
 @MainActor
 final class BikeIndexUITests: XCTestCase {
-    let timeout: TimeInterval = 90
+    let timeout: TimeInterval = 60
     let app = XCUIApplication()
     lazy var backButton = app.navigationBars.buttons.element(boundBy: 0)
 
