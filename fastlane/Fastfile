@@ -31,7 +31,7 @@ platform :ios do
   desc "Run test suite on iPad (10th generation)"
   lane :tests_ipad do
     # See Scanfile for default configuration
-    scan(devices: ["iPad (18.2)"])
+    scan(devices: ["iPad (10th generation) (18.2)"])
   end
 
   desc "Run test suite (all default simulators)"
