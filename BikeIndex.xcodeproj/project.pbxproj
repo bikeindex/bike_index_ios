@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0428F4812D75156300BDD2A5 /* SectionedQuery in Frameworks */ = {isa = PBXBuildFile; productRef = 0428F4802D75156300BDD2A5 /* SectionedQuery */; };
 		04ABEBB92D1F35B400E30577 /* PreviewGallery in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBB82D1F35B400E30577 /* PreviewGallery */; };
 		04ABEBBB2D1F35B400E30577 /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */; };
 		04ABEBBD2D1F35B400E30577 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBC2D1F35B400E30577 /* SnapshottingTests */; };
@@ -15,7 +16,6 @@
 		04ABEBC82D1F399E00E30577 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBC72D1F399E00E30577 /* SnapshottingTests */; };
 		04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 04E1343D2B4B718200CE88DD /* WebViewKit */; };
 		04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */ = {isa = PBXBuildFile; productRef = 04EA11212B2504340024CDDD /* URLEncodedForm */; };
-		04F4B9322B098B5A009442B5 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 04F4B9312B098B5A009442B5 /* README.md */; };
 		04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04F4B95D2B0990CE009442B5 /* KeychainSwift */; };
 /* End PBXBuildFile section */
 
@@ -51,7 +51,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0454049D2D458CA40020A655 /* swift-format-configuration.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "swift-format-configuration.json"; sourceTree = "<group>"; };
 		0496C6702CB36BED00B88D1B /* Brewfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Brewfile; sourceTree = "<group>"; };
 		0496C6712CB36BF100B88D1B /* .ruby-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".ruby-version"; sourceTree = "<group>"; };
 		0496C6722CB36BF600B88D1B /* Gemfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Gemfile; sourceTree = "<group>"; };
@@ -111,6 +110,7 @@
 			files = (
 				04ABEBB92D1F35B400E30577 /* PreviewGallery in Frameworks */,
 				04ABEBBB2D1F35B400E30577 /* SnapshotPreferences in Frameworks */,
+				0428F4812D75156300BDD2A5 /* SectionedQuery in Frameworks */,
 				04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */,
 				04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */,
 				04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */,
@@ -158,7 +158,6 @@
 				0496C6702CB36BED00B88D1B /* Brewfile */,
 				0496C6722CB36BF600B88D1B /* Gemfile */,
 				0496C6712CB36BF100B88D1B /* .ruby-version */,
-				0454049D2D458CA40020A655 /* swift-format-configuration.json */,
 				04ABEBC32D1F399E00E30577 /* Frameworks */,
 				04F4B8F82B098ADB009442B5 /* Products */,
 			);
@@ -199,6 +198,7 @@
 				04E1343D2B4B718200CE88DD /* WebViewKit */,
 				04ABEBB82D1F35B400E30577 /* PreviewGallery */,
 				04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */,
+				0428F4802D75156300BDD2A5 /* SectionedQuery */,
 			);
 			productName = BikeIndex;
 			productReference = 04F4B8F72B098ADB009442B5 /* BikeIndex.app */;
@@ -284,6 +284,7 @@
 				04EA11202B2504340024CDDD /* XCRemoteSwiftPackageReference "URLEncodedForm" */,
 				04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */,
 				04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */,
+				0428F47F2D75156300BDD2A5 /* XCRemoteSwiftPackageReference "swiftdata-sectionedquery" */,
 			);
 			productRefGroup = 04F4B8F82B098ADB009442B5 /* Products */;
 			projectDirPath = "";
@@ -308,7 +309,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04F4B9322B098B5A009442B5 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -844,6 +844,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		0428F47F2D75156300BDD2A5 /* XCRemoteSwiftPackageReference "swiftdata-sectionedquery" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/beechtom/swiftdata-sectionedquery.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
+			};
+		};
 		04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/EmergeTools/SnapshotPreviews";
@@ -857,7 +865,7 @@
 			repositoryURL = "https://github.com/danielsaidi/WebViewKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.3.0;
+				minimumVersion = 0.5.0;
 			};
 		};
 		04EA11202B2504340024CDDD /* XCRemoteSwiftPackageReference "URLEncodedForm" */ = {
@@ -879,6 +887,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0428F4802D75156300BDD2A5 /* SectionedQuery */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0428F47F2D75156300BDD2A5 /* XCRemoteSwiftPackageReference "swiftdata-sectionedquery" */;
+			productName = SectionedQuery;
+		};
 		04ABEBB82D1F35B400E30577 /* PreviewGallery */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
