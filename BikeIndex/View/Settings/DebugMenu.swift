@@ -72,6 +72,17 @@ struct DebugMenu: View {
                         }))
             }
         }
+        .toolbar {
+            ToolbarItem(placement: .automatic) {
+                Button {
+                    // Validate client refresh behavior for integration testing
+                    client.forceRefreshToken()
+                } label: {
+                    Label("Refresh", systemImage: "restart.circle")
+                        .accessibilityHint(Text("Manually force a session refresh"))
+                }
+            }
+        }
         .navigationDestination(isPresented: $showOAuthApplicationsPage) {
             NavigableWebView(
                 constantLink: .oauthApplications,

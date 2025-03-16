@@ -30,6 +30,7 @@ typealias QueryItemTuple = (name: String, value: String)
 /// Stateful API client for interacting with bikeindex.org
 /// Wraps ``API`` class.
 /// Controls networking state and loads app configuration from the bundle.
+@MainActor
 @Observable class Client {
     private let session = URLSession(configuration: .default)
 

@@ -49,6 +49,7 @@ class TestableClient: Client {
 
 // MARK: -
 
+@MainActor
 final class ClientRefreshTests: XCTestCase {
     var client: TestableClient!
 
