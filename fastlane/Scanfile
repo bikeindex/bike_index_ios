@@ -5,8 +5,8 @@
 # fastlane scan --help
 
 project("BikeIndex.xcodeproj")
-
 scheme("Debug (development)")
+testplan("AllTests")
 
 # Scanfile contains defaults and these can be overridden by Fastfile
 # or CLI arguments
@@ -18,11 +18,8 @@ devices([
 ])
 
 result_bundle(true)
-
 reset_simulator(true)
-
 force_quit_simulator(true)
-
 include_simulator_logs(false)
-
 number_of_retries(2)
+
