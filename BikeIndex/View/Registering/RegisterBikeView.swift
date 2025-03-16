@@ -398,11 +398,9 @@ struct RegisterBikeView: View {
         auth.user = user
         container.mainContext.insert(auth)
 
-        return NavigationStack {
-            RegisterBikeView(mode: .myOwnBike, bike: bike)
+        return RegisterBikeView(mode: .myOwnBike, bike: bike)
                 .environment(client)
                 .modelContainer(container)
-        }
     } catch let error {
         return Text("Failed to load preview \(error.localizedDescription)")
     }
@@ -428,11 +426,9 @@ struct RegisterBikeView: View {
         auth.user = user
         container.mainContext.insert(auth)
 
-        return NavigationStack {
-            RegisterBikeView(mode: .myStolenBike, bike: bike)
-                .environment(client)
-                .modelContainer(container)
-        }
+        return RegisterBikeView(mode: .myStolenBike, bike: bike)
+            .environment(client)
+            .modelContainer(container)
     } catch let error {
         return Text("Failed to load preview \(error.localizedDescription)")
     }
