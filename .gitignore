@@ -4,8 +4,9 @@
 # App secrets!
 BikeIndex-development.xcconfig
 BikeIndex-production.xcconfig
+
 # Test app secrets!
-SharedTests/Test-credentials.xcconfig
+Test-credentials.xcconfig
 
 # Fastlane recommended ignore:
 # https://docs.fastlane.tools/best-practices/source-control/
