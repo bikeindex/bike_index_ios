@@ -12,6 +12,8 @@ struct ProportionalLazyVGrid<Content>: View where Content: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
 
+    var pinnedViews: PinnedScrollableViews = .init()
+
     @ViewBuilder
     var content: () -> Content
 
@@ -19,26 +21,30 @@ struct ProportionalLazyVGrid<Content>: View where Content: View {
         switch UIDevice.current.userInterfaceIdiom {
         case .phone:
             if horizontalSizeClass == .compact {
-                LazyVGrid(columns: Array(repeating: GridItem(), count: 2)) {
+                LazyVGrid(columns: Array(repeating: GridItem(), count: 2), pinnedViews: pinnedViews)
+                {
                     content()
                 }
             } else {
-                LazyVGrid(columns: Array(repeating: GridItem(), count: 4)) {
+                LazyVGrid(columns: Array(repeating: GridItem(), count: 4), pinnedViews: pinnedViews)
+                {
                     content()
                 }
             }
         case .pad:
             if horizontalSizeClass == .compact || verticalSizeClass == .compact {
-                LazyVGrid(columns: Array(repeating: GridItem(), count: 2)) {
+                LazyVGrid(columns: Array(repeating: GridItem(), count: 2), pinnedViews: pinnedViews)
+                {
                     content()
                 }
             } else {
-                LazyVGrid(columns: Array(repeating: GridItem(), count: 4)) {
+                LazyVGrid(columns: Array(repeating: GridItem(), count: 4), pinnedViews: pinnedViews)
+                {
                     content()
                 }
             }
         default:
-            LazyVGrid(columns: Array(repeating: GridItem(), count: 4)) {
+            LazyVGrid(columns: Array(repeating: GridItem(), count: 4), pinnedViews: pinnedViews) {
                 content()
             }
         }
