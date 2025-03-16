@@ -395,14 +395,19 @@ struct RegisterBikeView: View {
 
     let auth = AuthenticatedUser(identifier: "1", bikes: [bike])
 
-    NavStackInPreview {
-        RegisterBikeView(mode: .myOwnBike, bike: bike)
-            .environment(client)
-            .modelContainer(container)
-            .onAppear {
-                auth.user = user
-                container.mainContext.insert(auth)
-            }
+    let previewContent = RegisterBikeView(mode: .myOwnBike, bike: bike)
+        .environment(client)
+        .modelContainer(container)
+        .onAppear {
+            auth.user = user
+            container.mainContext.insert(auth)
+        }
+    if ProcessInfo().isRunningPreviews {
+        NavigationStack {
+            previewContent
+        }
+    } else {
+        previewContent
     }
 }
 
@@ -423,13 +428,18 @@ struct RegisterBikeView: View {
 
     let auth = AuthenticatedUser(identifier: "1", bikes: [bike])
 
-    NavStackInPreview {
-        RegisterBikeView(mode: .myStolenBike, bike: bike)
-            .environment(client)
-            .modelContainer(container)
-            .onAppear {
-                auth.user = user
-                container.mainContext.insert(auth)
-            }
+    let previewContent = RegisterBikeView(mode: .myStolenBike, bike: bike)
+        .environment(client)
+        .modelContainer(container)
+        .onAppear {
+            auth.user = user
+            container.mainContext.insert(auth)
+        }
+    if ProcessInfo().isRunningPreviews {
+        NavigationStack {
+            previewContent
+        }
+    } else {
+        previewContent
     }
 }
