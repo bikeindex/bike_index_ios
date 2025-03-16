@@ -8,12 +8,23 @@ project("BikeIndex.xcodeproj")
 
 scheme("Debug (development)")
 
+# Scanfile contains defaults and these can be overridden by Fastfile
+# or CLI arguments
+ios_version = "(18.2)"
 devices([
-	"iPhone 16 (18.2)",
-	"iPhone 16 Plus (18.2)",
-	"iPad (10th generation) (18.2)"
+	"iPhone 16 #{ios_version}",
+	"iPhone 16 Plus #{ios_version}",
+	"iPad (10th generation) #{ios_version}"
 ])
 
 skip_build(true)
 
 result_bundle(true)
+
+reset_simulator(true)
+
+force_quit_simulator(true)
+
+include_simulator_logs(false)
+
+number_of_retries(5)
