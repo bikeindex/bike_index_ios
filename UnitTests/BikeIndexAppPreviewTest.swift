@@ -8,7 +8,7 @@
 import SnapshottingTests
 import XCTest
 
-class BikeIndexAppPreviewTest: SnapshotTest {
+final class BikeIndexAppPreviewTest: SnapshotTest {
 
     // Return the type names of previews like "MyApp.MyView._Previews" to selectively render only some previews
     override class func snapshotPreviews() -> [String]? {
