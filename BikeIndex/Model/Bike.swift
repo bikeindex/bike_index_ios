@@ -136,7 +136,7 @@ import SwiftData
         frameColorPrimary = .black
 
         manufacturerName = ""
-        serial = ""
+        serial = nil
         status = .withOwner
         statusString = BikeStatus.withOwner.rawValue
         typeOfCycle = .bike

@@ -11,7 +11,7 @@ import Foundation
 /// Documented at https://bikeindex.org/documentation/api_v3#!/bikes/POST_version_bikes_format_post_3
 struct BikeRegistration: Encodable {
     struct Serial {
-        static let unknown = "unkown"
+        static let unknown = "unknown"
     }
 
     // MARK: Required fields
