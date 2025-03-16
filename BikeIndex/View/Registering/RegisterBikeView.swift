@@ -380,60 +380,66 @@ struct RegisterBikeView: View {
 
 // MARK: - Normal Mode Preview
 #Preview("Normal Mode Preview") {
-    do {
-        let bike = Bike()
-        let client = try Client()
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let bike = Bike()
+    let client = try! Client()
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
 
-        let container = try ModelContainer(
-            for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
-            configurations: config)
+    let container = try! ModelContainer(
+        for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+        configurations: config)
 
-        let user = User(
-            email: "preview@bikeindex.org", username: "previewUser", name: "Preview User",
-            additionalEmails: [], createdAt: Date(), image: nil, twitter: nil, parent: nil,
-            bikes: [bike])
+    let user = User(
+        email: "preview@bikeindex.org", username: "previewUser", name: "Preview User",
+        additionalEmails: [], createdAt: Date(), image: nil, twitter: nil, parent: nil,
+        bikes: [bike])
 
-        let auth = AuthenticatedUser(identifier: "1", bikes: [bike])
-        auth.user = user
-        container.mainContext.insert(auth)
+    let auth = AuthenticatedUser(identifier: "1", bikes: [bike])
 
-        return NavigationStack {
-            RegisterBikeView(mode: .myOwnBike, bike: bike)
-                .environment(client)
-                .modelContainer(container)
+    let previewContent = RegisterBikeView(mode: .myOwnBike, bike: bike)
+        .environment(client)
+        .modelContainer(container)
+        .onAppear {
+            auth.user = user
+            container.mainContext.insert(auth)
         }
-    } catch let error {
-        return Text("Failed to load preview \(error.localizedDescription)")
+    if ProcessInfo().isRunningPreviews {
+        NavigationStack {
+            previewContent
+        }
+    } else {
+        previewContent
     }
 }
 
 // MARK: - Stolen Mode Preview
 #Preview("Stolen Mode Preview") {
-    do {
-        let bike = Bike()
-        let client = try Client()
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let bike = Bike()
+    let client = try! Client()
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
 
-        let container = try ModelContainer(
-            for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
-            configurations: config)
+    let container = try! ModelContainer(
+        for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+        configurations: config)
 
-        let user = User(
-            email: "preview@bikeindex.org", username: "previewUser", name: "Preview User",
-            additionalEmails: [], createdAt: Date(), image: nil, twitter: nil, parent: nil,
-            bikes: [bike])
+    let user = User(
+        email: "preview@bikeindex.org", username: "previewUser", name: "Preview User",
+        additionalEmails: [], createdAt: Date(), image: nil, twitter: nil, parent: nil,
+        bikes: [bike])
 
-        let auth = AuthenticatedUser(identifier: "1", bikes: [bike])
-        auth.user = user
-        container.mainContext.insert(auth)
+    let auth = AuthenticatedUser(identifier: "1", bikes: [bike])
 
-        return NavigationStack {
-            RegisterBikeView(mode: .myStolenBike, bike: bike)
-                .environment(client)
-                .modelContainer(container)
+    let previewContent = RegisterBikeView(mode: .myStolenBike, bike: bike)
+        .environment(client)
+        .modelContainer(container)
+        .onAppear {
+            auth.user = user
+            container.mainContext.insert(auth)
         }
-    } catch let error {
-        return Text("Failed to load preview \(error.localizedDescription)")
+    if ProcessInfo().isRunningPreviews {
+        NavigationStack {
+            previewContent
+        }
+    } else {
+        previewContent
     }
 }

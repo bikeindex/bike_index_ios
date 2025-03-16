@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 71;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -11,9 +11,6 @@
 		04ABEBB92D1F35B400E30577 /* PreviewGallery in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBB82D1F35B400E30577 /* PreviewGallery */; };
 		04ABEBBB2D1F35B400E30577 /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */; };
 		04ABEBBD2D1F35B400E30577 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBC2D1F35B400E30577 /* SnapshottingTests */; };
-		04ABEBC52D1F399E00E30577 /* Snapshotting in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBC42D1F399E00E30577 /* Snapshotting */; };
-		04ABEBC62D1F399E00E30577 /* Snapshotting in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBC42D1F399E00E30577 /* Snapshotting */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		04ABEBC82D1F399E00E30577 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBC72D1F399E00E30577 /* SnapshottingTests */; };
 		04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 04E1343D2B4B718200CE88DD /* WebViewKit */; };
 		04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */ = {isa = PBXBuildFile; productRef = 04EA11212B2504340024CDDD /* URLEncodedForm */; };
 		04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04F4B95D2B0990CE009442B5 /* KeychainSwift */; };
@@ -43,7 +40,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				04ABEBC62D1F399E00E30577 /* Snapshotting in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -54,6 +50,8 @@
 		0496C6702CB36BED00B88D1B /* Brewfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Brewfile; sourceTree = "<group>"; };
 		0496C6712CB36BF100B88D1B /* .ruby-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".ruby-version"; sourceTree = "<group>"; };
 		0496C6722CB36BF600B88D1B /* Gemfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Gemfile; sourceTree = "<group>"; };
+		04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Test-credentials.xcconfig"; sourceTree = "<group>"; };
+		04D80BB72D8673F200E29577 /* Test-credentials-template.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Test-credentials-template.xcconfig"; sourceTree = "<group>"; };
 		04F4B8F72B098ADB009442B5 /* BikeIndex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BikeIndex.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04F4B90A2B098ADE009442B5 /* UnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		04F4B9142B098ADE009442B5 /* UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -129,8 +127,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04ABEBC82D1F399E00E30577 /* SnapshottingTests in Frameworks */,
-				04ABEBC52D1F399E00E30577 /* Snapshotting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,6 +147,8 @@
 				04F4B9292B098B44009442B5 /* BikeIndex-development.xcconfig */,
 				04F4B9272B098B44009442B5 /* BikeIndex-production.xcconfig */,
 				04F4B9282B098B44009442B5 /* BikeIndex-template.xcconfig */,
+				04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */,
+				04D80BB72D8673F200E29577 /* Test-credentials-template.xcconfig */,
 				04CDF1012D3C344100F90515 /* BikeIndex */,
 				04CDF1502D3C344500F90515 /* UnitTests */,
 				04CDF1632D3C344800F90515 /* UITests */,
@@ -487,8 +485,7 @@
 		};
 		04EA11262B25135D0024CDDD /* Debug BikeIndex.org */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 04CDF16F2D3C344C00F90515 /* SharedTests */;
-			baseConfigurationReferenceRelativePath = "Test-credentials.xcconfig";
+			baseConfigurationReference = 04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -754,8 +751,7 @@
 		};
 		04F4B9252B098ADE009442B5 /* Debug (development) */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 04CDF16F2D3C344C00F90515 /* SharedTests */;
-			baseConfigurationReferenceRelativePath = "Test-credentials.xcconfig";
+			baseConfigurationReference = 04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -777,8 +773,7 @@
 		};
 		04F4B9262B098ADE009442B5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 04CDF16F2D3C344C00F90515 /* SharedTests */;
-			baseConfigurationReferenceRelativePath = "Test-credentials.xcconfig";
+			baseConfigurationReference = 04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -903,16 +898,6 @@
 			productName = SnapshotPreferences;
 		};
 		04ABEBBC2D1F35B400E30577 /* SnapshottingTests */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
-			productName = SnapshottingTests;
-		};
-		04ABEBC42D1F399E00E30577 /* Snapshotting */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
-			productName = Snapshotting;
-		};
-		04ABEBC72D1F399E00E30577 /* SnapshottingTests */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
 			productName = SnapshottingTests;
