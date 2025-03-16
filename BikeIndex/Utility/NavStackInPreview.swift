@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-#if DEBUG
 /// Wrap this view's content in two different ways:
 /// 1. Previews will use a NavigationView
 /// 2. Everywhere else (SnapshotPreviews and Snapshot tests) will use a plain group
@@ -28,4 +27,3 @@ struct NavStackInPreview<Preview>: View where Preview: View {
         }
     }
 }
-#endif
