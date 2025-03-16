@@ -1,5 +1,5 @@
 {
-  "originHash" : "e648f0399da93eb0701a346f2b05c18a85feb4e380affc0efa759ecd2a61e754",
+  "originHash" : "70c1608ccd41988fbed45e9843d1c315e380525ef27a32b9ede486e2b5eca9f0",
   "pins" : [
     {
       "identity" : "accessibilitysnapshot",
@@ -38,6 +38,15 @@
       }
     },
     {
+      "identity" : "swiftdata-sectionedquery",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/beechtom/swiftdata-sectionedquery.git",
+      "state" : {
+        "revision" : "af2451407fe4f3cf06ff52318cd81a1d26df52bd",
+        "version" : "1.2.0"
+      }
+    },
+    {
       "identity" : "urlencodedform",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/interactord/URLEncodedForm.git",
@@ -51,8 +60,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/danielsaidi/WebViewKit.git",
       "state" : {
-        "revision" : "04fcd86336f4d254f0967b8cc7023af29dd7adce",
-        "version" : "0.4.0"
+        "revision" : "bae09cfa4bae29f22dcf9d98f197aba50b5dc4bb",
+        "version" : "0.5.0"
       }
     }
   ],

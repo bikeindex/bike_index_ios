@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0428F4812D75156300BDD2A5 /* SectionedQuery in Frameworks */ = {isa = PBXBuildFile; productRef = 0428F4802D75156300BDD2A5 /* SectionedQuery */; };
 		04ABEBB92D1F35B400E30577 /* PreviewGallery in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBB82D1F35B400E30577 /* PreviewGallery */; };
 		04ABEBBB2D1F35B400E30577 /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */; };
 		04ABEBBD2D1F35B400E30577 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBC2D1F35B400E30577 /* SnapshottingTests */; };
@@ -15,7 +16,6 @@
 		04ABEBC82D1F399E00E30577 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBC72D1F399E00E30577 /* SnapshottingTests */; };
 		04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 04E1343D2B4B718200CE88DD /* WebViewKit */; };
 		04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */ = {isa = PBXBuildFile; productRef = 04EA11212B2504340024CDDD /* URLEncodedForm */; };
-		04F4B9322B098B5A009442B5 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 04F4B9312B098B5A009442B5 /* README.md */; };
 		04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04F4B95D2B0990CE009442B5 /* KeychainSwift */; };
 /* End PBXBuildFile section */
 
@@ -73,13 +73,6 @@
 			);
 			target = 04F4B8F62B098ADB009442B5 /* BikeIndex */;
 		};
-		04CDF15C2D3C344500F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"Debug (bikeindex.org).xctestplan",
-			);
-			target = 04F4B9092B098ADE009442B5 /* UnitTests */;
-		};
 		04CDF16A2D3C344800F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -105,7 +98,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		04CDF1012D3C344100F90515 /* BikeIndex */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF1442D3C344100F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = BikeIndex; sourceTree = "<group>"; };
-		04CDF1502D3C344500F90515 /* UnitTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF15C2D3C344500F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = UnitTests; sourceTree = "<group>"; };
+		04CDF1502D3C344500F90515 /* UnitTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = UnitTests; sourceTree = "<group>"; };
 		04CDF1632D3C344800F90515 /* UITests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF16A2D3C344800F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = UITests; sourceTree = "<group>"; };
 		04CDF16F2D3C344C00F90515 /* SharedTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF1722D3C344C00F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 04CDF1732D3C344C00F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = SharedTests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -117,6 +110,7 @@
 			files = (
 				04ABEBB92D1F35B400E30577 /* PreviewGallery in Frameworks */,
 				04ABEBBB2D1F35B400E30577 /* SnapshotPreferences in Frameworks */,
+				0428F4812D75156300BDD2A5 /* SectionedQuery in Frameworks */,
 				04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */,
 				04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */,
 				04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */,
@@ -204,6 +198,7 @@
 				04E1343D2B4B718200CE88DD /* WebViewKit */,
 				04ABEBB82D1F35B400E30577 /* PreviewGallery */,
 				04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */,
+				0428F4802D75156300BDD2A5 /* SectionedQuery */,
 			);
 			productName = BikeIndex;
 			productReference = 04F4B8F72B098ADB009442B5 /* BikeIndex.app */;
@@ -289,6 +284,7 @@
 				04EA11202B2504340024CDDD /* XCRemoteSwiftPackageReference "URLEncodedForm" */,
 				04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */,
 				04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */,
+				0428F47F2D75156300BDD2A5 /* XCRemoteSwiftPackageReference "swiftdata-sectionedquery" */,
 			);
 			productRefGroup = 04F4B8F82B098ADB009442B5 /* Products */;
 			projectDirPath = "";
@@ -313,7 +309,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04F4B9322B098B5A009442B5 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -849,6 +844,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		0428F47F2D75156300BDD2A5 /* XCRemoteSwiftPackageReference "swiftdata-sectionedquery" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/beechtom/swiftdata-sectionedquery.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
+			};
+		};
 		04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/EmergeTools/SnapshotPreviews";
@@ -862,7 +865,7 @@
 			repositoryURL = "https://github.com/danielsaidi/WebViewKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.3.0;
+				minimumVersion = 0.5.0;
 			};
 		};
 		04EA11202B2504340024CDDD /* XCRemoteSwiftPackageReference "URLEncodedForm" */ = {
@@ -884,6 +887,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0428F4802D75156300BDD2A5 /* SectionedQuery */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0428F47F2D75156300BDD2A5 /* XCRemoteSwiftPackageReference "swiftdata-sectionedquery" */;
+			productName = SectionedQuery;
+		};
 		04ABEBB82D1F35B400E30577 /* PreviewGallery */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;

@@ -55,6 +55,11 @@ extension AcknowledgementPackage {
             license: .mit,
             copyright: "Copyright © 2023 Emerge Tools",
             repository: URL(string: "https://github.com/EmergeTools/SnapshotPreviews")!),
+        AcknowledgementPackage(
+            title: "SwiftData-SectionedQuery",
+            license: .mit,
+            copyright: "Copyright © 2023 Thomas Magis-Agosta",
+            repository: URL(string: "https://github.com/beechtom/swiftdata-sectionedquery")!),
     ]
 
     static var gnuAfferoGPLv3Packages: [AcknowledgementPackage] {
