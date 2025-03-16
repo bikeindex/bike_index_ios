@@ -169,7 +169,7 @@ struct MainContentPage: View {
 
                 for (index, status) in statuses.enumerated() {
                     let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
-                    var bike = output.modelInstance()
+                    let bike = output.modelInstance()
                     // Mock one of each status
                     // but separate the identifiers
                     bike.identifier = index
@@ -202,7 +202,7 @@ struct MainContentPage: View {
                 let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
 
                 for (index, status) in BikeStatus.allCases.enumerated() {
-                    var bike = output.modelInstance()
+                    let bike = output.modelInstance()
 
                     // Mock one of each status
                     // but separate the identifiers

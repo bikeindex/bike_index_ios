@@ -21,7 +21,7 @@ struct AcknowledgementPackage: Identifiable, Hashable {
 }
 
 extension AcknowledgementPackage {
-    static var all: [AcknowledgementPackage] = [
+    static let all: [AcknowledgementPackage] = [
         // MARK: GNU AGPL v3.0
         AcknowledgementPackage(
             title: "Bike Index",

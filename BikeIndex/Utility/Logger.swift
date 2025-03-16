@@ -8,7 +8,7 @@
 import OSLog
 
 extension Logger {
-    private static var subsystem = Bundle.main.bundleIdentifier!
+    private static let subsystem = Bundle.main.bundleIdentifier!
 
     static let views = Logger(subsystem: subsystem, category: "views")
     static let auth = Logger(subsystem: subsystem, category: "auth")

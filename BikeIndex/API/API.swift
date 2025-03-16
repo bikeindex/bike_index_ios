@@ -22,9 +22,9 @@ extension URL {
 public typealias BikeId = String
 
 /// Internal type to signify that POSTs use an Encodable type
-public typealias Postable = Encodable
+public protocol Postable: Encodable, Sendable {}
 
-protocol APIEndpoint {
+protocol APIEndpoint: Sendable {
     /// Array of path components to-be concatenated to the URL
     var path: [String] { get }
 

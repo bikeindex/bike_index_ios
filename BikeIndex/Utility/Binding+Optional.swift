@@ -8,7 +8,7 @@
 import SwiftUI
 
 /// Via https://stackoverflow.com/a/72291242/178805
-extension Binding where Value: Equatable {
+extension Binding where Value: (Equatable & Sendable) {
     public init(_ source: Binding<Value?>, replacingNilWith nilProxy: Value) {
         self.init(
             get: { source.wrappedValue ?? nilProxy },
