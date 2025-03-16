@@ -27,39 +27,39 @@ extension AcknowledgementPackage {
             title: "Bike Index",
             license: .gnuAfferoGPLv3,
             copyright: "2023 © Bike Index, a 501(c)(3) nonprofit - EIN 81-4296194",
-            repository: URL(string: "https://github.com/bikeindex/bike_index")!),
+            repository: URL("https://github.com/bikeindex/bike_index")),
         AcknowledgementPackage(
             title: "Bike Index iOS",
             license: .gnuAfferoGPLv3,
             copyright: "2023 © Bike Index, a 501(c)(3) nonprofit - EIN 81-4296194",
-            repository: URL(string: "https://github.com/bikeindex/bike_index_ios")!),
+            repository: URL("https://github.com/bikeindex/bike_index_ios")),
 
         // MARK: MIT
         AcknowledgementPackage(
             title: "KeychainSwift",
             license: .mit,
             copyright: "Copyright © 2015 - 2021 Evgenii Neumerzhitckii",
-            repository: URL(string: "https://github.com/evgenyneu/keychain-swift")!),
+            repository: URL("https://github.com/evgenyneu/keychain-swift")),
         AcknowledgementPackage(
             title: "URLEncodedForm",
             license: .mit,
             copyright: "Copyright © 2023 Scott Moon",
-            repository: URL(string: "https://github.com/forXifLess/URLEncodedForm")!),
+            repository: URL("https://github.com/forXifLess/URLEncodedForm")),
         AcknowledgementPackage(
             title: "WebViewKit",
             license: .mit,
             copyright: "Copyright © 2022 Daniel Saidi",
-            repository: URL(string: "https://github.com/danielsaidi/WebViewKit")!),
+            repository: URL("https://github.com/danielsaidi/WebViewKit")),
         AcknowledgementPackage(
             title: "SnapshotPreviews",
             license: .mit,
             copyright: "Copyright © 2023 Emerge Tools",
-            repository: URL(string: "https://github.com/EmergeTools/SnapshotPreviews")!),
+            repository: URL("https://github.com/EmergeTools/SnapshotPreviews")),
         AcknowledgementPackage(
             title: "SwiftData-SectionedQuery",
             license: .mit,
             copyright: "Copyright © 2023 Thomas Magis-Agosta",
-            repository: URL(string: "https://github.com/beechtom/swiftdata-sectionedquery")!),
+            repository: URL("https://github.com/beechtom/swiftdata-sectionedquery")),
     ]
 
     static var gnuAfferoGPLv3Packages: [AcknowledgementPackage] {

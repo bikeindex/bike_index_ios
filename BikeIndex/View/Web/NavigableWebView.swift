@@ -83,7 +83,7 @@ struct NavigableWebView: View {
 
 #Preview {
     NavigableWebView(
-        url: .constant(URL(string: "https://bikeindex.org")!),
+        url: .constant(URL("https://bikeindex.org")),
         navigator: HistoryNavigator()
     )
     .environment(try! Client())

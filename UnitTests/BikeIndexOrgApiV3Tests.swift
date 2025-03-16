@@ -14,7 +14,7 @@ final class BikeIndexOrgApiV3Tests: XCTestCase {
         let token = UUID().uuidString
         let config = EndpointConfiguration(
             accessToken: token,
-            host: URL(string: "https://bikeindex.org/")!)
+            host: URL("https://bikeindex.org/"))
 
         let identifier = "0987654321"
         let path = Bikes.bikes(identifier: identifier)
