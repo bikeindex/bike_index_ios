@@ -17,8 +17,6 @@ devices([
 	"iPad (10th generation) #{ios_version}"
 ])
 
-skip_build(false)
-
 result_bundle(true)
 
 reset_simulator(true)
