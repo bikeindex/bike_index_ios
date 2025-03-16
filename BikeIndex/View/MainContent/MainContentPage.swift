@@ -68,7 +68,7 @@ struct MainContentPage: View {
                     RegisterBikeView(mode: .myStolenBike)
                 case .searchBikes:
                     NavigableWebView(
-                        url: .constant(URL(string: "https://bikeindex.org/bikes?stolenness=all")!)
+                        url: .constant(URL("https://bikeindex.org/bikes?stolenness=all"))
                     )
                     .environment(client)
                 }
