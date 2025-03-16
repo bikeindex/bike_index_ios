@@ -11,9 +11,6 @@
 		04ABEBB92D1F35B400E30577 /* PreviewGallery in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBB82D1F35B400E30577 /* PreviewGallery */; };
 		04ABEBBB2D1F35B400E30577 /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */; };
 		04ABEBBD2D1F35B400E30577 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBC2D1F35B400E30577 /* SnapshottingTests */; };
-		04ABEBC52D1F399E00E30577 /* Snapshotting in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBC42D1F399E00E30577 /* Snapshotting */; };
-		04ABEBC62D1F399E00E30577 /* Snapshotting in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBC42D1F399E00E30577 /* Snapshotting */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		04ABEBC82D1F399E00E30577 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBC72D1F399E00E30577 /* SnapshottingTests */; };
 		04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 04E1343D2B4B718200CE88DD /* WebViewKit */; };
 		04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */ = {isa = PBXBuildFile; productRef = 04EA11212B2504340024CDDD /* URLEncodedForm */; };
 		04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04F4B95D2B0990CE009442B5 /* KeychainSwift */; };
@@ -43,7 +40,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				04ABEBC62D1F399E00E30577 /* Snapshotting in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -131,8 +127,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04ABEBC82D1F399E00E30577 /* SnapshottingTests in Frameworks */,
-				04ABEBC52D1F399E00E30577 /* Snapshotting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -904,16 +898,6 @@
 			productName = SnapshotPreferences;
 		};
 		04ABEBBC2D1F35B400E30577 /* SnapshottingTests */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
-			productName = SnapshottingTests;
-		};
-		04ABEBC42D1F399E00E30577 /* Snapshotting */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
-			productName = Snapshotting;
-		};
-		04ABEBC72D1F399E00E30577 /* SnapshottingTests */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
 			productName = SnapshottingTests;
