@@ -17,7 +17,6 @@ devices([
 	"iPad (10th generation)"
 ])
 
-prelaunch_simulator(true)
 result_bundle(true)
 reset_simulator(true)
 force_quit_simulator(true)
