@@ -27,4 +27,4 @@ force_quit_simulator(true)
 
 include_simulator_logs(false)
 
-number_of_retries(5)
+number_of_retries(2)
