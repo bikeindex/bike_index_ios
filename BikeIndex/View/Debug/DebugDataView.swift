@@ -41,7 +41,7 @@ struct DebugDataView: View {
                 Text("Owner [UUID]: \(bike.owner?.persistentModelID.storeIdentifier ?? "Empty")")
                 Text("Auth Owner [ID]: \(bike.authenticatedOwner?.identifier ?? "Empty")")
                 Text("Description: \(bike.bikeDescription ?? "")")
-                Text("Frame Model: \(bike.frameModel)")
+                Text("Frame Model: \(String(describing: bike.frameModel))")
                 Text("Color Primary: \(bike.frameColorPrimary))")
                 if let frameColorSecondary = bike.frameColorSecondary {
                     Text("Frame Color Secondary: \(frameColorSecondary))")
