@@ -29,12 +29,21 @@
       }
     },
     {
+      "identity" : "simpledebugger",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/EmergeTools/SimpleDebugger.git",
+      "state" : {
+        "revision" : "f065263eb5db95874b690408d136b573c939db9e",
+        "version" : "1.0.0"
+      }
+    },
+    {
       "identity" : "snapshotpreviews",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/EmergeTools/SnapshotPreviews",
       "state" : {
-        "revision" : "e29969072e600518867af25d4d2acd0d1d2ffd5f",
-        "version" : "0.10.20"
+        "revision" : "dc8c05cb7d156019cbb49f1337fe89c7856455cd",
+        "version" : "0.10.21"
       }
     },
     {
@@ -51,8 +60,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/interactord/URLEncodedForm.git",
       "state" : {
-        "revision" : "5f51aa13d41b26fc8833cd040df3a3101768bb64",
-        "version" : "1.0.8"
+        "revision" : "cd690e95f0df333293ec3f9fa9c2c7322ef54bbf",
+        "version" : "1.0.9"
       }
     },
     {

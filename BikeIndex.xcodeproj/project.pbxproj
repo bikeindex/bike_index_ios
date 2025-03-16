@@ -852,7 +852,7 @@
 			repositoryURL = "https://github.com/EmergeTools/SnapshotPreviews";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.10.20;
+				minimumVersion = 0.10.21;
 			};
 		};
 		04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */ = {
@@ -868,7 +868,7 @@
 			repositoryURL = "https://github.com/interactord/URLEncodedForm.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.8;
+				minimumVersion = 1.0.9;
 			};
 		};
 		04F4B95C2B0990CE009442B5 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
