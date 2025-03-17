@@ -6,7 +6,7 @@
 //
 
 import OSLog
-@preconcurrency import WebKit  // TODO: Upgrade WebKit for Swift 6 concurrency
+import WebKit
 
 open class NavigatorChild: NSObject, WKNavigationDelegate {
     var child: NavigatorChild?
