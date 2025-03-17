@@ -95,14 +95,16 @@ struct RegisterBikeView: View {
 
             // MARK: Serial number
             Section {
-                let safeSerial = Binding {
-                    bike.serial ?? ""
-                } set: { newValue in
-                    bike.serial = newValue
-                    if let serial = bike.serial, !serial.isEmpty {
-                        missingSerial = false
-                    }
-                }
+                let safeSerial = Binding(
+                    get: {
+                        $bike.serial.wrappedValue ?? ""
+                    },
+                    set: { newValue in
+                        bike.serial = newValue
+                        if let serial = bike.serial, !serial.isEmpty {
+                            missingSerial = false
+                        }
+                    })
 
                 TextField(text: safeSerial) {
                     if missingSerial {
