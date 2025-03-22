@@ -341,7 +341,7 @@ struct RegisterBikeView: View {
         case .success(let success):
             guard let registrationResponseSource = success as? SingleBikeResponseContainer else {
                 Logger.views.error(
-                    "Failed to parse bike registtration successful response from \(String(reflecting: success))"
+                    "Failed to parse bike registration successful response from \(String(reflecting: success))"
                 )
                 return
             }

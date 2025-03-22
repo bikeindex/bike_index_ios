@@ -88,6 +88,7 @@ final class API {
             request.addValue(accessToken, forHTTPHeaderField: "access_token")
         }
 
+        // Prepare HTTP body contents
         do {
             guard let requestModel = endpoint.requestModel else {
                 Logger.api.error(
@@ -101,6 +102,7 @@ final class API {
             return .failure(error)
         }
 
+        // Send POST request
         do {
             let (data, response) = try await session.data(for: request)
             try (response as? HTTPURLResponse)?.validate(with: data)
@@ -130,12 +132,6 @@ enum HttpMethod: String {
     case options = "OPTIONS"
     case trace = "TRACE"
     case patch = "PATCH"
-}
-
-enum APIError: Error {
-    case cacheHit
-    case clientError(code: Int, data: Data?)
-    case postMissingContents(endpoint: APIEndpoint)
 }
 
 extension HTTPURLResponse {
