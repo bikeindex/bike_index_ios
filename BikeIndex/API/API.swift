@@ -85,8 +85,7 @@ final class API {
     func post(_ endpoint: APIEndpoint) async -> Result<(any Decodable), Error> {
         var request = endpoint.request(for: configuration)
         if endpoint.authorized, let accessToken = configuration.accessToken {
-            request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
-            )
+            request.addValue(accessToken, forHTTPHeaderField: "access_token")
         }
 
         do {
