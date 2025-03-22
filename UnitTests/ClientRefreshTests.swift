@@ -58,7 +58,9 @@ final class ClientRefreshTests: XCTestCase {
     }
 
     override func tearDownWithError() throws {
-        client.destroySession()
+        Task { [weak client] in
+            await client?.destroySession()
+        }
     }
 
     func test_token_renewal() throws {

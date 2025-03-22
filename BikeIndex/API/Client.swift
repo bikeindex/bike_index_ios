@@ -113,37 +113,35 @@ typealias QueryItemTuple = (name: String, value: String)
     }
 
     /// Allow users to log out
-    func destroySession() {
-        Task { @MainActor in
-            // Clear web state
-            // NOTE: We could parse this for a 302 redirect to /goodbye but that seems unnecessary
-            _ = await api.get(OAuth.logout)
+    func destroySession() async {
+        // Clear web state
+        // NOTE: We could parse this for a 302 redirect to /goodbye but that seems unnecessary
+        _ = await api.get(OAuth.logout)
 
-            let allCookies = await webConfiguration.websiteDataStore.httpCookieStore.allCookies()
-            var authCookie: HTTPCookie?
-            for cookie in allCookies {
-                if cookie.name == "auth" {
-                    authCookie = cookie
-                }
-                Logger.client.info("Evaluated cookie named \(cookie.name) during sign-out")
+        let allCookies = await webConfiguration.websiteDataStore.httpCookieStore.allCookies()
+        var authCookie: HTTPCookie?
+        for cookie in allCookies {
+            if cookie.name == "auth" {
+                authCookie = cookie
             }
-            Logger.client.warning("Found \(allCookies.count) cookies")
-            if let authCookie {
-                await webConfiguration.websiteDataStore.httpCookieStore.deleteCookie(authCookie)
-            } else {
-                Logger.client.warning("Failed to find and destroy auth cookie")
-            }
-
-            // Clear app state
-            KeychainSwift().delete(Keychain.oauthToken)
-            accessToken = nil
-            auth = nil
-            api = API(
-                configuration: EndpointConfiguration(
-                    accessToken: "",
-                    host: configuration.host),
-                session: session)
+            Logger.client.info("Evaluated cookie named \(cookie.name) during sign-out")
         }
+        Logger.client.warning("Found \(allCookies.count) cookies")
+        if let authCookie {
+            await webConfiguration.websiteDataStore.httpCookieStore.deleteCookie(authCookie)
+        } else {
+            Logger.client.warning("Failed to find and destroy auth cookie")
+        }
+
+        // Clear app state
+        KeychainSwift().delete(Keychain.oauthToken)
+        accessToken = nil
+        auth = nil
+        api = API(
+            configuration: EndpointConfiguration(
+                accessToken: "",
+                host: configuration.host),
+            session: session)
     }
 
     var userCanRegisterBikes: Bool {
