@@ -10,10 +10,23 @@ import SwiftData
 import SwiftUI
 
 /// Model for ``MainContentPage`` to perform helpful work retrieving and serializing.
+/// Performs all work on the MainActor so this may be view-blocking
+/// Consider moving this to @ModelActor
+/// - https://www.massicotte.org/model-actor
+/// - https://fatbobman.com/en/posts/concurret-programming-in-swiftdata/
 final class MainContentModel {
 
+    /// Fetch the current user's profile. Must be authenticated already!
+    /// Will perform these steps:
+    /// 0. Destroy all other authenticated users
+    /// 1. Write this ``AuthenticatedUser``
+    /// 2. Write the User
+    /// 3. Find any cached bikes known-to-be-owned by this user and link them.
+    /// - Parameter client: App network Client to perform network requests.
+    /// - Parameter modelContext: SwiftData modelContext to do work on
+    /// - Throws: Swift.Error, MainContentModel.Error
     @MainActor
-    func fetchProfile(client: Client, modelContext: ModelContext) async throws(Swift.Error) {
+    func fetchProfile(client: Client, modelContext: ModelContext) async throws {
         guard client.authenticated else {
             return
         }
@@ -32,10 +45,6 @@ final class MainContentModel {
             let myProfile = myProfileSource.modelInstance()
             myProfile.user = myProfileSource.user.modelInstance()
 
-            // 0. Destroy all other authenticated users
-            // 1. Write the AuthenticatedUser
-            // 2. Write the User
-            // 3. Find any cached bikes known-to-be-owned by this user and link them.
             do {
                 try modelContext.transaction {
                     // 0.
@@ -75,8 +84,13 @@ final class MainContentModel {
         }
     }
 
+    /// Fetch the current user's bikes. Must be authenticated already! Must have an AuthenticatedUser already!
+    /// Will fetch and associate bikes with ``Bike/owner`` and ``Bike/authenticatedOwner``.
+    /// - Parameter client: App network Client to perform network requests.
+    /// - Parameter modelContext: SwiftData modelContext to do work on
+    /// - Throws: Swift.Error, MainContentModel.Error
     @MainActor
-    func fetchBikes(client: Client, modelContext: ModelContext) async throws(Swift.Error) {
+    func fetchBikes(client: Client, modelContext: ModelContext) async throws {
         guard client.authenticated else {
             return
         }
