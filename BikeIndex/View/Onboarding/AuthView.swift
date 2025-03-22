@@ -32,7 +32,7 @@ struct AuthView: View {
     @Environment(Client.self) var client
     /// ViewModel to manage state.
     /// `viewModel.authNavigator.client` must be connected at runtime.
-    @State private var viewModel = AuthViewModel()
+    @State private var viewModel = ViewModel()
 
     var body: some View {
         NavigationStack(path: $viewModel.topLevelPath) {
@@ -55,7 +55,7 @@ struct AuthView: View {
 
                     #if DEBUG
                     ToolbarItem(placement: .topBarLeading) {
-                        NavigationLink(value: AuthViewModel.Nav.debugSettings) {
+                        NavigationLink(value: ViewModel.Nav.debugSettings) {
                             Label("Settings", systemImage: "gearshape")
                         }
                     }
@@ -63,7 +63,7 @@ struct AuthView: View {
                 }
                 .navigationTitle("Welcome to Bike Index")
                 .navigationBarTitleDisplayMode(.inline)
-                .navigationDestination(for: AuthViewModel.Nav.self) { navSelection in
+                .navigationDestination(for: ViewModel.Nav.self) { navSelection in
                     switch navSelection {
                     case .debugSettings:
                         SettingsPage(path: $viewModel.topLevelPath)
