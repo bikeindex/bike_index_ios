@@ -14,7 +14,12 @@ import SwiftUI
 /// Consider moving this to @ModelActor
 /// - https://www.massicotte.org/model-actor
 /// - https://fatbobman.com/en/posts/concurret-programming-in-swiftdata/
+@MainActor @Observable
 final class MainContentModel {
+
+    var groupMode: GroupMode = .byStatus
+
+    // MARK: - Network Operations
 
     /// Fetch the current user's profile. Must be authenticated already!
     /// Will perform these steps:
@@ -94,7 +99,8 @@ final class MainContentModel {
     /// - Parameter modelContext: SwiftData modelContext to do work on
     /// - Throws: MainContentModel.Error
     @MainActor
-    func fetchBikes(client: Client, modelContext: ModelContext) async throws(MainContentModel.Error) {
+    func fetchBikes(client: Client, modelContext: ModelContext) async throws(MainContentModel.Error)
+    {
         guard client.authenticated else {
             return
         }
@@ -133,6 +139,27 @@ final class MainContentModel {
         case .failure(let failure):
             Logger.model.error("\(type(of: self)).\(#function) - Failed with \(failure)")
             throw Error.swiftError(failure)
+        }
+    }
+}
+
+extension MainContentModel {
+    enum GroupMode: CaseIterable, Identifiable {
+        case byStatus
+//        case byDateUpdated // TODO: Implement `registration_created_at` and `registration_updated_at`
+        case byManufacturer
+
+        var id: Self { self }
+
+        var displayName: String {
+            switch self {
+            case .byStatus:
+                return "Status"
+//            case .byDateUpdated:
+//                return "Date Added"
+            case .byManufacturer:
+                return "Manufacturer"
+            }
         }
     }
 }

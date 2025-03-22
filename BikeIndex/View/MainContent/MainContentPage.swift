@@ -18,7 +18,8 @@ struct MainContentPage: View {
     @State var path = NavigationPath()
 
     // Data handling and error handling
-    var contentModel = MainContentModel()
+    // TODO: Write MainContentModel.groupMode to user defaults
+    @State var contentModel = MainContentModel()
     @State var lastError: MainContentModel.Error?
     @State var showError: Bool = false
 
@@ -26,6 +27,11 @@ struct MainContentPage: View {
         \Bike.statusString,
         sort: [SortDescriptor(\.statusString)])
     private var bikesByStatus: SectionedResults<String, Bike>
+
+    @SectionedQuery(
+        \Bike.manufacturerName,
+        sort: [SortDescriptor(\.manufacturerName)])
+    private var bikesByManufacturer: SectionedResults<String, Bike>
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -42,19 +48,34 @@ struct MainContentPage: View {
                     ContentUnavailableView("No bikes registered", systemImage: "bicycle.circle")
                         .padding()
                 } else {
-                    ProportionalLazyVGrid(pinnedViews: [.sectionHeaders]) {
-                        ForEach(bikesByStatus) { section in
-                            if let status = BikeStatus(rawValue: section.id) {
-                                BikesStatusSection(
+                    switch contentModel.groupMode {
+                    case .byStatus:
+                        ProportionalLazyVGrid(pinnedViews: [.sectionHeaders]) {
+                            ForEach(bikesByStatus) { section in
+                                if let status = BikeStatus(rawValue: section.id) {
+                                    BikesSection(
+                                        path: $path,
+                                        title: status.rawValue.capitalized,
+                                        group: .byStatus(status))
+                                }
+                            }
+                        }
+                    case .byManufacturer:
+                        ProportionalLazyVGrid(pinnedViews: [.sectionHeaders]) {
+                            ForEach(bikesByManufacturer) { section in
+                                BikesSection(
                                     path: $path,
-                                    status: status)
+                                    title: section.id,
+                                    group: .byManufacturer(section.id))
                             }
                         }
                     }
                 }
             }
             .toolbar {
-                MainToolbar(path: $path)
+                MainToolbar(
+                    path: $path,
+                    groupMode: $contentModel.groupMode)
             }
             .navigationTitle("Bike Index")
             .navigationDestination(for: MainContent.self) { selection in
@@ -154,6 +175,9 @@ struct MainContentPage: View {
             do {
                 let rawJsonData = MockData.sampleBikeJson.data(using: .utf8)!
                 let statuses: [BikeStatus] = Array(repeating: .withOwner, count: 3)
+                let manufacturers = [
+                    "Giant", "Specialized", "Jamis", "Giant", "Specialized", "Jamis",
+                ]
 
                 for (index, status) in statuses.enumerated() {
                     let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
@@ -162,6 +186,7 @@ struct MainContentPage: View {
                     // but separate the identifiers
                     bike.identifier = index
                     bike.update(keyPath: \.status, to: status)
+                    bike.update(keyPath: \.manufacturerName, to: manufacturers[index])
                     print(
                         "Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)"
                     )
@@ -188,6 +213,9 @@ struct MainContentPage: View {
             do {
                 let rawJsonData = MockData.sampleBikeJson.data(using: .utf8)!
                 let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
+                let manufacturers = [
+                    "Giant", "Specialized", "Jamis", "Giant", "Specialized", "Jamis",
+                ]
 
                 for (index, status) in BikeStatus.allCases.enumerated() {
                     let bike = output.modelInstance()
@@ -196,6 +224,7 @@ struct MainContentPage: View {
                     // but separate the identifiers
                     bike.identifier = index
                     bike.update(keyPath: \.status, to: status)
+                    bike.update(keyPath: \.manufacturerName, to: manufacturers[index])
                     print(
                         "Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)"
                     )
