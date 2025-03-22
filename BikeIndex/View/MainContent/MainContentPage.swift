@@ -96,24 +96,15 @@ struct MainContentPage: View {
     ///     - Report error and return if any problems occur
     /// 2. Fetch profile's bikes data
     ///     - Report error and return if any problems occur
-    /// Unfortunately I don't see any way around the Xcode 16.0 / Swift 6 "'as' test is always true" compiler warning.
-    /// Resources:
-    /// - https://stackoverflow.com/questions/79019378/swift-6-how-to-use-typed-throws-inside-a-task
-    /// - https://dandylyons.github.io/posts/typed-error-handling/
-    /// - https://forums.swift.org/t/struct-mystruct-error-does-not-conform-to-errorcodeprotocol/17103
-    /// - https://www.hackingwithswift.com/swift/6.0/typed-throws
     private func fetchMainContentData() async {
         do {
             try await contentModel.fetchProfile(
                 client: client,
                 modelContext: modelContext)
-        } catch let error as MainContentModel.Error {
+        } catch {
             Logger.model.error("Failed to fetch profile: \(error)")
             lastError = error
             showError = true
-            return
-        } catch {
-            Logger.model.error("Unhandled error encountered: \(error)")
             return
         }
 
@@ -121,13 +112,10 @@ struct MainContentPage: View {
             try await contentModel.fetchBikes(
                 client: client,
                 modelContext: modelContext)
-        } catch let error as MainContentModel.Error {
+        } catch {
             Logger.model.error("Failed to user's bikes: \(error)")
             lastError = error
             showError = true
-            return
-        } catch {
-            Logger.model.error("Failed to fetch user's bikes with \(error)")
             return
         }
     }
