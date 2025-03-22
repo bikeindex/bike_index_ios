@@ -13,7 +13,6 @@ import WebViewKit
 /// NOTE: Adopt @Focus State https://developer.apple.com/documentation/swiftui/focusstate
 /// NOTE: Possibly add organization selection
 struct RegisterBikeView: View {
-    // @Environment(\.dismiss) private var dismiss // Can't use with NavigableWebView for serial or how-to-recover links
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
     @Environment(\.dismiss) var dismiss

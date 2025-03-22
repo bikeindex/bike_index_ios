@@ -91,7 +91,6 @@ struct NavigableWebView: View {
 
 extension NavigableWebView {
     enum Identifiers: String {
-
         case backButton = "WebViewBack"
         case forwardButton = "WebViewForward"
     }
