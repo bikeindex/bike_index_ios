@@ -9,10 +9,11 @@ import OSLog
 import SwiftData
 import SwiftUI
 
+/// Model for ``MainContentPage`` to perform helpful work retrieving and serializing.
 final class MainContentModel {
 
     @MainActor
-    func fetchProfile(client: Client, modelContext: ModelContext) async throws(Error) {
+    func fetchProfile(client: Client, modelContext: ModelContext) async throws(Swift.Error) {
         guard client.authenticated else {
             return
         }
@@ -75,7 +76,7 @@ final class MainContentModel {
     }
 
     @MainActor
-    func fetchBikes(client: Client, modelContext: ModelContext) async throws(Error) {
+    func fetchBikes(client: Client, modelContext: ModelContext) async throws(Swift.Error) {
         guard client.authenticated else {
             return
         }
