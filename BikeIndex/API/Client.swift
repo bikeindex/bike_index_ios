@@ -192,12 +192,9 @@ typealias QueryItemTuple = (name: String, value: String)
             URLQueryItem(name: item.name, value: item.value)
         }
 
-        let fullToken = await get(OAuth.token(queryItems: tokenQuery))
+        let fullToken: Result<OAuthToken, Error> = await post(OAuth.token(queryItems: tokenQuery))
         switch fullToken {
-        case .success(let success):
-            guard let fullTokenAuth = success as? OAuthToken else {
-                return false
-            }
+        case .success(let fullTokenAuth):
             self.auth = fullTokenAuth
             self.accessToken = fullTokenAuth.accessToken
             self.setupRefreshTimer()
@@ -261,14 +258,10 @@ typealias QueryItemTuple = (name: String, value: String)
         }
 
         Task {
-            let renewedTokenRequest = await get(OAuth.refresh(queryItems: tokenQuery))
+            let renewedTokenRequest: Result<OAuthToken, Error> = await post(
+                OAuth.refresh(queryItems: tokenQuery))
             switch renewedTokenRequest {
-            case .success(let success):
-                guard let refreshedToken = success as? OAuthToken else {
-                    Logger.client.error("Failed to parse oauthtoken from fetch")
-                    return
-                }
-
+            case .success(let refreshedToken):
                 self.auth = refreshedToken
                 self.accessToken = refreshedToken.accessToken
                 self.setupRefreshTimer()

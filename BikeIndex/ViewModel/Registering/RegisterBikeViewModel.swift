@@ -210,7 +210,7 @@ extension RegisterBikeView {
                 propulsion: propulsion,
                 ownerEmail: ownerEmail)
             let endpoint = Bikes.postBikes(form: bikeRegistration)
-            let response: Result<SingleBikeResponseContainer, any Error> = await client.post(
+            let response: Result<RegisterBikeResponseContainer, any Error> = await client.post(
                 endpoint)
             switch response {
             case .success(let registrationResponseSource):
@@ -224,7 +224,7 @@ extension RegisterBikeView {
                         // TODO: Find a way to reduce file size further without reducing quality
                         if let data = image.jpegData(compressionQuality: 0.9) {
                             let endpoint = Bikes.image(
-                                identifier: "\(bikeModel.identifier)", imageData: data)
+                                identifier: bikeModel.identifier, imageData: data)
                             client.postInBackground(endpoint) { error in
                                 Logger.model.debug(
                                     "\(#function) Failed to upload image after bike registration: \(error)"

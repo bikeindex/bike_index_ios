@@ -68,6 +68,7 @@ struct BikeIndexApp: App {
             AuthenticatedUser.self,
             AutocompleteManufacturer.self,
             ScannedBike.self,  // QR sticker history
+            FullPublicImage.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

@@ -15,7 +15,7 @@ struct BikeRegistrationModelTests {
     /// All other frame color usages must be title-case.
     @Test func test_lowercase_color() throws {
         let rawJsonData = try #require(MockData.sampleBikeJson.data(using: .utf8))
-        let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
+        let output = try JSONDecoder().decode(SimpleBikeResponse.self, from: rawJsonData)
         let bike = output.modelInstance()
 
         bike.frameColorTertiary = .covered

@@ -14,7 +14,7 @@ final class BikeIndexOrgApiV3Tests: XCTestCase {
         let config = HostProvider(
             host: URL("https://bikeindex.org/"))
 
-        let identifier = "0987654321"
+        let identifier = 0_987_654_321
         let path = Bikes.bikes(identifier: identifier)
 
         let endpoint = path.request(for: config)
