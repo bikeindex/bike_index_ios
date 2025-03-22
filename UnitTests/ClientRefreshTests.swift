@@ -113,8 +113,6 @@ final class ClientRefreshTests: XCTestCase {
             timeout: expirationInterval * 2)
 
         switch result {
-        case .completed:
-            XCTSkip("The timer completed")
         case .timedOut:
             XCTFail("The timer could not complete correctly")
         default:

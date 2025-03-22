@@ -121,10 +121,6 @@ final class UserRelationshipTests: XCTestCase {
             FetchDescriptor<AuthenticatedUser>())
         XCTAssertEqual(authResults_prefill_postCreate.count, 0)
 
-        let expect_user_prefill = XCTestExpectation(
-            description: "Must prefill User before decoding")
-        let expect_authUser_prefill = XCTestExpectation(
-            description: "Must prefill AuthenticatedUser before decoding")
         container.mainContext.insert(existingUser)
 
         let existingAuth = AuthenticatedUser(identifier: "456654", bikes: [])
@@ -153,7 +149,6 @@ final class UserRelationshipTests: XCTestCase {
 
         XCTAssertNil(responseAuthUser.id.storeIdentifier)
         XCTAssertNil(responseAuthUser.user)
-        let expectation = XCTestExpectation(description: "SwiftData operations will complete.")
 
         Logger.tests.debug(
             "attaching responseUser to responseAuth - \(String(reflecting: responseUser), privacy: .public)"
