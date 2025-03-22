@@ -45,6 +45,8 @@ struct BikeResponse: ResponseModelInstantiable {
     let url: URL
     let api_url: URL?
     let public_images: [String]?
+    let registration_created_at: Date
+    let registration_updated_at: Date
 
     // MARK: - ResponseModelInstantiable for BikeResponse
 
@@ -98,6 +100,9 @@ struct BikeResponse: ResponseModelInstantiable {
             thumb: thumb,
             url: url,
             apiUrl: api_url,
-            publicImages: public_images ?? [])
+            publicImages: public_images ?? [],
+            createdAt: registration_created_at,
+            updatedAt: registration_updated_at
+        )
     }
 }
