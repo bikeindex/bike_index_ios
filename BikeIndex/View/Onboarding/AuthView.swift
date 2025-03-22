@@ -26,87 +26,79 @@ extension ClientConfiguration {
 /// NOTE: Network traffic for ASWebAuthenticationSession will run in the WebKitNetworking process!
 /// This means that Proxyman will not show app authentication in the "Bike Index" app. You will have to look for the
 /// host or across all networking in Proxyman!
+/// Entry-point for all users to sign-in.
 struct AuthView: View {
     /// API client for performing auth
     @Environment(Client.self) var client
-    @Environment(\.dismiss) var dismiss
-
-    @State private var displaySignIn = false
-    /// Object to intercept authentication events from the sign-in webview and forward them to Client
-    private var authNavigationDelegate = AuthNavigationDelegate()
-
-    @State private var path = NavigationPath()
-    @State private var showDebugMenu = false
+    /// ViewModel to manage state.
+    /// `viewModel.authNavigator.client` must be connected at runtime.
+    @State private var viewModel = AuthViewModel()
 
     var body: some View {
-        NavigationStack(path: $path) {
-            WelcomeView().toolbar {
-                ToolbarItem(placement: .bottomBar) {
-                    Button {
-                        displaySignIn = true
-                    } label: {
-                        Label("Sign in and get started", systemImage: "person.crop.circle.dashed")
+        NavigationStack(path: $viewModel.topLevelPath) {
+            WelcomeView()
+                .toolbar {
+                    ToolbarItem(placement: .bottomBar) {
+                        Button {
+                            viewModel.displaySignIn = true
+                        } label: {
+                            Label(
+                                "Sign in and get started",
+                                systemImage: "person.crop.circle.dashed"
+                            )
                             .accessibilityIdentifier("SignIn")
                             .font(.title3)
                             .labelStyle(.titleAndIcon)
+                        }
+                        .buttonStyle(.borderedProminent)
                     }
-                    .buttonStyle(.borderedProminent)
-                }
 
-                #if DEBUG
-                ToolbarItem(placement: .topBarLeading) {
-                    NavigationLink(value: Nav.debugSettings) {
-                        Label("Settings", systemImage: "gearshape")
-                    }
-                }
-                #endif
-            }
-            .sheet(
-                isPresented: $displaySignIn,
-                content: {
-                    NavigationStack {
-                        NavigableWebView(
-                            url: .constant(oAuthUrl!),
-                            navigator: HistoryNavigator(child: authNavigationDelegate)
-                        )
-                        .environment(client)
-                        .navigationTitle("Sign in")
-                        .navigationBarTitleDisplayMode(.inline)
-                        .toolbar {
-                            ToolbarItemGroup(placement: .topBarLeading) {
-                                Button("Close") {
-                                    dismiss()
-                                }
-                            }
+                    #if DEBUG
+                    ToolbarItem(placement: .topBarLeading) {
+                        NavigationLink(value: AuthViewModel.Nav.debugSettings) {
+                            Label("Settings", systemImage: "gearshape")
                         }
                     }
+                    #endif
                 }
-            )
-            .navigationTitle("Welcome to Bike Index")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationDestination(for: Nav.self) { navSelection in
-                switch navSelection {
-                case .debugSettings:
-                    SettingsPage(path: $path)
-                        .accessibilityIdentifier("Settings")
+                .navigationTitle("Welcome to Bike Index")
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationDestination(for: AuthViewModel.Nav.self) { navSelection in
+                    switch navSelection {
+                    case .debugSettings:
+                        SettingsPage(path: $viewModel.topLevelPath)
+                            .accessibilityIdentifier("Settings")
+                    }
+                }
+        }
+        .sheet(isPresented: $viewModel.displaySignIn) {
+            NavigationStack {
+                NavigableWebView(
+                    url: .constant(oAuthUrl!),
+                    navigator: HistoryNavigator(child: viewModel.authNavigator)
+                )
+                .environment(client)
+                .navigationTitle("Sign in")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItemGroup(placement: .topBarLeading) {
+                        Button("Close") {
+                            viewModel.displaySignIn = false
+                        }
+                    }
                 }
             }
         }
         .onAppear {
-            authNavigationDelegate.client = client
+            viewModel.authNavigator.client = client
         }
     }
 
+    /// URL helper to find the right user-facing authorization page for this app config.
     private var oAuthUrl: URL? {
         OAuth.authorize(queryItems: client.configuration.authorizeQueryItems).request(
             for: client.api.configuration
         ).url
-    }
-
-    enum Nav: Identifiable {
-        var id: Self { self }
-
-        case debugSettings
     }
 }
 
