@@ -53,7 +53,11 @@ struct SettingsPage: View {
                             systemImage: "person.badge.shield.checkmark")
                     }
 
-                    Button(action: logout) {
+                    Button {
+                        Task {
+                            await logout()
+                        }
+                    } label: {
                         Label("Sign out", systemImage: "figure.walk.departure")
                             .tint(Color.highlightPrimary)
                             .foregroundStyle(Color.highlightPrimary)
@@ -173,9 +177,9 @@ struct SettingsPage: View {
         }
     }
 
-    func logout() {
+    func logout() async {
         path = NavigationPath()
-        client.destroySession()
+        await client.destroySession()
     }
 
     /// Excluding signOut and contactUs which don't navigate internally
