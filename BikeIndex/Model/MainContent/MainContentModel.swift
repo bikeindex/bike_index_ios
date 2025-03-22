@@ -22,11 +22,13 @@ final class MainContentModel {
     /// 1. Write this ``AuthenticatedUser``
     /// 2. Write the User
     /// 3. Find any cached bikes known-to-be-owned by this user and link them.
+    /// Wrapped Swift.Error can be thrown from A) network operations and B) SwiftData operations.
+    /// MainContentModel.Error can be thrown from C) application state errors or D) application logic errors.
     /// - Parameter client: App network Client to perform network requests.
     /// - Parameter modelContext: SwiftData modelContext to do work on
-    /// - Throws: Swift.Error, MainContentModel.Error
+    /// - Throws: MainContentModel.Error
     @MainActor
-    func fetchProfile(client: Client, modelContext: ModelContext) async throws {
+    func fetchProfile(client: Client, modelContext: ModelContext) async throws(MainContentModel.Error) {
         guard client.authenticated else {
             return
         }
@@ -86,11 +88,13 @@ final class MainContentModel {
 
     /// Fetch the current user's bikes. Must be authenticated already! Must have an AuthenticatedUser already!
     /// Will fetch and associate bikes with ``Bike/owner`` and ``Bike/authenticatedOwner``.
+    /// Wrapped Swift.Error can be thrown from A) network operations and B) SwiftData operations.
+    /// MainContentModel.Error can be thrown from C) application state errors or D) application logic errors.
     /// - Parameter client: App network Client to perform network requests.
     /// - Parameter modelContext: SwiftData modelContext to do work on
-    /// - Throws: Swift.Error, MainContentModel.Error
+    /// - Throws: MainContentModel.Error
     @MainActor
-    func fetchBikes(client: Client, modelContext: ModelContext) async throws {
+    func fetchBikes(client: Client, modelContext: ModelContext) async throws(MainContentModel.Error) {
         guard client.authenticated else {
             return
         }

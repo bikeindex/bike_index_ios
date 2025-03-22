@@ -101,13 +101,10 @@ struct MainContentPage: View {
             try await contentModel.fetchProfile(
                 client: client,
                 modelContext: modelContext)
-        } catch let error as MainContentModel.Error {
+        } catch {
             Logger.model.error("Failed to fetch profile: \(error)")
             lastError = error
             showError = true
-            return
-        } catch {
-            Logger.model.error("Unhandled error encountered: \(error)")
             return
         }
 
@@ -115,13 +112,10 @@ struct MainContentPage: View {
             try await contentModel.fetchBikes(
                 client: client,
                 modelContext: modelContext)
-        } catch let error as MainContentModel.Error {
+        } catch {
             Logger.model.error("Failed to user's bikes: \(error)")
             lastError = error
             showError = true
-            return
-        } catch {
-            Logger.model.error("Failed to fetch user's bikes with \(error)")
             return
         }
     }
