@@ -83,6 +83,9 @@ import SwiftData
     var apiUrl: URL?
     var publicImages: [String]
 
+    var createdAt: Date = Date()
+    var updatedAt: Date = Date()
+
     struct Constants {
         /// The range of supported years for Bike models
         static let yearRange = 1900..<2100
@@ -114,7 +117,9 @@ import SwiftData
         thumb: URL? = nil,
         url: URL,
         apiUrl: URL? = nil,
-        publicImages: [String]
+        publicImages: [String],
+        createdAt: Date,
+        updatedAt: Date
     ) {
         self.identifier = identifier
         self.bikeDescription = bikeDescription

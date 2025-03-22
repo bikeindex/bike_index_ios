@@ -83,7 +83,9 @@ struct ContentBikeButtonView: View {
         url: URL(string: "about:blank").unsafelyUnwrapped,
         publicImages: [
             "https://placekitten.com/200/200"
-        ]
+        ],
+        createdAt: Date(),
+        updatedAt: Date()
     )
 
     let sampleBike2 = Bike(
@@ -99,7 +101,9 @@ struct ContentBikeButtonView: View {
         url: URL(string: "about:blank").unsafelyUnwrapped,
         publicImages: [
             "https://placekitten.com/200/200"
-        ]
+        ],
+        createdAt: Date(),
+        updatedAt: Date()
     )
 
     let sampleBike3 = Bike(
@@ -115,7 +119,9 @@ struct ContentBikeButtonView: View {
         url: URL(string: "about:blank").unsafelyUnwrapped,
         publicImages: [
             "https://placekitten.com/200/200"
-        ]
+        ],
+        createdAt: Date(),
+        updatedAt: Date()
     )
 
     let sampleBike4 = Bike(
@@ -131,7 +137,9 @@ struct ContentBikeButtonView: View {
         url: URL(string: "about:blank").unsafelyUnwrapped,
         publicImages: [
             "https://placekitten.com/200/200"
-        ]
+        ],
+        createdAt: Date(),
+        updatedAt: Date()
     )
 
     let samples = [sampleBike1, sampleBike2, sampleBike3, sampleBike4]
