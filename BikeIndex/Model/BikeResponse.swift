@@ -45,6 +45,8 @@ struct BikeResponse: ResponseModelInstantiable {
     let url: URL
     let api_url: URL?
     let public_images: [String]?
+
+    /// Requires decoder to assign dateDecodingStrategy to .secondsSince1970
     let registration_created_at: Date
     let registration_updated_at: Date
 
