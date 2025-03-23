@@ -146,7 +146,6 @@ final class MainContentModel {
 extension MainContentModel {
     enum GroupMode: CaseIterable, Identifiable {
         case byStatus
-//        case byDateUpdated // TODO: Implement `registration_created_at` and `registration_updated_at`
         case byManufacturer
 
         var id: Self { self }
@@ -155,8 +154,6 @@ extension MainContentModel {
             switch self {
             case .byStatus:
                 return "Status"
-//            case .byDateUpdated:
-//                return "Date Added"
             case .byManufacturer:
                 return "Manufacturer"
             }

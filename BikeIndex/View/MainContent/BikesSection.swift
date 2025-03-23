@@ -43,7 +43,6 @@ extension BikesSection {
     enum Group {
         case byStatus(BikeStatus)
         case byManufacturer(String)
-        // TODO: Add byDateUpdated
 
         var filterPredicate: Predicate<Bike> {
             switch self {
