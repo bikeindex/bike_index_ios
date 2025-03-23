@@ -83,10 +83,7 @@ struct MainContentPage: View {
                 case .lostBike:
                     RegisterBikeView(mode: .myStolenBike)
                 case .searchBikes:
-                    NavigableWebView(
-                        url: .constant(URL("https://bikeindex.org/bikes?stolenness=all"))
-                    )
-                    .environment(client)
+                    SearchBikesView()
                 }
             }
             .navigationDestination(for: PersistentIdentifier.self) { identifier in
