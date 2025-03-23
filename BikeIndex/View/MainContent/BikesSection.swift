@@ -56,6 +56,15 @@ extension BikesSection {
                 }
             }
         }
+
+        var displayName: String {
+            switch self {
+            case .byStatus(let bikeStatus):
+                bikeStatus.rawValue.capitalized
+            case .byManufacturer(let manufacturer):
+                manufacturer
+            }
+        }
     }
 }
 

@@ -37,7 +37,7 @@ struct BikesList: View {
                     case .byManufacturer: .byManufacturer(section.id)
                     }
                     BikesSection(path: $path,
-                                 title: section.id,
+                                 title: sectionGroup.displayName,
                                  group: sectionGroup)
                 }
             }
