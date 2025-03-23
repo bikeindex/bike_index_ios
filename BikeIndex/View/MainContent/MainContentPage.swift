@@ -18,10 +18,10 @@ struct BikesList: View {
 
     var group: MainContentPage.ViewModel.GroupMode
 
-    init(path: Binding<NavigationPath>, bikes: SectionedQuery<String, Bike>, group: MainContentPage.ViewModel.GroupMode) {
+    init(path: Binding<NavigationPath>, group: MainContentPage.ViewModel.GroupMode) {
         _path = path
-        _bikes = bikes
         self.group = group
+        _bikes = group.sectionQuery
     }
 
     var body: some View {
@@ -52,7 +52,6 @@ struct MainContentPage: View {
 
     // ViewModel for state management (but not query management)
     @State private var viewModel = ViewModel()
-    @State private var query = SectionedQuery(\Bike.statusString)
 
     var body: some View {
         NavigationStack(path: $viewModel.path) {
@@ -66,7 +65,6 @@ struct MainContentPage: View {
                 }
 
                 BikesList(path: $viewModel.path,
-                          bikes: query,
                           group: viewModel.groupMode)
             }
             .toolbar {
@@ -102,17 +100,17 @@ struct MainContentPage: View {
             .alert(isPresented: $viewModel.showError, error: viewModel.lastError) {
                 Text("Okay")
             }
-            .onChange(of: viewModel.groupMode) { oldValue, newValue in
-                print("@@ viewModel.groupMode changed to \(newValue)")
-                if oldValue != newValue {
-                    query = newValue.sectionQuery
-                    // Alright
-                    // so
-                    // TODO: 1. rename MainContent to MainContainer
-                    // TODO: 2. Move all the section-query accessing into a BikesList or something that's the scroll view
-                    // TODO: 3. Manipulate _that_ child view's `bikes: SectionedQuery` to get the safe mutation.
-                }
-            }
+//            .onChange(of: viewModel.groupMode) { oldValue, newValue in
+//                print("@@ viewModel.groupMode changed to \(newValue)")
+//                if oldValue != newValue {
+//                    query = newValue.sectionQuery
+//                    // Alright
+//                    // so
+//                    // TODO: 1. rename MainContent to MainContainer
+//                    // TODO: 2. Move all the section-query accessing into a BikesList or something that's the scroll view
+//                    // TODO: 3. Manipulate _that_ child view's `bikes: SectionedQuery` to get the safe mutation.
+//                }
+//            }
         }
         .task {
             /// Comment this out to test ``MainContentPage/ViewModel/fetching`` display
