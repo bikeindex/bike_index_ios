@@ -12,6 +12,7 @@ extension MainContentPage {
         @Environment(Client.self) var client
 
         @Binding var path: NavigationPath
+        @Binding var loading: Bool
         @Binding var groupMode: ViewModel.GroupMode
 
         var body: some ToolbarContent {
@@ -23,6 +24,12 @@ extension MainContentPage {
                 }
             }
 
+            if loading {
+                ToolbarItem(placement: .topBarTrailing) {
+                    ProgressView()
+                        .tint(Color.primary)
+                }
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
                     ForEach(ViewModel.GroupMode.allCases) { option in
@@ -46,6 +53,7 @@ extension MainContentPage {
             .toolbar {
                 MainContentPage.MainToolbar(
                     path: $path,
+                    loading: .constant(true),
                     groupMode: $groupMode)
             }
     }

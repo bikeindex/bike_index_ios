@@ -26,7 +26,7 @@ extension MainContentPage {
         // Alert presentation
         var showError: Bool = false {
             didSet {
-                fetching = false
+                if showError { fetching = false }
             }
         }
         // UI Management
@@ -190,11 +190,6 @@ extension MainContentPage {
                 Logger.model.error("\(type(of: self)).\(#function) - Failed with \(failure)")
                 throw Error.swiftError(failure)
             }
-        }
-
-        convenience init(fetching: Bool) {
-            self.init()
-            self.fetching = fetching
         }
     }
 }

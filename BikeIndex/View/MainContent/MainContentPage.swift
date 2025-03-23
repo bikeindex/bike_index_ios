@@ -15,7 +15,7 @@ struct MainContentPage: View {
     @Environment(Client.self) var client
 
     // ViewModel for state management (but not query management)
-    @State var viewModel = ViewModel()
+    @State private var viewModel = ViewModel()
 
     @SectionedQuery(
         \Bike.statusString,
@@ -39,7 +39,7 @@ struct MainContentPage: View {
                 }
 
                 // Loading state views are handled in an overlay to apply everywhere
-                // TODO: Replace duplicated `SectionedQuery` with a mutable sort parameter
+                // TODO: Replace duplicated `SectionedQuery` with a mutable sort parameter (or wrap in the ViewModel)
                 switch viewModel.groupMode {
                 case .byStatus:
                     if bikesByStatus.isEmpty {
@@ -76,6 +76,7 @@ struct MainContentPage: View {
             .toolbar {
                 MainToolbar(
                     path: $viewModel.path,
+                    loading: $viewModel.fetching,
                     groupMode: $viewModel.groupMode)
             }
             .navigationTitle("Bike Index")
@@ -105,23 +106,12 @@ struct MainContentPage: View {
                 Text("Okay")
             }
         }
-        .overlay {
-            if viewModel.fetching {
-                ProgressView()
-            }
-        }
         .task {
+            /// Comment this out to test ``MainContentPage/ViewModel/fetching`` display
             await viewModel.fetchMainContentData(
                 client: client,
                 modelContext: modelContext)
         }
-    }
-}
-
-extension MainContentPage {
-    // Initializer for previews
-    init(viewModel: ViewModel) {
-        self.viewModel = viewModel
     }
 }
 
@@ -215,49 +205,6 @@ extension MainContentPage {
                     container.mainContext.insert(bike)
                 }
                 try? container.mainContext.save()
-            } catch {
-                print("Encountered error \(error)")
-            }
-        }
-}
-
-// MARK: Fetching bikes by status
-#Preview("Fetching bikes by status") {
-    @Previewable @State var viewModel = MainContentPage.ViewModel(fetching: true)
-    @Previewable let container = try! ModelContainer(
-        for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
-        configurations: ModelConfiguration(isStoredInMemoryOnly: true))
-
-    MainContentPage(viewModel: viewModel)
-        .environment(try! Client())
-        .modelContainer(container)
-        .onAppear {
-            print("onAppear.ViewModel = \(viewModel)")
-
-            do {
-                let rawJsonData = MockData.sampleBikeJson.data(using: .utf8)!
-                let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
-                let manufacturers = [
-                    "Giant", "Specialized", "Jamis", "Giant", "Specialized", "Jamis",
-                ]
-
-                for (index, status) in BikeStatus.allCases.enumerated() {
-                    let bike = output.modelInstance()
-
-                    // Mock one of each status
-                    // but separate the identifiers
-                    bike.identifier = index
-                    bike.update(keyPath: \.status, to: status)
-                    bike.update(keyPath: \.manufacturerName, to: manufacturers[index])
-                    print(
-                        "Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)"
-                    )
-
-                    container.mainContext.insert(bike)
-                }
-                try? container.mainContext.save()
-
-                print("ViewModel.fetching = \(viewModel.fetching)")
             } catch {
                 print("Encountered error \(error)")
             }
