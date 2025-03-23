@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-// TODO: Evaluate generalizing this with ``BikeDetailView`` (although BikeDetailView is intended to grow in complexity.
 struct AcknowledgementRepositoryWebView: View {
     @Environment(Client.self) var client
 

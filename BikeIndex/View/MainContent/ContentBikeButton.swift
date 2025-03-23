@@ -8,6 +8,9 @@
 import SwiftData
 import SwiftUI
 
+// TODO: Rename
+// TODO: Rewrite previews without return
+// TODO: Add strong typing to Bike.identifier
 struct ContentBikeButtonView: View {
     @Binding var path: NavigationPath
     @Query var bikeQuery: [Bike]
@@ -22,7 +25,7 @@ struct ContentBikeButtonView: View {
 
     var body: some View {
         if let bike = bikeQuery.first, bikeQuery.count == 1 {
-            NavigationLink(value: bike.persistentModelID) {
+            NavigationLink(value: bike.identifier) {
                 VStack {
                     ZStack {
                         AsyncImage(url: bike.largeImage) { image in

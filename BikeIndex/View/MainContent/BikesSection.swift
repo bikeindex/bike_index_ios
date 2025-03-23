@@ -10,13 +10,13 @@ import SwiftUI
 
 struct BikesSection: View {
     @Binding var path: NavigationPath
-    private(set) var title: String
+    private(set) var section: SectionValue
     @Query private var bikes: [Bike]
 
-    init(path: Binding<NavigationPath>, title: String, group: Group) {
+    init(path: Binding<NavigationPath>, section: SectionValue) {
         self._path = path
-        self.title = title
-        _bikes = Query(filter: group.filterPredicate)
+        self.section = section
+        _bikes = Query(filter: section.filterPredicate)
     }
 
     var body: some View {
@@ -30,7 +30,7 @@ struct BikesSection: View {
             }
             .padding()
         } header: {
-            Text(title)
+            Text(section.displayName)
                 .padding([.top, .bottom], 4)
                 .frame(maxWidth: .infinity)
                 .font(.headline)
@@ -40,7 +40,7 @@ struct BikesSection: View {
 }
 
 extension BikesSection {
-    enum Group {
+    enum SectionValue {
         case byStatus(BikeStatus)
         case byManufacturer(String)
 
@@ -74,7 +74,6 @@ extension BikesSection {
     NavigationStack {
         BikesSection(
             path: $navigationPath,
-            title: "Status",
-            group: .byStatus(status))
+            section: .byStatus(status))
     }
 }

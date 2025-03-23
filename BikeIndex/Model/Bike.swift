@@ -10,7 +10,10 @@ import MapKit
 import SwiftData
 
 @Model final class Bike {
-    @Attribute(.unique) var identifier: Int
+    /// Rails-specific Bike identifier.
+    typealias BikeIdentifier = Int
+
+    @Attribute(.unique) var identifier: BikeIdentifier
     @Relationship var owner: User?
     @Relationship var authenticatedOwner: AuthenticatedUser?
 
@@ -83,7 +86,7 @@ import SwiftData
     }
 
     init(
-        identifier: Int,
+        identifier: BikeIdentifier,
         bikeDescription: String? = nil,
         frameModel: String? = nil,
         primaryColor: FrameColor,

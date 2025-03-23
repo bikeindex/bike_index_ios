@@ -19,6 +19,7 @@ struct MainContentPage: View {
     @State private var viewModel = ViewModel()
 
     var body: some View {
+        let _ = Self._printChanges()
         NavigationStack(path: $viewModel.path) {
             ScrollView {
                 LazyVGrid(columns: Array(repeating: GridItem(), count: 1)) {
@@ -52,15 +53,10 @@ struct MainContentPage: View {
                     SearchBikesView()
                 }
             }
-            .navigationDestination(for: PersistentIdentifier.self) { identifier in
-                // TODO: Change BikeDetailView to just read a PersistentIdentifier, consider strongly typing Bike.persistentModelID
-//                ForEach(bikes) { section in
-//                    if let bike = section.elements.first(where: {
-//                        $0.persistentModelID == identifier
-//                    }) {
-//                        BikeDetailView(bike: bike)
-//                    }
-//                }
+            .navigationDestination(for: Int.self) { identifier in
+                /// ``ContentBikeButtonView`` uses `NavigationLink`s to ``Bike/persistentModelID``.
+                BikeDetailView(bikeIdentifier: identifier,
+                               host: client.configuration.host)
             }
             .alert(isPresented: $viewModel.showError, error: viewModel.lastError) {
                 Text("Okay")

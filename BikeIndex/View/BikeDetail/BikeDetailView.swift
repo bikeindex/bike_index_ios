@@ -13,46 +13,77 @@ import WebViewKit
 struct BikeDetailView: View {
     @Environment(Client.self) var client
 
-    var bike: Bike
+    /// Query is only returns arrays and we'll pick the only element.
+    @Query private var bikeQuery: [Bike]
+
     @State private var url: URL
 
-    init(bike: Bike) {
-        self.bike = bike
-        self._url = State(initialValue: bike.url)
+    /// Initialize with a BikeIdentifier and base URL. The base URL must be retrieved before Client is available.
+    /// With these inputs the Bike's canonical URL can be constructed and displayed in the NavigableWebView.
+    /// ``NavigableWebView`` requires that `@State var url: URL` be non-optional and start at a valid URL (don't start at about:blank because the change won't get picked up from a @Query load event) so we hack this together with `host+"/bikes/"+bikeIdentifier`
+    /// - Parameters:
+    ///   - bikeIdentifier: The Rails BikeIndex record identifier.
+    ///   - host: Value from ``Client/configuration`` that must be passed directly because Environment Client is not available at init() time.
+    init(bikeIdentifier: Bike.BikeIdentifier, host: URL) {
+        _bikeQuery = Query(
+            filter: #Predicate<Bike> { model in
+                model.identifier == bikeIdentifier
+            })
+
+        let reconstructedUrl = host.appending(path: "bikes/\(bikeIdentifier)")
+        print("Reconstructed URL \(reconstructedUrl)")
+        _url = State(initialValue: reconstructedUrl)
+    }
+
+    private var bike: Bike? {
+        print("@@ queried bike and found \(bikeQuery.count)")
+        return bikeQuery.count == 1 ? bikeQuery.first : nil
     }
 
     var body: some View {
-        NavigableWebView(url: $url)
-            .environment(client)
-            .toolbar(content: {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Edit", systemImage: "pencil") {
-                        if let editUrl = bike.editUrl {
-                            self.url = editUrl
+        let _ = Self._printChanges()
+        if let bike {
+            NavigableWebView(url: $url)
+                .toolbar(content: {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Edit", systemImage: "pencil") {
+                            if let editUrl = bike.editUrl {
+                                url = editUrl
+                            }
                         }
                     }
-                }
-            })
-            .navigationTitle(bike.title)
+                })
+                .navigationTitle(bike.title)
+        } else {
+            // In practice this view is never displayed because SwiftData will find the Bike
+            ProgressView()
+                .navigationTitle("Loading")
+        }
     }
 }
 
 #Preview {
-    do {
-        let client = try Client()
-        let filename = "SingleBikeResponse_mock"
-        let container: MultipleBikeResponseContainer? = try PreviewData.load(filename: filename)
-        if let container, let responseBike = container.bikes.first {
-            let bike = responseBike.modelInstance()
-            return NavigationStack {
-                BikeDetailView(bike: bike)
-                    .environment(client)
+    let container = try! ModelContainer(
+        for: Bike.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+
+    NavigationStack {
+        BikeDetailView(bikeIdentifier: 20348, host: URL(stringLiteral: "https://bikeindex.org"))
+            .environment(try! Client())
+            .modelContainer(container)
+    }
+    .onAppear {
+        do {
+            let mockResponse = try PreviewData.loadMultipleBikeResponseMock()
+            print("Found mock response \(mockResponse)")
+            if let responseBike = mockResponse.bikes.first {
+                let bike = responseBike.modelInstance()
+                container.mainContext.insert(bike)
+                try container.mainContext.save()
             }
-        } else {
-            return Text("Failed to load preview data for \(filename)")
+        } catch {
+            print("Failed to render \(error.localizedDescription)")
         }
-    } catch {
-        return Text(error.localizedDescription)
     }
 }
 
