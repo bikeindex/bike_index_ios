@@ -22,6 +22,9 @@ extension MainContentPage {
         public var lastError: ViewModel.Error? = nil
         var showError: Bool = false
 
+        // Control the navigation hierarchy for all views after this one
+        var path = NavigationPath()
+
         // UI Management
         var groupMode: GroupMode = .byStatus
 

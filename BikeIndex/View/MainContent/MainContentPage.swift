@@ -14,9 +14,6 @@ struct MainContentPage: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
-    // Control the navigation hierarchy for all views after this one
-    @State var path = NavigationPath()
-
     // Data handling and error handling
     // TODO: Write ViewModel.groupMode to user defaults
     @State private var viewModel = ViewModel()
@@ -32,12 +29,12 @@ struct MainContentPage: View {
     private var bikesByManufacturer: SectionedResults<String, Bike>
 
     var body: some View {
-        NavigationStack(path: $path) {
+        NavigationStack(path: $viewModel.path) {
             ScrollView {
                 LazyVGrid(columns: Array(repeating: GridItem(), count: 1)) {
                     ForEach(ContentButton.allCases, id: \.id) { menuItem in
                         ContentButtonView(
-                            path: $path,
+                            path: $viewModel.path,
                             item: menuItem)
                     }
                 }
@@ -52,7 +49,7 @@ struct MainContentPage: View {
                             ForEach(bikesByStatus) { section in
                                 if let status = BikeStatus(rawValue: section.id) {
                                     BikesSection(
-                                        path: $path,
+                                        path: $viewModel.path,
                                         title: status.rawValue.capitalized,
                                         group: .byStatus(status))
                                 }
@@ -62,7 +59,7 @@ struct MainContentPage: View {
                         ProportionalLazyVGrid(pinnedViews: [.sectionHeaders]) {
                             ForEach(bikesByManufacturer) { section in
                                 BikesSection(
-                                    path: $path,
+                                    path: $viewModel.path,
                                     title: section.id,
                                     group: .byManufacturer(section.id))
                             }
@@ -72,14 +69,14 @@ struct MainContentPage: View {
             }
             .toolbar {
                 MainToolbar(
-                    path: $path,
+                    path: $viewModel.path,
                     groupMode: $viewModel.groupMode)
             }
             .navigationTitle("Bike Index")
             .navigationDestination(for: MainContent.self) { selection in
                 switch selection {
                 case .settings:
-                    SettingsPage(path: $path)
+                    SettingsPage(path: $viewModel.path)
                         .accessibilityIdentifier("Settings")
                 case .registerBike:
                     RegisterBikeView(mode: .myOwnBike)
