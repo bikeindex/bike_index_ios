@@ -89,7 +89,9 @@ extension Color {
         stolenCoordinateLatitude: 0.0,
         stolenCoordinateLongitude: 0.0,
         url: URL(stringLiteral: "about:blank"),
-        publicImages: [])
+        publicImages: [],
+        createdAt: .distantPast,
+        updatedAt: .now)
     VStack {
         Text("Shadows fit better in BikeDetailOfflineView")
         FrameColorsView(bike: bike)
