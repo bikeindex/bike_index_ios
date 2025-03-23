@@ -19,7 +19,7 @@ struct MainContentPage: View {
 
     // Data handling and error handling
     // TODO: Write ViewModel.groupMode to user defaults
-    @State private var contentModel = ViewModel()
+    @State private var viewModel = ViewModel()
 
     @SectionedQuery(
         \Bike.statusString,
@@ -46,7 +46,7 @@ struct MainContentPage: View {
                     ContentUnavailableView("No bikes registered", systemImage: "bicycle.circle")
                         .padding()
                 } else {
-                    switch contentModel.groupMode {
+                    switch viewModel.groupMode {
                     case .byStatus:
                         ProportionalLazyVGrid(pinnedViews: [.sectionHeaders]) {
                             ForEach(bikesByStatus) { section in
@@ -73,7 +73,7 @@ struct MainContentPage: View {
             .toolbar {
                 MainToolbar(
                     path: $path,
-                    groupMode: $contentModel.groupMode)
+                    groupMode: $viewModel.groupMode)
             }
             .navigationTitle("Bike Index")
             .navigationDestination(for: MainContent.self) { selection in
@@ -101,7 +101,7 @@ struct MainContentPage: View {
                     }
                 }
             }
-            .alert(isPresented: $contentModel.showError, error: contentModel.lastError) {
+            .alert(isPresented: $viewModel.showError, error: viewModel.lastError) {
                 Text("Okay")
             }
         }
@@ -116,17 +116,17 @@ struct MainContentPage: View {
     ///     - Report error and return if any problems occur
     private func fetchMainContentData() async {
         do {
-            try await contentModel.fetchProfile(
+            try await viewModel.fetchProfile(
                 client: client,
                 modelContext: modelContext)
 
-            try await contentModel.fetchBikes(
+            try await viewModel.fetchBikes(
                 client: client,
                 modelContext: modelContext)
         } catch {
             Logger.model.error("Failed to user info: \(error)")
-            contentModel.lastError = error
-            contentModel.showError = true
+            viewModel.lastError = error
+            viewModel.showError = true
             return
         }
     }

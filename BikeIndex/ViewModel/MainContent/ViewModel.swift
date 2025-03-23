@@ -1,5 +1,5 @@
 //
-//  MainContentModel.swift
+//  MainContentPage+ViewModel.swift
 //  BikeIndex
 //
 //  Created by Jack on 12/22/24.
@@ -153,20 +153,3 @@ extension MainContentPage {
     }
 }
 
-extension MainContentPage.ViewModel {
-    enum GroupMode: CaseIterable, Identifiable {
-        case byStatus
-        case byManufacturer
-
-        var id: Self { self }
-
-        var displayName: String {
-            switch self {
-            case .byStatus:
-                return "Status"
-            case .byManufacturer:
-                return "Manufacturer"
-            }
-        }
-    }
-}
