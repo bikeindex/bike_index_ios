@@ -10,47 +10,12 @@ import SectionedQuery
 import SwiftData
 import SwiftUI
 
-struct BikesList: View {
-    @Binding var path: NavigationPath
-
-    @SectionedQuery(\Bike.statusString)
-    var bikes: SectionedResults<String, Bike>
-
-    var group: MainContentPage.ViewModel.GroupMode
-
-    init(path: Binding<NavigationPath>, group: MainContentPage.ViewModel.GroupMode) {
-        _path = path
-        self.group = group
-        _bikes = group.sectionQuery
-    }
-
-    var body: some View {
-        let _ = Self._printChanges()
-        if bikes.isEmpty {
-            ContentUnavailableView("No bikes registered", systemImage: "bicycle.circle")
-                .padding()
-        } else {
-            ProportionalLazyVGrid(pinnedViews: [.sectionHeaders]) {
-                ForEach(bikes) { section in
-                    // TODO: Unify BikesSection.Group and MainContentPage.ViewModel.GroupMode
-                    let sectionGroup: BikesSection.Group = switch group {
-                    case .byStatus: .byStatus(BikeStatus(rawValue: section.id)!)
-                    case .byManufacturer: .byManufacturer(section.id)
-                    }
-                    BikesSection(path: $path,
-                                 title: section.id,
-                                 group: sectionGroup)
-                }
-            }
-        }
-    }
-}
-
 struct MainContentPage: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
-    // ViewModel for state management (but not query management)
+    /// ViewModel for state management.
+    /// Forwards dynamic query changes to ``BikesList`` to support dynamic grouping selection.
     @State private var viewModel = ViewModel()
 
     var body: some View {
@@ -88,7 +53,7 @@ struct MainContentPage: View {
                 }
             }
             .navigationDestination(for: PersistentIdentifier.self) { identifier in
-                // TODO: Change BikeDetailView to just read a PersistentIdentifier
+                // TODO: Change BikeDetailView to just read a PersistentIdentifier, consider strongly typing Bike.persistentModelID
 //                ForEach(bikes) { section in
 //                    if let bike = section.elements.first(where: {
 //                        $0.persistentModelID == identifier
@@ -100,17 +65,6 @@ struct MainContentPage: View {
             .alert(isPresented: $viewModel.showError, error: viewModel.lastError) {
                 Text("Okay")
             }
-//            .onChange(of: viewModel.groupMode) { oldValue, newValue in
-//                print("@@ viewModel.groupMode changed to \(newValue)")
-//                if oldValue != newValue {
-//                    query = newValue.sectionQuery
-//                    // Alright
-//                    // so
-//                    // TODO: 1. rename MainContent to MainContainer
-//                    // TODO: 2. Move all the section-query accessing into a BikesList or something that's the scroll view
-//                    // TODO: 3. Manipulate _that_ child view's `bikes: SectionedQuery` to get the safe mutation.
-//                }
-//            }
         }
         .task {
             /// Comment this out to test ``MainContentPage/ViewModel/fetching`` display
