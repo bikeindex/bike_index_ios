@@ -17,18 +17,53 @@ extension MainContentPage {
     /// - https://fatbobman.com/en/posts/concurret-programming-in-swiftdata/
     @MainActor @Observable
     class ViewModel {
+        // MARK: Top Level State
 
+        // Normal operation handling
+        var fetching = true
         // Error Handling
         public var lastError: ViewModel.Error? = nil
-        var showError: Bool = false
+        // Alert presentation
+        var showError: Bool = false {
+            didSet {
+                fetching = false
+            }
+        }
+        // UI Management
+        var groupMode: GroupMode = .byStatus
+
+        // MARK: Child View State
 
         // Control the navigation hierarchy for all views after this one
         var path = NavigationPath()
 
-        // UI Management
-        var groupMode: GroupMode = .byStatus
-
         // MARK: - Network Operations
+
+        /// 1. Fetch profile data
+        ///     - Report error and return if any problems occur
+        /// 2. Fetch profile's bikes data
+        ///     - Report error and return if any problems occur
+        func fetchMainContentData(client: Client, modelContext: ModelContext) async {
+            fetching = true
+            lastError = nil
+            showError = false
+
+            do {
+                try await fetchProfile(
+                    client: client,
+                    modelContext: modelContext)
+
+                try await fetchBikes(
+                    client: client,
+                    modelContext: modelContext)
+
+                fetching = false
+            } catch {
+                Logger.model.error("Failed to user info: \(error)")
+                lastError = error
+                showError = true
+            }
+        }
 
         /// Fetch the current user's profile. Must be authenticated already!
         /// Will perform these steps:
@@ -42,8 +77,9 @@ extension MainContentPage {
         /// - Parameter modelContext: SwiftData modelContext to do work on
         /// - Throws: ViewModel.Error
         @MainActor
-        func fetchProfile(client: Client, modelContext: ModelContext) async
-        throws(ViewModel.Error)
+        func fetchProfile(client: Client, modelContext: ModelContext)
+            async
+            throws(ViewModel.Error)
         {
             guard client.authenticated else {
                 return
@@ -110,8 +146,9 @@ extension MainContentPage {
         /// - Parameter modelContext: SwiftData modelContext to do work on
         /// - Throws: ViewModel.Error
         @MainActor
-        func fetchBikes(client: Client, modelContext: ModelContext) async
-        throws(ViewModel.Error)
+        func fetchBikes(client: Client, modelContext: ModelContext)
+            async
+            throws(ViewModel.Error)
         {
             guard client.authenticated else {
                 return
@@ -155,4 +192,3 @@ extension MainContentPage {
         }
     }
 }
-

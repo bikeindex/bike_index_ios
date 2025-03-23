@@ -100,28 +100,9 @@ struct MainContentPage: View {
             }
         }
         .task {
-            await fetchMainContentData()
-        }
-    }
-
-    /// 1. Fetch profile data
-    ///     - Report error and return if any problems occur
-    /// 2. Fetch profile's bikes data
-    ///     - Report error and return if any problems occur
-    private func fetchMainContentData() async {
-        do {
-            try await viewModel.fetchProfile(
+            await viewModel.fetchMainContentData(
                 client: client,
                 modelContext: modelContext)
-
-            try await viewModel.fetchBikes(
-                client: client,
-                modelContext: modelContext)
-        } catch {
-            Logger.model.error("Failed to user info: \(error)")
-            viewModel.lastError = error
-            viewModel.showError = true
-            return
         }
     }
 }
