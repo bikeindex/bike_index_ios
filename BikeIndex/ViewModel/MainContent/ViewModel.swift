@@ -30,6 +30,7 @@ extension MainContentPage {
             }
         }
         // UI Management
+        // TODO: Write `groupMode` to user defaults
         var groupMode: GroupMode = .byStatus
 
         // MARK: Child View State
@@ -189,6 +190,11 @@ extension MainContentPage {
                 Logger.model.error("\(type(of: self)).\(#function) - Failed with \(failure)")
                 throw Error.swiftError(failure)
             }
+        }
+
+        convenience init(fetching: Bool) {
+            self.init()
+            self.fetching = fetching
         }
     }
 }

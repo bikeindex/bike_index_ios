@@ -14,9 +14,8 @@ struct MainContentPage: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
-    // Data handling and error handling
-    // TODO: Write ViewModel.groupMode to user defaults
-    @State private var viewModel = ViewModel()
+    // ViewModel for state management (but not query management)
+    @State var viewModel = ViewModel()
 
     @SectionedQuery(
         \Bike.statusString,
@@ -39,12 +38,14 @@ struct MainContentPage: View {
                     }
                 }
 
-                if bikesByStatus.isEmpty {
-                    ContentUnavailableView("No bikes registered", systemImage: "bicycle.circle")
-                        .padding()
-                } else {
-                    switch viewModel.groupMode {
-                    case .byStatus:
+                // Loading state views are handled in an overlay to apply everywhere
+                // TODO: Replace duplicated `SectionedQuery` with a mutable sort parameter
+                switch viewModel.groupMode {
+                case .byStatus:
+                    if bikesByStatus.isEmpty {
+                        ContentUnavailableView("No bikes registered", systemImage: "bicycle.circle")
+                            .padding()
+                    } else {
                         ProportionalLazyVGrid(pinnedViews: [.sectionHeaders]) {
                             ForEach(bikesByStatus) { section in
                                 if let status = BikeStatus(rawValue: section.id) {
@@ -55,7 +56,12 @@ struct MainContentPage: View {
                                 }
                             }
                         }
-                    case .byManufacturer:
+                    }
+                case .byManufacturer:
+                    if bikesByManufacturer.isEmpty {
+                        ContentUnavailableView("No bikes registered", systemImage: "bicycle.circle")
+                            .padding()
+                    } else {
                         ProportionalLazyVGrid(pinnedViews: [.sectionHeaders]) {
                             ForEach(bikesByManufacturer) { section in
                                 BikesSection(
@@ -99,11 +105,23 @@ struct MainContentPage: View {
                 Text("Okay")
             }
         }
+        .overlay {
+            if viewModel.fetching {
+                ProgressView()
+            }
+        }
         .task {
             await viewModel.fetchMainContentData(
                 client: client,
                 modelContext: modelContext)
         }
+    }
+}
+
+extension MainContentPage {
+    // Initializer for previews
+    init(viewModel: ViewModel) {
+        self.viewModel = viewModel
     }
 }
 
@@ -197,6 +215,49 @@ struct MainContentPage: View {
                     container.mainContext.insert(bike)
                 }
                 try? container.mainContext.save()
+            } catch {
+                print("Encountered error \(error)")
+            }
+        }
+}
+
+// MARK: Fetching bikes by status
+#Preview("Fetching bikes by status") {
+    @Previewable @State var viewModel = MainContentPage.ViewModel(fetching: true)
+    @Previewable let container = try! ModelContainer(
+        for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+
+    MainContentPage(viewModel: viewModel)
+        .environment(try! Client())
+        .modelContainer(container)
+        .onAppear {
+            print("onAppear.ViewModel = \(viewModel)")
+
+            do {
+                let rawJsonData = MockData.sampleBikeJson.data(using: .utf8)!
+                let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
+                let manufacturers = [
+                    "Giant", "Specialized", "Jamis", "Giant", "Specialized", "Jamis",
+                ]
+
+                for (index, status) in BikeStatus.allCases.enumerated() {
+                    let bike = output.modelInstance()
+
+                    // Mock one of each status
+                    // but separate the identifiers
+                    bike.identifier = index
+                    bike.update(keyPath: \.status, to: status)
+                    bike.update(keyPath: \.manufacturerName, to: manufacturers[index])
+                    print(
+                        "Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)"
+                    )
+
+                    container.mainContext.insert(bike)
+                }
+                try? container.mainContext.save()
+
+                print("ViewModel.fetching = \(viewModel.fetching)")
             } catch {
                 print("Encountered error \(error)")
             }
