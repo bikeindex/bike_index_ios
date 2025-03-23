@@ -17,6 +17,11 @@ import SwiftUI
 @MainActor @Observable
 final class MainContentModel {
 
+    // Error Handling
+    public var lastError: MainContentModelError? = nil
+    var showError: Bool = false
+
+    // UI Management
     var groupMode: GroupMode = .byStatus
 
     // MARK: - Network Operations
@@ -33,7 +38,9 @@ final class MainContentModel {
     /// - Parameter modelContext: SwiftData modelContext to do work on
     /// - Throws: MainContentModel.Error
     @MainActor
-    func fetchProfile(client: Client, modelContext: ModelContext) async throws(MainContentModel.Error) {
+    func fetchProfile(client: Client, modelContext: ModelContext) async throws(MainContentModel
+        .Error)
+    {
         guard client.authenticated else {
             return
         }

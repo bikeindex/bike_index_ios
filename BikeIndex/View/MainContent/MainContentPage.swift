@@ -19,9 +19,7 @@ struct MainContentPage: View {
 
     // Data handling and error handling
     // TODO: Write MainContentModel.groupMode to user defaults
-    @State var contentModel = MainContentModel()
-    @State var lastError: MainContentModel.Error?
-    @State var showError: Bool = false
+    @State private var contentModel = MainContentModel()
 
     @SectionedQuery(
         \Bike.statusString,
@@ -103,9 +101,8 @@ struct MainContentPage: View {
                     }
                 }
             }
-
-            .alert(isPresented: $showError, error: lastError) {
-                Text("Error occurred")
+            .alert(isPresented: $contentModel.showError, error: contentModel.lastError) {
+                Text("Okay")
             }
         }
         .task {
@@ -122,21 +119,14 @@ struct MainContentPage: View {
             try await contentModel.fetchProfile(
                 client: client,
                 modelContext: modelContext)
-        } catch {
-            Logger.model.error("Failed to fetch profile: \(error)")
-            lastError = error
-            showError = true
-            return
-        }
 
-        do {
             try await contentModel.fetchBikes(
                 client: client,
                 modelContext: modelContext)
         } catch {
-            Logger.model.error("Failed to user's bikes: \(error)")
-            lastError = error
-            showError = true
+            Logger.model.error("Failed to user info: \(error)")
+            contentModel.lastError = error
+            contentModel.showError = true
             return
         }
     }
