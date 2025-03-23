@@ -10,22 +10,49 @@ import SectionedQuery
 import SwiftData
 import SwiftUI
 
+struct BikesList: View {
+    @Binding var path: NavigationPath
+
+    @SectionedQuery(\Bike.statusString)
+    var bikes: SectionedResults<String, Bike>
+
+    var group: MainContentPage.ViewModel.GroupMode
+
+    init(path: Binding<NavigationPath>, bikes: SectionedQuery<String, Bike>, group: MainContentPage.ViewModel.GroupMode) {
+        _path = path
+        _bikes = bikes
+        self.group = group
+    }
+
+    var body: some View {
+        let _ = Self._printChanges()
+        if bikes.isEmpty {
+            ContentUnavailableView("No bikes registered", systemImage: "bicycle.circle")
+                .padding()
+        } else {
+            ProportionalLazyVGrid(pinnedViews: [.sectionHeaders]) {
+                ForEach(bikes) { section in
+                    // TODO: Unify BikesSection.Group and MainContentPage.ViewModel.GroupMode
+                    let sectionGroup: BikesSection.Group = switch group {
+                    case .byStatus: .byStatus(BikeStatus(rawValue: section.id)!)
+                    case .byManufacturer: .byManufacturer(section.id)
+                    }
+                    BikesSection(path: $path,
+                                 title: section.id,
+                                 group: sectionGroup)
+                }
+            }
+        }
+    }
+}
+
 struct MainContentPage: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
     // ViewModel for state management (but not query management)
     @State private var viewModel = ViewModel()
-
-    @SectionedQuery(
-        \Bike.statusString,
-        sort: [SortDescriptor(\.statusString)])
-    private var bikesByStatus: SectionedResults<String, Bike>
-
-    @SectionedQuery(
-        \Bike.manufacturerName,
-        sort: [SortDescriptor(\.manufacturerName)])
-    private var bikesByManufacturer: SectionedResults<String, Bike>
+    @State private var query = SectionedQuery(\Bike.statusString)
 
     var body: some View {
         NavigationStack(path: $viewModel.path) {
@@ -38,40 +65,9 @@ struct MainContentPage: View {
                     }
                 }
 
-                // Loading state views are handled in an overlay to apply everywhere
-                // TODO: Replace duplicated `SectionedQuery` with a mutable sort parameter (or wrap in the ViewModel)
-                switch viewModel.groupMode {
-                case .byStatus:
-                    if bikesByStatus.isEmpty {
-                        ContentUnavailableView("No bikes registered", systemImage: "bicycle.circle")
-                            .padding()
-                    } else {
-                        ProportionalLazyVGrid(pinnedViews: [.sectionHeaders]) {
-                            ForEach(bikesByStatus) { section in
-                                if let status = BikeStatus(rawValue: section.id) {
-                                    BikesSection(
-                                        path: $viewModel.path,
-                                        title: status.rawValue.capitalized,
-                                        group: .byStatus(status))
-                                }
-                            }
-                        }
-                    }
-                case .byManufacturer:
-                    if bikesByManufacturer.isEmpty {
-                        ContentUnavailableView("No bikes registered", systemImage: "bicycle.circle")
-                            .padding()
-                    } else {
-                        ProportionalLazyVGrid(pinnedViews: [.sectionHeaders]) {
-                            ForEach(bikesByManufacturer) { section in
-                                BikesSection(
-                                    path: $viewModel.path,
-                                    title: section.id,
-                                    group: .byManufacturer(section.id))
-                            }
-                        }
-                    }
-                }
+                BikesList(path: $viewModel.path,
+                          bikes: query,
+                          group: viewModel.groupMode)
             }
             .toolbar {
                 MainToolbar(
@@ -94,16 +90,28 @@ struct MainContentPage: View {
                 }
             }
             .navigationDestination(for: PersistentIdentifier.self) { identifier in
-                ForEach(bikesByStatus) { section in
-                    if let bike = section.elements.first(where: {
-                        $0.persistentModelID == identifier
-                    }) {
-                        BikeDetailView(bike: bike)
-                    }
-                }
+                // TODO: Change BikeDetailView to just read a PersistentIdentifier
+//                ForEach(bikes) { section in
+//                    if let bike = section.elements.first(where: {
+//                        $0.persistentModelID == identifier
+//                    }) {
+//                        BikeDetailView(bike: bike)
+//                    }
+//                }
             }
             .alert(isPresented: $viewModel.showError, error: viewModel.lastError) {
                 Text("Okay")
+            }
+            .onChange(of: viewModel.groupMode) { oldValue, newValue in
+                print("@@ viewModel.groupMode changed to \(newValue)")
+                if oldValue != newValue {
+                    query = newValue.sectionQuery
+                    // Alright
+                    // so
+                    // TODO: 1. rename MainContent to MainContainer
+                    // TODO: 2. Move all the section-query accessing into a BikesList or something that's the scroll view
+                    // TODO: 3. Manipulate _that_ child view's `bikes: SectionedQuery` to get the safe mutation.
+                }
             }
         }
         .task {
@@ -111,6 +119,7 @@ struct MainContentPage: View {
             await viewModel.fetchMainContentData(
                 client: client,
                 modelContext: modelContext)
+
         }
     }
 }
@@ -119,20 +128,15 @@ struct MainContentPage: View {
 
 // MARK: Empty Data Preview
 #Preview("Empty data") {
-    do {
-        let client = try Client()
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    @Previewable let client = try! Client()
 
-        let container = try ModelContainer(
-            for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
-            configurations: config)
+    @Previewable let container = try! ModelContainer(
+        for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true))
 
-        return MainContentPage()
-            .environment(client)
-            .modelContainer(container)
-    } catch let error {
-        return Text("Failed to load preview \(error.localizedDescription)")
-    }
+    MainContentPage()
+        .environment(client)
+        .modelContainer(container)
 }
 
 // MARK: Bikes by status (withOwner)

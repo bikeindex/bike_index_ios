@@ -8,6 +8,7 @@
 import OSLog
 import SwiftData
 import SwiftUI
+import SectionedQuery
 
 extension MainContentPage {
     /// Model for ``MainContentPage`` to perform helpful work retrieving and serializing.
@@ -29,7 +30,9 @@ extension MainContentPage {
                 if showError { fetching = false }
             }
         }
-        // UI Management
+
+        // MARK: Query Management
+
         // TODO: Write `groupMode` to user defaults
         var groupMode: GroupMode = .byStatus
 
