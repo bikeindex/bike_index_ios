@@ -12,7 +12,7 @@ extension MainContentPage {
         @Environment(Client.self) var client
 
         @Binding var path: NavigationPath
-        @Binding var groupMode: MainContentModel.GroupMode
+        @Binding var groupMode: ViewModel.GroupMode
 
         var body: some ToolbarContent {
             ToolbarItem(placement: .topBarLeading) {
@@ -25,7 +25,7 @@ extension MainContentPage {
 
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
-                    ForEach(MainContentModel.GroupMode.allCases) { option in
+                    ForEach(ViewModel.GroupMode.allCases) { option in
                         Button(option.displayName) {
                             groupMode = option
                         }
@@ -40,7 +40,7 @@ extension MainContentPage {
 
 #Preview {
     @Previewable @State var path = NavigationPath()
-    @Previewable @State var groupMode = MainContentModel.GroupMode.byStatus
+    @Previewable @State var groupMode = MainContentPage.ViewModel.GroupMode.byStatus
     NavigationStack {
         Text("Toolbar preview")
             .toolbar {

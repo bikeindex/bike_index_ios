@@ -1,5 +1,5 @@
 //
-//  MainContentModel+Error.swift
+//  ViewModel+Error.swift
 //  BikeIndex
 //
 //  Created by Jack on 12/26/24.
@@ -7,8 +7,8 @@
 
 import Foundation
 
-extension MainContentModel {
-    /// Some errors in MainContentModel are app-specific, others come from SwiftData.
+extension MainContentPage.ViewModel {
+    /// Some errors in ViewModel are app-specific, others come from SwiftData.
     /// Represent both kinds of errors in this concrete type for SwiftUI.alert to utilize.
     public enum Error: LocalizedError {
         case failed(message: String)

@@ -18,8 +18,8 @@ struct MainContentPage: View {
     @State var path = NavigationPath()
 
     // Data handling and error handling
-    // TODO: Write MainContentModel.groupMode to user defaults
-    @State private var contentModel = MainContentModel()
+    // TODO: Write ViewModel.groupMode to user defaults
+    @State private var contentModel = ViewModel()
 
     @SectionedQuery(
         \Bike.statusString,
