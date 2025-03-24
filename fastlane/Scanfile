@@ -5,15 +5,22 @@
 # fastlane scan --help
 
 project("BikeIndex.xcodeproj")
-
 scheme("Debug (development)")
+testplan("AllTests")
 
+# Scanfile contains defaults and these can be overridden by Fastfile
+# or CLI arguments
+deployment_target_version = "18.2"
 devices([
-	"iPhone 16 (18.0)",
-	"iPhone 16 Plus (18.0)",
-	"iPad (10th generation) (18.0)"
+	"iPhone 16",
+	"iPhone 16 Plus",
+	"iPad (10th generation)"
 ])
 
-skip_build(true)
-
+disable_concurrent_testing(true)
 result_bundle(true)
+reset_simulator(true)
+force_quit_simulator(true)
+include_simulator_logs(false)
+number_of_retries(3)
+

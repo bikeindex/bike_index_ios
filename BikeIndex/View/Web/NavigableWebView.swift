@@ -83,7 +83,7 @@ struct NavigableWebView: View {
 
 #Preview {
     NavigableWebView(
-        url: .constant(URL(string: "https://bikeindex.org")!),
+        url: .constant(URL("https://bikeindex.org")),
         navigator: HistoryNavigator()
     )
     .environment(try! Client())
@@ -91,7 +91,6 @@ struct NavigableWebView: View {
 
 extension NavigableWebView {
     enum Identifiers: String {
-
         case backButton = "WebViewBack"
         case forwardButton = "WebViewForward"
     }

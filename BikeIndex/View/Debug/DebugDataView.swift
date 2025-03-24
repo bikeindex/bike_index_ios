@@ -13,7 +13,6 @@ struct DebugDataView: View {
     @Query var authenticatedUsers: [AuthenticatedUser]
     @Query var users: [User]
     @Query var bikes: [Bike]
-    @Query var organizations: [Organization]
     @Query var manufacturers: [AutocompleteManufacturer]
 
     var body: some View {
@@ -42,7 +41,7 @@ struct DebugDataView: View {
                 Text("Owner [UUID]: \(bike.owner?.persistentModelID.storeIdentifier ?? "Empty")")
                 Text("Auth Owner [ID]: \(bike.authenticatedOwner?.identifier ?? "Empty")")
                 Text("Description: \(bike.bikeDescription ?? "")")
-                Text("Frame Model: \(bike.frameModel)")
+                Text("Frame Model: \(String(describing: bike.frameModel))")
                 Text("Color Primary: \(bike.frameColorPrimary))")
                 if let frameColorSecondary = bike.frameColorSecondary {
                     Text("Frame Color Secondary: \(frameColorSecondary))")
@@ -81,14 +80,6 @@ struct DebugDataView: View {
                     Text("Api Url: \(apiUrl))")
                 }
                 Text("Public Images: \(bike.publicImages)")
-            }
-
-            // MARK: - Organizations
-            DataModelDebugView(models: organizations) { organization in
-                Text("Name: \(organization.name)")
-                Text("ID: \(organization.identifier)")
-                Text("Slug: \(organization.slug)")
-                Text("Admin?: \(organization.userIsOrganizationAdmin.description)")
             }
 
             // MARK: - AutocompleteManufacturers
@@ -137,7 +128,7 @@ struct DataModelDebugView<Model: PersistentModel, Content: View>: View {
     do {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let mockContainer = try ModelContainer(
-            for: Bike.self, User.self, AuthenticatedUser.self, Organization.self,
+            for: Bike.self, User.self, AuthenticatedUser.self,
             AutocompleteManufacturer.self,
             configurations: config
         )

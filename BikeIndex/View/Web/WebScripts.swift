@@ -8,6 +8,7 @@
 import OSLog
 import WebKit
 
+@MainActor
 enum WebScripts: String {
     case removeFrame =
         """

@@ -56,27 +56,3 @@ import SwiftData
         self.bikes = bikes
     }
 }
-
-@Model final class Organization {
-    @Attribute(.unique) var identifier: Int
-    var name: String
-    var slug: String
-    var accessToken: Token
-    var userIsOrganizationAdmin: Bool
-
-    // TODO: Fill-in Organization relationships and functionality
-    //    @Relationship(deleteRule: .cascade, inverse: \AuthenticatedUser.memberships)
-    //    var authorizedUsers: [AuthenticatedUser]? = []
-
-    init(
-        name: String, slug: String, identifier: Int, accessToken: Token,
-        userIsOrganizationAdmin: Bool
-    ) {
-        Logger.model.debug("Org.init w/ identifier \(identifier)")
-        self.name = name
-        self.slug = slug
-        self.identifier = identifier
-        self.accessToken = accessToken
-        self.userIsOrganizationAdmin = userIsOrganizationAdmin
-    }
-}

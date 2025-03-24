@@ -9,11 +9,18 @@
     }
   ],
   "defaultOptions" : {
+    "environmentVariableEntries" : [
+      {
+        "key" : "EMERGE_IS_RUNNING_FOR_SNAPSHOTS",
+        "value" : "1"
+      }
+    ],
     "targetForVariableExpansion" : {
       "containerPath" : "container:BikeIndex.xcodeproj",
       "identifier" : "04F4B8F62B098ADB009442B5",
       "name" : "BikeIndex"
-    }
+    },
+    "testTimeoutsEnabled" : true
   },
   "testTargets" : [
     {

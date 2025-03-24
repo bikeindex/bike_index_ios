@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum BikeStatus: String, Codable {
+enum BikeStatus: String, Codable, CaseIterable {
     case withOwner = "with owner"
     case found
     case stolen

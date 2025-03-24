@@ -3,19 +3,16 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 71;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0428F4812D75156300BDD2A5 /* SectionedQuery in Frameworks */ = {isa = PBXBuildFile; productRef = 0428F4802D75156300BDD2A5 /* SectionedQuery */; };
 		04ABEBB92D1F35B400E30577 /* PreviewGallery in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBB82D1F35B400E30577 /* PreviewGallery */; };
 		04ABEBBB2D1F35B400E30577 /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */; };
 		04ABEBBD2D1F35B400E30577 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBC2D1F35B400E30577 /* SnapshottingTests */; };
-		04ABEBC52D1F399E00E30577 /* Snapshotting in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBC42D1F399E00E30577 /* Snapshotting */; };
-		04ABEBC62D1F399E00E30577 /* Snapshotting in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBC42D1F399E00E30577 /* Snapshotting */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		04ABEBC82D1F399E00E30577 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBC72D1F399E00E30577 /* SnapshottingTests */; };
 		04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 04E1343D2B4B718200CE88DD /* WebViewKit */; };
 		04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */ = {isa = PBXBuildFile; productRef = 04EA11212B2504340024CDDD /* URLEncodedForm */; };
-		04F4B9322B098B5A009442B5 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 04F4B9312B098B5A009442B5 /* README.md */; };
 		04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04F4B95D2B0990CE009442B5 /* KeychainSwift */; };
 /* End PBXBuildFile section */
 
@@ -43,7 +40,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				04ABEBC62D1F399E00E30577 /* Snapshotting in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -51,10 +47,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0454049D2D458CA40020A655 /* swift-format-configuration.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "swift-format-configuration.json"; sourceTree = "<group>"; };
 		0496C6702CB36BED00B88D1B /* Brewfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Brewfile; sourceTree = "<group>"; };
 		0496C6712CB36BF100B88D1B /* .ruby-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".ruby-version"; sourceTree = "<group>"; };
 		0496C6722CB36BF600B88D1B /* Gemfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Gemfile; sourceTree = "<group>"; };
+		04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Test-credentials.xcconfig"; sourceTree = "<group>"; };
+		04D80BB72D8673F200E29577 /* Test-credentials-template.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Test-credentials-template.xcconfig"; sourceTree = "<group>"; };
 		04F4B8F72B098ADB009442B5 /* BikeIndex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BikeIndex.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04F4B90A2B098ADE009442B5 /* UnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		04F4B9142B098ADE009442B5 /* UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,13 +70,6 @@
 				"Preview Content/SingleBikeResponse_mock.json",
 			);
 			target = 04F4B8F62B098ADB009442B5 /* BikeIndex */;
-		};
-		04CDF15C2D3C344500F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"Debug (bikeindex.org).xctestplan",
-			);
-			target = 04F4B9092B098ADE009442B5 /* UnitTests */;
 		};
 		04CDF16A2D3C344800F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -106,7 +96,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		04CDF1012D3C344100F90515 /* BikeIndex */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF1442D3C344100F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = BikeIndex; sourceTree = "<group>"; };
-		04CDF1502D3C344500F90515 /* UnitTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF15C2D3C344500F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = UnitTests; sourceTree = "<group>"; };
+		04CDF1502D3C344500F90515 /* UnitTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = UnitTests; sourceTree = "<group>"; };
 		04CDF1632D3C344800F90515 /* UITests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF16A2D3C344800F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = UITests; sourceTree = "<group>"; };
 		04CDF16F2D3C344C00F90515 /* SharedTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF1722D3C344C00F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 04CDF1732D3C344C00F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = SharedTests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -118,6 +108,7 @@
 			files = (
 				04ABEBB92D1F35B400E30577 /* PreviewGallery in Frameworks */,
 				04ABEBBB2D1F35B400E30577 /* SnapshotPreferences in Frameworks */,
+				0428F4812D75156300BDD2A5 /* SectionedQuery in Frameworks */,
 				04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */,
 				04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */,
 				04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */,
@@ -136,8 +127,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04ABEBC82D1F399E00E30577 /* SnapshottingTests in Frameworks */,
-				04ABEBC52D1F399E00E30577 /* Snapshotting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,6 +147,8 @@
 				04F4B9292B098B44009442B5 /* BikeIndex-development.xcconfig */,
 				04F4B9272B098B44009442B5 /* BikeIndex-production.xcconfig */,
 				04F4B9282B098B44009442B5 /* BikeIndex-template.xcconfig */,
+				04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */,
+				04D80BB72D8673F200E29577 /* Test-credentials-template.xcconfig */,
 				04CDF1012D3C344100F90515 /* BikeIndex */,
 				04CDF1502D3C344500F90515 /* UnitTests */,
 				04CDF1632D3C344800F90515 /* UITests */,
@@ -165,7 +156,6 @@
 				0496C6702CB36BED00B88D1B /* Brewfile */,
 				0496C6722CB36BF600B88D1B /* Gemfile */,
 				0496C6712CB36BF100B88D1B /* .ruby-version */,
-				0454049D2D458CA40020A655 /* swift-format-configuration.json */,
 				04ABEBC32D1F399E00E30577 /* Frameworks */,
 				04F4B8F82B098ADB009442B5 /* Products */,
 			);
@@ -206,6 +196,7 @@
 				04E1343D2B4B718200CE88DD /* WebViewKit */,
 				04ABEBB82D1F35B400E30577 /* PreviewGallery */,
 				04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */,
+				0428F4802D75156300BDD2A5 /* SectionedQuery */,
 			);
 			productName = BikeIndex;
 			productReference = 04F4B8F72B098ADB009442B5 /* BikeIndex.app */;
@@ -291,6 +282,7 @@
 				04EA11202B2504340024CDDD /* XCRemoteSwiftPackageReference "URLEncodedForm" */,
 				04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */,
 				04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */,
+				0428F47F2D75156300BDD2A5 /* XCRemoteSwiftPackageReference "swiftdata-sectionedquery" */,
 			);
 			productRefGroup = 04F4B8F82B098ADB009442B5 /* Products */;
 			projectDirPath = "";
@@ -315,7 +307,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04F4B9322B098B5A009442B5 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -439,7 +430,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BikeIndex/BikeIndex.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 26;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BikeIndex/Preview Content\"";
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
@@ -460,13 +451,13 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.4;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Debug BikeIndex.org";
@@ -494,8 +485,7 @@
 		};
 		04EA11262B25135D0024CDDD /* Debug BikeIndex.org */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 04CDF16F2D3C344C00F90515 /* SharedTests */;
-			baseConfigurationReferenceRelativePath = "Test-credentials.xcconfig";
+			baseConfigurationReference = 04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -645,7 +635,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BikeIndex/BikeIndex.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 26;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BikeIndex/Preview Content\"";
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
@@ -666,13 +656,13 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.4;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Debug (development)";
@@ -685,7 +675,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BikeIndex/BikeIndex.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 26;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BikeIndex/Preview Content\"";
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
@@ -706,13 +696,13 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.4;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -761,8 +751,7 @@
 		};
 		04F4B9252B098ADE009442B5 /* Debug (development) */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 04CDF16F2D3C344C00F90515 /* SharedTests */;
-			baseConfigurationReferenceRelativePath = "Test-credentials.xcconfig";
+			baseConfigurationReference = 04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -784,8 +773,7 @@
 		};
 		04F4B9262B098ADE009442B5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 04CDF16F2D3C344C00F90515 /* SharedTests */;
-			baseConfigurationReferenceRelativePath = "Test-credentials.xcconfig";
+			baseConfigurationReference = 04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -851,12 +839,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		0428F47F2D75156300BDD2A5 /* XCRemoteSwiftPackageReference "swiftdata-sectionedquery" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/beechtom/swiftdata-sectionedquery.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
+			};
+		};
 		04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/EmergeTools/SnapshotPreviews";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.10.20;
+				minimumVersion = 0.10.21;
 			};
 		};
 		04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */ = {
@@ -864,7 +860,7 @@
 			repositoryURL = "https://github.com/danielsaidi/WebViewKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.3.0;
+				minimumVersion = 0.5.0;
 			};
 		};
 		04EA11202B2504340024CDDD /* XCRemoteSwiftPackageReference "URLEncodedForm" */ = {
@@ -872,7 +868,7 @@
 			repositoryURL = "https://github.com/interactord/URLEncodedForm.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.8;
+				minimumVersion = 1.0.9;
 			};
 		};
 		04F4B95C2B0990CE009442B5 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
@@ -886,6 +882,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0428F4802D75156300BDD2A5 /* SectionedQuery */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0428F47F2D75156300BDD2A5 /* XCRemoteSwiftPackageReference "swiftdata-sectionedquery" */;
+			productName = SectionedQuery;
+		};
 		04ABEBB82D1F35B400E30577 /* PreviewGallery */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
@@ -897,16 +898,6 @@
 			productName = SnapshotPreferences;
 		};
 		04ABEBBC2D1F35B400E30577 /* SnapshottingTests */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
-			productName = SnapshottingTests;
-		};
-		04ABEBC42D1F399E00E30577 /* Snapshotting */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
-			productName = Snapshotting;
-		};
-		04ABEBC72D1F399E00E30577 /* SnapshottingTests */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
 			productName = SnapshottingTests;

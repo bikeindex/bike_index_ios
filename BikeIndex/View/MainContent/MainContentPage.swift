@@ -6,6 +6,7 @@
 //
 
 import OSLog
+import SectionedQuery
 import SwiftData
 import SwiftUI
 
@@ -21,7 +22,10 @@ struct MainContentPage: View {
     @State var lastError: MainContentModel.Error?
     @State var showError: Bool = false
 
-    @Query private var bikes: [Bike]
+    @SectionedQuery(
+        \Bike.statusString,
+        sort: [SortDescriptor(\.statusString)])
+    private var bikesByStatus: SectionedResults<String, Bike>
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -34,20 +38,19 @@ struct MainContentPage: View {
                     }
                 }
 
-                if bikes.isEmpty {
+                if bikesByStatus.isEmpty {
                     ContentUnavailableView("No bikes registered", systemImage: "bicycle.circle")
                         .padding()
                 } else {
-                    ProportionalLazyVGrid {
-                        ForEach(Array(bikes.enumerated()), id: \.element) { (index, bike) in
-                            ContentBikeButtonView(
-                                path: $path,
-                                bikeIdentifier: bike.identifier
-                            )
-                            .accessibilityIdentifier("Bike \(index + 1)")
+                    ProportionalLazyVGrid(pinnedViews: [.sectionHeaders]) {
+                        ForEach(bikesByStatus) { section in
+                            if let status = BikeStatus(rawValue: section.id) {
+                                BikesStatusSection(
+                                    path: $path,
+                                    status: status)
+                            }
                         }
                     }
-                    .padding()
                 }
             }
             .toolbar {
@@ -60,21 +63,26 @@ struct MainContentPage: View {
                     SettingsPage(path: $path)
                         .accessibilityIdentifier("Settings")
                 case .registerBike:
-                    RegisterBikeView(mode: .myOwnBike)
+                    RegisterBikeView(path: $path, mode: .myOwnBike)
                 case .lostBike:
-                    RegisterBikeView(mode: .myStolenBike)
+                    RegisterBikeView(path: $path, mode: .myStolenBike)
                 case .searchBikes:
                     NavigableWebView(
-                        url: .constant(URL(string: "https://bikeindex.org/bikes?stolenness=all")!)
+                        url: .constant(URL("https://bikeindex.org/bikes?stolenness=all"))
                     )
                     .environment(client)
                 }
             }
             .navigationDestination(for: PersistentIdentifier.self) { identifier in
-                if let bike = bikes.first(where: { $0.persistentModelID == identifier }) {
-                    BikeDetailView(bike: bike)
+                ForEach(bikesByStatus) { section in
+                    if let bike = section.elements.first(where: {
+                        $0.persistentModelID == identifier
+                    }) {
+                        BikeDetailView(bike: bike)
+                    }
                 }
             }
+
             .alert(isPresented: $showError, error: lastError) {
                 Text("Error occurred")
             }
@@ -88,24 +96,15 @@ struct MainContentPage: View {
     ///     - Report error and return if any problems occur
     /// 2. Fetch profile's bikes data
     ///     - Report error and return if any problems occur
-    /// Unfortunately I don't see any way around the Xcode 16.0 / Swift 6 "'as' test is always true" compiler warning.
-    /// Resources:
-    /// - https://stackoverflow.com/questions/79019378/swift-6-how-to-use-typed-throws-inside-a-task
-    /// - https://dandylyons.github.io/posts/typed-error-handling/
-    /// - https://forums.swift.org/t/struct-mystruct-error-does-not-conform-to-errorcodeprotocol/17103
-    /// - https://www.hackingwithswift.com/swift/6.0/typed-throws
     private func fetchMainContentData() async {
         do {
             try await contentModel.fetchProfile(
                 client: client,
                 modelContext: modelContext)
-        } catch let error as MainContentModel.Error {
+        } catch {
             Logger.model.error("Failed to fetch profile: \(error)")
             lastError = error
             showError = true
-            return
-        } catch {
-            Logger.model.error("Unhandled error encountered: \(error)")
             return
         }
 
@@ -113,13 +112,10 @@ struct MainContentPage: View {
             try await contentModel.fetchBikes(
                 client: client,
                 modelContext: modelContext)
-        } catch let error as MainContentModel.Error {
+        } catch {
             Logger.model.error("Failed to user's bikes: \(error)")
             lastError = error
             showError = true
-            return
-        } catch {
-            Logger.model.error("Failed to fetch user's bikes with \(error)")
             return
         }
     }
@@ -127,8 +123,8 @@ struct MainContentPage: View {
 
 // MARK: - Previews
 
+// MARK: Empty Data Preview
 #Preview("Empty data") {
-    // MARK: Empty Data Preview
     do {
         let client = try Client()
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
@@ -145,27 +141,70 @@ struct MainContentPage: View {
     }
 }
 
-#Preview("1 Bike Preview") {
-    // MARK: 1 Bike Preview
-    do {
-        let client = try Client()
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+// MARK: Bikes by status (withOwner)
+#Preview("Bikes by status (withOwner)") {
+    let container = try! ModelContainer(
+        for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true))
 
-        let container = try ModelContainer(
-            for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
-            configurations: config)
+    MainContentPage()
+        .environment(try! Client())
+        .modelContainer(container)
+        .onAppear {
+            do {
+                let rawJsonData = MockData.sampleBikeJson.data(using: .utf8)!
+                let statuses: [BikeStatus] = Array(repeating: .withOwner, count: 3)
 
-        let rawJsonData = MockData.sampleBikeJson.data(using: .utf8)!
-        let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
-        let bike = output.modelInstance()
+                for (index, status) in statuses.enumerated() {
+                    let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
+                    let bike = output.modelInstance()
+                    // Mock one of each status
+                    // but separate the identifiers
+                    bike.identifier = index
+                    bike.update(keyPath: \.status, to: status)
+                    print(
+                        "Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)"
+                    )
 
-        container.mainContext.insert(bike)
-        try? container.mainContext.save()
+                    container.mainContext.insert(bike)
+                }
+                try? container.mainContext.save()
+            } catch {
+                print("Encountered error \(error)")
+            }
+        }
+}
 
-        return MainContentPage()
-            .environment(client)
-            .modelContainer(container)
-    } catch let error {
-        return Text("Failed to load preview \(error.localizedDescription)")
-    }
+// MARK: Bikes by status (all)
+#Preview("Bikes by status (all)") {
+    let container = try! ModelContainer(
+        for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+
+    MainContentPage()
+        .environment(try! Client())
+        .modelContainer(container)
+        .onAppear {
+            do {
+                let rawJsonData = MockData.sampleBikeJson.data(using: .utf8)!
+                let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
+
+                for (index, status) in BikeStatus.allCases.enumerated() {
+                    let bike = output.modelInstance()
+
+                    // Mock one of each status
+                    // but separate the identifiers
+                    bike.identifier = index
+                    bike.update(keyPath: \.status, to: status)
+                    print(
+                        "Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)"
+                    )
+
+                    container.mainContext.insert(bike)
+                }
+                try? container.mainContext.save()
+            } catch {
+                print("Encountered error \(error)")
+            }
+        }
 }

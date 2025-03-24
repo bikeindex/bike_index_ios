@@ -36,11 +36,14 @@ import SwiftData
     var typeOfPropulsion: PropulsionType
 
     /// Nil if the serial number is missing.
-    /// There are various concepts of abasent serial numbers
+    /// There are various concepts of absent serial numbers
     /// such as "unknown" and also "made\_without\_serial" for certain older bikes.
     var serial: String?
 
     var status: BikeStatus
+    /// SwiftData predicates are incompatible with Enums (like ``BikeStatus``) so we duplicate it :/ to make it queryable
+    /// Add a default value of empty string, to be over-written by 1) ``Bike/init`` and 2) ``Bike/status/willSet``.
+    var statusString: String = ""
 
     // 2D coordinate is a struct
     // Persistent model requires a class/object
@@ -114,6 +117,7 @@ import SwiftData
         self.typeOfPropulsion = typeOfPropulsion
         self.serial = serial
         self.status = status
+        self.statusString = status.rawValue
         self.stolenCoordinateLatitude = stolenCoordinateLatitude
         self.stolenCoordinateLongitude = stolenCoordinateLongitude
         self.stolenLocation = stolenLocation
@@ -132,8 +136,9 @@ import SwiftData
         frameColorPrimary = .black
 
         manufacturerName = ""
-        serial = ""
+        serial = nil
         status = .withOwner
+        statusString = BikeStatus.withOwner.rawValue
         typeOfCycle = .bike
         typeOfPropulsion = .footPedal
 
@@ -147,6 +152,16 @@ import SwiftData
         apiUrl = defaultUrl
         publicImages = []
     }
+
+    // https://www.hackingwithswift.com/quick-start/swiftdata/how-to-create-derived-attributes-with-swiftdata
+    func update<T>(keyPath: ReferenceWritableKeyPath<Bike, T>, to value: T) {
+        print("Bike #\(identifier) updating \(keyPath) to \(value)")
+        self[keyPath: keyPath] = value
+        if keyPath == \.status {
+            statusString = status.rawValue
+        }
+    }
+
 }
 
 extension Bike {
@@ -161,5 +176,4 @@ extension Bike {
             manufacturerName
         }
     }
-
 }

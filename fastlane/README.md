@@ -15,13 +15,37 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## iOS
 
+### ios tests_iphone16
+
+```sh
+[bundle exec] fastlane ios tests_iphone16
+```
+
+Run test suite on iPhone 16
+
+### ios tests_iphone16plus
+
+```sh
+[bundle exec] fastlane ios tests_iphone16plus
+```
+
+Run test suite on iPhone 16 Plus
+
+### ios tests_ipad
+
+```sh
+[bundle exec] fastlane ios tests_ipad
+```
+
+Run test suite on iPad (10th generation)
+
 ### ios tests
 
 ```sh
 [bundle exec] fastlane ios tests
 ```
 
-Run unit tests
+Run test suite (all default simulators)
 
 ----
 

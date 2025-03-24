@@ -49,6 +49,7 @@ class TestableClient: Client {
 
 // MARK: -
 
+@MainActor
 final class ClientRefreshTests: XCTestCase {
     var client: TestableClient!
 
@@ -57,7 +58,9 @@ final class ClientRefreshTests: XCTestCase {
     }
 
     override func tearDownWithError() throws {
-        client.destroySession()
+        Task { [weak client] in
+            await client?.destroySession()
+        }
     }
 
     func test_token_renewal() throws {
@@ -110,8 +113,6 @@ final class ClientRefreshTests: XCTestCase {
             timeout: expirationInterval * 2)
 
         switch result {
-        case .completed:
-            XCTSkip("The timer completed")
         case .timedOut:
             XCTFail("The timer could not complete correctly")
         default:

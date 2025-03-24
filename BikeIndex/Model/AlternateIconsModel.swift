@@ -66,7 +66,8 @@ enum AppIcon: String, CaseIterable, Identifiable {
     }
 }
 
-@Observable final class AlternateIconsModel {
+@MainActor @Observable
+final class AlternateIconsModel {
     private(set) var selectedAppIcon: AppIcon
 
     init() {

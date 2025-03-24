@@ -11,12 +11,11 @@ import SwiftUI
 import WebViewKit
 
 /// NOTE: Adopt @Focus State https://developer.apple.com/documentation/swiftui/focusstate
-/// NOTE: Possibly add organization selection
 struct RegisterBikeView: View {
-    // @Environment(\.dismiss) private var dismiss // Can't use with NavigableWebView for serial or how-to-recover links
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
-    @Environment(\.dismiss) var dismiss
+
+    @Binding var path: NavigationPath
 
     // MARK: Shadow State
 
@@ -95,14 +94,16 @@ struct RegisterBikeView: View {
 
             // MARK: Serial number
             Section {
-                let safeSerial = Binding {
-                    bike.serial ?? ""
-                } set: { newValue in
-                    bike.serial = newValue
-                    if let serial = bike.serial, !serial.isEmpty {
-                        missingSerial = false
-                    }
-                }
+                let safeSerial = Binding(
+                    get: {
+                        $bike.serial.wrappedValue ?? ""
+                    },
+                    set: { newValue in
+                        bike.serial = newValue
+                        if let serial = bike.serial, !serial.isEmpty {
+                            missingSerial = false
+                        }
+                    })
 
                 TextField(text: safeSerial) {
                     if missingSerial {
@@ -301,7 +302,7 @@ struct RegisterBikeView: View {
                 ownerEmail = user.email
             } else {
                 Logger.views.info(
-                    "Failed to find authenticated users with email, skiping association of ownerEmail. Authenticated users has count \(authenticatedUsers.count)"
+                    "Failed to find authenticated users with email, skipping association of ownerEmail. Authenticated users has count \(authenticatedUsers.count)"
                 )
             }
         }
@@ -314,7 +315,7 @@ struct RegisterBikeView: View {
         }
     }
 
-    /// Marshall the Bike model to a Postable intermediary, write that intermediary to the API client and discard Bike model
+    /// Marshall the Bike model to a ``Postable`` intermediary, write that intermediary to the API client and discard Bike model
     /// Receive the result and persist the server's model
     /// Update the UI
     private func registerBike() async {
@@ -340,7 +341,7 @@ struct RegisterBikeView: View {
         case .success(let success):
             guard let registrationResponseSource = success as? SingleBikeResponseContainer else {
                 Logger.views.error(
-                    "Failed to parse bike registtration successful response from \(String(reflecting: success))"
+                    "Failed to parse bike registration successful response from \(String(reflecting: success))"
                 )
                 return
             }
@@ -353,10 +354,8 @@ struct RegisterBikeView: View {
                 self.validationModel = AddBikeOutput(
                     show: true,
                     actions: {
-                        /// Access dismiss directly.
-                        /// If ``RegisterBikeView`` captures the Environment object in a var it will conflict with the
-                        /// NavigableWebViews and cause an infinite loop. (I think that's the cause).
-                        dismiss()
+                        // After success, pop RegisterBikeView
+                        path.removeLast()
                     }, message: "", title: "Success!")
             }
 
@@ -380,60 +379,70 @@ struct RegisterBikeView: View {
 
 // MARK: - Normal Mode Preview
 #Preview("Normal Mode Preview") {
-    do {
-        let bike = Bike()
-        let client = try Client()
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let bike = Bike()
+    let client = try! Client()
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
 
-        let container = try ModelContainer(
-            for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
-            configurations: config)
+    let container = try! ModelContainer(
+        for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+        configurations: config)
 
-        let user = User(
-            email: "preview@bikeindex.org", username: "previewUser", name: "Preview User",
-            additionalEmails: [], createdAt: Date(), image: nil, twitter: nil, parent: nil,
-            bikes: [bike])
+    let user = User(
+        email: "preview@bikeindex.org", username: "previewUser", name: "Preview User",
+        additionalEmails: [], createdAt: Date(), image: nil, twitter: nil, parent: nil,
+        bikes: [bike])
 
-        let auth = AuthenticatedUser(identifier: "1", bikes: [bike])
+    let auth = AuthenticatedUser(identifier: "1", bikes: [bike])
+
+    let previewContent = RegisterBikeView(
+        path: .constant(NavigationPath()), mode: .myOwnBike, bike: bike
+    )
+    .environment(client)
+    .modelContainer(container)
+    .onAppear {
         auth.user = user
         container.mainContext.insert(auth)
-
-        return NavigationStack {
-            RegisterBikeView(mode: .myOwnBike, bike: bike)
-                .environment(client)
-                .modelContainer(container)
+    }
+    if ProcessInfo().isRunningPreviews {
+        NavigationStack {
+            previewContent
         }
-    } catch let error {
-        return Text("Failed to load preview \(error.localizedDescription)")
+    } else {
+        previewContent
     }
 }
 
 // MARK: - Stolen Mode Preview
 #Preview("Stolen Mode Preview") {
-    do {
-        let bike = Bike()
-        let client = try Client()
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let bike = Bike()
+    let client = try! Client()
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
 
-        let container = try ModelContainer(
-            for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
-            configurations: config)
+    let container = try! ModelContainer(
+        for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+        configurations: config)
 
-        let user = User(
-            email: "preview@bikeindex.org", username: "previewUser", name: "Preview User",
-            additionalEmails: [], createdAt: Date(), image: nil, twitter: nil, parent: nil,
-            bikes: [bike])
+    let user = User(
+        email: "preview@bikeindex.org", username: "previewUser", name: "Preview User",
+        additionalEmails: [], createdAt: Date(), image: nil, twitter: nil, parent: nil,
+        bikes: [bike])
 
-        let auth = AuthenticatedUser(identifier: "1", bikes: [bike])
+    let auth = AuthenticatedUser(identifier: "1", bikes: [bike])
+
+    let previewContent = RegisterBikeView(
+        path: .constant(NavigationPath()), mode: .myStolenBike, bike: bike
+    )
+    .environment(client)
+    .modelContainer(container)
+    .onAppear {
         auth.user = user
         container.mainContext.insert(auth)
-
-        return NavigationStack {
-            RegisterBikeView(mode: .myStolenBike, bike: bike)
-                .environment(client)
-                .modelContainer(container)
+    }
+    if ProcessInfo().isRunningPreviews {
+        NavigationStack {
+            previewContent
         }
-    } catch let error {
-        return Text("Failed to load preview \(error.localizedDescription)")
+    } else {
+        previewContent
     }
 }

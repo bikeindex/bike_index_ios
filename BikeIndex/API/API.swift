@@ -22,9 +22,9 @@ extension URL {
 public typealias BikeId = String
 
 /// Internal type to signify that POSTs use an Encodable type
-public typealias Postable = Encodable
+public protocol Postable: Encodable, Sendable {}
 
-protocol APIEndpoint {
+protocol APIEndpoint: Sendable {
     /// Array of path components to-be concatenated to the URL
     var path: [String] { get }
 
@@ -40,6 +40,7 @@ protocol APIEndpoint {
 }
 
 /// API client to perform networking operations regardless of external state
+@MainActor
 final class API {
     var configuration: EndpointConfigurationProvider
     private(set) var session: URLSession
@@ -49,7 +50,6 @@ final class API {
         self.session = session
     }
 
-    @MainActor
     func get(_ endpoint: APIEndpoint) async -> Result<(any Decodable), Error> {
         var request = endpoint.request(for: configuration)
         if endpoint.authorized, let accessToken = configuration.accessToken {
@@ -89,6 +89,7 @@ final class API {
             )
         }
 
+        // Prepare HTTP body contents
         do {
             guard let requestModel = endpoint.requestModel else {
                 Logger.api.error(
@@ -102,6 +103,7 @@ final class API {
             return .failure(error)
         }
 
+        // Send POST request
         do {
             let (data, response) = try await session.data(for: request)
             try (response as? HTTPURLResponse)?.validate(with: data)
@@ -131,12 +133,6 @@ enum HttpMethod: String {
     case options = "OPTIONS"
     case trace = "TRACE"
     case patch = "PATCH"
-}
-
-enum APIError: Error {
-    case cacheHit
-    case clientError(code: Int, data: Data?)
-    case postMissingContents(endpoint: APIEndpoint)
 }
 
 extension HTTPURLResponse {

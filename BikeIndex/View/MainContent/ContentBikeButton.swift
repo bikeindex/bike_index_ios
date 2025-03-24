@@ -14,13 +14,10 @@ struct ContentBikeButtonView: View {
 
     init(path: Binding<NavigationPath>, bikeIdentifier: Int) {
         self._path = path
-
-        let predicate = #Predicate<Bike> { model in
-            model.identifier == bikeIdentifier
-        }
-
-        let descriptor = FetchDescriptor<Bike>(predicate: predicate)
-        _bikeQuery = Query(descriptor)
+        _bikeQuery = Query(
+            filter: #Predicate<Bike> { model in
+                model.identifier == bikeIdentifier
+            })
     }
 
     var body: some View {
