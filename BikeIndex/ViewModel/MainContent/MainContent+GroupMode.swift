@@ -10,11 +10,11 @@ import SwiftData
 import SwiftUI
 
 extension MainContentPage.ViewModel {
-    enum GroupMode: CaseIterable, Identifiable, Equatable {
+    enum GroupMode: String, CaseIterable, Identifiable, Equatable {
         case byStatus
         case byManufacturer
 
-        var id: Self { self }
+        var id: String { rawValue }
 
         var displayName: String {
             switch self {
@@ -45,6 +45,23 @@ extension MainContentPage.ViewModel {
                     \Bike.manufacturerName,
                     sort: [SortDescriptor(\Bike.manufacturerName)])
             }
+        }
+
+        // MARK: - Persistence
+
+        static private let persistenceKey = "groupMode_id"
+
+        static var lastKnownGroupMode: Self {
+            if let id = UserDefaults.standard.string(forKey: persistenceKey),
+               let mode = Self(rawValue: id) {
+                return mode
+            } else {
+                return .byStatus
+            }
+        }
+
+        func persist() {
+            UserDefaults.standard.set(self.id, forKey: Self.persistenceKey)
         }
     }
 }

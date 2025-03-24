@@ -33,8 +33,13 @@ extension MainContentPage {
 
         // MARK: Query Management
 
-        // TODO: Write `groupMode` to user defaults
-        var groupMode: GroupMode = .byStatus
+        /// Will fetch last known value from user defaults.
+        /// Will persist after `didSet`.
+        var groupMode: GroupMode = GroupMode.lastKnownGroupMode {
+            didSet {
+                groupMode.persist()
+            }
+        }
 
         // MARK: Child View State
 
