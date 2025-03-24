@@ -32,13 +32,24 @@ extension MainContentPage {
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
+                    Text("Group by:")
+                        .accessibilityLabel("Select one option")
                     ForEach(ViewModel.GroupMode.allCases) { option in
-                        Button(option.displayName) {
+                        Button {
                             groupMode = option
+                        } label: {
+                            if groupMode == option {
+                                Label(option.displayName, systemImage: "checkmark")
+                                    .accessibilityHint(Text("Currently selected"))
+                            } else {
+                                Text(option.displayName)
+                                    .accessibilityHint(Text("Not selected"))
+                            }
                         }
                     }
                 } label: {
                     Image(systemName: "slider.horizontal.3")
+                        .accessibilityLabel("Change how bikes are grouped.")
                 }
             }
         }
