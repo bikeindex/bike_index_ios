@@ -5,9 +5,9 @@
 //  Created by Jack on 3/22/25.
 //
 
-import SwiftUI
-import SwiftData
 import SectionedQuery
+import SwiftData
+import SwiftUI
 
 extension MainContentPage.ViewModel {
     enum GroupMode: CaseIterable, Identifiable, Equatable {
@@ -37,11 +37,13 @@ extension MainContentPage.ViewModel {
         var sectionQuery: SectionedQuery<String, Bike> {
             switch self {
             case .byStatus:
-                SectionedQuery(\Bike.statusString,
-                              sort: [SortDescriptor(\Bike.statusString)])
+                SectionedQuery(
+                    \Bike.statusString,
+                    sort: [SortDescriptor(\Bike.statusString)])
             case .byManufacturer:
-                SectionedQuery(\Bike.manufacturerName,
-                              sort: [SortDescriptor(\Bike.manufacturerName)])
+                SectionedQuery(
+                    \Bike.manufacturerName,
+                    sort: [SortDescriptor(\Bike.manufacturerName)])
             }
         }
     }

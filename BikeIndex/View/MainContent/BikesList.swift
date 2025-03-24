@@ -5,9 +5,9 @@
 //  Created by Jack on 3/23/25.
 //
 
-import SwiftUI
-import SwiftData
 import SectionedQuery
+import SwiftData
+import SwiftUI
 
 /// Display multiple sections of bikes together
 struct BikesList: View {
@@ -37,18 +37,20 @@ struct BikesList: View {
                     /// Use an optional SectionValue because the ``BikeStatus`` has to map
                     /// from a string (we can search on ``Bike/statusString`` but **not** Bike.status
                     /// so there could be a BikeStatus(rawValue:) initializer that fails.
-                    let section: BikesSection.SectionValue? = switch group {
-                    case .byStatus:
-                        if let status = BikeStatus(rawValue: section.id) {
-                            BikesSection.SectionValue.byStatus(status)
-                        } else {
-                            Optional<BikesSection.SectionValue>(nil)
+                    let section: BikesSection.SectionValue? =
+                        switch group {
+                        case .byStatus:
+                            if let status = BikeStatus(rawValue: section.id) {
+                                BikesSection.SectionValue.byStatus(status)
+                            } else {
+                                BikesSection.SectionValue?(nil)
+                            }
+                        case .byManufacturer: .byManufacturer(section.id)
                         }
-                    case .byManufacturer: .byManufacturer(section.id)
-                    }
                     if let section {
-                        BikesSection(path: $path,
-                                     section: section)
+                        BikesSection(
+                            path: $path,
+                            section: section)
                     } else {
                         Text("Error rendering section")
                     }

@@ -6,9 +6,9 @@
 //
 
 import OSLog
+import SectionedQuery
 import SwiftData
 import SwiftUI
-import SectionedQuery
 
 extension MainContentPage {
     /// Model for ``MainContentPage`` to perform helpful work retrieving and serializing.

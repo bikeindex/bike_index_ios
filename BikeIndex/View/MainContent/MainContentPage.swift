@@ -31,8 +31,9 @@ struct MainContentPage: View {
                     }
                 }
 
-                BikesList(path: $viewModel.path,
-                          group: viewModel.groupMode)
+                BikesList(
+                    path: $viewModel.path,
+                    group: viewModel.groupMode)
             }
             .toolbar {
                 MainToolbar(
@@ -56,8 +57,9 @@ struct MainContentPage: View {
             }
             .navigationDestination(for: Int.self) { identifier in
                 /// ``ContentBikeButtonView`` uses `NavigationLink`s to ``Bike/persistentModelID``.
-                BikeDetailView(bikeIdentifier: identifier,
-                               host: client.configuration.host)
+                BikeDetailView(
+                    bikeIdentifier: identifier,
+                    host: client.configuration.host)
             }
             .alert(isPresented: $viewModel.showError, error: viewModel.lastError) {
                 Text("Okay")
