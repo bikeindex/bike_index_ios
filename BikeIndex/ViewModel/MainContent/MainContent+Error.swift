@@ -1,5 +1,5 @@
 //
-//  MainContentPage+ViewModel+Error.swift
+//  MainContent+Error.swift
 //  BikeIndex
 //
 //  Created by Jack on 12/26/24.
