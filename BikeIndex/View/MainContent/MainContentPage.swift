@@ -10,6 +10,7 @@ import SectionedQuery
 import SwiftData
 import SwiftUI
 
+/// Main page of the app to display all navigation options and Bikes.
 struct MainContentPage: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
@@ -46,9 +47,9 @@ struct MainContentPage: View {
                     SettingsPage(path: $viewModel.path)
                         .accessibilityIdentifier("Settings")
                 case .registerBike:
-                    RegisterBikeView(path: $path, mode: .myOwnBike)
+                    RegisterBikeView(path: $viewModel.path, mode: .myOwnBike)
                 case .lostBike:
-                    RegisterBikeView(path: $path, mode: .myStolenBike)
+                    RegisterBikeView(path: $viewModel.path, mode: .myStolenBike)
                 case .searchBikes:
                     SearchBikesView()
                 }

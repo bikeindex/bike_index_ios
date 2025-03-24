@@ -10,6 +10,7 @@ import SwiftUI
 import WebKit
 import WebViewKit
 
+/// Display the details for a single bike by ``Bike/BikeIdentifier`` (Int).
 struct BikeDetailView: View {
     @Environment(Client.self) var client
 
