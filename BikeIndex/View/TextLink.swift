@@ -126,7 +126,7 @@ enum BikeIndexLink: Identifiable {
 }
 
 /// Display constant and clickable Markdown links for Production
-/// Display dyanmic and non-clickable Markdown links for Development
+/// Display dynamic and non-clickable Markdown links for Development
 ///
 /// Why does this exist??
 /// `Text` does **not** support `URL`s. You must provide a constant _string_.
@@ -140,7 +140,7 @@ struct TextLink: View {
 }
 
 #Preview {
-    let localhost = URL(string: "http://localhost").unsafelyUnwrapped
+    let localhost = URL(stringLiteral: "http://localhost")
     return VStack {
         ForEach([BikeIndexLink.oauthApplications, .serials, .stolenBikeFAQ]) { item in
             TextLink(base: localhost, link: item)

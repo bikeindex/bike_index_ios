@@ -46,9 +46,9 @@ struct MainContentPage: View {
                     SettingsPage(path: $viewModel.path)
                         .accessibilityIdentifier("Settings")
                 case .registerBike:
-                    RegisterBikeView(mode: .myOwnBike)
+                    RegisterBikeView(path: $path, mode: .myOwnBike)
                 case .lostBike:
-                    RegisterBikeView(mode: .myStolenBike)
+                    RegisterBikeView(path: $path, mode: .myStolenBike)
                 case .searchBikes:
                     SearchBikesView()
                 }
