@@ -54,11 +54,11 @@ struct AuthView: View {
                     }
 
                     ToolbarItemGroup(placement: .topBarLeading) {
-#if DEBUG
+                        #if DEBUG
                         NavigationLink(value: ViewModel.Nav.debugSettings) {
                             Label("Settings", systemImage: "gearshape")
                         }
-#endif
+                        #endif
                         NavigationLink(value: ViewModel.Nav.help) {
                             Label("Help", systemImage: "book.closed")
                         }
