@@ -28,6 +28,7 @@ extension AuthView {
             var id: Self { self }
 
             case debugSettings
+            case help
         }
     }
 }
