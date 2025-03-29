@@ -224,3 +224,30 @@ final class BikeIndexUITests: XCTestCase {
         app.links.matching(NSPredicate(format: "label BEGINSWITH %@", prefix)).element
     }
 }
+
+// MARK: - Help button
+extension BikeIndexUITests {
+    /// Note: UI Tests don't really have a way to enforce that the user is signed-out
+    /// to test through the `BikeIndex/AuthView` flow. This omission is passable for this
+    /// test because MainContentPage has the same button. But it may need an answer later.
+    func testUnauthenticatedHelp() throws {
+        app.launch()
+
+        let unauthenticatedHelpButton = app.buttons["Help"]
+        _ = unauthenticatedHelpButton.waitForExistence(timeout: timeout)
+        unauthenticatedHelpButton.tap()
+
+        back()
+    }
+
+    func testMainContentPageHelp() throws {
+        app.launch()
+        try signIn(app: app)
+
+        let unauthenticatedHelpButton = app.buttons["Help"]
+        _ = unauthenticatedHelpButton.waitForExistence(timeout: timeout)
+        unauthenticatedHelpButton.tap()
+
+        back()
+    }
+}

@@ -53,13 +53,16 @@ struct AuthView: View {
                         .buttonStyle(.borderedProminent)
                     }
 
-                    #if DEBUG
-                    ToolbarItem(placement: .topBarLeading) {
+                    ToolbarItemGroup(placement: .topBarLeading) {
+                        #if DEBUG
                         NavigationLink(value: ViewModel.Nav.debugSettings) {
                             Label("Settings", systemImage: "gearshape")
                         }
+                        #endif
+                        NavigationLink(value: ViewModel.Nav.help) {
+                            Label("Help", systemImage: "book.closed")
+                        }
                     }
-                    #endif
                 }
                 .navigationTitle("Welcome to Bike Index")
                 .navigationBarTitleDisplayMode(.inline)
@@ -67,7 +70,12 @@ struct AuthView: View {
                     switch navSelection {
                     case .debugSettings:
                         SettingsPage(path: $viewModel.topLevelPath)
+                            .environment(client)
                             .accessibilityIdentifier("Settings")
+                    case .help:
+                        NavigableWebView(constantLink: .help, host: client.configuration.host)
+                            .environment(client)
+                            .navigationTitle("Help")
                     }
                 }
         }
@@ -81,7 +89,7 @@ struct AuthView: View {
                 .navigationTitle("Sign in")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
-                    ToolbarItemGroup(placement: .topBarLeading) {
+                    ToolbarItem(placement: .topBarLeading) {
                         Button("Close") {
                             viewModel.displaySignIn = false
                         }

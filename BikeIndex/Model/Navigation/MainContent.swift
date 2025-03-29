@@ -10,13 +10,14 @@ import Foundation
 enum MainContent: Identifiable {
     var id: Self { self }
 
-    //
+    /// General
     case settings
+    case help
 
-    //
+    /// Registration
     case registerBike
     case lostBike
 
-    //
+    /// Search
     case searchBikes
 }
