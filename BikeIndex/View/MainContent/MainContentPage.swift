@@ -62,15 +62,19 @@ struct MainContentPage: View {
                 case .settings:
                     SettingsPage(path: $path)
                         .accessibilityIdentifier("Settings")
+                case .help:
+                    NavigableWebView(
+                        constantLink: .help,
+                        host: client.configuration.host
+                    )
+                    .environment(client)
                 case .registerBike:
                     RegisterBikeView(path: $path, mode: .myOwnBike)
                 case .lostBike:
                     RegisterBikeView(path: $path, mode: .myStolenBike)
                 case .searchBikes:
-                    NavigableWebView(
-                        url: .constant(URL("https://bikeindex.org/bikes?stolenness=all"))
-                    )
-                    .environment(client)
+                    SearchBikesView()
+                        .environment(client)
                 }
             }
             .navigationDestination(for: PersistentIdentifier.self) { identifier in

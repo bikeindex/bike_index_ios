@@ -7,21 +7,34 @@
 
 import SwiftUI
 
+/// Toolbar for authenticated users on the regular ``MainContentPage``.
 struct MainToolbar: ToolbarContent {
-    @Environment(Client.self) var client
-
-    @State var searchTerms: [SearchTerm] = []
-    @State var serialNumberSearch: String = ""
-    @State var searchMode: GlobalSearchMode = .withinHundredMiles
     @Binding var path: NavigationPath
 
     var body: some ToolbarContent {
-        ToolbarItem(placement: .topBarLeading) {
+        ToolbarItemGroup(placement: .topBarLeading) {
+            // Settings
             Button {
                 path.append(MainContent.settings)
             } label: {
                 Label("Settings", systemImage: "gearshape")
             }
+
+            // Help
+            Button {
+                path.append(MainContent.help)
+            } label: {
+                Label("Help", systemImage: "book.closed")
+            }
         }
+    }
+}
+
+#Preview {
+    NavigationStack {
+        Text("MainToolbar")
+            .toolbar {
+                MainToolbar(path: .constant(NavigationPath()))
+            }
     }
 }
