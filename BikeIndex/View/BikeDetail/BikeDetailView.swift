@@ -40,7 +40,7 @@ struct BikeDetailView: View {
 #Preview {
     do {
         let client = try Client()
-        let filename = "SingleBikeResponse_mock"
+        let filename = "MultipleBikeResponse_mock"
         let container: MultipleBikeResponseContainer? = try PreviewData.load(filename: filename)
         if let container, let responseBike = container.bikes.first {
             let bike = responseBike.modelInstance()
