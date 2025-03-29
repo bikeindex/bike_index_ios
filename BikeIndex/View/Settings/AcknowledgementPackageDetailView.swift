@@ -14,7 +14,7 @@ struct AcknowledgementPackageDetailView: View {
     var body: some View {
         Text(package.fullLicense())
             .toolbar {
-                ToolbarItemGroup(placement: .topBarTrailing) {
+                ToolbarItem(placement: .topBarTrailing) {
                     Button(
                         action: {
                             showRepositoryUrl = true
