@@ -48,7 +48,7 @@ extension ScannedBikePage {
         var onDisappear: MainContent?
 
         var title: String {
-            scan.identifier
+            scan.sticker.identifier
         }
 
         init(scan: ScannedBike, path: NavigationPath, dismiss: @escaping () -> Void) {

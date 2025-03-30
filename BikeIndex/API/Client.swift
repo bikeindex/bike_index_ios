@@ -54,7 +54,9 @@ typealias QueryItemTuple = (name: String, value: String)
     var refreshRunLoop: RunLoop
 
     // MARK: Deeplink State
-    var deeplinkModel: DeeplinkModel?
+    /// Deeplinks can be opened from stickers at any time.
+    /// Client will keep the authoritative reference to a deeplink manager.
+    var deeplinkManager = DeeplinkManager()
 
     init(
         keychain: KeychainSwift = KeychainSwift(),

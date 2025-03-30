@@ -44,7 +44,7 @@ struct BikeIndexApp: App {
                 MainContentPage()
                     .tint(Color.accentColor)
                     .onOpenURL { url in
-                        client.deeplinkModel = DeeplinkModel(scannedURL: url)
+                        client.deeplinkManager = DeeplinkManager(scannedURL: url)
                     }
             } else {
                 AuthView()

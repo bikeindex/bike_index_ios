@@ -84,6 +84,7 @@ struct AuthView: View {
                     title: "Sign In"
                 )
                 .environment(client)
+                .interactiveDismissDisabled()
                 .onAppear {
                     viewModel.authNavigator?.routeToAuthenticationPage = {
                         viewModel.historyNavigator.wkWebView?.load(
@@ -93,19 +94,19 @@ struct AuthView: View {
             }
         )
         .onAppear {
+            /// Connect AuthView.viewModel.authenticationNavigator.client at runtime
+            /// so that AuthenticationNavigator can respond to sign-in and complete the flow.
             viewModel.authNavigator?.client = client
         }
         .onOpenURL { url in
+            ///
             viewModel.display = true
 
-            client.deeplinkModel = DeeplinkModel(scannedURL: url)
+            client.deeplinkManager.scannedBike = ScannedBike(url: url)
 
-            print(
-                "@@ client.deeplink changed to \(String(describing: client.deeplinkModel?.scannedBike()?.url))"
+            Logger.deeplinks.info(
+                "AuthView handling scanned deeplink: \(String(describing: client.deeplinkManager.scannedBike?.url))"
             )
-            if let deeplink = client.deeplinkModel?.scannedBike()?.url {
-                print("@@ Client deeplink is \(deeplink)")
-            }
         }
     }
 }

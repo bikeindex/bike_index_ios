@@ -33,16 +33,14 @@ struct AuthSignInView: View {
                 }
             }
             .onChange(
-                of: client.deeplinkModel, initial: true,
+                of: client.deeplinkManager.scannedBike, initial: true,
                 { oldValue, newValue in
-                    if let deeplinkModel = newValue?.scannedBike()?.url,
-                        navigator.wkWebView?.url != deeplinkModel
-                    {
-                        navigator.wkWebView?.load(URLRequest(url: deeplinkModel))
-                        client.deeplinkModel = nil  // TODO: Reconsider clearing this, we want anyone that completes authentication to _still see the QR code_ until they fully act on it
-                    } else {
-                        print("CHange, but not on client.deeplinkModel")
+                    if let scan = newValue?.url,
+                        navigator.wkWebView?.url != scan {
+                        navigator.wkWebView?.load(URLRequest(url: scan))
                     }
+                    // TODO: Consider invalidating scannedBike, or leaving it in place for post-auth continuation.
+                    // client.deeplinkManager.scannedBike = nil
                 })
         }
     }
