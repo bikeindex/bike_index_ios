@@ -32,6 +32,7 @@ typealias QueryItemTuple = (name: String, value: String)
 /// Controls networking state and loads app configuration from the bundle.
 @MainActor
 @Observable class Client {
+    // MARK: Configuration and Helpers
     private let session = URLSession(configuration: .default)
 
     /// App configuration loaded from .xcconfig files to determine the network environment
@@ -47,6 +48,8 @@ typealias QueryItemTuple = (name: String, value: String)
         return config
     }()
 
+    // MARK: Authorization State
+
     /// Full OAuth token response.
     internal var auth: OAuthToken?
     /// Access token is provided by the OAuth flow to the application from `ASWebAuthenticationSession`.
@@ -57,6 +60,9 @@ typealias QueryItemTuple = (name: String, value: String)
     // MARK: Refresh Properties
     var refreshTimer: Timer?
     var refreshRunLoop: RunLoop
+
+    // MARK: Deeplink State
+    var deeplinkModel: DeeplinkModel?
 
     init(
         keychain: KeychainSwift = KeychainSwift(),

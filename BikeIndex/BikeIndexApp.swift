@@ -39,12 +39,26 @@ struct BikeIndexApp: App {
     /// Set up App
     var body: some Scene {
         WindowGroup {
-            if client.authenticated {
-                MainContentPage()
-                    .tint(Color.accentColor)
-            } else {
-                AuthView()
-                    .tint(Color.accentColor)
+            Group {
+                if client.authenticated {
+                    MainContentPage()
+                        .tint(Color.accentColor)
+                } else {
+                    AuthView()
+                        .tint(Color.accentColor)
+                    // TODO: Consider separating onOpenURL behavior by authenticated vs guest here to build everything without overloading and conflicting behavior
+                }
+            }
+            .sheet(item: $client.deeplinkModel, content: { deeplinkModel in
+                if let deeplink = deeplinkModel.scannedBike() {
+                    ScannedBikePage(scan: deeplink)
+                        .environment(client)
+                }
+            })
+            .onOpenURL { deeplinkURL in
+                print("URL is \(deeplinkURL)")
+                // TODO: Test with `xcrun simctl openurl booted "bikeindex://https://bikeindex.org/bikes/scanned/A40340"`
+                client.deeplinkModel = DeeplinkModel(scannedURL: deeplinkURL)
             }
         }
         .environment(client)
