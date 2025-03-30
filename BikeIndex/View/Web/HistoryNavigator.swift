@@ -8,6 +8,7 @@
 import OSLog
 import WebKit
 
+@Observable
 final class HistoryNavigator: NavigationResponder {
 
     // MARK: - Navigation Controller

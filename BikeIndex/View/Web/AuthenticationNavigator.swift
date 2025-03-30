@@ -8,12 +8,15 @@
 import OSLog
 import WebKit
 
+@Observable
 /// Delegate to intercept completed OAuth callback URLs, forward them to Client, and complete authentication.
 final class AuthenticationNavigator: NavigationResponder {
+    @ObservationIgnored
     /// Allow composition for ``AuthView/ViewModel`` to connect this client.
     /// Authentication cannot proceed until this value is assigned.
     var client: Client?
 
+    @ObservationIgnored
     var routeToAuthenticationPage: () -> Void = { }
 
     // MARK: - Decide Policy
