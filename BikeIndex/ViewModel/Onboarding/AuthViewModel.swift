@@ -30,7 +30,10 @@ extension AuthView {
         /// Object to intercept authentication events from the sign-in WebView and forward them to Client
         /// ``AuthenticationNavigator/client`` must be connected at runtime so that AuthNavigator can update ``Client``
         /// with authorization events.
-        let authNavigator = AuthenticationNavigator()
+        let historyNavigator = HistoryNavigator(child: AuthenticationNavigator())
+        var authNavigator: AuthenticationNavigator? {
+            historyNavigator.child as? AuthenticationNavigator
+        }
 
         /// AuthView may push to a Debug view (debug builds only)
         var topLevelPath = NavigationPath()

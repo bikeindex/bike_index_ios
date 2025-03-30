@@ -11,9 +11,7 @@ import XCTest
 
 final class BikeIndexOrgApiV3Tests: XCTestCase {
     func test_v3_bikes() throws {
-        let token = UUID().uuidString
         let config = EndpointConfiguration(
-            accessToken: token,
             host: URL("https://bikeindex.org/"))
 
         let identifier = "0987654321"

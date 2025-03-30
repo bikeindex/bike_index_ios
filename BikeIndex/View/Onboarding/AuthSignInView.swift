@@ -10,7 +10,7 @@ import SwiftUI
 struct AuthSignInView: View {
     @Environment(Client.self) var client
     @State var baseUrl: URL
-    var navigator: AuthenticationNavigator
+    var navigator: HistoryNavigator
     @Binding var display: Bool
     var title: String
     // TODO: Move to ViewModel?
@@ -20,7 +20,7 @@ struct AuthSignInView: View {
         NavigationStack {
             NavigableWebView(
                 url: $baseUrl,
-                navigator: HistoryNavigator(child: navigator))
+                navigator: navigator)
             .environment(client)
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)

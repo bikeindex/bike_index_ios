@@ -74,19 +74,19 @@ struct AuthView: View {
             // Also supports QR-code bike display in a web view.
             // TODO: Change $viewModel.display back to bool -- this way when the QR code > sign-in > change can *keep* the same web view and history, and just go to a new page.
             AuthSignInView(baseUrl: viewModel.oAuthUrl.unsafelyUnwrapped,
-                           navigator: viewModel.authNavigator,
+                           navigator: viewModel.historyNavigator,
                            display: $viewModel.display,
                            title: "Sign In")
             .environment(client)
             .onAppear {
-                viewModel.authNavigator.routeToAuthenticationPage = {
+                viewModel.authNavigator?.routeToAuthenticationPage = {
 //                    viewModel.navigationUrl = viewModel.oAuthUrl.unsafelyUnwrapped
-                    viewModel.authNavigator.wkWebView?.load(URLRequest(url: viewModel.oAuthUrl.unsafelyUnwrapped))
+                    viewModel.historyNavigator.wkWebView?.load(URLRequest(url: viewModel.oAuthUrl.unsafelyUnwrapped))
                 }
             }
         })
         .onAppear {
-            viewModel.authNavigator.client = client
+            viewModel.authNavigator?.client = client
         }
         .onOpenURL { url in
             client.deeplinkModel = DeeplinkModel(scannedURL: url)
