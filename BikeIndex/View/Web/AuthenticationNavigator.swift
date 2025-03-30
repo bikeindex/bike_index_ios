@@ -17,7 +17,7 @@ final class AuthenticationNavigator: NavigationResponder {
     var client: Client?
 
     @ObservationIgnored
-    var routeToAuthenticationPage: () -> Void = { }
+    var routeToAuthenticationPage: () -> Void = {}
 
     // MARK: - Decide Policy
 
@@ -26,9 +26,13 @@ final class AuthenticationNavigator: NavigationResponder {
         preferences: WKWebpagePreferences
     ) async -> (WKNavigationActionPolicy, WKWebpagePreferences) {
         if let url = navigationAction.request.url,
-           url.absoluteString == "https://bikeindex.org/session/new?return_to=%2Fbikes%2FA40340%2Fscanned%3Forganization_id%3D2167" {
-            print("ALRIGHT HERE WE FOUND THE NAVIGATION ACTION THAT NEEDS TO REDIRECT INTO CLIENT-INJECTED PARAMS")
-//            return (.allow, preferences)
+            url.absoluteString
+                == "https://bikeindex.org/session/new?return_to=%2Fbikes%2FA40340%2Fscanned%3Forganization_id%3D2167"
+        {
+            print(
+                "ALRIGHT HERE WE FOUND THE NAVIGATION ACTION THAT NEEDS TO REDIRECT INTO CLIENT-INJECTED PARAMS"
+            )
+            //            return (.allow, preferences)
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
                 self?.routeToAuthenticationPage()
@@ -36,7 +40,6 @@ final class AuthenticationNavigator: NavigationResponder {
 
             return (.cancel, preferences)
         }
-
 
         if let url = navigationAction.request.url,
             let scheme = url.scheme,
@@ -48,7 +51,8 @@ final class AuthenticationNavigator: NavigationResponder {
         }
 
         if let child {
-            return await child.webView(webView, decidePolicyFor: navigationAction, preferences: preferences)
+            return await child.webView(
+                webView, decidePolicyFor: navigationAction, preferences: preferences)
         } else {
             return (.allow, preferences)
         }

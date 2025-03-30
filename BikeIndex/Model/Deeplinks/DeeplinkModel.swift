@@ -56,7 +56,7 @@ final class ScannedBike {
             print("ScannedBike.init failed to find bikes/scanned/:id")
             return nil
         }
-        self.identifier = lastPath1 // TODO: Parse this out with regex
-        self.url = URL(string: "https://bikeindex.org/bikes/scanned/\(lastPath1)").unsafelyUnwrapped // TODO: Do this right
+        self.identifier = lastPath1  // TODO: Parse this out with regex
+        self.url = URL(string: "https://bikeindex.org/bikes/scanned/\(lastPath1)").unsafelyUnwrapped  // TODO: Do this right
     }
 }

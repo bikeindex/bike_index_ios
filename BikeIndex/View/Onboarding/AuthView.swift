@@ -67,24 +67,31 @@ struct AuthView: View {
                     }
                 }
         }
-        .sheet(isPresented: $viewModel.display, onDismiss: {
-            // Essential to reset state
-            viewModel.historyNavigator.wkWebView?.load(URLRequest(url: URL("about:blank")))
-        }, content: {
-            // Sign-in Dialog.
-            // Also supports QR-code bike display in a web view.
-            // TODO: Change $viewModel.display back to bool -- this way when the QR code > sign-in > change can *keep* the same web view and history, and just go to a new page.
-            AuthSignInView(baseUrl: viewModel.oAuthUrl.unsafelyUnwrapped,
-                           navigator: viewModel.historyNavigator,
-                           display: $viewModel.display,
-                           title: "Sign In")
-            .environment(client)
-            .onAppear {
-                viewModel.authNavigator?.routeToAuthenticationPage = {
-                    viewModel.historyNavigator.wkWebView?.load(URLRequest(url: viewModel.oAuthUrl.unsafelyUnwrapped))
+        .sheet(
+            isPresented: $viewModel.display,
+            onDismiss: {
+                // Essential to reset state
+                viewModel.historyNavigator.wkWebView?.load(URLRequest(url: URL("about:blank")))
+            },
+            content: {
+                // Sign-in Dialog.
+                // Also supports QR-code bike display in a web view.
+                // TODO: Change $viewModel.display back to bool -- this way when the QR code > sign-in > change can *keep* the same web view and history, and just go to a new page.
+                AuthSignInView(
+                    baseUrl: viewModel.oAuthUrl.unsafelyUnwrapped,
+                    navigator: viewModel.historyNavigator,
+                    display: $viewModel.display,
+                    title: "Sign In"
+                )
+                .environment(client)
+                .onAppear {
+                    viewModel.authNavigator?.routeToAuthenticationPage = {
+                        viewModel.historyNavigator.wkWebView?.load(
+                            URLRequest(url: viewModel.oAuthUrl.unsafelyUnwrapped))
+                    }
                 }
             }
-        })
+        )
         .onAppear {
             viewModel.authNavigator?.client = client
         }
@@ -93,7 +100,9 @@ struct AuthView: View {
 
             client.deeplinkModel = DeeplinkModel(scannedURL: url)
 
-            print("@@ client.deeplink changed to \(String(describing: client.deeplinkModel?.scannedBike()?.url))")
+            print(
+                "@@ client.deeplink changed to \(String(describing: client.deeplinkModel?.scannedBike()?.url))"
+            )
             if let deeplink = client.deeplinkModel?.scannedBike()?.url {
                 print("@@ Client deeplink is \(deeplink)")
             }

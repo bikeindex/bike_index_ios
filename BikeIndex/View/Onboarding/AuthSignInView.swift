@@ -20,7 +20,8 @@ struct AuthSignInView: View {
         NavigationStack {
             NavigableWebView(
                 url: $baseUrl,
-                navigator: navigator)
+                navigator: navigator
+            )
             .environment(client)
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
@@ -31,16 +32,18 @@ struct AuthSignInView: View {
                     }
                 }
             }
-            .onChange(of: client.deeplinkModel, initial: true, { oldValue, newValue in
-                if let deeplinkModel = newValue?.scannedBike()?.url,
-                   navigator.wkWebView?.url != deeplinkModel {
-                    navigator.wkWebView?.load(URLRequest(url: deeplinkModel))
-                    client.deeplinkModel = nil // TODO: Reconsider clearing this, we want anyone that completes authentication to _still see the QR code_ until they fully act on it
-                } else {
-                    print("CHange, but not on client.deeplinkModel")
-                }
-            })
+            .onChange(
+                of: client.deeplinkModel, initial: true,
+                { oldValue, newValue in
+                    if let deeplinkModel = newValue?.scannedBike()?.url,
+                        navigator.wkWebView?.url != deeplinkModel
+                    {
+                        navigator.wkWebView?.load(URLRequest(url: deeplinkModel))
+                        client.deeplinkModel = nil  // TODO: Reconsider clearing this, we want anyone that completes authentication to _still see the QR code_ until they fully act on it
+                    } else {
+                        print("CHange, but not on client.deeplinkModel")
+                    }
+                })
         }
     }
 }
-
