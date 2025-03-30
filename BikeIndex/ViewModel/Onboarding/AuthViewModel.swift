@@ -10,14 +10,14 @@ import SwiftUI
 
 extension AuthView {
     @MainActor @Observable
-    class ViewModel {
+    final class ViewModel {
         /// Control presenting a modal sheet for app authorization
         var displaySignIn = false
 
         /// Object to intercept authentication events from the sign-in webview and forward them to Client
-        /// `authNavigator.client` must be connected at runtime so that AuthNavigator can update ``Client``
+        /// ``AuthenticationNavigator/client`` must be connected at runtime so that AuthNavigator can update ``Client``
         /// with authorization events.
-        let authNavigator = AuthNavigationDelegate()
+        let authNavigator = AuthenticationNavigator()
 
         /// AuthView may push to a Debug view (debug builds only)
         var topLevelPath = NavigationPath()
