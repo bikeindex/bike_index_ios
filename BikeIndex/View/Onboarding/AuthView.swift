@@ -19,7 +19,7 @@ struct AuthView: View {
     @State private var viewModel = ViewModel()
 
     var body: some View {
-        @Bindable var boundClient = client
+        @Bindable var deeplinkManager = client.deeplinkManager
         NavigationStack(path: $viewModel.topLevelPath) {
             WelcomeView()
                 .toolbar {
@@ -73,7 +73,6 @@ struct AuthView: View {
             content: {
                 // Sign-in Dialog.
                 // Also supports QR-code bike display in a web view.
-                // TODO: Change $viewModel.display back to bool -- this way when the QR code > sign-in > change can *keep* the same web view and history, and just go to a new page.
                 AuthSignInView(
                     baseUrl: viewModel.signInPageRequest.url!,
                     navigator: viewModel.historyNavigator,
@@ -94,11 +93,10 @@ struct AuthView: View {
             /// so that AuthenticationNavigator can respond to sign-in and complete the flow.
             viewModel.authNavigator?.client = client
         }
-        .onOpenURL { url in
-            ///
+        .onChange(of: deeplinkManager.scannedBike) { oldValue, newValue in
+            /// When a deeplink arrives ``AuthView`` will display ``AuthSignInView`` which will also check
+            /// onChange(of: deeplinkManager.scannedBike) to display the universal link.
             viewModel.display = true
-
-            client.deeplinkManager.scannedBike = ScannedBike(url: url)
 
             Logger.deeplinks.info(
                 "AuthView handling scanned deeplink: \(String(describing: client.deeplinkManager.scannedBike?.url))"
