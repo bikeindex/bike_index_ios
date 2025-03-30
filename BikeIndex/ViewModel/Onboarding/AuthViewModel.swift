@@ -52,11 +52,11 @@ extension AuthView {
         }
 
         /// URL helper to find the right user-facing authorization page for this app config.
-        var oAuthUrl: URL? {
+        var signInPageRequest: URLRequest {
             // TODO: Modernize EndpointConfiguration
             OAuth.authorize(queryItems: configuration.authorizeQueryItems).request(
                 for: configuration.hostProvider
-            ).url
+            )
         }
     }
 }
