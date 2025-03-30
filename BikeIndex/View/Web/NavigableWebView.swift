@@ -40,6 +40,7 @@ struct NavigableWebView: View {
             navigator.wkWebView = $0
             $0.navigationDelegate = navigator
         }
+        .ignoresSafeArea()
         .onChange(
             of: url,
             { _, newValue in

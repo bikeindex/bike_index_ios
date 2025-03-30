@@ -35,6 +35,7 @@ struct AuthView: View {
     @State private var viewModel = ViewModel()
 
     var body: some View {
+        @Bindable var boundClient = client
         NavigationStack(path: $viewModel.topLevelPath) {
             WelcomeView()
                 .toolbar {
@@ -97,8 +98,17 @@ struct AuthView: View {
                 }
             }
         }
+        .sheet(item: $boundClient.deeplinkModel) { deeplink in
+            if let deeplink = deeplink.scannedBike() {
+                ScannedBikePage(scan: deeplink)
+                    .environment(client)
+            }
+        }
         .onAppear {
             viewModel.authNavigator.client = client
+        }
+        .onOpenURL { url in
+            client.deeplinkModel = DeeplinkModel(scannedURL: url)
         }
     }
 

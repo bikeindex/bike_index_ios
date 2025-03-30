@@ -8,6 +8,7 @@
 import OSLog
 import WebKit
 
+@Observable
 open class NavigationResponder: NSObject, WKNavigationDelegate {
     var child: NavigationResponder?
 

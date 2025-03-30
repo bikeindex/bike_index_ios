@@ -29,6 +29,10 @@ final class AuthenticationNavigator: NavigationResponder {
             return (WKNavigationActionPolicy.cancel, preferences)
         }
 
-        return (.allow, preferences)
+        if let child {
+            return await child.webView(webView, decidePolicyFor: navigationAction, preferences: preferences)
+        } else {
+            return (.allow, preferences)
+        }
     }
 }
