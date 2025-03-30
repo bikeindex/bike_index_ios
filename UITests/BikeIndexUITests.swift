@@ -60,9 +60,7 @@ final class BikeIndexUITests: XCTestCase {
         app.launch()
         try signIn(app: app)
 
-        let settings = app.buttons["Settings"]
-        _ = settings.waitForExistence(timeout: timeout)
-        settings.tap()
+        openSettings()
 
         let appIcon = app.buttons["App Icon"]
         _ = appIcon.waitForExistence(timeout: timeout)
@@ -106,9 +104,7 @@ final class BikeIndexUITests: XCTestCase {
 
         // SETUP
 
-        let settings = app.buttons["Settings"]
-        _ = settings.waitForExistence(timeout: timeout)
-        settings.tap()
+        openSettings()
 
         let acknowledgements = app.buttons["Acknowledgements"]
         _ = acknowledgements.waitForExistence(timeout: timeout)
@@ -222,6 +218,12 @@ final class BikeIndexUITests: XCTestCase {
 
     func link(with prefix: String) -> XCUIElement {
         app.links.matching(NSPredicate(format: "label BEGINSWITH %@", prefix)).element
+    }
+
+    func openSettings() {
+        let settings = app.buttons["Settings"]
+        _ = settings.waitForExistence(timeout: timeout)
+        settings.tap()
     }
 }
 
