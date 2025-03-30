@@ -37,12 +37,15 @@ struct BikeIndexApp: App {
     }()
 
     /// Set up App
+    /// NOTE: MainContentPage and AuthView **each** implement their own universal link handling
     var body: some Scene {
         WindowGroup {
             if client.authenticated {
                 MainContentPage()
                     .tint(Color.accentColor)
-                // TODO: Add deeplink handling within MainContentPage
+                    .onOpenURL { url in
+                        client.deeplinkModel = DeeplinkModel(scannedURL: url)
+                    }
             } else {
                 AuthView()
                     .tint(Color.accentColor)

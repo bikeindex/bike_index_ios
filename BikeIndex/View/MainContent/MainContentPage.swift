@@ -29,6 +29,7 @@ struct MainContentPage: View {
 
     var body: some View {
         NavigationStack(path: $path) {
+            @Bindable var boundClient = client
             ScrollView {
                 LazyVGrid(columns: Array(repeating: GridItem(), count: 1)) {
                     ForEach(ContentButton.allCases, id: \.id) { menuItem in
@@ -86,7 +87,22 @@ struct MainContentPage: View {
                     }
                 }
             }
-
+            .sheet(item: $boundClient.deeplinkModel, content: { deeplink in
+                if let scanned = deeplink.scannedBike() {
+                    let viewModel = ScannedBikePage.ViewModel(
+                        scan: scanned,
+                        path: path,
+                        dismiss: {
+                            boundClient.deeplinkModel = nil
+                        })
+                    ScannedBikePage(viewModel: viewModel)
+                    .onDisappear {
+                        if let exitPath = viewModel.onDisappear {
+                            path.append(exitPath)
+                        }
+                    }
+                }
+            })
             .alert(isPresented: $showError, error: lastError) {
                 Text("Error occurred")
             }

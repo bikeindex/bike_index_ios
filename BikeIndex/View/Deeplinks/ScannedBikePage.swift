@@ -12,17 +12,19 @@ struct ScannedBikePage: View {
     @Environment(Client.self) var client
     @State var viewModel: ViewModel
 
-    init(scan: ScannedBike) {
-        self.viewModel = ViewModel(scan: scan)
-    }
-
     var body: some View {
-        NavigationStack(path: $viewModel.path) {
-            // TODO: When a guest user taps sign-in this should open the **native** sign-in
-            NavigableWebView(url: $viewModel.scan.url,
+        NavigationStack {
+            NavigableWebView(url: .constant(viewModel.scan.url),
                              navigator: .guestNavigator(viewModel: viewModel))
                 .environment(client)
                 .navigationTitle(viewModel.title)
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button("Close") {
+                            viewModel.dismiss()
+                        }
+                    }
+                }
                 .onAppear {
                     print("Opening \(viewModel.scan.url)")
                 }
@@ -39,19 +41,23 @@ extension ScannedBikePage {
     @Observable
     final class ViewModel {
         var scan: ScannedBike
-        var path = NavigationPath()
+        var path: NavigationPath
+        var dismiss: () -> Void
+        var onDisappear: MainContent?
 
         var title: String {
             scan.identifier
         }
 
-        init(scan: ScannedBike) {
+        init(scan: ScannedBike, path: NavigationPath, dismiss: @escaping () -> Void) {
             self.scan = scan
             self.path = path
+            self.dismiss = dismiss
         }
     }
 }
 
+@Observable
 final class GuestNavigator: NavigationResponder {
     var viewModel: ScannedBikePage.ViewModel
 
@@ -61,8 +67,16 @@ final class GuestNavigator: NavigationResponder {
 
         // AuthView does a lot of extra work to make sure that sign-in works
 
-        if navigationAction.request.url == URL(string: "https://bikeindex.org/session/new") {
-//            viewModel.path
+// NICE TO HAVE: Native Bike details displaydismiss scanned page, push bike page by identifier, and cancel the web navigation -- but this cannot be built until the BikeDetailView can track association of the bike-detail sticker so we need to make sure that is brou;gh along for the ride
+//        if navigationAction.request.url == URL(string: "https://bikeindex.org/bikes/2553556") {
+//            viewModel.path.append("2553556")
+//        }
+
+        if navigationAction.request.url == URL(string: "https://bikeindex.org/bikes/new?bike_sticker=A40340") {
+            // TODO: Native QR code registration
+//            viewModel.dismiss()
+//            viewModel.onDisappear = MainContent.registerBike
+//            return (.cancel, preferences)
         }
 
         return (.allow, preferences)
@@ -77,9 +91,7 @@ extension NavigationResponder {
     /// Responder chain in action!
     static func guestNavigator(viewModel: ScannedBikePage.ViewModel) -> HistoryNavigator {
         HistoryNavigator(
-            child: AuthenticationNavigator(
-                child: GuestNavigator(viewModel: viewModel)
-            )
+            child: GuestNavigator(viewModel: viewModel)
         )
     }
 }

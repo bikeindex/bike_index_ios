@@ -35,7 +35,7 @@ struct AuthSignInView: View {
                 if let deeplinkModel = newValue?.scannedBike()?.url,
                    navigator.wkWebView?.url != deeplinkModel {
                     navigator.wkWebView?.load(URLRequest(url: deeplinkModel))
-                    client.deeplinkModel = nil
+                    client.deeplinkModel = nil // TODO: Reconsider clearing this, we want anyone that completes authentication to _still see the QR code_ until they fully act on it
                 } else {
                     print("CHange, but not on client.deeplinkModel")
                 }
