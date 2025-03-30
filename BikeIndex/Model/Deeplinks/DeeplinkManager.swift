@@ -34,6 +34,11 @@ extension ScannedBike {
             print("ScannedBike.init failed on nil URL input")
             return nil
         }
+        // TODO: Parse this out with regex
+        self.sticker = Sticker(url: url)
+
+        // TODO: During development universal links have a bikeindex:// prefix.
+        // Reimplement this without the prefix when validation is closer.
         let lastPath1 = url.lastPathComponent
         url.deleteLastPathComponent()
         let lastPath2 = url.lastPathComponent
@@ -44,8 +49,6 @@ extension ScannedBike {
             print("ScannedBike.init failed to find bikes/scanned/:id")
             return nil
         }
-        // TODO: Parse this out with regex
-        self.sticker = Sticker(url: url)
         self.url = URL(string: "https://bikeindex.org/bikes/scanned/\(lastPath1)").unsafelyUnwrapped
     }
 }
