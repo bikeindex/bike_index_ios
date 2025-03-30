@@ -18,8 +18,8 @@ struct MainContentPage: View {
     @State var path = NavigationPath()
 
     // Data handling and error handling
-    var contentModel = MainContentModel()
-    @State var lastError: MainContentModel.Error?
+    var contentModel = ViewModel()
+    @State var lastError: ViewModel.Error?
     @State var showError: Bool = false
 
     @SectionedQuery(
