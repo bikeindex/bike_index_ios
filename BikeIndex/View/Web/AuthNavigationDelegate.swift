@@ -9,7 +9,7 @@ import OSLog
 import WebKit
 
 /// Delegate to intercept completed OAuth callback URLs, forward them to Client, and complete authentication.
-final class AuthNavigationDelegate: NavigatorChild {
+final class AuthNavigationDelegate: NavigationResponder {
     var client: Client?
 
     // MARK: - Decide Policy
