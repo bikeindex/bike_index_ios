@@ -38,6 +38,11 @@ final class AuthenticationNavigator: NavigationResponder {
 
         }
 
+        /// Re-route the AuthSignInView experience away from /session/new.
+        /// - /session/new is only for browser sessions.
+        /// - APp sessions must use the ``AuthView/ViewModel/signInPageRequest`` page (or sign-in will fail!)
+        /// How does the user get to /session/new? A) if they navigate around the sign-in page
+        /// B) if they scan a QR code Bike Sticker
         if let url = navigationAction.request.url,
             url.absoluteString
                 == "https://bikeindex.org/session/new?return_to=%2Fbikes%2FA40340%2Fscanned%3Forganization_id%3D2167"
