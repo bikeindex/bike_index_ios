@@ -10,9 +10,6 @@ import SwiftUI
 import WebKit
 import WebViewKit
 
-/// NOTE: Network traffic for ASWebAuthenticationSession will run in the WebKitNetworking process!
-/// This means that Proxyman will not show app authentication in the "Bike Index" app. You will have to look for the
-/// host or across all networking in Proxyman!
 /// Entry-point for all users to sign-in.
 struct AuthView: View {
     /// API client for performing auth

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import WebKit
+import OSLog
 
 struct ScannedBikePage: View {
     @Environment(Client.self) var client
@@ -28,15 +29,10 @@ struct ScannedBikePage: View {
                 }
             }
             .onAppear {
-                print("Opening \(viewModel.scan.url)")
+                Logger.views.debug("ScannedBikePage opening \(viewModel.scan.url)")
             }
         }
     }
-}
-
-#Preview {
-//    ScannedBike(url: URL(stringLiteral: "https://bikeindex.org/bikes/scanned/A40340"))
-//        .environment(try Client())
 }
 
 extension ScannedBikePage {
