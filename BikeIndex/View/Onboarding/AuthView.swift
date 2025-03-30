@@ -77,8 +77,7 @@ struct AuthView: View {
                 AuthSignInView(
                     baseUrl: viewModel.oAuthUrl.unsafelyUnwrapped,
                     navigator: viewModel.historyNavigator,
-                    display: $viewModel.display,
-                    title: "Sign In"
+                    display: $viewModel.display
                 )
                 .environment(client)
                 .interactiveDismissDisabled()

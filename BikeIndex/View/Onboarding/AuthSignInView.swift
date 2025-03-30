@@ -12,8 +12,7 @@ struct AuthSignInView: View {
     @State var baseUrl: URL
     var navigator: HistoryNavigator
     @Binding var display: Bool
-    var title: String
-    // TODO: Move to ViewModel?
+    @State private var title: String = "Sign in"
 
     var body: some View {
         let _ = Self._printChanges()
@@ -35,13 +34,15 @@ struct AuthSignInView: View {
             .onChange(
                 of: client.deeplinkManager.scannedBike, initial: true,
                 { oldValue, newValue in
-                    if let scan = newValue?.url,
-                        navigator.wkWebView?.url != scan {
-                        navigator.wkWebView?.load(URLRequest(url: scan))
+                    if let scan = newValue, navigator.wkWebView?.url != scan.url {
+                        navigator.wkWebView?.load(URLRequest(url: scan.url))
+                        title = scan.sticker.identifier
                     }
+
                     // TODO: Consider invalidating scannedBike, or leaving it in place for post-auth continuation.
                     // client.deeplinkManager.scannedBike = nil
-                })
+                }
+            )
         }
     }
 }
