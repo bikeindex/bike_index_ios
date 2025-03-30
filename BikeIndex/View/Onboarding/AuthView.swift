@@ -10,19 +10,6 @@ import SwiftUI
 import WebKit
 import WebViewKit
 
-extension ClientConfiguration {
-    fileprivate var authorizeQueryItems: [URLQueryItem] {
-        return [
-            ("client_id", clientId),
-            ("response_type", "code"),
-            ("redirect_uri", redirectUri),
-            ("scope", oauthScopes.queryItem),
-        ].map { (item: QueryItemTuple) in
-            URLQueryItem(name: item.name, value: item.value)
-        }
-    }
-}
-
 /// NOTE: Network traffic for ASWebAuthenticationSession will run in the WebKitNetworking process!
 /// This means that Proxyman will not show app authentication in the "Bike Index" app. You will have to look for the
 /// host or across all networking in Proxyman!
@@ -41,7 +28,7 @@ struct AuthView: View {
                 .toolbar {
                     ToolbarItem(placement: .bottomBar) {
                         Button {
-                            viewModel.displaySignIn = true
+                            viewModel.display = .displaySignIn
                         } label: {
                             Label(
                                 "Sign in and get started",
@@ -80,43 +67,25 @@ struct AuthView: View {
                     }
                 }
         }
-        .sheet(isPresented: $viewModel.displaySignIn) {
-            NavigationStack {
-                NavigableWebView(
-                    url: .constant(oAuthUrl!),
-                    navigator: HistoryNavigator(child: viewModel.authNavigator)
-                )
-                .environment(client)
-                .navigationTitle("Sign in")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button("Close") {
-                            viewModel.displaySignIn = false
-                        }
-                    }
-                }
-            }
-        }
-        .sheet(item: $boundClient.deeplinkModel) { deeplink in
-            if let deeplink = deeplink.scannedBike() {
-                ScannedBikePage(scan: deeplink)
-                    .environment(client)
-            }
+        .sheet(item: $viewModel.display) { mode in
+            // Sign-in Dialog.
+            // Also supports QR-code bike display in a web view.
+            // TODO: Change $viewModel.display back to bool -- this way when the QR code > sign-in > change can *keep* the same web view and history, and just go to a new page.
+            AuthSignInView(oAuthUrl: $viewModel.navigationUrl,
+                           navigator: viewModel.authNavigator,
+                           displayMode:  $viewModel.display,
+                           title: "Sign In")
+            .environment(client)
         }
         .onAppear {
             viewModel.authNavigator.client = client
         }
         .onOpenURL { url in
             client.deeplinkModel = DeeplinkModel(scannedURL: url)
+            if let deeplink = client.deeplinkModel?.scannedBike() {
+                viewModel.display = .deeplink(url: deeplink.url)
+            }
         }
-    }
-
-    /// URL helper to find the right user-facing authorization page for this app config.
-    private var oAuthUrl: URL? {
-        OAuth.authorize(queryItems: client.configuration.authorizeQueryItems).request(
-            for: client.api.configuration
-        ).url
     }
 }
 

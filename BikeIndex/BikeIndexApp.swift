@@ -39,28 +39,14 @@ struct BikeIndexApp: App {
     /// Set up App
     var body: some Scene {
         WindowGroup {
-//            Group {
-                if client.authenticated {
-                    MainContentPage()
-                        .tint(Color.accentColor)
-                    // TODO: Add deeplink handling within MainContentPage
-                } else {
-                    AuthView()
-                        .tint(Color.accentColor)
-                }
-//            }
-//            .tint(Color.accentColor)
-//            .sheet(item: $client.deeplinkModel, content: { deeplinkModel in
-//                if let deeplink = deeplinkModel.scannedBike() {
-//                    ScannedBikePage(scan: deeplink)
-//                        .environment(client)
-//                }
-//            })
-//            .onOpenURL { deeplinkURL in
-//                print("URL is \(deeplinkURL)")
-//                // TODO: Test with `xcrun simctl openurl booted "bikeindex://https://bikeindex.org/bikes/scanned/A40340"`
-//                client.deeplinkModel = DeeplinkModel(scannedURL: deeplinkURL)
-//            }
+            if client.authenticated {
+                MainContentPage()
+                    .tint(Color.accentColor)
+                // TODO: Add deeplink handling within MainContentPage
+            } else {
+                AuthView()
+                    .tint(Color.accentColor)
+            }
         }
         .environment(client)
         .modelContainer(sharedModelContainer)

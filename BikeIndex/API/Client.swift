@@ -14,13 +14,11 @@ import WebKit
 /// Instances created by Client at runtime to provide the full information for EndpointProvider instances.
 /// This allows safe API access.
 protocol EndpointConfigurationProvider {
-    var accessToken: Token? { set get }
     var host: URL { get }
 }
 
 /// Instance of EndpointConfigurationProvider
 struct EndpointConfiguration: EndpointConfigurationProvider {
-    var accessToken: Token?
     let host: URL
 }
 
@@ -72,9 +70,7 @@ typealias QueryItemTuple = (name: String, value: String)
         self.refreshRunLoop = refreshRunLoop
         let configuration = try ClientConfiguration.bundledConfig()
         self.api = API(
-            configuration: EndpointConfiguration(
-                accessToken: "",
-                host: configuration.host),
+            configuration: EndpointConfiguration(host: configuration.host),
             session: session)
         self.configuration = configuration
         loadLastToken()
@@ -103,7 +99,7 @@ typealias QueryItemTuple = (name: String, value: String)
 
                 auth = lastKnownAuth
                 accessToken = lastKnownAuth.accessToken
-                api.configuration.accessToken = lastKnownAuth.accessToken
+                api.accessToken = lastKnownAuth.accessToken
 
                 setupRefreshTimer()
 
@@ -144,9 +140,7 @@ typealias QueryItemTuple = (name: String, value: String)
         accessToken = nil
         auth = nil
         api = API(
-            configuration: EndpointConfiguration(
-                accessToken: "",
-                host: configuration.host),
+            configuration: EndpointConfiguration(host: configuration.host),
             session: session)
     }
 
@@ -199,7 +193,7 @@ typealias QueryItemTuple = (name: String, value: String)
                 return false
             }
             self.auth = fullTokenAuth
-            self.api.configuration.accessToken = fullTokenAuth.accessToken
+            self.api.accessToken = fullTokenAuth.accessToken
             self.setupRefreshTimer()
             do {
                 let data = try JSONEncoder().encode(fullTokenAuth)
@@ -270,7 +264,7 @@ typealias QueryItemTuple = (name: String, value: String)
                 }
 
                 self.auth = refreshedToken
-                self.api.configuration.accessToken = refreshedToken.accessToken
+                self.api.accessToken = refreshedToken.accessToken
                 self.setupRefreshTimer()
                 do {
                     let data = try JSONEncoder().encode(refreshedToken)

@@ -43,6 +43,7 @@ protocol APIEndpoint: Sendable {
 @MainActor
 final class API {
     var configuration: EndpointConfigurationProvider
+    var accessToken: String?
     private(set) var session: URLSession
 
     init(configuration: EndpointConfigurationProvider, session: URLSession = URLSession.shared) {
@@ -52,7 +53,7 @@ final class API {
 
     func get(_ endpoint: APIEndpoint) async -> Result<(any Decodable), Error> {
         var request = endpoint.request(for: configuration)
-        if endpoint.authorized, let accessToken = configuration.accessToken {
+        if endpoint.authorized, let accessToken {
             request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
             )
         }
@@ -84,7 +85,7 @@ final class API {
     /// Endpoint
     func post(_ endpoint: APIEndpoint) async -> Result<(any Decodable), Error> {
         var request = endpoint.request(for: configuration)
-        if endpoint.authorized, let accessToken = configuration.accessToken {
+        if endpoint.authorized, let accessToken {
             request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
             )
         }
