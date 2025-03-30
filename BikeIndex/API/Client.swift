@@ -11,14 +11,8 @@ import OSLog
 import URLEncodedForm
 import WebKit
 
-/// Instances created by Client at runtime to provide the full information for EndpointProvider instances.
-/// This allows safe API access.
-protocol EndpointConfigurationProvider {
-    var host: URL { get }
-}
-
-/// Instance of EndpointConfigurationProvider
-struct EndpointConfiguration: EndpointConfigurationProvider {
+/// Provide a subset of ``ClientConfiguration`` to control access.
+struct HostProvider {
     let host: URL
 }
 
@@ -70,7 +64,7 @@ typealias QueryItemTuple = (name: String, value: String)
         self.refreshRunLoop = refreshRunLoop
         let configuration = try ClientConfiguration.bundledConfig()
         self.api = API(
-            configuration: EndpointConfiguration(host: configuration.host),
+            configuration: configuration.hostProvider,
             session: session)
         self.configuration = configuration
         loadLastToken()
@@ -140,7 +134,7 @@ typealias QueryItemTuple = (name: String, value: String)
         accessToken = nil
         auth = nil
         api = API(
-            configuration: EndpointConfiguration(host: configuration.host),
+            configuration: configuration.hostProvider,
             session: session)
     }
 

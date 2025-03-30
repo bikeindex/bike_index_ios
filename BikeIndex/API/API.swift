@@ -36,17 +36,19 @@ protocol APIEndpoint: Sendable {
     var requestModel: Encodable? { get }
     var responseModel: any Decodable.Type { get }
 
-    func request(for config: EndpointConfigurationProvider) -> URLRequest
+    func request(for config: HostProvider) -> URLRequest
 }
 
-/// API client to perform networking operations regardless of external state
+/// API client to perform networking operations with only essential state.
 @MainActor
 final class API {
-    var configuration: EndpointConfigurationProvider
+    /// Retrieve networking essentials, namely host URL, to apply to all requests
+    private var configuration: HostProvider
+    /// Receive the known-good accessToken from Client for stateful network requests.
     var accessToken: String?
     private(set) var session: URLSession
 
-    init(configuration: EndpointConfigurationProvider, session: URLSession = URLSession.shared) {
+    init(configuration: HostProvider, session: URLSession = URLSession.shared) {
         self.configuration = configuration
         self.session = session
     }

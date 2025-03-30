@@ -32,6 +32,8 @@ struct ClientConfiguration {
     /// Defaults to all
     let oauthScopes: [Scope] = Scope.allCases
 
+    // MARK: -
+
     /// Load the API network service information and OAuth configuration from BikeIndex-\*.xcconfig project files.
     /// Please see BikeIndex-template.xcconfig for instructions to provide these values.
     static func bundledConfig() throws -> Self {
@@ -65,6 +67,13 @@ struct ClientConfiguration {
             secret: secret,
             redirectUri: redirectUri)
     }
+
+    // MARK: General Access
+    var hostProvider: HostProvider {
+        HostProvider(host: host)
+    }
+
+    // MARK: Errors
 
     enum ClientConfigurationError: Error {
         case failedToLoadBundle

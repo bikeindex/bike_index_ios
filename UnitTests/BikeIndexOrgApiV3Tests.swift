@@ -11,7 +11,7 @@ import XCTest
 
 final class BikeIndexOrgApiV3Tests: XCTestCase {
     func test_v3_bikes() throws {
-        let config = EndpointConfiguration(
+        let config = HostProvider(
             host: URL("https://bikeindex.org/"))
 
         let identifier = "0987654321"

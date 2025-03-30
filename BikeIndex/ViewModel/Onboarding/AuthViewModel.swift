@@ -55,7 +55,7 @@ extension AuthView {
         var oAuthUrl: URL? {
             // TODO: Modernize EndpointConfiguration
             OAuth.authorize(queryItems: configuration.authorizeQueryItems).request(
-                for: EndpointConfiguration(host: configuration.host)
+                for: configuration.hostProvider
             ).url
         }
     }
