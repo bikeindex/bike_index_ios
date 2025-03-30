@@ -104,6 +104,9 @@ struct MainContentPage: View {
             .alert(isPresented: $showError, error: lastError) {
                 Text("Error occurred")
             }
+            .onAppear {
+                Logger.views.debug("Starting main content page with deeplink scanned bike \(String(describing: deeplinkManager.scannedBike))")
+            }
         }
         .task {
             await fetchMainContentData()

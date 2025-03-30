@@ -25,21 +25,34 @@ final class AuthenticationNavigator: NavigationResponder {
         _ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
         preferences: WKWebpagePreferences
     ) async -> (WKNavigationActionPolicy, WKWebpagePreferences) {
+        // TODO: Consolidate these two if-statements
+
+        if let url = navigationAction.request.url {
+            let firstHalf = url.absoluteString.split(separator: "?")[0]
+            if firstHalf == "https://bikeindex.org/session/new" {
+                print(
+                    "Alright, so this request has to be picked out and directed to `routeToAuthenticationPage`"
+                )
+            }
+            let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
+
+        }
+
         if let url = navigationAction.request.url,
             url.absoluteString
                 == "https://bikeindex.org/session/new?return_to=%2Fbikes%2FA40340%2Fscanned%3Forganization_id%3D2167"
         {
-            print(
-                "ALRIGHT HERE WE FOUND THE NAVIGATION ACTION THAT NEEDS TO REDIRECT INTO CLIENT-INJECTED PARAMS"
-            )
             //            return (.allow, preferences)
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+                // TODO: Move this out of asyncAfter and into a different delegate function that occurs _after_ this decision, or elsewhere
                 self?.routeToAuthenticationPage()
             }
 
             return (.cancel, preferences)
         }
+
+        // MARK: - Stable
 
         if let url = navigationAction.request.url,
             let scheme = url.scheme,

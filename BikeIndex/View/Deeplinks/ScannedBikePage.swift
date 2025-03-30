@@ -73,13 +73,14 @@ final class GuestNavigator: NavigationResponder {
         //            viewModel.path.append("2553556")
         //        }
 
-        if navigationAction.request.url
-            == URL(string: "https://bikeindex.org/bikes/new?bike_sticker=A40340")
+        if let url = navigationAction.request.url,
+           url == URL(string: "https://bikeindex.org/bikes/new?bike_sticker=A40340")
         {
+            let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
             // TODO: Native QR code registration
-            //            viewModel.dismiss()
-            //            viewModel.onDisappear = MainContent.registerBike
-            //            return (.cancel, preferences)
+            //viewModel.dismiss()
+            //viewModel.onDisappear = MainContent.registerBike
+            //return (.cancel, preferences)
         }
 
         return (.allow, preferences)
