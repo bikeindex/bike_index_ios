@@ -30,7 +30,9 @@ final class AuthenticationNavigator: NavigationResponder {
             print("ALRIGHT HERE WE FOUND THE NAVIGATION ACTION THAT NEEDS TO REDIRECT INTO CLIENT-INJECTED PARAMS")
 //            return (.allow, preferences)
 
-            routeToAuthenticationPage()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+                self?.routeToAuthenticationPage()
+            }
 
             return (.cancel, preferences)
         }

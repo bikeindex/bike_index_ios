@@ -68,7 +68,8 @@ struct AuthView: View {
                 }
         }
         .sheet(isPresented: $viewModel.display, onDismiss: {
-
+            // Essential to reset state
+            viewModel.historyNavigator.wkWebView?.load(URLRequest(url: URL("about:blank")))
         }, content: {
             // Sign-in Dialog.
             // Also supports QR-code bike display in a web view.
@@ -80,7 +81,6 @@ struct AuthView: View {
             .environment(client)
             .onAppear {
                 viewModel.authNavigator?.routeToAuthenticationPage = {
-//                    viewModel.navigationUrl = viewModel.oAuthUrl.unsafelyUnwrapped
                     viewModel.historyNavigator.wkWebView?.load(URLRequest(url: viewModel.oAuthUrl.unsafelyUnwrapped))
                 }
             }
@@ -89,14 +89,13 @@ struct AuthView: View {
             viewModel.authNavigator?.client = client
         }
         .onOpenURL { url in
+            viewModel.display = true
+
             client.deeplinkModel = DeeplinkModel(scannedURL: url)
-            if let deeplink = client.deeplinkModel?.scannedBike()?.url,
-                viewModel.display == false {
+
+            print("@@ client.deeplink changed to \(String(describing: client.deeplinkModel?.scannedBike()?.url))")
+            if let deeplink = client.deeplinkModel?.scannedBike()?.url {
                 print("@@ Client deeplink is \(deeplink)")
-                viewModel.display = true
-//                if viewModel.authNavigator.wkWebView?.url != deeplink {
-//                    viewModel.authNavigator.wkWebView?.load(URLRequest(url: deeplink))
-//                }
             }
         }
     }

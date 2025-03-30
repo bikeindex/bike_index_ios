@@ -35,6 +35,7 @@ struct AuthSignInView: View {
                 if let deeplinkModel = newValue?.scannedBike()?.url,
                    navigator.wkWebView?.url != deeplinkModel {
                     navigator.wkWebView?.load(URLRequest(url: deeplinkModel))
+                    client.deeplinkModel = nil
                 } else {
                     print("CHange, but not on client.deeplinkModel")
                 }
