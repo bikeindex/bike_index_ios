@@ -28,7 +28,7 @@ struct AuthView: View {
                 .toolbar {
                     ToolbarItem(placement: .bottomBar) {
                         Button {
-                            viewModel.display = .displaySignIn
+                            viewModel.display = true
                         } label: {
                             Label(
                                 "Sign in and get started",
@@ -67,23 +67,36 @@ struct AuthView: View {
                     }
                 }
         }
-        .sheet(item: $viewModel.display) { mode in
+        .sheet(isPresented: $viewModel.display, onDismiss: {
+
+        }, content: {
             // Sign-in Dialog.
             // Also supports QR-code bike display in a web view.
             // TODO: Change $viewModel.display back to bool -- this way when the QR code > sign-in > change can *keep* the same web view and history, and just go to a new page.
-            AuthSignInView(oAuthUrl: $viewModel.navigationUrl,
+            AuthSignInView(baseUrl: viewModel.oAuthUrl.unsafelyUnwrapped,
                            navigator: viewModel.authNavigator,
-                           displayMode:  $viewModel.display,
+                           display: $viewModel.display,
                            title: "Sign In")
             .environment(client)
-        }
+            .onAppear {
+                viewModel.authNavigator.routeToAuthenticationPage = {
+//                    viewModel.navigationUrl = viewModel.oAuthUrl.unsafelyUnwrapped
+                    viewModel.authNavigator.wkWebView?.load(URLRequest(url: viewModel.oAuthUrl.unsafelyUnwrapped))
+                }
+            }
+        })
         .onAppear {
             viewModel.authNavigator.client = client
         }
         .onOpenURL { url in
             client.deeplinkModel = DeeplinkModel(scannedURL: url)
-            if let deeplink = client.deeplinkModel?.scannedBike() {
-                viewModel.display = .deeplink(url: deeplink.url)
+            if let deeplink = client.deeplinkModel?.scannedBike()?.url,
+                viewModel.display == false {
+                print("@@ Client deeplink is \(deeplink)")
+                viewModel.display = true
+//                if viewModel.authNavigator.wkWebView?.url != deeplink {
+//                    viewModel.authNavigator.wkWebView?.load(URLRequest(url: deeplink))
+//                }
             }
         }
     }

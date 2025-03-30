@@ -9,9 +9,9 @@ import SwiftUI
 
 struct AuthSignInView: View {
     @Environment(Client.self) var client
-    @Binding var oAuthUrl: URL
+    @State var baseUrl: URL
     var navigator: AuthenticationNavigator
-    @Binding var displayMode: AuthView.ViewModel.Sheet?
+    @Binding var display: Bool
     var title: String
     // TODO: Move to ViewModel?
 
@@ -19,7 +19,7 @@ struct AuthSignInView: View {
         let _ = Self._printChanges()
         NavigationStack {
             NavigableWebView(
-                url: $oAuthUrl,
+                url: $baseUrl,
                 navigator: HistoryNavigator(child: navigator))
             .environment(client)
             .navigationTitle(title)
@@ -27,15 +27,18 @@ struct AuthSignInView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Close") {
-                        displayMode = nil
+                        display = false
                     }
                 }
             }
-            .onAppear {
-                navigator.routeToAuthenticationPage = {
-                    displayMode = .displaySignIn
+            .onChange(of: client.deeplinkModel, initial: true, { oldValue, newValue in
+                if let deeplinkModel = newValue?.scannedBike()?.url,
+                   navigator.wkWebView?.url != deeplinkModel {
+                    navigator.wkWebView?.load(URLRequest(url: deeplinkModel))
+                } else {
+                    print("CHange, but not on client.deeplinkModel")
                 }
-            }
+            })
         }
     }
 }

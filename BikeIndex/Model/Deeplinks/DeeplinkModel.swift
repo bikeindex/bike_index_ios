@@ -8,7 +8,7 @@
 import Foundation
 
 @Observable
-final class DeeplinkModel: Identifiable {
+final class DeeplinkModel: Identifiable, Equatable {
     var scannedURL: URL?
 
     init(scannedURL: URL? = nil) {
@@ -17,6 +17,12 @@ final class DeeplinkModel: Identifiable {
 
     func scannedBike() -> ScannedBike? {
         ScannedBike(url: scannedURL)
+    }
+
+    // MARK: Equatable
+
+    static func == (lhs: DeeplinkModel, rhs: DeeplinkModel) -> Bool {
+        lhs.scannedURL == rhs.scannedURL
     }
 }
 
@@ -36,14 +42,20 @@ final class ScannedBike {
     /// - bikes/scanned/:id
     /// - CHECK LAST PATH COMPONENT
     init?(url: URL?) {
-        guard var url else { return nil }
+        guard var url else {
+            print("ScannedBike.init failed on nil URL input")
+            return nil
+        }
         let lastPath1 = url.lastPathComponent
         url.deleteLastPathComponent()
         let lastPath2 = url.lastPathComponent
         url.deleteLastPathComponent()
         let lastpath3 = url.lastPathComponent
 
-        guard lastPath2 == "scanned", lastpath3 == "bikes" else { return nil }
+        guard lastPath2 == "scanned", lastpath3 == "bikes" else {
+            print("ScannedBike.init failed to find bikes/scanned/:id")
+            return nil
+        }
         self.identifier = lastPath1 // TODO: Parse this out with regex
         self.url = URL(string: "https://bikeindex.org/bikes/scanned/\(lastPath1)").unsafelyUnwrapped // TODO: Do this right
     }

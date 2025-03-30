@@ -12,8 +12,6 @@ final class HistoryNavigator: NavigationResponder {
 
     // MARK: - Navigation Controller
 
-    var wkWebView: WKWebView?
-
     var canGoBack: Bool {
         wkWebView?.canGoBack ?? false
     }

@@ -12,11 +12,18 @@ import WebKit
 open class NavigationResponder: NSObject, WKNavigationDelegate {
     var child: NavigationResponder?
 
+    var wkWebView: WKWebView?
+
     init(child: NavigationResponder? = nil) {
         self.child = child
         if child != nil {
             Logger.views.debug("Created Navigator instance with child \(child, privacy: .public)")
         }
+    }
+
+    func assign(wkWebView: WKWebView?) {
+        self.wkWebView = wkWebView
+        child?.assign(wkWebView: wkWebView)
     }
 
     // MARK: - Navigation Delegate

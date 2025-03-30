@@ -25,20 +25,7 @@ extension AuthView {
     @MainActor @Observable
     final class ViewModel {
         /// Control presenting a modal sheet for app authorization
-        var display: Sheet? {
-            didSet {
-                switch display {
-                case .displaySignIn:
-                    navigationUrl = oAuthUrl.unsafelyUnwrapped
-                case .deeplink(let url):
-                    navigationUrl = url
-                case nil:
-                    navigationUrl = URL("about:blank")
-                }
-            }
-        }
-
-        var navigationUrl: URL = URL("about:blank")
+        var display: Bool = false
 
         /// Object to intercept authentication events from the sign-in WebView and forward them to Client
         /// ``AuthenticationNavigator/client`` must be connected at runtime so that AuthNavigator can update ``Client``
@@ -61,17 +48,9 @@ extension AuthView {
             case help
         }
 
-        /// Destinations to present **within** AuthView
-        enum Sheet: Hashable, Identifiable {
-            var id: Self { self }
-
-            case displaySignIn
-            case deeplink(url: URL)
-        }
-
         /// URL helper to find the right user-facing authorization page for this app config.
-        private var oAuthUrl: URL? {
-            // TODO: Make this easier to work with -- separate Client (runtime state) from Configuration (bundled values)
+        var oAuthUrl: URL? {
+            // TODO: Modernize EndpointConfiguration
             OAuth.authorize(queryItems: configuration.authorizeQueryItems).request(
                 for: EndpointConfiguration(host: configuration.host)
             ).url
