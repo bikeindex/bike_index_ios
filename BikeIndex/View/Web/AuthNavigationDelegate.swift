@@ -9,7 +9,9 @@ import OSLog
 import WebKit
 
 /// Delegate to intercept completed OAuth callback URLs, forward them to Client, and complete authentication.
-final class AuthNavigationDelegate: NavigatorChild {
+final class AuthenticationNavigator: NavigationResponder {
+    /// Allow composition for ``AuthView/ViewModel`` to connect this client.
+    /// Authentication cannot proceed until this value is assigned.
     var client: Client?
 
     // MARK: - Decide Policy

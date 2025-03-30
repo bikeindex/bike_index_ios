@@ -1,5 +1,5 @@
 //
-//  NavigatorChild.swift
+//  NavigationResponder.swift
 //  BikeIndex
 //
 //  Created by Jack on 1/14/24.
@@ -8,10 +8,10 @@
 import OSLog
 import WebKit
 
-open class NavigatorChild: NSObject, WKNavigationDelegate {
-    var child: NavigatorChild?
+open class NavigationResponder: NSObject, WKNavigationDelegate {
+    var child: NavigationResponder?
 
-    init(child: NavigatorChild? = nil) {
+    init(child: NavigationResponder? = nil) {
         self.child = child
         if child != nil {
             Logger.views.debug("Created Navigator instance with child \(child, privacy: .public)")
