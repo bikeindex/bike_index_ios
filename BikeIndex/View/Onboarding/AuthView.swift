@@ -81,7 +81,7 @@ struct AuthView: View {
                 .environment(client)
                 .interactiveDismissDisabled()
                 .onAppear {
-                    viewModel.authNavigator?.routeToAuthenticationPage = {
+                    viewModel.authNavigator.routeToAuthenticationPage = {
                         let webView = viewModel.historyNavigator.wkWebView
                         webView?.load(viewModel.signInPageRequest)
                     }
@@ -91,7 +91,7 @@ struct AuthView: View {
         .onAppear {
             /// Connect AuthView.viewModel.authenticationNavigator.client at runtime
             /// so that AuthenticationNavigator can respond to sign-in and complete the flow.
-            viewModel.authNavigator?.client = client
+            viewModel.authNavigator.client = client
         }
         .onChange(of: deeplinkManager.scannedBike) { oldValue, newValue in
             /// When a deeplink arrives ``AuthView`` will display ``AuthSignInView`` which will also check

@@ -30,16 +30,24 @@ extension AuthView {
         /// Object to intercept authentication events from the sign-in WebView and forward them to Client
         /// ``AuthenticationNavigator/client`` must be connected at runtime so that AuthNavigator can update ``Client``
         /// with authorization events.
-        let historyNavigator = HistoryNavigator(child: AuthenticationNavigator())
-        var authNavigator: AuthenticationNavigator? {
-            historyNavigator.child as? AuthenticationNavigator
-        }
+        let historyNavigator: HistoryNavigator
+        var authNavigator: AuthenticationNavigator
 
         /// AuthView may push to a Debug view (debug builds only)
         var topLevelPath = NavigationPath()
 
         @ObservationIgnored
         var configuration = try! ClientConfiguration.bundledConfig()
+
+        init() {
+            let configuration = try! ClientConfiguration.bundledConfig()
+            let authNavigator = AuthenticationNavigator(
+                interceptor: .init(hostProvider: configuration.hostProvider))
+            let historyNavigator = HistoryNavigator(child: authNavigator)
+            self.authNavigator = authNavigator
+            self.historyNavigator = historyNavigator
+            self.configuration = configuration
+        }
 
         // MARK: - NavigationPath
 
@@ -53,7 +61,6 @@ extension AuthView {
 
         /// URL helper to find the right user-facing authorization page for this app config.
         var signInPageRequest: URLRequest {
-            // TODO: Modernize EndpointConfiguration
             OAuth.authorize(queryItems: configuration.authorizeQueryItems).request(
                 for: configuration.hostProvider
             )

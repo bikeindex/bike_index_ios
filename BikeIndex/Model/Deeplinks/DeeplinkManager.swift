@@ -34,10 +34,9 @@ extension ScannedBike {
             print("ScannedBike.init failed on nil URL input")
             return nil
         }
-        // TODO: Parse this out with regex
+
         self.sticker = Sticker(url: url)
 
-        // TODO: During development universal links have a bikeindex:// prefix.
         // Reimplement this without the prefix when validation is closer.
         let lastPath1 = url.lastPathComponent
         url.deleteLastPathComponent()

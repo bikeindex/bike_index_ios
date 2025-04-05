@@ -56,6 +56,7 @@ extension ScannedBikePage {
 }
 
 @Observable
+// TODO: Rename to Scanned Bike interceptor
 final class GuestNavigator: NavigationResponder {
     var viewModel: ScannedBikePage.ViewModel
 

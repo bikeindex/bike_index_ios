@@ -17,7 +17,15 @@ final class AuthenticationNavigator: NavigationResponder {
     var client: Client?
 
     @ObservationIgnored
-    var routeToAuthenticationPage: () -> Void = {}
+    var routeToAuthenticationPage: () -> Void
+
+    private(set) var interceptor: Interceptor
+
+    init(client: Client? = nil, routeToAuthenticationPage: @escaping () -> Void = {}, interceptor: Interceptor) {
+        self.client = client
+        self.routeToAuthenticationPage = routeToAuthenticationPage
+        self.interceptor = interceptor
+    }
 
     // MARK: - Decide Policy
 
@@ -35,7 +43,6 @@ final class AuthenticationNavigator: NavigationResponder {
                 )
             }
             let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
-
         }
 
         /// Re-route the AuthSignInView experience away from /session/new.
@@ -73,6 +80,41 @@ final class AuthenticationNavigator: NavigationResponder {
                 webView, decidePolicyFor: navigationAction, preferences: preferences)
         } else {
             return (.allow, preferences)
+        }
+    }
+
+    struct Interceptor {
+        var hostProvider: HostProvider
+
+        var routeToAuthentication: () -> Void = {}
+
+        func filterSignInRedirect(_ url: URL?) -> WKNavigationActionPolicy? {
+            guard let url,
+                  let prefixTrimmed = Optional(url.absoluteString.trimmingPrefix("bikeindex://")),
+                  let components = URLComponents(string: String(prefixTrimmed))
+            else { return nil }
+
+            // "https://bikeindex.org/session/new?return_to=%2Fbikes%2FA40340%2Fscanned%3Forganization_id%3D2167"
+            // "https://bikeindex.org/session/new"
+
+//            components.host .remove because we need to trim the prfix bikeindex:// in development
+
+            print("Components are \(components)")
+            if let baseHost = hostProvider.host.host(),
+               components.host != baseHost {
+                /// E.g. bikeindex.org in the input URL must match bikeindex.org
+                return nil
+            }
+
+            if components.path == "/session/new" {
+                return .cancel
+            }
+
+            return nil
+        }
+
+        func filterCompletedAuthentication(_ url: URL) -> WKNavigationActionPolicy? {
+            return .allow
         }
     }
 }
