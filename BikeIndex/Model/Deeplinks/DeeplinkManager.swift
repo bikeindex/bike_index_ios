@@ -14,8 +14,9 @@ final class DeeplinkManager: Identifiable {
 
     init(host: HostProvider, scannedURL: URL? = nil) {
         self.hostProvider = host
-        self.scannedBike = ScannedBike(host: host,
-                                       url: scannedURL)
+        self.scannedBike = ScannedBike(
+            host: host,
+            url: scannedURL)
     }
 }
 
@@ -39,11 +40,12 @@ extension ScannedBike {
     init?(host provider: HostProvider, url inputUrl: URL?) {
         guard let inputUrl else { return nil }
         let inputPrefixTrimmed = String(inputUrl.absoluteString.trimmingPrefix("bikeindex://"))
-        let inputCorrectedBase = inputPrefixTrimmed.replacingOccurrences(of: "https//", with: "http://")
+        let inputCorrectedBase = inputPrefixTrimmed.replacingOccurrences(
+            of: "https//", with: "http://")
 
         guard let components = URLComponents(string: inputCorrectedBase),
-              let url = components.url,
-              components.host == provider.host.host()
+            let url = components.url,
+            components.host == provider.host.host()
         else {
             print("ScannedBike.init failed on nil URL input. Found \(inputCorrectedBase)")
             return nil

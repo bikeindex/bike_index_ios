@@ -6,9 +6,10 @@
 //
 
 import Foundation
+import OSLog
 import Testing
 import WebKit
-import OSLog
+
 @testable import BikeIndex
 
 /// Tests for
@@ -20,8 +21,9 @@ struct AuthInterceptorTests {
 
     /// `AuthenticationNavigator.Interceptor` must intercept `/session/new?return_to` URLs
     /// to make sure the Universal Link to Sign-In flow always displays an app-functional page.
-    @Test(arguments:
-            ["https://bikeindex.org/session/new?return_to=%2Fbikes%2FA40340%2Fscanned%3Forganization_id%3D1234",])
+    @Test(arguments: [
+        "https://bikeindex.org/session/new?return_to=%2Fbikes%2FA40340%2Fscanned%3Forganization_id%3D1234"
+    ])
     func test_redirect_web_signin_to_app(rawInput: String) async throws {
         let input = try #require(URL(string: rawInput))
         let interceptor = await AuthenticationNavigator.Interceptor(hostProvider: hostProvider)
@@ -33,10 +35,12 @@ struct AuthInterceptorTests {
     /// `AuthenticationNavigator.Interceptor` must NOT intercept `/session/new` (without query parameters) to make
     /// sure the sign-in flow always displays an app-functional page.
     /// `AuthenticationNavigator.Interceptor` must NOT intercept other URLs
-    @Test(arguments: ["https://bikeindex.org/session/new",
-                      "bikeindex://https://bikeindex.org/session/new", // not necessary in production
-                      "invalid_url",
-                      "https://bikeindex.org/help", ])
+    @Test(arguments: [
+        "https://bikeindex.org/session/new",
+        "bikeindex://https://bikeindex.org/session/new",  // not necessary in production
+        "invalid_url",
+        "https://bikeindex.org/help",
+    ])
     func test_redirect_web_signing_irrelevant_url(rawInput: String) async throws {
         let input = try #require(URL(string: rawInput))
         let interceptor = await AuthenticationNavigator.Interceptor(hostProvider: hostProvider)
@@ -52,8 +56,9 @@ struct AuthInterceptorTests {
         let input = try #require(URL(string: rawInput))
         let interceptor = await AuthenticationNavigator.Interceptor(hostProvider: hostProvider)
         let mockClient = try await #require(try MockClient())
-        let output = await interceptor.filterCompletedAuthentication(input,
-                                                                     client: mockClient)
+        let output = await interceptor.filterCompletedAuthentication(
+            input,
+            client: mockClient)
         try #require(output != nil)
         #expect(output == WKNavigationActionPolicy.cancel)
         let accessToken = try #require(await mockClient.accessToken)
@@ -61,13 +66,16 @@ struct AuthInterceptorTests {
     }
 
     /// Authentication page must be presented **before** any sign-in has started and **not** intercepted.
-    @Test(arguments: ["https://bikeindex.org/oauth/authorize?client_id=0987654321&response_type=code&redirect_uri=bikeindex://&scope=read_user+write_user+read_bikes+write_bikes"])
+    @Test(arguments: [
+        "https://bikeindex.org/oauth/authorize?client_id=0987654321&response_type=code&redirect_uri=bikeindex://&scope=read_user+write_user+read_bikes+write_bikes"
+    ])
     func test_webview_redirect_non_intercepted(rawInput: String) async throws {
         let input = try #require(URL(string: rawInput))
         let interceptor = await AuthenticationNavigator.Interceptor(hostProvider: hostProvider)
         let mockClient = try await #require(try Client())
-        let output = await interceptor.filterCompletedAuthentication(input,
-                                                                     client: mockClient)
+        let output = await interceptor.filterCompletedAuthentication(
+            input,
+            client: mockClient)
         try #require(output == nil)
     }
 
@@ -86,8 +94,8 @@ class MockClient: Client {
 
         let components = URLComponents(string: authCallback.absoluteString)
         guard let queryItems = components?.queryItems,
-              let code = queryItems.first(where: { $0.name == Constants.code }),
-              let newToken = code.value
+            let code = queryItems.first(where: { $0.name == Constants.code }),
+            let newToken = code.value
         else {
             Logger.api.debug(
                 "\(#function) exiting for lack of query item 'code' from callback \(authCallback, privacy: .sensitive)"

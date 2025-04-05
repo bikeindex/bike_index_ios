@@ -87,25 +87,30 @@ struct MainContentPage: View {
                     }
                 }
             }
-            .sheet(item: $deeplinkManager.scannedBike, content: { scan in
-                let viewModel = ScannedBikePage.ViewModel(
-                    scan: scan,
-                    path: path,
-                    dismiss: {
-                        deeplinkManager.scannedBike = nil
-                    })
-                ScannedBikePage(viewModel: viewModel)
-                    .onDisappear {
-                        if let exitPath = viewModel.onDisappear {
-                            path.append(exitPath)
+            .sheet(
+                item: $deeplinkManager.scannedBike,
+                content: { scan in
+                    let viewModel = ScannedBikePage.ViewModel(
+                        scan: scan,
+                        path: path,
+                        dismiss: {
+                            deeplinkManager.scannedBike = nil
+                        })
+                    ScannedBikePage(viewModel: viewModel)
+                        .onDisappear {
+                            if let exitPath = viewModel.onDisappear {
+                                path.append(exitPath)
+                            }
                         }
-                    }
-            })
+                }
+            )
             .alert(isPresented: $showError, error: lastError) {
                 Text("Error occurred")
             }
             .onAppear {
-                Logger.views.debug("Starting main content page with deeplink scanned bike \(String(describing: deeplinkManager.scannedBike))")
+                Logger.views.debug(
+                    "Starting main content page with deeplink scanned bike \(String(describing: deeplinkManager.scannedBike))"
+                )
             }
         }
         .task {

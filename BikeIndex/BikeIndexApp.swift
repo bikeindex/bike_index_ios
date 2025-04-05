@@ -45,15 +45,17 @@ struct BikeIndexApp: App {
                 MainContentPage()
                     .tint(Color.accentColor)
                     .onOpenURL { url in
-                        client.deeplinkManager = DeeplinkManager(host: client.hostProvider,
-                                                                 scannedURL: url)
+                        client.deeplinkManager = DeeplinkManager(
+                            host: client.hostProvider,
+                            scannedURL: url)
                     }
             } else {
                 AuthView()
                     .tint(Color.accentColor)
                     .onOpenURL { url in
-                        client.deeplinkManager = DeeplinkManager(host: client.hostProvider,
-                                                                 scannedURL: url)
+                        client.deeplinkManager = DeeplinkManager(
+                            host: client.hostProvider,
+                            scannedURL: url)
                     }
             }
         }

@@ -5,9 +5,9 @@
 //  Created by Jack on 3/29/25.
 //
 
+import OSLog
 import SwiftUI
 import WebKit
-import OSLog
 
 /// For authenticated users, display the Bike Sticker details page for the scanned sticker.
 /// In the future the web view's Navigator parameter can be used to provide custom behavior

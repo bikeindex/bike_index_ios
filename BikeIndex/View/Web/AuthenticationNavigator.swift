@@ -21,7 +21,10 @@ final class AuthenticationNavigator: NavigationResponder {
 
     private(set) var interceptor: Interceptor
 
-    init(client: Client? = nil, routeToAuthenticationPage: @escaping () -> Void = {}, interceptor: Interceptor) {
+    init(
+        client: Client? = nil, routeToAuthenticationPage: @escaping () -> Void = {},
+        interceptor: Interceptor
+    ) {
         self.client = client
         self.routeToAuthenticationPage = routeToAuthenticationPage
         self.interceptor = interceptor
@@ -50,8 +53,9 @@ final class AuthenticationNavigator: NavigationResponder {
         // MARK: - Stable
 
         /// Flow: Guest > "Sign in and get started"
-        if let action = await interceptor.filterCompletedAuthentication(navigationAction.request.url,
-                                                                  client: client)
+        if let action = await interceptor.filterCompletedAuthentication(
+            navigationAction.request.url,
+            client: client)
         {
             return (action, preferences)
         }
@@ -73,21 +77,22 @@ final class AuthenticationNavigator: NavigationResponder {
         /// Guest > Scan Sticker QR Code > Please Sign In
         func filterSignInRedirect(_ url: URL?) -> WKNavigationActionPolicy? {
             guard let url,
-                  let prefixTrimmed = Optional(url.absoluteString.trimmingPrefix("bikeindex://")),
-                  let components = URLComponents(string: String(prefixTrimmed))
+                let prefixTrimmed = Optional(url.absoluteString.trimmingPrefix("bikeindex://")),
+                let components = URLComponents(string: String(prefixTrimmed))
             else { return nil }
 
             if let baseHost = hostProvider.host.host(),
-               components.host != baseHost {
+                components.host != baseHost
+            {
                 /// E.g. bikeindex.org in the input URL must match bikeindex.org
                 return nil
             }
 
             if components.path == "/session/new",
                 let returnTo = components.queryItems?.first(where: { $0.name == "return_to" }),
-               let decoded = returnTo.value?.removingPercentEncoding,
-               decoded.contains("scanned")
-             {
+                let decoded = returnTo.value?.removingPercentEncoding,
+                decoded.contains("scanned")
+            {
                 return .cancel
             }
 
@@ -96,12 +101,14 @@ final class AuthenticationNavigator: NavigationResponder {
 
         /// Guest > Sign in and get started
         /// (aka regular authentication flow)
-        func filterCompletedAuthentication(_ url: URL?, client: Client?) async -> WKNavigationActionPolicy? {
+        func filterCompletedAuthentication(_ url: URL?, client: Client?) async
+            -> WKNavigationActionPolicy?
+        {
             if let url,
-               let scheme = url.scheme,
-               scheme + "://" == client?.configuration.redirectUri,
-               let result = await client?.accept(authCallback: url),
-               result == true
+                let scheme = url.scheme,
+                scheme + "://" == client?.configuration.redirectUri,
+                let result = await client?.accept(authCallback: url),
+                result == true
             {
                 return WKNavigationActionPolicy.cancel
             } else {

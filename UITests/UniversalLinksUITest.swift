@@ -5,8 +5,8 @@
 //  Created by Jack on 4/5/25.
 //
 
-import XCTest
 import OSLog
+import XCTest
 
 let stickerUrl = URL(string: "bikeindex://https://bikeindex.org/bikes/scanned/A40340")!
 
@@ -19,7 +19,6 @@ extension BikeIndexUITests {
         try signIn(app: app)
 
         // NOTE: Deeplinks will remove the second `:` from `bikeindex://https://bikeindex...`
-//        app.open(stickerUrl)
         XCUIDevice.shared.system.open(stickerUrl)
 
         let stickerHeader = app.staticTexts["A40340"]
@@ -28,7 +27,7 @@ extension BikeIndexUITests {
         let unlinkedMessage: [XCUIElement] = [
             app.staticTexts["Sticker ".uppercased()],
             app.staticTexts["A 403 40".uppercased()],
-            app.staticTexts[" isn't linked to a bike.".uppercased()]
+            app.staticTexts[" isn't linked to a bike.".uppercased()],
         ]
         for message in unlinkedMessage {
             _ = message.waitForExistence(timeout: timeout)
