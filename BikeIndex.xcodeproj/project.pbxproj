@@ -429,7 +429,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BikeIndex/BikeIndex.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 28;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "BikeIndex/Preview\\ Content/MultipleBikeResponse_mock.json BikeIndex/Preview\\ Content";
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
@@ -634,7 +634,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BikeIndex/BikeIndex.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 28;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "BikeIndex/Preview\\ Content/MultipleBikeResponse_mock.json BikeIndex/Preview\\ Content";
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
@@ -674,7 +674,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BikeIndex/BikeIndex.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 28;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "BikeIndex/Preview\\ Content/MultipleBikeResponse_mock.json BikeIndex/Preview\\ Content";
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
