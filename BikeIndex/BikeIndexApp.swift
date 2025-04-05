@@ -37,14 +37,26 @@ struct BikeIndexApp: App {
     }()
 
     /// Set up App
+    /// NOTE: MainContentPage and AuthView **each** implement their own universal link handling.
+    /// Scene does not implement `onOpenURL` so each applies a basic handler to kickstart the process.
     var body: some Scene {
         WindowGroup {
             if client.authenticated {
                 MainContentPage()
                     .tint(Color.accentColor)
+                    .onOpenURL { url in
+                        client.deeplinkManager = DeeplinkManager(
+                            host: client.hostProvider,
+                            scannedURL: url)
+                    }
             } else {
                 AuthView()
                     .tint(Color.accentColor)
+                    .onOpenURL { url in
+                        client.deeplinkManager = DeeplinkManager(
+                            host: client.hostProvider,
+                            scannedURL: url)
+                    }
             }
         }
         .environment(client)

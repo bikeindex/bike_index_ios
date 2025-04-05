@@ -10,22 +10,6 @@ import SwiftUI
 import WebKit
 import WebViewKit
 
-extension ClientConfiguration {
-    fileprivate var authorizeQueryItems: [URLQueryItem] {
-        return [
-            ("client_id", clientId),
-            ("response_type", "code"),
-            ("redirect_uri", redirectUri),
-            ("scope", oauthScopes.queryItem),
-        ].map { (item: QueryItemTuple) in
-            URLQueryItem(name: item.name, value: item.value)
-        }
-    }
-}
-
-/// NOTE: Network traffic for ASWebAuthenticationSession will run in the WebKitNetworking process!
-/// This means that Proxyman will not show app authentication in the "Bike Index" app. You will have to look for the
-/// host or across all networking in Proxyman!
 /// Entry-point for all users to sign-in.
 struct AuthView: View {
     /// API client for performing auth
@@ -35,12 +19,13 @@ struct AuthView: View {
     @State private var viewModel = ViewModel()
 
     var body: some View {
+        @Bindable var deeplinkManager = client.deeplinkManager
         NavigationStack(path: $viewModel.topLevelPath) {
             WelcomeView()
                 .toolbar {
                     ToolbarItem(placement: .bottomBar) {
                         Button {
-                            viewModel.displaySignIn = true
+                            viewModel.display = true
                         } label: {
                             Label(
                                 "Sign in and get started",
@@ -79,34 +64,44 @@ struct AuthView: View {
                     }
                 }
         }
-        .sheet(isPresented: $viewModel.displaySignIn) {
-            NavigationStack {
-                NavigableWebView(
-                    url: .constant(oAuthUrl!),
-                    navigator: HistoryNavigator(child: viewModel.authNavigator)
+        .sheet(
+            isPresented: $viewModel.display,
+            onDismiss: {
+                // Essential to reset state
+                viewModel.historyNavigator.wkWebView?.load(URLRequest(url: URL("about:blank")))
+            },
+            content: {
+                // Sign-in Dialog.
+                // Also supports QR-code bike display in a web view.
+                AuthSignInView(
+                    baseUrl: viewModel.signInPageRequest.url!,
+                    navigator: viewModel.historyNavigator,
+                    display: $viewModel.display
                 )
                 .environment(client)
-                .navigationTitle("Sign in")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button("Close") {
-                            viewModel.displaySignIn = false
-                        }
+                .interactiveDismissDisabled()
+                .onAppear {
+                    viewModel.authNavigator.routeToAuthenticationPage = {
+                        let webView = viewModel.historyNavigator.wkWebView
+                        webView?.load(viewModel.signInPageRequest)
                     }
                 }
             }
-        }
+        )
         .onAppear {
+            /// Connect AuthView.viewModel.authenticationNavigator.client at runtime
+            /// so that AuthenticationNavigator can respond to sign-in and complete the flow.
             viewModel.authNavigator.client = client
         }
-    }
+        .onChange(of: deeplinkManager.scannedBike) { oldValue, newValue in
+            /// When a deeplink arrives ``AuthView`` will display ``AuthSignInView`` which will also check
+            /// onChange(of: deeplinkManager.scannedBike) to display the universal link.
+            viewModel.display = true
 
-    /// URL helper to find the right user-facing authorization page for this app config.
-    private var oAuthUrl: URL? {
-        OAuth.authorize(queryItems: client.configuration.authorizeQueryItems).request(
-            for: client.api.configuration
-        ).url
+            Logger.deeplinks.info(
+                "AuthView handling scanned deeplink: \(String(describing: client.deeplinkManager.scannedBike?.url))"
+            )
+        }
     }
 }
 

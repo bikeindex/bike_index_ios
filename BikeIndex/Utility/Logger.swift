@@ -7,6 +7,8 @@
 
 import OSLog
 
+/// OSLog implementation.
+/// Note that Logger output will **not** be printed to SwiftUI Previews.
 extension Logger {
     private static let subsystem = Bundle.main.bundleIdentifier!
 
@@ -15,4 +17,5 @@ extension Logger {
     static let api = Logger(subsystem: subsystem, category: "api")
     static let client = Logger(subsystem: subsystem, category: "client")
     static let model = Logger(subsystem: subsystem, category: "model")
+    static let deeplinks = Logger(subsystem: subsystem, category: "deeplinks")
 }

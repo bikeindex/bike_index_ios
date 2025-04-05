@@ -11,16 +11,8 @@ import OSLog
 import URLEncodedForm
 import WebKit
 
-/// Instances created by Client at runtime to provide the full information for EndpointProvider instances.
-/// This allows safe API access.
-protocol EndpointConfigurationProvider {
-    var accessToken: Token? { set get }
-    var host: URL { get }
-}
-
-/// Instance of EndpointConfigurationProvider
-struct EndpointConfiguration: EndpointConfigurationProvider {
-    var accessToken: Token?
+/// Provide a subset of ``ClientConfiguration`` to control access.
+struct HostProvider {
     let host: URL
 }
 
@@ -32,10 +24,15 @@ typealias QueryItemTuple = (name: String, value: String)
 /// Controls networking state and loads app configuration from the bundle.
 @MainActor
 @Observable class Client {
+    // MARK: Configuration and Helpers
     private let session = URLSession(configuration: .default)
 
     /// App configuration loaded from .xcconfig files to determine the network environment
     private(set) var configuration: ClientConfiguration
+    /// Convenience access to host provider for Base URL validation and construction
+    var hostProvider: HostProvider {
+        configuration.hostProvider
+    }
     /// Stateless API class belonging to this stateful instance that performs network operations for us.
     private(set) var api: API
     /// Stateful shared webview configuration to manage cookie storage for logout
@@ -47,16 +44,23 @@ typealias QueryItemTuple = (name: String, value: String)
         return config
     }()
 
+    // MARK: Authorization State
+
     /// Full OAuth token response.
     internal var auth: OAuthToken?
     /// Access token is provided by the OAuth flow to the application from `ASWebAuthenticationSession`.
     /// The access token may be required in requests and it may be used to retrieve the full OAuth token (see ``auth``).
-    private var accessToken: Token?
+    internal var accessToken: Token?
     private var keychain = KeychainSwift()
 
     // MARK: Refresh Properties
     var refreshTimer: Timer?
     var refreshRunLoop: RunLoop
+
+    // MARK: Deeplink State
+    /// Deeplinks can be opened from stickers at any time.
+    /// Client will keep the authoritative reference to a deeplink manager.
+    var deeplinkManager: DeeplinkManager
 
     init(
         keychain: KeychainSwift = KeychainSwift(),
@@ -66,11 +70,10 @@ typealias QueryItemTuple = (name: String, value: String)
         self.refreshRunLoop = refreshRunLoop
         let configuration = try ClientConfiguration.bundledConfig()
         self.api = API(
-            configuration: EndpointConfiguration(
-                accessToken: "",
-                host: configuration.host),
+            configuration: configuration.hostProvider,
             session: session)
         self.configuration = configuration
+        self.deeplinkManager = DeeplinkManager(host: configuration.hostProvider)
         loadLastToken()
     }
 
@@ -97,7 +100,7 @@ typealias QueryItemTuple = (name: String, value: String)
 
                 auth = lastKnownAuth
                 accessToken = lastKnownAuth.accessToken
-                api.configuration.accessToken = lastKnownAuth.accessToken
+                api.accessToken = lastKnownAuth.accessToken
 
                 setupRefreshTimer()
 
@@ -138,9 +141,7 @@ typealias QueryItemTuple = (name: String, value: String)
         accessToken = nil
         auth = nil
         api = API(
-            configuration: EndpointConfiguration(
-                accessToken: "",
-                host: configuration.host),
+            configuration: configuration.hostProvider,
             session: session)
     }
 
@@ -193,7 +194,7 @@ typealias QueryItemTuple = (name: String, value: String)
                 return false
             }
             self.auth = fullTokenAuth
-            self.api.configuration.accessToken = fullTokenAuth.accessToken
+            self.api.accessToken = fullTokenAuth.accessToken
             self.setupRefreshTimer()
             do {
                 let data = try JSONEncoder().encode(fullTokenAuth)
@@ -264,7 +265,7 @@ typealias QueryItemTuple = (name: String, value: String)
                 }
 
                 self.auth = refreshedToken
-                self.api.configuration.accessToken = refreshedToken.accessToken
+                self.api.accessToken = refreshedToken.accessToken
                 self.setupRefreshTimer()
                 do {
                     let data = try JSONEncoder().encode(refreshedToken)

@@ -73,7 +73,7 @@ enum OAuth: APIEndpoint {
         }
     }
 
-    func request(for config: EndpointConfigurationProvider) -> URLRequest {
+    func request(for config: HostProvider) -> URLRequest {
         var url = config.host.appending(components: path)
         switch self {
         case .authorize(let queryItems):
@@ -130,7 +130,7 @@ enum Search: APIEndpoint {
         OAuthToken.self
     }
 
-    func request(for config: EndpointConfigurationProvider) -> URLRequest {
+    func request(for config: HostProvider) -> URLRequest {
         URLRequest(url: config.host)
     }
 }
@@ -193,7 +193,7 @@ enum Bikes: APIEndpoint {
         }
     }
 
-    func request(for config: EndpointConfigurationProvider) -> URLRequest {
+    func request(for config: HostProvider) -> URLRequest {
         let url = config.host.appending(components: path)
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
@@ -233,7 +233,7 @@ enum Me: APIEndpoint {
         }
     }
 
-    func request(for config: EndpointConfigurationProvider) -> URLRequest {
+    func request(for config: HostProvider) -> URLRequest {
         let url = config.host.appending(components: path)
         return URLRequest(url: url)
     }
@@ -266,7 +266,7 @@ enum Autocomplete: APIEndpoint {
         }
     }
 
-    func request(for config: EndpointConfigurationProvider) -> URLRequest {
+    func request(for config: HostProvider) -> URLRequest {
         var url = config.host.appending(components: path)
 
         if case let .manufacturer(query) = self {
@@ -311,7 +311,7 @@ enum Manufacturers: APIEndpoint {
         fatalError()
     }
 
-    func request(for config: EndpointConfigurationProvider) -> URLRequest {
+    func request(for config: HostProvider) -> URLRequest {
         URLRequest(url: config.host)
     }
 }
@@ -364,7 +364,7 @@ enum Selections: APIEndpoint {
         fatalError()
     }
 
-    func request(for config: EndpointConfigurationProvider) -> URLRequest {
+    func request(for config: HostProvider) -> URLRequest {
         URLRequest(url: config.host)
     }
 }

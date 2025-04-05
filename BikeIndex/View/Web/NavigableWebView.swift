@@ -37,9 +37,10 @@ struct NavigableWebView: View {
             #if !RELEASE
             $0.isInspectable = true
             #endif
-            navigator.wkWebView = $0
+            navigator.assign(wkWebView: $0)
             $0.navigationDelegate = navigator
         }
+        .ignoresSafeArea()
         .onChange(
             of: url,
             { _, newValue in

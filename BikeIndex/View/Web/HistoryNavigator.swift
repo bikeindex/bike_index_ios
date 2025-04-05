@@ -8,11 +8,10 @@
 import OSLog
 import WebKit
 
-@Observable class HistoryNavigator: NavigationResponder {
+@Observable
+final class HistoryNavigator: NavigationResponder {
 
     // MARK: - Navigation Controller
-
-    var wkWebView: WKWebView?
 
     var canGoBack: Bool {
         wkWebView?.canGoBack ?? false
