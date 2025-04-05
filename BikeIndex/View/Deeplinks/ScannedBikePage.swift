@@ -9,6 +9,9 @@ import SwiftUI
 import WebKit
 import OSLog
 
+/// For authenticated users, display the Bike Sticker details page for the scanned sticker.
+/// In the future the web view's Navigator parameter can be used to provide custom behavior
+/// for bike sticker -> registration links and bike sticker -> bike details links.
 struct ScannedBikePage: View {
     @Environment(Client.self) var client
     @State var viewModel: ViewModel
@@ -16,8 +19,7 @@ struct ScannedBikePage: View {
     var body: some View {
         NavigationStack {
             NavigableWebView(
-                url: .constant(viewModel.scan.url),
-                navigator: .guestNavigator(viewModel: viewModel)
+                url: .constant(viewModel.scan.url)
             )
             .environment(client)
             .navigationTitle(viewModel.title)
@@ -29,7 +31,7 @@ struct ScannedBikePage: View {
                 }
             }
             .onAppear {
-                Logger.views.debug("ScannedBikePage opening \(viewModel.scan.url)")
+                Logger.views.debug("ScannedBikePage opening sticker for \(viewModel.scan.url)")
             }
         }
     }
@@ -52,51 +54,5 @@ extension ScannedBikePage {
             self.path = path
             self.dismiss = dismiss
         }
-    }
-}
-
-@Observable
-// TODO: Rename to Scanned Bike interceptor
-final class GuestNavigator: NavigationResponder {
-    var viewModel: ScannedBikePage.ViewModel
-
-    override func webView(
-        _ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
-        preferences: WKWebpagePreferences
-    ) async -> (WKNavigationActionPolicy, WKWebpagePreferences) {
-        // TODO: Intercept requests for sign-in page, and substitute the native sign-in
-        // TODO: **OR** even better, let it proceed and then just dismiss it —— but this will need to work with the view models and window group probably —— and also work with authenticated users (don't degrade their experience, and make sure only the necessary flows are involved.
-
-        // AuthView does a lot of extra work to make sure that sign-in works
-
-        // NICE TO HAVE: Native Bike details displaydismiss scanned page, push bike page by identifier, and cancel the web navigation -- but this cannot be built until the BikeDetailView can track association of the bike-detail sticker so we need to make sure that is brou;gh along for the ride
-        //        if navigationAction.request.url == URL(string: "https://bikeindex.org/bikes/2553556") {
-        //            viewModel.path.append("2553556")
-        //        }
-
-        if let url = navigationAction.request.url,
-           url == URL(string: "https://bikeindex.org/bikes/new?bike_sticker=A40340")
-        {
-            let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
-            // TODO: Native QR code registration
-            //viewModel.dismiss()
-            //viewModel.onDisappear = MainContent.registerBike
-            //return (.cancel, preferences)
-        }
-
-        return (.allow, preferences)
-    }
-
-    init(viewModel: ScannedBikePage.ViewModel) {
-        self.viewModel = viewModel
-    }
-}
-
-extension NavigationResponder {
-    /// Responder chain in action!
-    static func guestNavigator(viewModel: ScannedBikePage.ViewModel) -> HistoryNavigator {
-        HistoryNavigator(
-            child: GuestNavigator(viewModel: viewModel)
-        )
     }
 }

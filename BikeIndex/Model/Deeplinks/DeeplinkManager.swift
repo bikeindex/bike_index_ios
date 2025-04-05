@@ -8,11 +8,14 @@
 import Foundation
 
 @Observable
-final class DeeplinkManager: Identifiable {    
+final class DeeplinkManager: Identifiable {
+    let hostProvider: HostProvider
     var scannedBike: ScannedBike?
 
-    init(scannedURL: URL? = nil) {
-        self.scannedBike = ScannedBike(url: scannedURL)
+    init(host: HostProvider, scannedURL: URL? = nil) {
+        self.hostProvider = host
+        self.scannedBike = ScannedBike(host: host,
+                                       url: scannedURL)
     }
 }
 
@@ -25,30 +28,40 @@ struct ScannedBike: Equatable, Identifiable {
 }
 
 extension ScannedBike {
-    /// INPUTS:
-    /// - TODO: HOST? to make sure the host matches client.configuration.host
-    /// - bikes/scanned/:id
-    /// - CHECK LAST PATH COMPONENT
-    init?(url: URL?) {
-        guard var url else {
-            print("ScannedBike.init failed on nil URL input")
+    /// Try to initialize a ScannedBike from a sticker.
+    /// URLs will be bikes/scanned/:id and _may_ start with bikeindex:// (this is useful for development and testing).
+    /// NOTE: Deeplinks will remove the second `:` from `bikeindex://https://bikeindex...`
+    /// - Parameters:
+    ///   - host: Configured host from xcconfig project config that determines the base URL for all API requests. Usually bikeindex.org/
+    ///   - inputUrl: The scanned bike sticker, expected in formats
+    ///     - bikeindex://{host}/bikes/scanned/:id
+    ///     - {host}/bikes/scanned/:id
+    init?(host provider: HostProvider, url inputUrl: URL?) {
+        guard let inputUrl else { return nil }
+        let inputPrefixTrimmed = String(inputUrl.absoluteString.trimmingPrefix("bikeindex://"))
+        let inputCorrectedBase = inputPrefixTrimmed.replacingOccurrences(of: "https//", with: "http://")
+
+        guard let components = URLComponents(string: inputCorrectedBase),
+              let url = components.url,
+              components.host == provider.host.host()
+        else {
+            print("ScannedBike.init failed on nil URL input. Found \(inputCorrectedBase)")
             return nil
         }
 
-        self.sticker = Sticker(url: url)
+        let identifier = url.lastPathComponent
 
-        // Reimplement this without the prefix when validation is closer.
-        let lastPath1 = url.lastPathComponent
-        url.deleteLastPathComponent()
-        let lastPath2 = url.lastPathComponent
-        url.deleteLastPathComponent()
-        let lastpath3 = url.lastPathComponent
+        let givenPathComponents = url.pathComponents
+        let expectedPathComponents = ["/", "bikes", "scanned", identifier]
 
-        guard lastPath2 == "scanned", lastpath3 == "bikes" else {
+        guard givenPathComponents == expectedPathComponents else {
             print("ScannedBike.init failed to find bikes/scanned/:id")
             return nil
         }
-        self.url = URL(string: "https://bikeindex.org/bikes/scanned/\(lastPath1)").unsafelyUnwrapped
+
+        self.url = url
+        self.sticker = Sticker(identifier: identifier)
+
     }
 }
 
@@ -56,8 +69,4 @@ extension ScannedBike {
 /// Example: https://bikeindex.org/bikes/scanned/A40340
 struct Sticker: Equatable {
     var identifier: String
-
-    init(url: URL) {
-        identifier = url.lastPathComponent
-    }
 }

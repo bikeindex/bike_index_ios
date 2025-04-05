@@ -151,7 +151,7 @@ struct BikeRegistration: Encodable {
         self.is_for_sale = nil
         self.frame_material = nil
         self.external_image_urls = nil
-        self.bike_sticker = nil  // TODO: Support bike_sticker for QR code deeplinks
+        self.bike_sticker = nil  // TODO: Support bike_sticker for writing QR code deeplinks
         self.components = nil
     }
 

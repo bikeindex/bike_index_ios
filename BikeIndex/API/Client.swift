@@ -29,6 +29,10 @@ typealias QueryItemTuple = (name: String, value: String)
 
     /// App configuration loaded from .xcconfig files to determine the network environment
     private(set) var configuration: ClientConfiguration
+    /// Convenience access to host provider for Base URL validation and construction
+    var hostProvider: HostProvider {
+        configuration.hostProvider
+    }
     /// Stateless API class belonging to this stateful instance that performs network operations for us.
     private(set) var api: API
     /// Stateful shared webview configuration to manage cookie storage for logout
@@ -56,7 +60,7 @@ typealias QueryItemTuple = (name: String, value: String)
     // MARK: Deeplink State
     /// Deeplinks can be opened from stickers at any time.
     /// Client will keep the authoritative reference to a deeplink manager.
-    var deeplinkManager = DeeplinkManager()
+    var deeplinkManager: DeeplinkManager
 
     init(
         keychain: KeychainSwift = KeychainSwift(),
@@ -69,6 +73,7 @@ typealias QueryItemTuple = (name: String, value: String)
             configuration: configuration.hostProvider,
             session: session)
         self.configuration = configuration
+        self.deeplinkManager = DeeplinkManager(host: configuration.hostProvider)
         loadLastToken()
     }
 
