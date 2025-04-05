@@ -60,9 +60,7 @@ class BikeIndexUITests: XCTestCase {
         app.launch()
         try signIn(app: app)
 
-        let settings = app.buttons["Settings"]
-        _ = settings.waitForExistence(timeout: timeout)
-        settings.tap()
+        openSettings()
 
         let appIcon = app.buttons["App Icon"]
         _ = appIcon.waitForExistence(timeout: timeout)
@@ -106,9 +104,7 @@ class BikeIndexUITests: XCTestCase {
 
         // SETUP
 
-        let settings = app.buttons["Settings"]
-        _ = settings.waitForExistence(timeout: timeout)
-        settings.tap()
+        openSettings()
 
         let acknowledgements = app.buttons["Acknowledgements"]
         _ = acknowledgements.waitForExistence(timeout: timeout)
@@ -213,6 +209,37 @@ class BikeIndexUITests: XCTestCase {
         back()
     }
 
+    func test_settings_account_pages() throws {
+        app.launch()
+        try signIn(app: app)
+
+        openSettings()
+
+        button(named: "User Settings")
+            .tap()
+        let userSettingsConfirmation = app.staticTexts["Give us permission to contact you if we believe your bike has been stolen, even if it isn't marked stolen"]
+        _ = userSettingsConfirmation.waitForExistence(timeout: timeout)
+        back()
+
+        button(named: "Password")
+            .tap()
+        let resetPassword = app.staticTexts["Password must be at least 12 characters. Longer is"]
+        _ = resetPassword.waitForExistence(timeout: timeout)
+        back()
+
+        button(named: "Sharing + Personal Page")
+            .tap()
+        let sharingPageConfirmation = app.staticTexts["Show Personal Site"]
+        _ = sharingPageConfirmation.waitForExistence(timeout: timeout)
+        back()
+
+        button(named: "Registration Organization")
+            .tap()
+        let regOrgsConfirmation = app.staticTexts["Manage the organizations your bikes are registered with."]
+        _ = regOrgsConfirmation.waitForExistence(timeout: timeout)
+        back()
+    }
+
     // MARK: - Helpers
 
     func back() {
@@ -222,6 +249,18 @@ class BikeIndexUITests: XCTestCase {
 
     func link(with prefix: String) -> XCUIElement {
         app.links.matching(NSPredicate(format: "label BEGINSWITH %@", prefix)).element
+    }
+
+    func openSettings() {
+        let settings = app.buttons["Settings"]
+        _ = settings.waitForExistence(timeout: timeout)
+        settings.tap()
+    }
+
+    func button(named: String) -> XCUIElement {
+        let button = app.buttons[named]
+        _ = button.waitForExistence(timeout: timeout)
+        return button
     }
 }
 
