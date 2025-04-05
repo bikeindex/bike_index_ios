@@ -33,46 +33,27 @@ final class AuthenticationNavigator: NavigationResponder {
         _ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
         preferences: WKWebpagePreferences
     ) async -> (WKNavigationActionPolicy, WKWebpagePreferences) {
-        // TODO: Consolidate these two if-statements
-
-        if let url = navigationAction.request.url {
-            let firstHalf = url.absoluteString.split(separator: "?")[0]
-            if firstHalf == "https://bikeindex.org/session/new" {
-                print(
-                    "Alright, so this request has to be picked out and directed to `routeToAuthenticationPage`"
-                )
-            }
-            let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
-        }
-
+        /// Flow: Guest > Sticker > Please Sign In
         /// Re-route the AuthSignInView experience away from /session/new.
         /// - /session/new is only for browser sessions.
         /// - APp sessions must use the ``AuthView/ViewModel/signInPageRequest`` page (or sign-in will fail!)
         /// How does the user get to /session/new? A) if they navigate around the sign-in page
         /// B) if they scan a QR code Bike Sticker
-        if let url = navigationAction.request.url,
-            url.absoluteString
-                == "https://bikeindex.org/session/new?return_to=%2Fbikes%2FA40340%2Fscanned%3Forganization_id%3D2167"
-        {
-            //            return (.allow, preferences)
-
+        if let signInAction = interceptor.filterSignInRedirect(navigationAction.request.url) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
-                // TODO: Move this out of asyncAfter and into a different delegate function that occurs _after_ this decision, or elsewhere
                 self?.routeToAuthenticationPage()
             }
 
-            return (.cancel, preferences)
+            return (signInAction, preferences)
         }
 
         // MARK: - Stable
 
-        if let url = navigationAction.request.url,
-            let scheme = url.scheme,
-            scheme + "://" == client?.configuration.redirectUri,
-            let result = await client?.accept(authCallback: url),
-            result == true
+        /// Flow: Guest > "Sign in and get started"
+        if let action = await interceptor.filterCompletedAuthentication(navigationAction.request.url,
+                                                                  client: client)
         {
-            return (WKNavigationActionPolicy.cancel, preferences)
+            return (action, preferences)
         }
 
         if let child {
@@ -83,38 +64,49 @@ final class AuthenticationNavigator: NavigationResponder {
         }
     }
 
+    @MainActor
     struct Interceptor {
         var hostProvider: HostProvider
 
         var routeToAuthentication: () -> Void = {}
 
+        /// Guest > Scan Sticker QR Code > Please Sign In
         func filterSignInRedirect(_ url: URL?) -> WKNavigationActionPolicy? {
             guard let url,
                   let prefixTrimmed = Optional(url.absoluteString.trimmingPrefix("bikeindex://")),
                   let components = URLComponents(string: String(prefixTrimmed))
             else { return nil }
 
-            // "https://bikeindex.org/session/new?return_to=%2Fbikes%2FA40340%2Fscanned%3Forganization_id%3D2167"
-            // "https://bikeindex.org/session/new"
-
-//            components.host .remove because we need to trim the prfix bikeindex:// in development
-
-            print("Components are \(components)")
             if let baseHost = hostProvider.host.host(),
                components.host != baseHost {
                 /// E.g. bikeindex.org in the input URL must match bikeindex.org
                 return nil
             }
 
-            if components.path == "/session/new" {
+            if components.path == "/session/new",
+                let returnTo = components.queryItems?.first(where: { $0.name == "return_to" }),
+               let decoded = returnTo.value?.removingPercentEncoding,
+               decoded.contains("scanned")
+             {
                 return .cancel
             }
 
             return nil
         }
 
-        func filterCompletedAuthentication(_ url: URL) -> WKNavigationActionPolicy? {
-            return .allow
+        /// Guest > Sign in and get started
+        /// (aka regular authentication flow)
+        func filterCompletedAuthentication(_ url: URL?, client: Client?) async -> WKNavigationActionPolicy? {
+            if let url,
+               let scheme = url.scheme,
+               scheme + "://" == client?.configuration.redirectUri,
+               let result = await client?.accept(authCallback: url),
+               result == true
+            {
+                return WKNavigationActionPolicy.cancel
+            } else {
+                return nil
+            }
         }
     }
 }

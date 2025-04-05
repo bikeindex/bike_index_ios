@@ -50,7 +50,7 @@ typealias QueryItemTuple = (name: String, value: String)
     internal var auth: OAuthToken?
     /// Access token is provided by the OAuth flow to the application from `ASWebAuthenticationSession`.
     /// The access token may be required in requests and it may be used to retrieve the full OAuth token (see ``auth``).
-    private var accessToken: Token?
+    internal var accessToken: Token?
     private var keychain = KeychainSwift()
 
     // MARK: Refresh Properties
