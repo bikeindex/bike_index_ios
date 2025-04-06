@@ -5,6 +5,7 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>webcredentials:bikeindex.org</string>
+		<string>applinks:bikeindex.org</string>
 	</array>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
