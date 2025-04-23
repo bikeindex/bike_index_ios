@@ -25,7 +25,7 @@ extension BikeIndexUITests {
         _ = stickerHeader.waitForExistence(timeout: timeout)
 
         let unlinkedMessage: [XCUIElement] = [
-            app.staticTexts["You scanned the sticker A 403 40, which is assigned to this bike."],
+            app.staticTexts["You scanned the sticker A 403 40, which is assigned to this bike."]
         ]
         for message in unlinkedMessage {
             _ = message.waitForExistence(timeout: timeout)

@@ -15,6 +15,11 @@ struct SettingsAttributionCaption: View {
         HStack {
             Spacer()
             VStack {
+                Text("2025 © Bike Index")
+                Text("A 501(c)(3) nonprofit - EIN 81-4296194")
+                Spacer()
+                Text("[Candid.org profile](https://app.candid.org/profile/9575027)")
+                Spacer()
                 Text("Made with 💝 in Pittsburgh, PA")
                 if let marketingVersion = appVersion.marketingVersion,
                     let buildNumber = appVersion.buildNumber
