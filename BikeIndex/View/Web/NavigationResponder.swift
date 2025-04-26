@@ -46,6 +46,16 @@ open class NavigationResponder: NSObject, WKNavigationDelegate {
             return await child.webView(
                 webView, decidePolicyFor: navigationAction, preferences: preferences)
         } else {
+            /// memberships are not managed inside the app
+            if let url = navigationAction.request.url,
+                (url.pathComponents.starts(with: ["/", "membership"]) || url.pathComponents.starts(with: ["/", "donate"]))
+            {
+                Logger.webNavigation.debug("Redirect from membership to donate")
+                let donateUrl = URL(stringLiteral: "https://bikeindex.org/donate")
+                await UIApplication.shared.open(donateUrl)
+                return (WKNavigationActionPolicy.cancel, preferences)
+            }
+
             return (WKNavigationActionPolicy.allow, preferences)
         }
     }

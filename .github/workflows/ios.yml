@@ -21,7 +21,9 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_16.2.app
       - name: Install tools
         run: |
-          brew bundle install
+          brew install rbenv
+          brew install ruby-build
+          brew install gh
           bundler install
       - name: Set up xcconfig secrets (see README.md#quick-start)
         env:
@@ -59,7 +61,9 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_16.2.app
       - name: Install tools
         run: |
-          brew bundle install
+          brew install rbenv
+          brew install ruby-build
+          brew install gh
           bundler install
       - name: Set up xcconfig secrets (see README.md#quick-start)
         env:
@@ -97,7 +101,9 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_16.2.app
       - name: Install tools
         run: |
-          brew bundle install
+          brew install rbenv
+          brew install ruby-build
+          brew install gh
           bundler install
       - name: Set up xcconfig secrets (see README.md#quick-start)
         env:

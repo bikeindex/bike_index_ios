@@ -39,7 +39,8 @@ typealias QueryItemTuple = (name: String, value: String)
     private(set) var webConfiguration: WKWebViewConfiguration = {
         let config = WKWebViewConfiguration()
         let userContent = WKUserContentController()
-        userContent.addUserScript(WebScripts.removeFrame.script)
+        userContent.addUserScript(WebScripts.removeFrame)
+        userContent.addUserScript(WebScripts.hideMembership)
         config.userContentController = userContent
         return config
     }()

@@ -217,7 +217,9 @@ final class BikeIndexUITests: XCTestCase {
 
         button(named: "User Settings")
             .tap()
-        let userSettingsConfirmation = app.staticTexts["Give us permission to contact you if we believe your bike has been stolen, even if it isn't marked stolen"]
+        let userSettingsConfirmation = app.staticTexts[
+            "Give us permission to contact you if we believe your bike has been stolen, even if it isn't marked stolen"
+        ]
         _ = userSettingsConfirmation.waitForExistence(timeout: timeout)
         back()
 
@@ -235,7 +237,8 @@ final class BikeIndexUITests: XCTestCase {
 
         button(named: "Registration Organization")
             .tap()
-        let regOrgsConfirmation = app.staticTexts["Manage the organizations your bikes are registered with."]
+        let regOrgsConfirmation = app.staticTexts[
+            "Manage the organizations your bikes are registered with."]
         _ = regOrgsConfirmation.waitForExistence(timeout: timeout)
         back()
     }

@@ -18,4 +18,5 @@ extension Logger {
     static let client = Logger(subsystem: subsystem, category: "client")
     static let model = Logger(subsystem: subsystem, category: "model")
     static let deeplinks = Logger(subsystem: subsystem, category: "deeplinks")
+    static let webNavigation = Logger(subsystem: subsystem, category: "web-navigation")
 }
