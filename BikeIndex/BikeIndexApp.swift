@@ -49,6 +49,11 @@ struct BikeIndexApp: App {
                             host: client.hostProvider,
                             scannedURL: url)
                     }
+                    .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
+                        client.deeplinkManager = DeeplinkManager(
+                            host: client.hostProvider,
+                            scannedURL: userActivity.webpageURL)
+                    }
             } else {
                 AuthView()
                     .tint(Color.accentColor)
@@ -57,6 +62,12 @@ struct BikeIndexApp: App {
                             host: client.hostProvider,
                             scannedURL: url)
                     }
+                    .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
+                        client.deeplinkManager = DeeplinkManager(
+                            host: client.hostProvider,
+                            scannedURL: userActivity.webpageURL)
+                    }
+
             }
         }
         .environment(client)
