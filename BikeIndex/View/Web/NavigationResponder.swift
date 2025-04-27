@@ -48,7 +48,8 @@ open class NavigationResponder: NSObject, WKNavigationDelegate {
         } else {
             /// memberships are not managed inside the app
             if let url = navigationAction.request.url,
-                (url.pathComponents.starts(with: ["/", "membership"]) || url.pathComponents.starts(with: ["/", "donate"]))
+                url.pathComponents.starts(with: ["/", "membership"])
+                    || url.pathComponents.starts(with: ["/", "donate"])
             {
                 Logger.webNavigation.debug("Redirect from membership to donate")
                 let donateUrl = URL(stringLiteral: "https://bikeindex.org/donate")

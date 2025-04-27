@@ -27,6 +27,8 @@ enum FrameColor: String, Codable, CaseIterable, Identifiable, Equatable {
     /// includes Gold
     case yellow = "Yellow or gold"
 
+    // MARK: -
+
     var id: Self { self }
 
     var displayValue: String { rawValue }

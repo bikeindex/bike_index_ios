@@ -6,7 +6,9 @@
 //
 
 import OSLog
+import SectionedQuery
 import SwiftData
+import SwiftUI
 
 extension MainContentPage {
     /// Model for ``MainContentPage`` to perform helpful work retrieving and serializing.
@@ -14,7 +16,63 @@ extension MainContentPage {
     /// Consider moving this to @ModelActor
     /// - https://www.massicotte.org/model-actor
     /// - https://fatbobman.com/en/posts/concurret-programming-in-swiftdata/
-    final class ViewModel {
+    @MainActor @Observable
+    class ViewModel {
+        // MARK: Top Level State
+
+        // Normal operation handling
+        var fetching = true
+        // Error Handling
+        public var lastError: ViewModel.Error? = nil
+        // Alert presentation
+        var showError: Bool = false {
+            didSet {
+                if showError { fetching = false }
+            }
+        }
+
+        // MARK: Query Management
+
+        /// Will fetch last known value from user defaults.
+        /// Will persist after `didSet`.
+        var groupMode: GroupMode = GroupMode.lastKnownGroupMode {
+            didSet {
+                groupMode.persist()
+            }
+        }
+
+        // MARK: Child View State
+
+        // Control the navigation hierarchy for all views after this one
+        var path = NavigationPath()
+
+        // MARK: - Network Operations
+
+        /// 1. Fetch profile data
+        ///     - Report error and return if any problems occur
+        /// 2. Fetch profile's bikes data
+        ///     - Report error and return if any problems occur
+        func fetchMainContentData(client: Client, modelContext: ModelContext) async {
+            fetching = true
+            lastError = nil
+            showError = false
+
+            do {
+                try await fetchProfile(
+                    client: client,
+                    modelContext: modelContext)
+
+                try await fetchBikes(
+                    client: client,
+                    modelContext: modelContext)
+
+                fetching = false
+            } catch {
+                Logger.model.error("Failed to user info: \(error)")
+                lastError = error
+                showError = true
+            }
+        }
 
         /// Fetch the current user's profile. Must be authenticated already!
         /// Will perform these steps:
@@ -23,12 +81,14 @@ extension MainContentPage {
         /// 2. Write the User
         /// 3. Find any cached bikes known-to-be-owned by this user and link them.
         /// Wrapped Swift.Error can be thrown from A) network operations and B) SwiftData operations.
-        /// MainContentModel.Error can be thrown from C) application state errors or D) application logic errors.
+        /// ViewModel.Error can be thrown from C) application state errors or D) application logic errors.
         /// - Parameter client: App network Client to perform network requests.
         /// - Parameter modelContext: SwiftData modelContext to do work on
-        /// - Throws: MainContentModel.Error
+        /// - Throws: ViewModel.Error
         @MainActor
-        func fetchProfile(client: Client, modelContext: ModelContext) async throws(ViewModel.Error)
+        func fetchProfile(client: Client, modelContext: ModelContext)
+            async
+            throws(ViewModel.Error)
         {
             guard client.authenticated else {
                 return
@@ -90,12 +150,15 @@ extension MainContentPage {
         /// Fetch the current user's bikes. Must be authenticated already! Must have an AuthenticatedUser already!
         /// Will fetch and associate bikes with ``Bike/owner`` and ``Bike/authenticatedOwner``.
         /// Wrapped Swift.Error can be thrown from A) network operations and B) SwiftData operations.
-        /// MainContentModel.Error can be thrown from C) application state errors or D) application logic errors.
+        /// ViewModel.Error can be thrown from C) application state errors or D) application logic errors.
         /// - Parameter client: App network Client to perform network requests.
         /// - Parameter modelContext: SwiftData modelContext to do work on
-        /// - Throws: MainContentModel.Error
+        /// - Throws: ViewModel.Error
         @MainActor
-        func fetchBikes(client: Client, modelContext: ModelContext) async throws(ViewModel.Error) {
+        func fetchBikes(client: Client, modelContext: ModelContext)
+            async
+            throws(ViewModel.Error)
+        {
             guard client.authenticated else {
                 return
             }

@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Top-level navigation options that are always available.
 enum MainContent: Identifiable {
     var id: Self { self }
 
