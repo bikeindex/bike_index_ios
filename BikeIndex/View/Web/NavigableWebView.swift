@@ -40,7 +40,6 @@ struct NavigableWebView: View {
             navigator.assign(wkWebView: $0)
             $0.navigationDelegate = navigator
         }
-        .ignoresSafeArea()
         .onChange(
             of: url,
             { _, newValue in
@@ -88,7 +87,7 @@ struct NavigableWebView: View {
 
 #Preview {
     NavigableWebView(
-        url: .constant(URL("https://bikeindex.org")),
+        url: .constant(URL(string: "https://bikeindex.org")!),
         navigator: HistoryNavigator()
     )
     .environment(try! Client())
