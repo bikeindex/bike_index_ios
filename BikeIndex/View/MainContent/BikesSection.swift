@@ -12,15 +12,19 @@ struct BikesSection: View {
     @Binding var path: NavigationPath
     private(set) var section: SectionValue
     @Query private var bikes: [Bike]
+    @AppStorage
+    private var isExpanded: Bool
 
     init(path: Binding<NavigationPath>, section: SectionValue) {
         self._path = path
         self.section = section
         _bikes = Query(filter: section.filterPredicate)
+        /// Track expanded state _for each section_
+        _isExpanded = AppStorage(wrappedValue: true, "BikesSection.isExpanded.\(section.displayName)")
     }
 
     var body: some View {
-        Section {
+        Section(isExpanded: $isExpanded) {
             ForEach(Array(bikes.enumerated()), id: \.element) { (index, bike) in
                 ContentBikeButtonView(
                     path: $path,
@@ -30,12 +34,29 @@ struct BikesSection: View {
             }
             .padding()
         } header: {
-            Text(section.displayName)
-                .padding([.top, .bottom], 4)
-                .frame(maxWidth: .infinity)
-                .font(.headline)
-                .background(.ultraThinMaterial)
+            ZStack {
+                Text(section.displayName)
+                    .padding([.top, .bottom], 4)
+                    .frame(maxWidth: .infinity)
+                    .font(.headline)
+                HStack {
+                    Spacer()
+                    if isExpanded {
+                        Image(systemName: "chevron.down")
+                            .padding(.trailing)
+                    } else {
+                        Image(systemName: "chevron.right")
+                            .padding(.trailing)
+                    }
+                }
+            }
+            .background(.ultraThinMaterial)
+
         }
+        .onTapGesture {
+            isExpanded.toggle()
+        }
+        .frame(maxWidth: .infinity)
     }
 }
 
@@ -72,8 +93,12 @@ extension BikesSection {
     @Previewable @State var navigationPath = NavigationPath()
     @Previewable @State var status: BikeStatus = .withOwner
     NavigationStack {
-        BikesSection(
-            path: $navigationPath,
-            section: .byStatus(status))
+        ScrollView {
+            ProportionalLazyVGrid {
+                BikesSection(
+                    path: $navigationPath,
+                    section: .byStatus(status))
+            }
+        }
     }
 }
