@@ -21,6 +21,9 @@ open class NavigationResponder: NSObject, WKNavigationDelegate {
         }
     }
 
+    /// Connect WebViewKit's wrapped `WKWebView` instance to this NavigationResponder for managing updates.
+    /// Required to use NavigationResponder.
+    /// - Parameter wkWebView: The web view provided by `WebViewKit.WebView.init(…, viewConfig: (WKWebView) -> Void)`
     func assign(wkWebView: WKWebView?) {
         self.wkWebView = wkWebView
         child?.assign(wkWebView: wkWebView)
