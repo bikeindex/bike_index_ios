@@ -12,15 +12,19 @@ struct BikesSection: View {
     @Binding var path: NavigationPath
     private(set) var section: SectionValue
     @Query private var bikes: [Bike]
+    @AppStorage
+    private var isExpanded: Bool
 
     init(path: Binding<NavigationPath>, section: SectionValue) {
         self._path = path
         self.section = section
         _bikes = Query(filter: section.filterPredicate)
+        /// Track expanded state _for each section_
+        _isExpanded = AppStorage(wrappedValue: true, "BikesSection.isExpanded.\(section.displayName)")
     }
 
     var body: some View {
-        Section {
+        Section(isExpanded: $isExpanded) {
             ForEach(Array(bikes.enumerated()), id: \.element) { (index, bike) in
                 ContentBikeButtonView(
                     path: $path,
@@ -30,11 +34,30 @@ struct BikesSection: View {
             }
             .padding()
         } header: {
-            Text(section.displayName)
-                .padding([.top, .bottom], 4)
-                .frame(maxWidth: .infinity)
-                .font(.headline)
+            Button {
+                withAnimation(Animation.smooth(duration: 1.0, extraBounce: 2.0)) {
+                    isExpanded.toggle()
+                }
+            } label: {
+                ZStack {
+                    Text(section.displayName)
+                        .padding([.top, .bottom], 4)
+                        .frame(maxWidth: .infinity)
+                        .font(.headline)
+                    HStack {
+                        Spacer()
+                        Image(systemName: "chevron.down")
+                            .rotationEffect(.degrees(isExpanded ? 0 : -90))
+                            .padding(.trailing)
+                            .foregroundStyle(Color.secondary)
+                    }
+                }
                 .background(.ultraThinMaterial)
+            }
+            .accessibilityIdentifier("Section toggle \(section.displayName)")
+            .accessibilityHint("\(isExpanded ? "Collapse" : "Expand") section for \(section.displayName)")
+            .buttonStyle(.plain)
+            .padding([.top, .bottom], 2)
         }
     }
 }
@@ -72,8 +95,12 @@ extension BikesSection {
     @Previewable @State var navigationPath = NavigationPath()
     @Previewable @State var status: BikeStatus = .withOwner
     NavigationStack {
-        BikesSection(
-            path: $navigationPath,
-            section: .byStatus(status))
+        ScrollView {
+            ProportionalLazyVGrid {
+                BikesSection(
+                    path: $navigationPath,
+                    section: .byStatus(status))
+            }
+        }
     }
 }

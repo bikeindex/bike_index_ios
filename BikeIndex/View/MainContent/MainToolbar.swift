@@ -23,41 +23,48 @@ extension MainContentPage {
                 } label: {
                     Label("Settings", systemImage: "gearshape")
                 }
+                .accessibilityHint("Open application settings")
+
                 // Help
                 Button {
                     path.append(MainContent.help)
                 } label: {
                     Label("Help", systemImage: "book.closed")
                 }
+                .accessibilityHint("Open frequently asked questions and help pages")
             }
 
-            if loading {
-                ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                if loading {
                     ProgressView()
                         .tint(Color.primary)
+                        .accessibilityLabel("Loading indicator")
                 }
-            }
-            ToolbarItem(placement: .topBarTrailing) {
+
+                // TODO: Add `Menu(content: label: primaryAction:)` to change sort order (and show sort in icon)
                 Menu {
                     Text("Group by:")
                         .accessibilityLabel("Select one option")
                     ForEach(ViewModel.GroupMode.allCases) { option in
+                        let selected = groupMode == option
                         Button {
                             groupMode = option
                         } label: {
-                            if groupMode == option {
+                            if selected {
                                 Label(option.displayName, systemImage: "checkmark")
-                                    .accessibilityHint(Text("Currently selected"))
                             } else {
                                 Text(option.displayName)
-                                    .accessibilityHint(Text("Not selected"))
                             }
                         }
+                        .accessibilityIdentifier(option.rawValue)
+                        .accessibilityHint(Text(selected ? "Currently selected" : "Not selected"))
                     }
                 } label: {
                     Image(systemName: "slider.horizontal.3")
-                        .accessibilityLabel("Change how bikes are grouped.")
+                        .accessibilityLabel("slider-group")
                 }
+                .accessibilityLabel("Change how bikes are grouped.")
+                .accessibilityIdentifier("main_content_page_group_control")
             }
         }
     }
