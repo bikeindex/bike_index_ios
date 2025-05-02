@@ -21,6 +21,10 @@ final class HistoryNavigator: NavigationResponder {
         wkWebView?.canGoForward ?? false
     }
 
+    var isLoading: Bool {
+        wkWebView?.isLoading ?? false
+    }
+
     var historyDidChange: Bool = false
 
     // MARK: - Navigation Delegate

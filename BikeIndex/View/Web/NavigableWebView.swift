@@ -61,6 +61,9 @@ struct NavigableWebView: View {
         )
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
+                if navigator.isLoading {
+                    ProgressView()
+                }
                 Group {
                     Button("Back", systemImage: "chevron.backward") {
                         navigator.wkWebView?.goBack()
