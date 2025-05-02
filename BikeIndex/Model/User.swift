@@ -10,16 +10,23 @@ import OSLog
 import SwiftData
 
 /// Only one authenticated user can exist at a time.
-@Model final class AuthenticatedUser: BikeIndexIdentifiable {
-    // TODO: Check if `identifier` can be Int
+/// Authoritative reference for a user known to be signed-in.
+/// Lightweight and refers to ``Bike`` and ``User``relationships for full details.
+@Model final class AuthenticatedUser {
+    /// NOTE: AuthenticatedUser returns a string for an identifier.
     @Attribute(.unique) private(set) var identifier: String
-    /// AuthenticatedUser controls a general reference.
+    /// Refer to a ``User`` object for the full account details.
     @Relationship(deleteRule: .cascade) var user: User?
 
     /// Associate the bikes that are owned by a user (usually the one currently logged-in).
     @Relationship(inverse: \Bike.authenticatedOwner)
     var bikes: [Bike]
 
+    /// Create an AuthenticatedUser
+    /// - Parameters:
+    ///   - identifier: The user ID from the server for this account.
+    ///   - bikes: An array of bikes owned by this account, if known.
+    ///   Otherwise relationships will be connected later.
     init(identifier: String, bikes: [Bike]) {
         self.identifier = identifier
         self.bikes = []

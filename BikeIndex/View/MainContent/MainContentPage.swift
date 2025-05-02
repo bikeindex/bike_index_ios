@@ -10,58 +10,42 @@ import SectionedQuery
 import SwiftData
 import SwiftUI
 
+/// Main page of the app to display all navigation options and Bikes.
 struct MainContentPage: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
-    // Control the navigation hierarchy for all views after this one
-    @State var path = NavigationPath()
-
-    // Data handling and error handling
-    var contentModel = ViewModel()
-    @State var lastError: ViewModel.Error?
-    @State var showError: Bool = false
-
-    @SectionedQuery(
-        \Bike.statusString,
-        sort: [SortDescriptor(\.statusString)])
-    private var bikesByStatus: SectionedResults<String, Bike>
+    /// ViewModel for state management.
+    /// Forwards dynamic query changes to ``BikesList`` to support dynamic grouping selection.
+    @State private var viewModel = ViewModel()
 
     var body: some View {
-        NavigationStack(path: $path) {
+        NavigationStack(path: $viewModel.path) {
             @Bindable var deeplinkManager = client.deeplinkManager
             ScrollView {
                 LazyVGrid(columns: Array(repeating: GridItem(), count: 1)) {
                     ForEach(ContentButton.allCases, id: \.id) { menuItem in
                         ContentButtonView(
-                            path: $path,
+                            path: $viewModel.path,
                             item: menuItem)
                     }
                 }
 
-                if bikesByStatus.isEmpty {
-                    ContentUnavailableView("No bikes registered", systemImage: "bicycle.circle")
-                        .padding()
-                } else {
-                    ProportionalLazyVGrid(pinnedViews: [.sectionHeaders]) {
-                        ForEach(bikesByStatus) { section in
-                            if let status = BikeStatus(rawValue: section.id) {
-                                BikesStatusSection(
-                                    path: $path,
-                                    status: status)
-                            }
-                        }
-                    }
-                }
+                BikesList(
+                    path: $viewModel.path,
+                    group: viewModel.groupMode)
             }
             .toolbar {
-                MainToolbar(path: $path)
+                MainToolbar(
+                    path: $viewModel.path,
+                    loading: $viewModel.fetching,
+                    groupMode: $viewModel.groupMode)
             }
             .navigationTitle("Bike Index")
             .navigationDestination(for: MainContent.self) { selection in
                 switch selection {
                 case .settings:
-                    SettingsPage(path: $path)
+                    SettingsPage(path: $viewModel.path)
                         .accessibilityIdentifier("Settings")
                 case .help:
                     NavigableWebView(
@@ -70,42 +54,39 @@ struct MainContentPage: View {
                     )
                     .environment(client)
                 case .registerBike:
-                    RegisterBikeView(path: $path, mode: .myOwnBike)
+                    RegisterBikeView(path: $viewModel.path, mode: .myOwnBike)
                 case .lostBike:
-                    RegisterBikeView(path: $path, mode: .myStolenBike)
+                    RegisterBikeView(path: $viewModel.path, mode: .myStolenBike)
                 case .searchBikes:
                     SearchBikesView()
                         .environment(client)
                 }
             }
-            .navigationDestination(for: PersistentIdentifier.self) { identifier in
-                ForEach(bikesByStatus) { section in
-                    if let bike = section.elements.first(where: {
-                        $0.persistentModelID == identifier
-                    }) {
-                        BikeDetailView(bike: bike)
-                    }
-                }
+            .navigationDestination(for: Bike.BikeIdentifier.self) { identifier in
+                /// ``ContentBikeButtonView`` uses `NavigationLink`s to ``Bike/identifier``.
+                BikeDetailView(
+                    bikeIdentifier: identifier,
+                    host: client.configuration.host)
             }
             .sheet(
                 item: $deeplinkManager.scannedBike,
                 content: { scan in
                     let viewModel = ScannedBikePage.ViewModel(
                         scan: scan,
-                        path: path,
+                        path: viewModel.path,
                         dismiss: {
                             deeplinkManager.scannedBike = nil
                         })
                     ScannedBikePage(viewModel: viewModel)
                         .onDisappear {
                             if let exitPath = viewModel.onDisappear {
-                                path.append(exitPath)
+                                viewModel.path.append(exitPath)
                             }
                         }
                 }
             )
-            .alert(isPresented: $showError, error: lastError) {
-                Text("Error occurred")
+            .alert(isPresented: $viewModel.showError, error: viewModel.lastError) {
+                Text("Okay")
             }
             .onAppear {
                 Logger.views.debug(
@@ -114,35 +95,11 @@ struct MainContentPage: View {
             }
         }
         .task {
-            await fetchMainContentData()
-        }
-    }
-
-    /// 1. Fetch profile data
-    ///     - Report error and return if any problems occur
-    /// 2. Fetch profile's bikes data
-    ///     - Report error and return if any problems occur
-    private func fetchMainContentData() async {
-        do {
-            try await contentModel.fetchProfile(
+            /// Comment this out to test ``MainContentPage/ViewModel/fetching`` display
+            await viewModel.fetchMainContentData(
                 client: client,
                 modelContext: modelContext)
-        } catch {
-            Logger.model.error("Failed to fetch profile: \(error)")
-            lastError = error
-            showError = true
-            return
-        }
 
-        do {
-            try await contentModel.fetchBikes(
-                client: client,
-                modelContext: modelContext)
-        } catch {
-            Logger.model.error("Failed to user's bikes: \(error)")
-            lastError = error
-            showError = true
-            return
         }
     }
 }
@@ -151,20 +108,15 @@ struct MainContentPage: View {
 
 // MARK: Empty Data Preview
 #Preview("Empty data") {
-    do {
-        let client = try Client()
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    @Previewable let client = try! Client()
 
-        let container = try ModelContainer(
-            for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
-            configurations: config)
+    @Previewable let container = try! ModelContainer(
+        for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true))
 
-        return MainContentPage()
-            .environment(client)
-            .modelContainer(container)
-    } catch let error {
-        return Text("Failed to load preview \(error.localizedDescription)")
-    }
+    MainContentPage()
+        .environment(client)
+        .modelContainer(container)
 }
 
 // MARK: Bikes by status (withOwner)
@@ -180,6 +132,9 @@ struct MainContentPage: View {
             do {
                 let rawJsonData = MockData.sampleBikeJson.data(using: .utf8)!
                 let statuses: [BikeStatus] = Array(repeating: .withOwner, count: 3)
+                let manufacturers = [
+                    "Giant", "Specialized", "Jamis", "Giant", "Specialized", "Jamis",
+                ]
 
                 for (index, status) in statuses.enumerated() {
                     let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
@@ -188,6 +143,7 @@ struct MainContentPage: View {
                     // but separate the identifiers
                     bike.identifier = index
                     bike.update(keyPath: \.status, to: status)
+                    bike.update(keyPath: \.manufacturerName, to: manufacturers[index])
                     print(
                         "Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)"
                     )
@@ -214,6 +170,9 @@ struct MainContentPage: View {
             do {
                 let rawJsonData = MockData.sampleBikeJson.data(using: .utf8)!
                 let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
+                let manufacturers = [
+                    "Giant", "Specialized", "Jamis", "Giant", "Specialized", "Jamis",
+                ]
 
                 for (index, status) in BikeStatus.allCases.enumerated() {
                     let bike = output.modelInstance()
@@ -222,6 +181,7 @@ struct MainContentPage: View {
                     // but separate the identifiers
                     bike.identifier = index
                     bike.update(keyPath: \.status, to: status)
+                    bike.update(keyPath: \.manufacturerName, to: manufacturers[index])
                     print(
                         "Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)"
                     )

@@ -5,7 +5,6 @@
 //  Created by Jack on 11/18/23.
 //
 
-import SwiftData
 import SwiftUI
 
 struct SearchBikesView: View {
