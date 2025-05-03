@@ -14,6 +14,7 @@ extension MainContentPage {
         @Binding var path: NavigationPath
         @Binding var loading: Bool
         @Binding var groupMode: ViewModel.GroupMode
+        @Binding var sortOrder: SortOrder
 
         var body: some ToolbarContent {
             ToolbarItemGroup(placement: .topBarLeading) {
@@ -41,8 +42,16 @@ extension MainContentPage {
                         .accessibilityLabel("Loading indicator")
                 }
 
-                // TODO: Add `Menu(content: label: primaryAction:)` to change sort order (and show sort in icon)
                 Menu {
+                    // MARK: - Sorty By
+                    Button {
+                        sortOrder = sortOrder.toggle()
+                    } label: {
+                        let systemImage = sortOrder == .forward ? "arrow.down" : "arrow.up"
+                        Label("Sort order:",  systemImage: systemImage)
+                    }
+                    Divider()
+                    // MARK: - Group By
                     Text("Group by:")
                         .accessibilityLabel("Select one option")
                     ForEach(ViewModel.GroupMode.allCases) { option in
@@ -73,13 +82,15 @@ extension MainContentPage {
 #Preview {
     @Previewable @State var path = NavigationPath()
     @Previewable @State var groupMode = MainContentPage.ViewModel.GroupMode.byStatus
+    @Previewable @State var sortOrder: SortOrder = .forward
     NavigationStack {
         Text("Toolbar preview")
             .toolbar {
                 MainContentPage.MainToolbar(
                     path: $path,
                     loading: .constant(true),
-                    groupMode: $groupMode)
+                    groupMode: $groupMode,
+                    sortOrder: $sortOrder)
             }
     }
     .environment(try! Client())

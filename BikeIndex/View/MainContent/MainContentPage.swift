@@ -34,13 +34,15 @@ struct MainContentPage: View {
                 BikesList(
                     path: $viewModel.path,
                     fetching: $viewModel.fetching,
-                    group: viewModel.groupMode)
+                    group: viewModel.groupMode,
+                    sortOrder: viewModel.sortOrder)
             }
             .toolbar {
                 MainToolbar(
                     path: $viewModel.path,
                     loading: $viewModel.fetching,
-                    groupMode: $viewModel.groupMode)
+                    groupMode: $viewModel.groupMode,
+                    sortOrder: $viewModel.sortOrder)
             }
             .navigationTitle("Bike Index")
             .navigationDestination(for: MainContent.self) { selection in
