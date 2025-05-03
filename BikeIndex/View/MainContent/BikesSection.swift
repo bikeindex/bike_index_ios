@@ -20,7 +20,8 @@ struct BikesSection: View {
         self.section = section
         _bikes = Query(filter: section.filterPredicate)
         /// Track expanded state _for each section_
-        _isExpanded = AppStorage(wrappedValue: true, "BikesSection.isExpanded.\(section.displayName)")
+        _isExpanded = AppStorage(
+            wrappedValue: true, "BikesSection.isExpanded.\(section.displayName)")
     }
 
     var body: some View {
@@ -31,6 +32,7 @@ struct BikesSection: View {
                     bikeIdentifier: bike.identifier
                 )
                 .accessibilityIdentifier("Bike \(index + 1)")
+                .accessibilityValue(bike.bikeDescription ?? bike.manufacturerName)
             }
             .padding()
         } header: {
@@ -54,8 +56,11 @@ struct BikesSection: View {
                 }
                 .background(.ultraThinMaterial)
             }
+            .accessibilityValue("\(isExpanded ? "Expanded" : "Collapsed")")
             .accessibilityIdentifier("Section toggle \(section.displayName)")
-            .accessibilityHint("\(isExpanded ? "Collapse" : "Expand") section for \(section.displayName)")
+            .accessibilityHint(
+                "\(isExpanded ? "Collapse" : "Expand") section for \(section.displayName)"
+            )
             .buttonStyle(.plain)
             .padding([.top, .bottom], 2)
         }
