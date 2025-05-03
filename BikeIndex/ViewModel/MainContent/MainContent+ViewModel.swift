@@ -40,6 +40,11 @@ extension MainContentPage {
                 groupMode.persist()
             }
         }
+        var sortOrder: SortOrder = GroupMode.lastKnownSortOrder {
+            didSet {
+                groupMode.persist(sortOrder: sortOrder)
+            }
+        }
 
         // MARK: Child View State
 
