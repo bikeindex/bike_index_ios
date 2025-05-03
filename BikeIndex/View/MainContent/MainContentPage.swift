@@ -33,6 +33,7 @@ struct MainContentPage: View {
 
                 BikesList(
                     path: $viewModel.path,
+                    fetching: $viewModel.fetching,
                     group: viewModel.groupMode)
             }
             .toolbar {

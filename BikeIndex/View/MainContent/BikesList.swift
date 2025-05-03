@@ -12,21 +12,29 @@ import SwiftUI
 /// Display multiple sections of bikes together
 struct BikesList: View {
     @Binding var path: NavigationPath
+    @Binding var fetching: Bool
 
     @SectionedQuery(\Bike.statusString)
     var bikes: SectionedResults<String, Bike>
 
     var group: MainContentPage.ViewModel.GroupMode
 
-    init(path: Binding<NavigationPath>, group: MainContentPage.ViewModel.GroupMode) {
+    init(
+        path: Binding<NavigationPath>, fetching: Binding<Bool>,
+        group: MainContentPage.ViewModel.GroupMode
+    ) {
         _path = path
+        _fetching = fetching
         self.group = group
         _bikes = group.sectionQuery
     }
 
     var body: some View {
-        if bikes.isEmpty {
-            ContentUnavailableView("No bikes registered", systemImage: "bicycle.circle")
+        if fetching {
+            ContentUnavailableView("Fetching bikes…", systemImage: "bicycle.circle")
+                .padding()
+        } else if bikes.isEmpty {
+            ContentUnavailableView("No bikes registered", systemImage: "bicycle.circle.fill")
                 .padding()
         } else {
             ProportionalLazyVGrid(pinnedViews: [.sectionHeaders]) {
