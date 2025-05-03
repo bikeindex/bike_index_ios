@@ -5,6 +5,7 @@
 //  Created by Jack on 3/22/25.
 //
 
+import OSLog
 import SectionedQuery
 import SwiftData
 import SwiftUI
@@ -67,11 +68,13 @@ extension MainContentPage.ViewModel {
         }
 
         static var lastKnownSortOrder: SortOrder {
-            let sortOrder_persistenceKey = "\(Self.lastKnownGroupMode.id)_\(Self.sortOrder_baseKey)"
+            let sortOrder_persistenceKey = "\(Self.lastKnownGroupMode.id)-\(Self.sortOrder_baseKey)"
             guard let id = UserDefaults.standard.string(forKey: sortOrder_persistenceKey) else {
+                Logger.views.debug("\(#function) failed to read \(sortOrder_persistenceKey)")
                 return .forward
             }
 
+            Logger.views.debug("\(#function) found \(id) for \(sortOrder_persistenceKey)")
             switch id {
             case "reverse":
                 return .reverse
@@ -82,10 +85,16 @@ extension MainContentPage.ViewModel {
             }
         }
 
-        func persist(with sortOrder: SortOrder) {
+        func persist() {
             UserDefaults.standard.set(self.id, forKey: Self.groupMode_persistenceKey)
-            let sortOrder_persistenceKey = "\(self.id)_\(Self.sortOrder_baseKey)"
-            UserDefaults.standard.set(sortOrder.displayName, forKey: sortOrder_persistenceKey)
+        }
+
+        func persist(sortOrder: SortOrder) {
+            let sortOrder_persistenceKey = "\(self.id)-\(Self.sortOrder_baseKey)"
+            UserDefaults.standard.set(sortOrder.identifier, forKey: sortOrder_persistenceKey)
+            Logger.views.debug(
+                "Persisted group mode: \(self.displayName, privacy: .public), sort order: \(sortOrder.identifier, privacy: .public)"
+            )
         }
     }
 }

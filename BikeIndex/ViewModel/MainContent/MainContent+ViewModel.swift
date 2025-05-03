@@ -37,12 +37,12 @@ extension MainContentPage {
         /// Will persist after `didSet`.
         var groupMode: GroupMode = GroupMode.lastKnownGroupMode {
             didSet {
-                groupMode.persist(with: sortOrder)
+                groupMode.persist()
             }
         }
         var sortOrder: SortOrder = GroupMode.lastKnownSortOrder {
             didSet {
-                groupMode.persist(with: sortOrder)
+                groupMode.persist(sortOrder: sortOrder)
             }
         }
 

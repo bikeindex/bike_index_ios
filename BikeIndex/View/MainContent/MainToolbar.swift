@@ -50,6 +50,8 @@ extension MainContentPage {
                         let systemImage = sortOrder == .forward ? "arrow.down" : "arrow.up"
                         Label("Sort order:", systemImage: systemImage)
                     }
+                    .accessibilityValue(sortOrder.displayName)
+                    .accessibilityHint("Toggle sort order")
                     Divider()
                     // MARK: - Group By
                     Text("Group by:")
@@ -58,6 +60,7 @@ extension MainContentPage {
                         let selected = groupMode == option
                         Button {
                             groupMode = option
+                            sortOrder = ViewModel.GroupMode.lastKnownSortOrder
                         } label: {
                             if selected {
                                 Label(option.displayName, systemImage: "checkmark")
