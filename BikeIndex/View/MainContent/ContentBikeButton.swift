@@ -5,6 +5,7 @@
 //  Created by Jack on 1/7/24.
 //
 
+import CachedAsyncImage
 import SwiftData
 import SwiftUI
 
@@ -25,7 +26,7 @@ struct ContentBikeButtonView: View {
             NavigationLink(value: bike.identifier) {
                 VStack {
                     ZStack {
-                        AsyncImage(url: bike.largeImage) { image in
+                        CachedAsyncImage(url: bike.largeImage) { image in
                             image
                                 .resizable()
                                 .scaledToFill()
