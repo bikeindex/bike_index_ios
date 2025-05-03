@@ -40,7 +40,6 @@ struct BikeDetailView: View {
     }
 
     var body: some View {
-        let _ = Self._printChanges()
         if let bike {
             NavigableWebView(url: $url)
                 .toolbar(content: {
