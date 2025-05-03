@@ -22,7 +22,7 @@ struct ContentBikeButtonView: View {
 
     var body: some View {
         if let bike = bikeQuery.first, bikeQuery.count == 1 {
-            NavigationLink(value: bike.persistentModelID) {
+            NavigationLink(value: bike.identifier) {
                 VStack {
                     ZStack {
                         AsyncImage(url: bike.largeImage) { image in

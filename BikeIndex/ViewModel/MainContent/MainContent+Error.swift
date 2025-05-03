@@ -8,7 +8,7 @@
 import Foundation
 
 extension MainContentPage.ViewModel {
-    /// Some errors in MainContentModel are app-specific, others come from SwiftData.
+    /// Some errors in ViewModel are app-specific, others come from SwiftData.
     /// Represent both kinds of errors in this concrete type for SwiftUI.alert to utilize.
     public enum Error: LocalizedError {
         case failed(message: String)

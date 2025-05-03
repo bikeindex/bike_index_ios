@@ -10,9 +10,9 @@ import WebKit
 import WebViewKit
 
 /// Display an inline URL with backward/forward page controls.
-/// Useful as a web view _instead of_ SFSafariViewController because we rely on hybrid web authentication
+/// Useful as a web view _instead of_ SFSafariViewController
+/// because we rely on hybrid web authentication
 /// until a fully native UI can be completed.
-/// The State variable for the `url` **must** not be modified anywhere else.
 struct NavigableWebView: View {
     @Environment(Client.self) var client
 
@@ -44,13 +44,14 @@ struct NavigableWebView: View {
         .onChange(
             of: url,
             { _, newValue in
-                // When the binding changes, navigate to the new page.
+                // Accept updates from the owning State/Binding, navigate to the new page.
                 navigator.wkWebView?.load(URLRequest(url: newValue))
             }
         )
         .onChange(
             of: navigator.wkWebView?.url,
             { oldValue, newValue in
+                // Accept updates from the webView (such as clicking links).
                 // After a user action causes a change, update the binding.
                 // This allows assigning new values to the binding to navigate to.
                 if let newValue, newValue != url {
@@ -60,6 +61,9 @@ struct NavigableWebView: View {
         )
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
+                if navigator.isLoading {
+                    ProgressView()
+                }
                 Group {
                     Button("Back", systemImage: "chevron.backward") {
                         navigator.wkWebView?.goBack()

@@ -21,6 +21,9 @@ open class NavigationResponder: NSObject, WKNavigationDelegate {
         }
     }
 
+    /// Connect WebViewKit's wrapped `WKWebView` instance to this NavigationResponder for managing updates.
+    /// Required to use NavigationResponder.
+    /// - Parameter wkWebView: The web view provided by `WebViewKit.WebView.init(…, viewConfig: (WKWebView) -> Void)`
     func assign(wkWebView: WKWebView?) {
         self.wkWebView = wkWebView
         child?.assign(wkWebView: wkWebView)
@@ -48,7 +51,8 @@ open class NavigationResponder: NSObject, WKNavigationDelegate {
         } else {
             /// memberships are not managed inside the app
             if let url = navigationAction.request.url,
-                (url.pathComponents.starts(with: ["/", "membership"]) || url.pathComponents.starts(with: ["/", "donate"]))
+                url.pathComponents.starts(with: ["/", "membership"])
+                    || url.pathComponents.starts(with: ["/", "donate"])
             {
                 Logger.webNavigation.debug("Redirect from membership to donate")
                 let donateUrl = URL(stringLiteral: "https://bikeindex.org/donate")
