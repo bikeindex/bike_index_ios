@@ -18,15 +18,20 @@ struct BikesList: View {
     var bikes: SectionedResults<String, Bike>
 
     var group: MainContentPage.ViewModel.GroupMode
+    /// Sort order applies to the sections, not the bikes in each section.
+    var sortOrder: SortOrder
 
     init(
         path: Binding<NavigationPath>, fetching: Binding<Bool>,
-        group: MainContentPage.ViewModel.GroupMode
+        group: MainContentPage.ViewModel.GroupMode,
+        sortOrder: SortOrder
     ) {
         _path = path
         _fetching = fetching
         self.group = group
-        _bikes = group.sectionQuery
+        self.sortOrder = sortOrder
+
+        _bikes = group.sectionQuery(with: sortOrder)
     }
 
     var body: some View {

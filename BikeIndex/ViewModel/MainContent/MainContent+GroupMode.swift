@@ -34,16 +34,20 @@ extension MainContentPage.ViewModel {
             }
         }
 
-        var sectionQuery: SectionedQuery<String, Bike> {
+        /// Query for Bikes grouped by `self`: either byStatus or byManufacturer
+        /// The sections will be sorted.
+        /// E.g. SortOrder.forward: Giant, Jamis, Specialized (down arrow)
+        ///      SortOrder.reverse: Specialized, Jamis, Giant (up arrow)
+        func sectionQuery(with sortOrder: SortOrder) -> SectionedQuery<String, Bike> {
             switch self {
             case .byStatus:
                 SectionedQuery(
                     \Bike.statusString,
-                    sort: [SortDescriptor(\Bike.statusString)])
+                    sort: [SortDescriptor(\Bike.statusString, order: sortOrder)])
             case .byManufacturer:
                 SectionedQuery(
                     \Bike.manufacturerName,
-                    sort: [SortDescriptor(\Bike.manufacturerName)])
+                    sort: [SortDescriptor(\Bike.manufacturerName, order: sortOrder)])
             }
         }
 
@@ -64,8 +68,9 @@ extension MainContentPage.ViewModel {
 
         static var lastKnownSortOrder: SortOrder {
             let sortOrder_persistenceKey = "\(Self.lastKnownGroupMode.id)_\(Self.sortOrder_baseKey)"
-            guard let id = UserDefaults.standard.string(forKey: sortOrder_persistenceKey) else
-            { return .forward }
+            guard let id = UserDefaults.standard.string(forKey: sortOrder_persistenceKey) else {
+                return .forward
+            }
 
             switch id {
             case "reverse":
@@ -103,7 +108,6 @@ extension SortOrder {
             return "Descending"
         }
     }
-
 
     func toggle() -> SortOrder {
         if self == .forward {

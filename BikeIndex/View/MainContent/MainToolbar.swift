@@ -48,7 +48,7 @@ extension MainContentPage {
                         sortOrder = sortOrder.toggle()
                     } label: {
                         let systemImage = sortOrder == .forward ? "arrow.down" : "arrow.up"
-                        Label("Sort order:",  systemImage: systemImage)
+                        Label("Sort order:", systemImage: systemImage)
                     }
                     Divider()
                     // MARK: - Group By
