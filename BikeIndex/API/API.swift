@@ -9,7 +9,7 @@ import Foundation
 import OSLog
 import URLEncodedForm
 
-/// URL's appending(components: String...) varidic function cannot accept arrays (splatting) so use reduce instead
+/// URL's appending(components: String...) variadic function cannot accept arrays (splatting) so use reduce instead
 extension URL {
     func appending(components: [String]) -> Self {
         return components.reduce(self) { partialResult, path in
