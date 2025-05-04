@@ -39,6 +39,7 @@ struct NavigableWebView: View {
             #endif
             navigator.assign(wkWebView: $0)
             $0.navigationDelegate = navigator
+            $0.allowsLinkPreview = false
         }
         .onChange(
             of: url,

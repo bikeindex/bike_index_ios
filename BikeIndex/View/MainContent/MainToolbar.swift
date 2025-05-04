@@ -14,6 +14,7 @@ extension MainContentPage {
         @Binding var path: NavigationPath
         @Binding var loading: Bool
         @Binding var groupMode: ViewModel.GroupMode
+        @Binding var sortOrder: SortOrder
 
         var body: some ToolbarContent {
             ToolbarItemGroup(placement: .topBarLeading) {
@@ -23,41 +24,59 @@ extension MainContentPage {
                 } label: {
                     Label("Settings", systemImage: "gearshape")
                 }
+                .accessibilityHint("Open application settings")
+
                 // Help
                 Button {
                     path.append(MainContent.help)
                 } label: {
                     Label("Help", systemImage: "book.closed")
                 }
+                .accessibilityHint("Open frequently asked questions and help pages")
             }
 
-            if loading {
-                ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                if loading {
                     ProgressView()
                         .tint(Color.primary)
+                        .accessibilityLabel("Loading indicator")
                 }
-            }
-            ToolbarItem(placement: .topBarTrailing) {
+
                 Menu {
+                    // MARK: - Sorty By
+                    Button {
+                        sortOrder = sortOrder.toggle()
+                    } label: {
+                        let systemImage = sortOrder == .forward ? "arrow.down" : "arrow.up"
+                        Label("Sort order:", systemImage: systemImage)
+                    }
+                    .accessibilityValue(sortOrder.displayName)
+                    .accessibilityHint("Toggle sort order")
+                    Divider()
+                    // MARK: - Group By
                     Text("Group by:")
                         .accessibilityLabel("Select one option")
                     ForEach(ViewModel.GroupMode.allCases) { option in
+                        let selected = groupMode == option
                         Button {
                             groupMode = option
+                            sortOrder = ViewModel.GroupMode.lastKnownSortOrder
                         } label: {
-                            if groupMode == option {
+                            if selected {
                                 Label(option.displayName, systemImage: "checkmark")
-                                    .accessibilityHint(Text("Currently selected"))
                             } else {
                                 Text(option.displayName)
-                                    .accessibilityHint(Text("Not selected"))
                             }
                         }
+                        .accessibilityIdentifier(option.rawValue)
+                        .accessibilityHint(Text(selected ? "Currently selected" : "Not selected"))
                     }
                 } label: {
                     Image(systemName: "slider.horizontal.3")
-                        .accessibilityLabel("Change how bikes are grouped.")
+                        .accessibilityLabel("slider-group")
                 }
+                .accessibilityLabel("Change how bikes are grouped.")
+                .accessibilityIdentifier("main_content_page_group_control")
             }
         }
     }
@@ -66,13 +85,15 @@ extension MainContentPage {
 #Preview {
     @Previewable @State var path = NavigationPath()
     @Previewable @State var groupMode = MainContentPage.ViewModel.GroupMode.byStatus
+    @Previewable @State var sortOrder: SortOrder = .forward
     NavigationStack {
         Text("Toolbar preview")
             .toolbar {
                 MainContentPage.MainToolbar(
                     path: $path,
                     loading: .constant(true),
-                    groupMode: $groupMode)
+                    groupMode: $groupMode,
+                    sortOrder: $sortOrder)
             }
     }
     .environment(try! Client())

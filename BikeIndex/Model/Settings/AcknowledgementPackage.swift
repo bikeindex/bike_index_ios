@@ -60,6 +60,14 @@ extension AcknowledgementPackage {
             license: .mit,
             copyright: "Copyright © 2023 Thomas Magis-Agosta",
             repository: URL("https://github.com/beechtom/swiftdata-sectionedquery")),
+        AcknowledgementPackage(
+            title: "SwiftUI CachedAsyncImage",
+            license: .mit,
+            copyright: "Copyright © 2021 Lorenzo Fiamingo",
+            repository: URL(
+                "https://github.com/lorenzofiamingo/swiftui-cached-async-image"
+            )
+        ),
     ]
 
     static var gnuAfferoGPLv3Packages: [AcknowledgementPackage] {

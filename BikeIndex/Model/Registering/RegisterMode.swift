@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum RegisterMode {
     case myOwnBike
@@ -18,6 +19,15 @@ enum RegisterMode {
             "Enter Bike Details"
         case .myStolenBike:
             "Enter Stolen Bike Details"
+        }
+    }
+
+    var navigationBarDisplayMode: NavigationBarItem.TitleDisplayMode {
+        switch self {
+        case .myOwnBike:
+            .automatic
+        case .myStolenBike:
+            .inline
         }
     }
 }

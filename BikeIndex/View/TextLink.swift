@@ -43,6 +43,7 @@ enum BikeIndexLink: Identifiable {
     // MARK: General
     case oauthApplications
     case serials
+    case stolenBikeWhatToDo
     case stolenBikeFAQ
     case privacyPolicy
     case termsOfService
@@ -70,7 +71,8 @@ enum BikeIndexLink: Identifiable {
             markdownSource =
                 "Learn more about [How to get your stolen bike back](\(link(base: base)))"
         case .help, .privacyPolicy, .termsOfService, .deleteAccount, .accountUserSettings,
-            .accountPassword, .accountSharingPersonalPage, .accountRegistrationOrganization:
+            .accountPassword, .accountSharingPersonalPage, .accountRegistrationOrganization,
+            .stolenBikeWhatToDo:
             return AttributedString()
         }
 
@@ -97,6 +99,9 @@ enum BikeIndexLink: Identifiable {
         case .serials:
             // https://bikeindex.org/serials
             return "serials"
+        case .stolenBikeWhatToDo:
+            // https://bikeindex.org/stolen
+            return "stolen"
         case .stolenBikeFAQ:
             // https://bikeindex.org/info/how-to-get-your-stolen-bike-back
             return "info/how-to-get-your-stolen-bike-back"

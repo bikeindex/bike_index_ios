@@ -16,7 +16,7 @@ struct MainContentPage: View {
     @Environment(Client.self) var client
 
     /// ViewModel for state management.
-    /// Forwards dynamic query changes to ``BikesList`` to support dynamic grouping selection.
+    /// Forwards dynamic query changes to ``BikesGridContainerView`` to support dynamic grouping selection.
     @State private var viewModel = ViewModel()
 
     var body: some View {
@@ -31,15 +31,18 @@ struct MainContentPage: View {
                     }
                 }
 
-                BikesList(
+                BikesGridContainerView(
                     path: $viewModel.path,
-                    group: viewModel.groupMode)
+                    fetching: $viewModel.fetching,
+                    sectionGroup: viewModel.groupMode,
+                    sectionSortOrder: viewModel.sortOrder)
             }
             .toolbar {
                 MainToolbar(
                     path: $viewModel.path,
                     loading: $viewModel.fetching,
-                    groupMode: $viewModel.groupMode)
+                    groupMode: $viewModel.groupMode,
+                    sortOrder: $viewModel.sortOrder)
             }
             .navigationTitle("Bike Index")
             .navigationDestination(for: MainContent.self) { selection in
@@ -132,6 +135,7 @@ struct MainContentPage: View {
             do {
                 let rawJsonData = MockData.sampleBikeJson.data(using: .utf8)!
                 let statuses: [BikeStatus] = Array(repeating: .withOwner, count: 3)
+                let years: [Int?] = [2025, 2020, nil]
                 let manufacturers = [
                     "Giant", "Specialized", "Jamis", "Giant", "Specialized", "Jamis",
                 ]
@@ -143,6 +147,7 @@ struct MainContentPage: View {
                     // but separate the identifiers
                     bike.identifier = index
                     bike.update(keyPath: \.status, to: status)
+                    bike.update(keyPath: \.year, to: years[index])
                     bike.update(keyPath: \.manufacturerName, to: manufacturers[index])
                     print(
                         "Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)"
@@ -173,6 +178,7 @@ struct MainContentPage: View {
                 let manufacturers = [
                     "Giant", "Specialized", "Jamis", "Giant", "Specialized", "Jamis",
                 ]
+                let years: [Int?] = [2025, 2024, 2020, 2015, 2014, nil]
 
                 for (index, status) in BikeStatus.allCases.enumerated() {
                     let bike = output.modelInstance()
@@ -181,6 +187,7 @@ struct MainContentPage: View {
                     // but separate the identifiers
                     bike.identifier = index
                     bike.update(keyPath: \.status, to: status)
+                    bike.update(keyPath: \.year, to: years[index])
                     bike.update(keyPath: \.manufacturerName, to: manufacturers[index])
                     print(
                         "Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)"

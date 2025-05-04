@@ -198,13 +198,15 @@ final class BikeIndexUITests: XCTestCase {
         _ = registerBikeButton.waitForExistence(timeout: timeout)
         registerBikeButton.tap()
 
-        let goToHowToGetYourBikeBackPage = app.staticTexts.matching(
-            NSPredicate(format: "label BEGINSWITH %@", "⚠️ How to get your stolen bike back"))
-        if goToHowToGetYourBikeBackPage.element.waitForExistence(timeout: timeout) {
-            goToHowToGetYourBikeBackPage.element.tap()
-        } else {
-            XCTFail("Expected markdown link at 'How to get your stolen bike back'")
-        }
+        let whatToDoIfYourBikeIStolenPage = app.buttons["What to do if your bike is stolen"]
+        _ = whatToDoIfYourBikeIStolenPage.waitForExistence(timeout: timeout)
+        whatToDoIfYourBikeIStolenPage.tap()
+
+        back()
+
+        let goToHowToGetYourBikeBackPage = app.buttons["How to get your stolen bike back"]
+        _ = goToHowToGetYourBikeBackPage.waitForExistence(timeout: timeout)
+        goToHowToGetYourBikeBackPage.tap()
 
         back()
     }
