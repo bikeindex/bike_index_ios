@@ -10,7 +10,6 @@ import SwiftData
 import SwiftUI
 import WebViewKit
 
-/// NOTE: Adopt @Focus State https://developer.apple.com/documentation/swiftui/focusstate
 struct RegisterBikeView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
@@ -22,7 +21,7 @@ struct RegisterBikeView: View {
     // Shadow the serial number, manufacturer, and model to update the UI without unwrapping optionals
     @State var missingSerial = false
     @State var manufacturerSearchText = ""
-    @FocusState var manufacturerSearchState: ManufacturerEntryView.EditState?
+    @FocusState var focus: Field?
     @State var frameModel = ""
 
     /* Shadow the Bike.frameColors selection with local state to bridge the gap between Binding<FrameColor>
@@ -102,6 +101,10 @@ struct RegisterBikeView: View {
                     }
                 }
                 .textInputAutocapitalization(.characters)
+                .focused($focus, equals: .serialNumberText)
+                .onSubmit {
+                    focus = focus?.next()
+                }
 
                 HStack {
                     CameraCaptureButton(text: safeSerial)
@@ -116,7 +119,7 @@ struct RegisterBikeView: View {
                         }
                     }
             } header: {
-                Text("Serial Number")
+                Text("Serial Number") + serialNumberRequiredStatus
             } footer: {
                 TextLink(base: client.configuration.host, link: .serials)
                     .environment(
@@ -138,12 +141,16 @@ struct RegisterBikeView: View {
                 ManufacturerEntryView(
                     bike: $bike,
                     manufacturerSearchText: $manufacturerSearchText,
-                    state: $manufacturerSearchState
+                    state: $focus,  // focused($focus, equals: .manufacturerText) is assigned inside ManufacturerEntryView
+                    valid: .constant(
+                        !bike.manufacturerName.isEmpty
+                            && bike.manufacturerName == manufacturerSearchText)
                 )
+                //                .foregroundStyle((!bike.manufacturerName.isEmpty && bike.manufacturerName == manufacturerSearchText) ? .green : .secondary) // BUG: this foreground style fails to update *after*
                 .environment(client)
                 .modelContext(modelContext)
             } header: {
-                Text("Manufacturer")
+                Text("Manufacturer") + manufacturerRequiredStatus
             } footer: {
                 Text("Select 'Other' if manufacturer doesn't show up when entered")
             }
@@ -177,10 +184,12 @@ struct RegisterBikeView: View {
                         Text(option.displayValue)
                     }
                 }
+                .focused($focus, equals: .primaryFrameColor)
                 .onChange(
                     of: colorPrimary,
                     { oldValue, newValue in
                         bike.frameColorPrimary = newValue
+                        focus = focus?.next()
                     }
                 )
                 .pickerStyle(.menu)
@@ -249,11 +258,17 @@ struct RegisterBikeView: View {
 
             // MARK: Email
             if mode == .myOwnBike || mode == .myStolenBike {
-                Section(header: Text("Owner Email")) {
+                Section {
                     TextField(text: $ownerEmail) {
                         Text("Who should be contacted?")
                     }
                     .textInputAutocapitalization(.never)
+                    .focused($focus, equals: .ownerEmailText)
+                    .onSubmit {
+                        focus = focus?.next()
+                    }
+                } header: {
+                    Text("Owner Email") + ownerEmailStatus
                 }
             }
 
@@ -264,6 +279,7 @@ struct RegisterBikeView: View {
                 } label: {
                     Text("Register")
                 }
+                .focused($focus, equals: .registerButton)
                 .alert(
                     validationModel.title,
                     isPresented: $validationModel.show,
@@ -277,12 +293,19 @@ struct RegisterBikeView: View {
                     }
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                //                .background {
+                //                    Color.red
+                //                }
             } footer: {
                 if !client.userCanRegisterBikes {
                     Text(
                         "Oh no, your authorization doesn't include the ability to register a bike!")
                 }
             }
+            .listRowBackground(
+                PrettyView()
+            )
+
             .disabled(client.userCanRegisterBikes && requiredFieldsNotMet)
         }
         .navigationBarTitleDisplayMode(mode.navigationBarDisplayMode)
@@ -303,6 +326,54 @@ struct RegisterBikeView: View {
             )
             .environment(client)
         }
+    }
+
+    /// Display a status indicator for serial number validation
+    var serialNumberRequiredStatus: Text {
+        if missingSerial {
+            Text(" ✔︎")
+                .bold()
+                .accessibilityLabel("Valid")
+        } else {
+            Text("*")
+                .bold()
+                .foregroundColor(.red)
+                .accessibilityLabel("Required")
+        }
+    }
+
+    /// Display a status indicator for serial Manufacturer name
+    var manufacturerRequiredStatus: Text {
+        if !bike.manufacturerName.isEmpty, bike.manufacturerName == manufacturerSearchText {
+            Text(" ✔︎")
+                .bold()
+                .accessibilityLabel("Valid")
+        } else {
+            Text("*")
+                .bold()
+                .foregroundColor(.red)
+                .accessibilityLabel("Required")
+        }
+    }
+
+    /// Display a status indicator for email address validation
+    var ownerEmailStatus: Text {
+        if !ownerEmail.isEmpty, validateEmail(ownerEmail) {
+            Text(" ✔︎")
+                .bold()
+                .accessibilityLabel("Valid")
+        } else {
+            Text("*")
+                .bold()
+                .foregroundColor(.red)
+                .accessibilityLabel("Required")
+        }
+    }
+
+    func validateEmail(_ email: String) -> Bool {
+        let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+        return email.range(of: emailRegex, options: .regularExpression, range: nil, locale: nil)
+            != nil
     }
 
     /// Marshall the Bike model to a ``Postable`` intermediary, write that intermediary to the API client and discard Bike model
@@ -363,6 +434,22 @@ struct RegisterBikeView: View {
 
                 }, message: LocalizedStringKey(failure.localizedDescription),
                 title: "Registering bike failed")
+        }
+    }
+}
+
+extension RegisterBikeView {
+    enum Field: Int, Hashable {
+        case serialNumberText
+        case manufacturerText
+        case primaryFrameColor
+        case ownerEmailText
+        case registerButton
+
+        func next() -> Field? {
+            let start = self.rawValue
+            let next = Field(rawValue: start + 1)
+            return next
         }
     }
 }
@@ -434,5 +521,65 @@ struct RegisterBikeView: View {
         }
     } else {
         previewContent
+    }
+}
+
+#Preview("Button") {
+    List {
+
+        if #available(iOS 18.0, *) {
+            Section {
+                Button {
+                    print("Tapped")
+                } label: {
+                    Text("Register")
+                        .foregroundStyle(.black)
+                }
+                .buttonStyle(.plain)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            .listRowBackground(
+                PrettyView()
+            )
+        } else {
+            // Fallback on earlier versions
+        }
+    }
+
+}
+
+// https://codingwithrashid.com/how-to-create-shape-masks-in-swiftui/
+//
+struct PrettyView: View {
+    var body: some View {
+        if #available(iOS 18.0, *) {
+            // TODO: Put this in a configurable view to adjust all the parameters on the fly!!!!!! Configurable kit!
+            Text(
+                "TODO: Put this in a configurable view to adjust all the parameters on the fly!!!!!! Configurable kit!"
+            )
+            TimelineView(.animation) { timeline in
+                let x = (sin(timeline.date.timeIntervalSince1970) + 1) / 4
+
+                MeshGradient(
+                    width: 3, height: 3,
+                    points: [
+                        [0, 0], [0.5, 0], [1, 0],
+                        [0, 0.5], [Float(x), Float(x)], [1, 0.5],
+                        [0, 1], [0.5, 1], [1, 1],
+                    ],
+                    colors: [
+                        .blue, .white, .white,
+                        .blue, .accent, .accent,
+                        .accent, .blue, .white,
+                    ])
+            }
+            .mask(
+                RoundedRectangle(cornerRadius: 6)
+                    .stroke(lineWidth: 10)
+            )
+            .background(Color.primary.colorInvert())
+        } else {
+            EmptyView()
+        }
     }
 }

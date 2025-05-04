@@ -13,20 +13,25 @@ struct ManufacturerEntryView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
-    @FocusState.Binding var state: EditState?
+    @FocusState.Binding var focus: RegisterBikeView.Field?
 
     @Binding var bike: Bike
+    /// Stores temporary search text input.
+    /// Later, if this is matched to a known manufacturer the form can proceed.
     @Binding var manufacturerSearchText: String
+    @Binding var valid: Bool
 
     @Query var manufacturers: [AutocompleteManufacturer]
 
     init(
-        bike: Binding<Bike>, manufacturerSearchText: Binding<String>,
-        state: FocusState<EditState?>.Binding
+        bike: Binding<Bike>,
+        manufacturerSearchText: Binding<String>,
+        state: FocusState<RegisterBikeView.Field?>.Binding, valid: Binding<Bool>
     ) {
         _bike = bike
         _manufacturerSearchText = manufacturerSearchText
-        _state = state
+        _focus = state
+        _valid = valid
         let searchTerm = manufacturerSearchText.wrappedValue
 
         let predicate = #Predicate<AutocompleteManufacturer> { model in
@@ -40,63 +45,75 @@ struct ManufacturerEntryView: View {
     }
 
     var body: some View {
-        TextField(text: $manufacturerSearchText) {
-            Text("Search for manufacturer")
-        }
+        let _ = Self._printChanges()
+        TextField(
+            "Search for manufacturer",
+            text: $manufacturerSearchText
+        )
+        .foregroundStyle(valid ? .green : .secondary)  // BUG: this foreground style fails to update *after*
+        .autocorrectionDisabled()
         .accessibilityIdentifier("manufacturerSearchTextField")
-        .focused($state, equals: .editing)
+        .focused($focus, equals: .manufacturerText)
         .onChange(of: manufacturerSearchText) { oldQuery, newQuery in
-            state = .editing
+            focus = .manufacturerText
 
             guard !newQuery.isEmpty else {
+                bike.manufacturerName = ""
                 return
             }
 
-            Task {
-                let fetch_manufacturer = await client.api.get(
-                    Autocomplete.manufacturer(query: newQuery))
-                switch fetch_manufacturer {
-                case .success(let success):
-                    guard
-                        let autocompleteResponse = success
-                            as? AutocompleteManufacturerContainerResponse
-                    else {
-                        Logger.views.debug(
-                            "ManufacturerEntryView search failed to parse response from \(String(reflecting: success), privacy: .public)"
-                        )
-                        return
-                    }
-
-                    do {
-                        for manufacturer in autocompleteResponse.matches {
-                            modelContext.insert(manufacturer.modelInstance())
-                        }
-                        try? modelContext.save()
-                    }
-
+            // Next step: run .task to fetch query from the network API
+            valid = false
+        }
+        .task {
+            let fetch_manufacturer = await client.api.get(
+                Autocomplete.manufacturer(query: manufacturerSearchText))
+            switch fetch_manufacturer {
+            case .success(let success):
+                guard
+                    let autocompleteResponse = success
+                        as? AutocompleteManufacturerContainerResponse
+                else {
                     Logger.views.debug(
-                        "ManufacturerEntryView received response \(String(describing: autocompleteResponse), privacy: .public)"
+                        "ManufacturerEntryView search failed to parse response from \(String(reflecting: success), privacy: .public)"
                     )
-
-                case .failure(let failure):
-                    Logger.views.error(
-                        "ManufacturerEntryView search failed with \(String(reflecting: failure), privacy: .public)"
-                    )
+                    return
                 }
+
+                do {
+                    for manufacturer in autocompleteResponse.matches {
+                        modelContext.insert(manufacturer.modelInstance())
+                    }
+                    try? modelContext.save()
+                }
+
+                Logger.views.debug(
+                    "ManufacturerEntryView received response \(String(describing: autocompleteResponse), privacy: .public)"
+                )
+
+            case .failure(let failure):
+                Logger.views.error(
+                    "ManufacturerEntryView search failed with \(String(reflecting: failure), privacy: .public)"
+                )
             }
+        }
+        .onSubmit {
+            focus = focus?.next()
         }
         if manufacturers.count == 1 && manufacturerSearchText == manufacturers.first?.text {
             /// After the user taps a selection, stop displaying the suggestions list
             EmptyView()
-        } else if !manufacturerSearchText.isEmpty, manufacturers.count > 0, state == .editing {
+        } else if !manufacturerSearchText.isEmpty, manufacturers.count > 0,
+            focus == .manufacturerText
+        {
             List {
                 ForEach(manufacturers) { manufacturer in
                     Button(manufacturer.text) {
                         bike.manufacturerName = manufacturer.text
                         manufacturerSearchText = manufacturer.text
-                        state = nil
+                        focus = focus?.next()
                     }
-                    .foregroundStyle(Color.secondary)
+                    .foregroundStyle(.primary)
                 }
             }
             .padding([.leading, .trailing], 8)
@@ -104,17 +121,10 @@ struct ManufacturerEntryView: View {
             Button("Other") {
                 bike.manufacturerName = "Other"
                 manufacturerSearchText = "Other"
-                state = nil
+                focus = focus?.next()
             }
-            .foregroundStyle(Color.secondary)
+            .foregroundStyle(.primary)
         }
-    }
-
-    // MARK: - State Management
-
-    enum EditState: Hashable {
-        /// Keyboard is active and user is entering text to search for a manufacturer
-        case editing
     }
 }
 
@@ -136,7 +146,7 @@ struct ManufacturerEntryView: View {
             searchText = $0
         })
 
-    let state = FocusState<ManufacturerEntryView.EditState?>()
+    let state = FocusState<RegisterBikeView.Field?>()
 
     do {
         let client = try Client()
@@ -172,7 +182,8 @@ struct ManufacturerEntryView: View {
             ManufacturerEntryView(
                 bike: bikeBinding,
                 manufacturerSearchText: searchTextBinding,
-                state: state.projectedValue
+                state: state.projectedValue,
+                valid: .constant(false)
             )
             .environment(client)
             .modelContainer(mockContainer)
