@@ -1,5 +1,5 @@
 //
-//  BikesList.swift
+//  BikesGridContainerView.swift
 //  BikeIndex
 //
 //  Created by Jack on 3/23/25.
@@ -9,9 +9,8 @@ import SectionedQuery
 import SwiftData
 import SwiftUI
 
-#warning("TODO: Rename to BikesGridContainerView")
 /// Display multiple sections of bikes together
-struct BikesList: View {
+struct BikesGridContainerView: View {
     @Binding var path: NavigationPath
     @Binding var fetching: Bool
 
