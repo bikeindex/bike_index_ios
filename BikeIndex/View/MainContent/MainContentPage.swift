@@ -16,7 +16,7 @@ struct MainContentPage: View {
     @Environment(Client.self) var client
 
     /// ViewModel for state management.
-    /// Forwards dynamic query changes to ``BikesList`` to support dynamic grouping selection.
+    /// Forwards dynamic query changes to ``BikesGridContainerView`` to support dynamic grouping selection.
     @State private var viewModel = ViewModel()
 
     var body: some View {
@@ -31,7 +31,7 @@ struct MainContentPage: View {
                     }
                 }
 
-                BikesList(
+                BikesGridContainerView(
                     path: $viewModel.path,
                     fetching: $viewModel.fetching,
                     sectionGroup: viewModel.groupMode,

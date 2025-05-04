@@ -46,8 +46,8 @@ extension MainContentPage.ViewModel {
         ///     SortOrder.reverse: Specialized, Jamis, Giant (up arrow)
         /// NOTE: Although the queries _could_ have different types (\Bike.year: Int?) in practice
         /// these must all use String key paths (or an enum with a String raw value).
-        /// ``BikesSection/SectionValue`` will be used to *display the title* of the section
-        /// and that relies on the key path we provide here to group the sections.
+        /// Unfortunately this requires shadowing Enum and Int fields
+        /// with String fields but hopefully this improves in iOS 19.
         func sectionQuery(with sortOrder: SortOrder) -> SectionedQuery<String, Bike> {
             switch self {
             case .byStatus:
