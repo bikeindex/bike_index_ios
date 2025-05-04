@@ -78,18 +78,7 @@ struct RegisterBikeView: View {
     var body: some View {
         Form {
             if mode == .myStolenBike {
-                Section {
-                    NavigationLink {
-                        NavigableWebView(
-                            constantLink: .stolenBikeFAQ,
-                            host: client.configuration.host
-                        )
-                        .environment(client)
-                    } label: {
-                        Text("⚠️ How to get your stolen bike back")
-                    }
-                }
-
+                StolenBikeInfoSectionView()
             }
 
             // MARK: Serial number
@@ -296,6 +285,7 @@ struct RegisterBikeView: View {
             }
             .disabled(client.userCanRegisterBikes && requiredFieldsNotMet)
         }
+        .navigationBarTitleDisplayMode(mode.navigationBarDisplayMode)
         .navigationTitle(mode.title)
         .onAppear {
             if let user = authenticatedUsers.first?.user {
