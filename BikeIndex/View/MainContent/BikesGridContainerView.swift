@@ -49,7 +49,7 @@ struct BikesGridContainerView: View {
         } else {
             ProportionalLazyVGrid(pinnedViews: [.sectionHeaders]) {
                 ForEach(sections) { section in
-                    BikesSection(
+                    BikesGridSectionView(
                         path: $path,
                         section: section.id,
                         bikes: section.elements)  // aka section.bikes
