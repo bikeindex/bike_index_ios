@@ -18,7 +18,7 @@ struct StolenBikeInfoSectionView: View {
                 )
                 .environment(client)
             } label: {
-                Text("What do to if your bike is stolen")
+                Text("What to do if your bike is stolen")
             }
             NavigationLink {
                 NavigableWebView(
