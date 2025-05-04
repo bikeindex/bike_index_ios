@@ -178,7 +178,7 @@ struct MainContentPage: View {
                 let manufacturers = [
                     "Giant", "Specialized", "Jamis", "Giant", "Specialized", "Jamis",
                 ]
-                let years: [Int?] = [2025, 2020, nil]
+                let years: [Int?] = [2025, 2024, 2020, 2015, 2014, nil]
 
                 for (index, status) in BikeStatus.allCases.enumerated() {
                     let bike = output.modelInstance()
