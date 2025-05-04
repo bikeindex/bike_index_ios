@@ -1,5 +1,5 @@
 //
-//  BikesSection.swift
+//  BikesGridSectionView.swift
 //  BikeIndex
 //
 //  Created by Jack on 3/2/25.
@@ -8,8 +8,7 @@
 import SwiftData
 import SwiftUI
 
-#warning("TODO: Rename to BikesGridSectionView")
-struct BikesSection: View {
+struct BikesGridSectionView: View {
     typealias GroupMode = MainContentPage.ViewModel.GroupMode
 
     @Binding var path: NavigationPath
@@ -24,7 +23,7 @@ struct BikesSection: View {
         self.section = section
         /// Track expanded state _for each section_
         _isExpanded = AppStorage(
-            wrappedValue: true, "BikesSection.isExpanded.\(section)")
+            wrappedValue: true, "BikesGridSectionView.isExpanded.\(section)")
     }
 
     var body: some View {
@@ -76,7 +75,7 @@ struct BikesSection: View {
     NavigationStack {
         ScrollView {
             ProportionalLazyVGrid {
-                BikesSection(
+                BikesGridSectionView(
                     path: $navigationPath,
                     section: status.displayName,
                     bikes: [])
