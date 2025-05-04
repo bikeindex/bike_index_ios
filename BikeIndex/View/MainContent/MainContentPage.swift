@@ -34,8 +34,8 @@ struct MainContentPage: View {
                 BikesList(
                     path: $viewModel.path,
                     fetching: $viewModel.fetching,
-                    group: viewModel.groupMode,
-                    sortOrder: viewModel.sortOrder)
+                    sectionGroup: viewModel.groupMode,
+                    sectionSortOrder: viewModel.sortOrder)
             }
             .toolbar {
                 MainToolbar(

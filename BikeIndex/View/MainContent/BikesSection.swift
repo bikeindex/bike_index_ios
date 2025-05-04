@@ -8,20 +8,23 @@
 import SwiftData
 import SwiftUI
 
+#warning("TODO: Rename to BikesGridSectionView")
 struct BikesSection: View {
+    typealias GroupMode = MainContentPage.ViewModel.GroupMode
+
     @Binding var path: NavigationPath
-    private(set) var section: SectionValue
-    @Query private var bikes: [Bike]
+    var section: String
+    private var bikes: [Bike]
     @AppStorage
     private var isExpanded: Bool
 
-    init(path: Binding<NavigationPath>, section: SectionValue) {
+    init(path: Binding<NavigationPath>, section: String, bikes: [Bike]) {
         self._path = path
+        self.bikes = bikes
         self.section = section
-        _bikes = Query(filter: section.filterPredicate)
         /// Track expanded state _for each section_
         _isExpanded = AppStorage(
-            wrappedValue: true, "BikesSection.isExpanded.\(section.displayName)")
+            wrappedValue: true, "BikesSection.isExpanded.\(section)")
     }
 
     var body: some View {
@@ -42,7 +45,7 @@ struct BikesSection: View {
                 }
             } label: {
                 ZStack {
-                    Text(section.displayName)
+                    Text(section)
                         .padding([.top, .bottom], 4)
                         .frame(maxWidth: .infinity)
                         .font(.headline)
@@ -57,48 +60,12 @@ struct BikesSection: View {
                 .background(.ultraThinMaterial)
             }
             .accessibilityValue("\(isExpanded ? "Expanded" : "Collapsed")")
-            .accessibilityIdentifier("Section toggle \(section.displayName)")
+            .accessibilityIdentifier("Section toggle \(section)")
             .accessibilityHint(
-                "\(isExpanded ? "Collapse" : "Expand") section for \(section.displayName)"
+                "\(isExpanded ? "Collapse" : "Expand") section for \(section)"
             )
             .buttonStyle(.plain)
             .padding([.top, .bottom], 2)
-        }
-    }
-}
-
-extension BikesSection {
-    enum SectionValue {
-        case byStatus(BikeStatus)
-        case byYear(String)
-        case byManufacturer(String)
-
-        var filterPredicate: Predicate<Bike> {
-            switch self {
-            case .byStatus(let status):
-                return #Predicate<Bike> { model in
-                    model.statusString == status.rawValue
-                }
-            case .byYear(let year):
-                return #Predicate<Bike> { model in
-                    model.yearString == year
-                }
-            case .byManufacturer(let manufacturer):
-                return #Predicate<Bike> { model in
-                    model.manufacturerName == manufacturer
-                }
-            }
-        }
-
-        var displayName: String {
-            switch self {
-            case .byStatus(let bikeStatus):
-                bikeStatus.rawValue.capitalized
-            case .byYear(let year):
-                year
-            case .byManufacturer(let manufacturer):
-                manufacturer
-            }
         }
     }
 }
@@ -111,7 +78,8 @@ extension BikesSection {
             ProportionalLazyVGrid {
                 BikesSection(
                     path: $navigationPath,
-                    section: .byStatus(status))
+                    section: status.displayName,
+                    bikes: [])
             }
         }
     }

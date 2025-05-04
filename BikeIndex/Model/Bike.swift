@@ -7,6 +7,7 @@
 
 import Foundation
 import MapKit
+import OSLog
 import SwiftData
 
 @Model final class Bike {
@@ -128,7 +129,7 @@ import SwiftData
         self.typeOfPropulsion = typeOfPropulsion
         self.serial = serial
         self.status = status
-        self.statusString = status.rawValue
+        self.statusString = status.displayName
         self.stolenCoordinateLatitude = stolenCoordinateLatitude
         self.stolenCoordinateLongitude = stolenCoordinateLongitude
         self.stolenLocation = stolenLocation
@@ -169,7 +170,7 @@ import SwiftData
         print("Bike #\(identifier) updating \(keyPath) to \(value)")
         self[keyPath: keyPath] = value
         if keyPath == \.status {
-            statusString = status.rawValue
+            statusString = status.displayName
         } else if keyPath == \.year {
             yearString = year.map(String.init) ?? Constants.unknownYear
         }
