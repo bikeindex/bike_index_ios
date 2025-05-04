@@ -13,6 +13,7 @@ import SwiftUI
 extension MainContentPage.ViewModel {
     enum GroupMode: String, CaseIterable, Identifiable, Equatable {
         case byStatus
+        case byYear
         case byManufacturer
 
         var id: String { rawValue }
@@ -20,9 +21,11 @@ extension MainContentPage.ViewModel {
         var displayName: String {
             switch self {
             case .byStatus:
-                return "Status"
+                "Status"
+            case .byYear:
+                "Year"
             case .byManufacturer:
-                return "Manufacturer"
+                "Manufacturer"
             }
         }
 
@@ -30,21 +33,32 @@ extension MainContentPage.ViewModel {
             switch self {
             case .byStatus:
                 \Bike.statusString
+            case .byYear:
+                \Bike.yearString
             case .byManufacturer:
                 \Bike.manufacturerName
             }
         }
 
-        /// Query for Bikes grouped by `self`: either byStatus or byManufacturer
-        /// The sections will be sorted.
-        /// E.g. SortOrder.forward: Giant, Jamis, Specialized (down arrow)
-        ///      SortOrder.reverse: Specialized, Jamis, Giant (up arrow)
+        /// Query for Bikes grouped by `self`. The sections will be sorted.
+        /// E.g. byManufacturer:
+        ///     SortOrder.forward: Giant, Jamis, Specialized (down arrow)
+        ///     SortOrder.reverse: Specialized, Jamis, Giant (up arrow)
+        /// NOTE: Although the queries _could_ have different types (\Bike.year: Int?) in practice
+        /// these must all use String key paths (or an enum with a String raw value).
+        /// ``BikesSection/SectionValue`` will be used to *display the title* of the section
+        /// and that relies on the key path we provide here to group the sections.
         func sectionQuery(with sortOrder: SortOrder) -> SectionedQuery<String, Bike> {
             switch self {
             case .byStatus:
                 SectionedQuery(
                     \Bike.statusString,
                     sort: [SortDescriptor(\Bike.statusString, order: sortOrder)])
+            case .byYear:
+                SectionedQuery(
+                    \Bike.yearString,
+                    // use Int sorting
+                    sort: [SortDescriptor(\Bike.year, order: sortOrder)])
             case .byManufacturer:
                 SectionedQuery(
                     \Bike.manufacturerName,

@@ -14,7 +14,7 @@ struct BikesList: View {
     @Binding var path: NavigationPath
     @Binding var fetching: Bool
 
-    @SectionedQuery(\Bike.statusString)
+    @SectionedQuery
     var bikes: SectionedResults<String, Bike>
 
     var group: MainContentPage.ViewModel.GroupMode
@@ -57,6 +57,7 @@ struct BikesList: View {
                             } else {
                                 BikesSection.SectionValue?(nil)
                             }
+                        case .byYear: .byYear(section.id)
                         case .byManufacturer: .byManufacturer(section.id)
                         }
                     if let section {

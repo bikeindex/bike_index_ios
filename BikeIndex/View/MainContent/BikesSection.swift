@@ -70,6 +70,7 @@ struct BikesSection: View {
 extension BikesSection {
     enum SectionValue {
         case byStatus(BikeStatus)
+        case byYear(String)
         case byManufacturer(String)
 
         var filterPredicate: Predicate<Bike> {
@@ -77,6 +78,10 @@ extension BikesSection {
             case .byStatus(let status):
                 return #Predicate<Bike> { model in
                     model.statusString == status.rawValue
+                }
+            case .byYear(let year):
+                return #Predicate<Bike> { model in
+                    model.yearString == year
                 }
             case .byManufacturer(let manufacturer):
                 return #Predicate<Bike> { model in
@@ -89,6 +94,8 @@ extension BikesSection {
             switch self {
             case .byStatus(let bikeStatus):
                 bikeStatus.rawValue.capitalized
+            case .byYear(let year):
+                year
             case .byManufacturer(let manufacturer):
                 manufacturer
             }
