@@ -135,6 +135,7 @@ struct MainContentPage: View {
             do {
                 let rawJsonData = MockData.sampleBikeJson.data(using: .utf8)!
                 let statuses: [BikeStatus] = Array(repeating: .withOwner, count: 3)
+                let years: [Int?] = [2025, 2020, nil]
                 let manufacturers = [
                     "Giant", "Specialized", "Jamis", "Giant", "Specialized", "Jamis",
                 ]
@@ -146,6 +147,7 @@ struct MainContentPage: View {
                     // but separate the identifiers
                     bike.identifier = index
                     bike.update(keyPath: \.status, to: status)
+                    bike.update(keyPath: \.year, to: years[index])
                     bike.update(keyPath: \.manufacturerName, to: manufacturers[index])
                     print(
                         "Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)"
@@ -176,6 +178,7 @@ struct MainContentPage: View {
                 let manufacturers = [
                     "Giant", "Specialized", "Jamis", "Giant", "Specialized", "Jamis",
                 ]
+                let years: [Int?] = [2025, 2020, nil]
 
                 for (index, status) in BikeStatus.allCases.enumerated() {
                     let bike = output.modelInstance()
@@ -184,6 +187,7 @@ struct MainContentPage: View {
                     // but separate the identifiers
                     bike.identifier = index
                     bike.update(keyPath: \.status, to: status)
+                    bike.update(keyPath: \.year, to: years[index])
                     bike.update(keyPath: \.manufacturerName, to: manufacturers[index])
                     print(
                         "Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)"
