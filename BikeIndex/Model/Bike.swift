@@ -31,6 +31,11 @@ import SwiftData
     /// Also accepts manufacturer identifier Int
     var manufacturerName: String
     var year: Int?
+    /// SwiftData KeyPaths are used with SectionedQuery to display section titles and mixing
+    /// the types of key paths is very difficult to work-around so we make it queryable
+    /// with a default value of empty string to be over-written by 1) ``Bike/init``
+    /// and 2) ``Bike/year/willSet``
+    var yearString: String = Constants.unknownYear
 
     /// Keyed by `cycle_type_slug`
     var typeOfCycle: BicycleType
@@ -83,6 +88,8 @@ import SwiftData
 
         /// The range of **displayable** years for Bike models aka "inclusive 1900-2026"
         static let displayableYearRange = 1900..<2027
+
+        static let unknownYear = "Unknown"
     }
 
     init(
@@ -116,6 +123,7 @@ import SwiftData
         self.frameColorTertiary = tertiaryColor
         self.manufacturerName = manufacturerName
         self.year = year
+        self.yearString = year.map(String.init) ?? Constants.unknownYear
         self.typeOfCycle = typeOfCycle
         self.typeOfPropulsion = typeOfPropulsion
         self.serial = serial
@@ -162,9 +170,10 @@ import SwiftData
         self[keyPath: keyPath] = value
         if keyPath == \.status {
             statusString = status.rawValue
+        } else if keyPath == \.year {
+            yearString = year.map(String.init) ?? Constants.unknownYear
         }
     }
-
 }
 
 extension Bike {
