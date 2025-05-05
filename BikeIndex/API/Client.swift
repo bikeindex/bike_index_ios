@@ -8,6 +8,7 @@
 import Foundation
 import KeychainSwift
 import OSLog
+import StoreKit
 import URLEncodedForm
 import WebKit
 
@@ -35,15 +36,8 @@ typealias QueryItemTuple = (name: String, value: String)
     }
     /// Stateless API class belonging to this stateful instance that performs network operations for us.
     private(set) var api: API
-    /// Stateful shared webview configuration to manage cookie storage for logout
-    private(set) var webConfiguration: WKWebViewConfiguration = {
-        let config = WKWebViewConfiguration()
-        let userContent = WKUserContentController()
-        userContent.addUserScript(WebScripts.removeFrame)
-        userContent.addUserScript(WebScripts.hideMembership)
-        config.userContentController = userContent
-        return config
-    }()
+    /// Stateful shared webview configuration to manage cookie storage for logout and javascript/css injection scripts.
+    private(set) var webConfiguration = WKWebViewConfiguration()
 
     // MARK: Authorization State
 
@@ -76,6 +70,19 @@ typealias QueryItemTuple = (name: String, value: String)
         self.configuration = configuration
         self.deeplinkManager = DeeplinkManager(host: configuration.hostProvider)
         loadLastToken()
+
+        // Configure webView manipulation scripts
+        Task {
+            webConfiguration.userContentController.addUserScript(WebScripts.removeFrame)
+
+            if let countryCode = await Storefront.current?.countryCode, countryCode != "USA" {
+                webConfiguration.userContentController
+                    .addUserScript(WebScripts.hideMembership)
+                Logger.donate.debug("App is outside the US app store")
+            } else {
+                Logger.donate.debug("App is inside the US app store")
+            }
+        }
     }
 
     struct Constants {

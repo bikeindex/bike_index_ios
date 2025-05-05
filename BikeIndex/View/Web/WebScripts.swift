@@ -36,6 +36,7 @@ struct WebScripts {
     /// Remove all links _starting with_ `/membership`
     /// Remove all links _starting with_ `/donate`
     /// Remove all links equal to PayPal account link
+    /// Applies to US App store users _only_: https://developer.apple.com/news/?id=9txfddzf
     static let hideMembership: WKUserScript = {
         let source =
             """
