@@ -45,7 +45,7 @@ extension ScannedBikePage {
         var scan: ScannedBike
         var path: NavigationPath
         var dismiss: (() -> Void)?
-        var onDisappear: MainContent?
+        var onDisappear: MainContent? // TODO: onDisappear needs to be connected to NavigableWebView.navigator actions for /register URLs
 
         var title: String {
             scan.sticker

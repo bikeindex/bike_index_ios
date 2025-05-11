@@ -9,7 +9,8 @@ import SwiftUI
 import SwiftData
 
 struct RecentlyScannedStickersView: View {
-    @Query var stickers: [ScannedBike]
+    @Query(sort: [SortDescriptor(\ScannedBike.createdAt, order: .reverse)])
+    var stickers: [ScannedBike]
 
     @State var path = NavigationPath()
 
@@ -17,13 +18,18 @@ struct RecentlyScannedStickersView: View {
 
     var body: some View {
         NavigationStack(path: $path) {
-            List(stickers) { sticker in
+            // Duplicated/repeated scans are allowed but duplicates on ScannedBike.id cause problems for List
+            // so we need to de-duplicate List on persistentModelID
+            List(stickers, id: \.persistentModelID) { sticker in
                 NavigationLink {
                     ScannedBikePage(viewModel: .init(scan: sticker, path: path, dismiss: nil))
                     .interactiveDismissDisabled()
                 } label: {
-                    Text("Sticker. \(sticker.id)")
-                    Text("Sticker. \(sticker.createdAt)")
+                    HStack {
+                        Text("\(sticker.url.lastPathComponent)")
+                        Spacer()
+                        Text("\(sticker.createdAt, style: .relative)")
+                    }
                 }
             }
             .navigationBarTitleDisplayMode(.inline)

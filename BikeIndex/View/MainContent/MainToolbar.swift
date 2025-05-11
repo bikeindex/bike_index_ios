@@ -46,6 +46,7 @@ extension MainContentPage {
                     } label: {
                         Label("\(recentStickers.count) Recently Scanned Stickers",
                               systemImage: "qrcode")
+                        .labelStyle(.titleAndIcon)
                     }
 
                 }
