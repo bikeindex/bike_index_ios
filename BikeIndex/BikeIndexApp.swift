@@ -48,10 +48,14 @@ struct BikeIndexApp: App {
         .modelContainer(sharedModelContainer)
     }
 
+    /// DeeplinkManager parses out the URL and returns a boxed result.
+    /// If this boxed result contains a QR sticker scanned bike then the view model will persist it.
+    /// After the view model persists the QR sticker, it can be stored in DeeplinkManager as the most-recent.
     func handleDeeplink(_ url: URL?) throws {
         let scanResult = client.deeplinkManager.scan(url: url)
         if let sticker = scanResult?.scannedBike {
-            try scannedBikesViewModel.persist(sticker: sticker)
+            let persistedSticker = try scannedBikesViewModel.persist(sticker: sticker)
+            client.deeplinkManager.scannedBike = persistedSticker
         }
     }
 

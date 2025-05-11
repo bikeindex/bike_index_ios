@@ -75,6 +75,9 @@ struct MainContentPage: View {
             .sheet(
                 item: $deeplinkManager.scannedBike,
                 content: { scan in
+                    // Dismiss any previous stickers
+                    // self.viewModel.displayRecentlyScannedStickers = false
+                    // Open the new sticker
                     let viewModel = ScannedBikePage.ViewModel(
                         scan: scan,
                         path: viewModel.path,
@@ -90,7 +93,7 @@ struct MainContentPage: View {
                 }
             )
             .sheet(isPresented: $viewModel.displayRecentlyScannedStickers, content: {
-                Text("Recent stickers!!!!!!!")
+                RecentlyScannedStickersView(dismiss: $viewModel.displayRecentlyScannedStickers)
             })
             .alert(isPresented: $viewModel.showError, error: viewModel.lastError) {
                 Text("Okay")

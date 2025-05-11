@@ -19,10 +19,10 @@ final class DeeplinkManager: Identifiable {
         self.hostProvider = host
     }
 
-    /// Every URL scan should go through this function
+    /// Every URL scan should go through this function.
+    /// However this does _not_ assign self.scannedBike, that will be done later.
     func scan(url: URL?) -> DeeplinkResult? {
         if let scannedBike = ScannedBike(host: hostProvider, url: url) {
-            self.scannedBike = scannedBike
             return DeeplinkResult(scannedBike: scannedBike)
         } else {
             return nil
