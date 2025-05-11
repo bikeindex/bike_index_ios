@@ -27,6 +27,12 @@ class ScannedBikeModelTests {
             }
             self.expectedNumberOfStickers = expectedNumberOfStickers
         }
+
+        var invocationName: String {
+            let ids = testSamples.map(\.sticker).joined(separator: "_")
+            let dates = testSamples.map(\.createdAt.timeIntervalSince1970.description).joined(separator: "_")
+            return "\(numberOfStickers).\(ids)_\(dates).\(expectedNumberOfStickers)"
+        }
     }
 
     @Test(arguments: [
@@ -39,7 +45,8 @@ class ScannedBikeModelTests {
         Input(numberOfStickers: 20, genesisBase: Date())
     ])
     func test_handleStickerDeeplinks(input: Input) async throws {
-        let config = ModelConfiguration(isStoredInMemoryOnly: true, allowsSave: true)
+        let invocationName = input.invocationName
+        let config = ModelConfiguration(invocationName, isStoredInMemoryOnly: true, allowsSave: true)
         let container = try! ModelContainer(
             for: ScannedBike.self,
             configurations: config
@@ -57,7 +64,7 @@ class ScannedBikeModelTests {
 
         do {
             try input.testSamples.forEach { sticker in
-                try model.handleDeeplink(sticker.url)
+                try model.persist(sticker: sticker)
             }
         } catch {
             #expect(false, "unexpected error \(error)")
