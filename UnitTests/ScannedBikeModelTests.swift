@@ -30,8 +30,12 @@ class ScannedBikeModelTests {
 
         var invocationName: String {
             let ids = testSamples.map(\.sticker).joined(separator: "_")
-            let dates = testSamples.map(\.createdAt.timeIntervalSince1970.description).joined(separator: "_")
-            return "\(numberOfStickers).\(ids)_\(dates).\(expectedNumberOfStickers)"
+            let firstId = ids.first ?? "0"
+            let lastId = ids.last ?? "0"
+            let dates = testSamples.map(\.createdAt.timeIntervalSince1970.description)
+            let firstDate = dates.first ?? ""
+            let lastDate = dates.last ?? ""
+            return "\(numberOfStickers).\(firstId)_\(lastId).\(firstId)_\(lastDate).\(expectedNumberOfStickers)"
         }
     }
 
