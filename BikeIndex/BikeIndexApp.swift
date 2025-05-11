@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import OSLog
 
 @main
 struct BikeIndexApp: App {
@@ -26,7 +27,7 @@ struct BikeIndexApp: App {
             User.self,
             AuthenticatedUser.self,
             AutocompleteManufacturer.self,
-            // TODO: Add ScannedBike
+            ScannedBike.self, // QR sticker history
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -70,8 +71,33 @@ struct BikeIndexApp: App {
     private func handleDeeplink(_ url: URL?) {
         let scanResult = client.deeplinkManager.scan(url: url)
         if let sticker = scanResult?.scannedBike {
-            // Persist to SwiftData after previous changes have more confidence.
-//            sharedModelContainer.mainContext.insert(sticker)
+            do {
+                let mainContext = sharedModelContainer.mainContext
+                try mainContext.transaction {
+                    // 1. Save the latest scanned bike sticker
+                    mainContext.insert(sticker)
+
+                    // 2. Purge any sticker outside of:
+                    //      - scanned in the last 2 weeks
+                    //      - scanned before the 10-most-recent
+                    let bikesScannedInTheLastTwoWeeks = #Predicate<ScannedBike> { model in
+                        model.createdAt > Date().addingTimeInterval(-60 * 60 * 24 * 14)
+                    }
+                    let sortByCreatedAt = SortDescriptor(\ScannedBike.createdAt,
+                                                          order: .forward)
+                    var fetchDescriptor = FetchDescriptor(predicate: bikesScannedInTheLastTwoWeeks,
+                                                          sortBy: [sortByCreatedAt])
+                    fetchDescriptor.fetchLimit = 10
+                    let tenMostRecentStickers = try mainContext.fetchIdentifiers(fetchDescriptor)
+
+                    try mainContext.delete(model: ScannedBike.self,
+                                           where: #Predicate<ScannedBike> { model in
+                        tenMostRecentStickers.contains(model.id) == false
+                    })
+                }
+            } catch {
+                Logger.model.error("\(error, privacy: .auto)")
+            }
         }
     }
 }

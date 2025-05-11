@@ -18,6 +18,8 @@ class ScannedBike: Equatable, Identifiable {
 
     var url: URL
 
+    var createdAt: Date = Date()
+
     /// Designated initializer only for SwiftData.
     init(sticker: String, url: URL) {
         self.sticker = sticker
