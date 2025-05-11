@@ -27,19 +27,19 @@ struct BikeIndexApp: App {
                 MainContentPage()
                     .tint(Color.accentColor)
                     .onOpenURL { url in
-                        scannedBikesViewModel.handleDeeplink(url)
+                        try! scannedBikesViewModel.handleDeeplink(url)
                     }
                     .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
-                        scannedBikesViewModel.handleDeeplink(userActivity.webpageURL)
+                        try! scannedBikesViewModel.handleDeeplink(userActivity.webpageURL)
                     }
             } else {
                 AuthView()
                     .tint(Color.accentColor)
                     .onOpenURL { url in
-                        scannedBikesViewModel.handleDeeplink(url)
+                        try! scannedBikesViewModel.handleDeeplink(url)
                     }
                     .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
-                        scannedBikesViewModel.handleDeeplink(userActivity.webpageURL)
+                        try! scannedBikesViewModel.handleDeeplink(userActivity.webpageURL)
                     }
 
             }
@@ -80,36 +80,36 @@ struct ScannedBikesViewModel {
         self.client = client
     }
 
-    func handleDeeplink(_ url: URL?) {
+    // TODO: Separate deeplinkManager.scan from database operations (separate functions)
+    func handleDeeplink(_ url: URL?) throws {
         let scanResult = client.deeplinkManager.scan(url: url)
         if let sticker = scanResult?.scannedBike {
-            do {
-                try context.transaction {
-                    // 1. Save the latest scanned bike sticker
-                    context.insert(sticker)
 
-                    // 2. Purge any sticker outside of:
-                    //      - scanned in the last 2 weeks
-                    //      - scanned before the 10-most-recent
-                    let twoWeeksAgo = Date().addingTimeInterval(-60 * 60 * 24 * 14)
-                    let bikesScannedInTheLastTwoWeeks = #Predicate<ScannedBike> { model in
-                        model.createdAt > twoWeeksAgo
-                    }
-                    let sortByCreatedAt = SortDescriptor(\ScannedBike.createdAt,
-                                                          order: .forward)
-                    var fetchDescriptor = FetchDescriptor(predicate: bikesScannedInTheLastTwoWeeks,
-                                                          sortBy: [sortByCreatedAt])
-                    fetchDescriptor.fetchLimit = 10
-                    let tenMostRecentStickers = try context.fetchIdentifiers(fetchDescriptor)
+            // 1. Save the latest scanned bike sticker
+            context.insert(sticker)
+            try context.save()
 
-                    try context.delete(model: ScannedBike.self,
-                                           where: #Predicate<ScannedBike> { model in
-                        tenMostRecentStickers.contains(model.id) == false
-                    })
-                }
-            } catch {
-                Logger.model.error("\(error, privacy: .auto)")
+            // 2. Purge any sticker outside of:
+            //      - scanned in the last 2 weeks
+            //      - scanned before the 10-most-recent
+            let twoWeeksAgo = Date().addingTimeInterval(-60 * 60 * 24 * 14)
+            let bikesScannedInTheLastTwoWeeks = #Predicate<ScannedBike> { model in
+                model.createdAt > twoWeeksAgo
             }
+
+            var fetchDescriptor = FetchDescriptor<ScannedBike>(
+                predicate: bikesScannedInTheLastTwoWeeks,
+                sortBy: [SortDescriptor(\.createdAt, order: .forward)])
+
+            fetchDescriptor.fetchLimit = 10
+            // Cannot use fetchIdentifiers _if_ the FetchDescriptor has a `sortBy` on a non-identifier field.
+            let tenMostRecentStickers = try context.fetch(fetchDescriptor)
+                .map(\.persistentModelID)
+
+            try context.delete(model: ScannedBike.self,
+                               where: #Predicate<ScannedBike> { model in
+                tenMostRecentStickers.contains(model.persistentModelID) == false
+            })
         }
     }
 }

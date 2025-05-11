@@ -20,6 +20,7 @@ class ScannedBikeModelTests {
             configurations: config
         )
         let context = container.mainContext
+        context.autosaveEnabled = false
         let model = ScannedBikesViewModel(context: context,
                                           client: try! Client())
         do {
@@ -29,7 +30,7 @@ class ScannedBikeModelTests {
 
             let stickerUrl1 = URL(string: "https://bikeindex.org/bikes/scanned/A40340")!
 
-            model.handleDeeplink(stickerUrl1)
+            try model.handleDeeplink(stickerUrl1)
 
             let endState = try! context.fetchCount(FetchDescriptor<ScannedBike>())
             #expect(endState == 1)
@@ -45,6 +46,7 @@ class ScannedBikeModelTests {
             configurations: config
         )
         let context = container.mainContext
+        context.autosaveEnabled = false
         let model = ScannedBikesViewModel(context: context,
                                           client: try! Client())
 
@@ -52,11 +54,14 @@ class ScannedBikeModelTests {
         let beginningState = try context.fetchCount(fetch)
         #expect(beginningState == 0)
 
+        #expect(context.hasChanges == false, "\(type(of: self)) should not have pending changes before reaching body of test function \(#function)")
+
         (0..<20).forEach { _ in
             let stickerUrl1 = URL(string: "https://bikeindex.org/bikes/scanned/A40340")!
-            model.handleDeeplink(stickerUrl1)
+            try! model.handleDeeplink(stickerUrl1)
         }
 
+        #expect(context.hasChanges == false, "\(type(of: self)) should not have pending changes before reaching body of test function \(#function)")
         let endState = try! context.fetchCount(FetchDescriptor<ScannedBike>())
         #expect(endState == 10)
     }
