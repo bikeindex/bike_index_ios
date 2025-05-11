@@ -441,6 +441,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BikeIndex/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Bike Index";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Add photos of your bike, and found bikes, to find matches and make recovery easier.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Add photos of your bike, and found bikes, to find matches and make recovery easier.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -646,6 +648,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BikeIndex/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Bike Index dev";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Add photos of your bike, and found bikes, to find matches and make recovery easier.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Add photos of your bike, and found bikes, to find matches and make recovery easier.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -686,6 +690,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BikeIndex/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Bike Index";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Add photos of your bike, and found bikes, to find matches and make recovery easier.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Add photos of your bike, and found bikes, to find matches and make recovery easier.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
