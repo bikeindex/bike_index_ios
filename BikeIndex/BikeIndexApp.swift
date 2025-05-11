@@ -5,9 +5,9 @@
 //  Created by Jack on 11/18/23.
 //
 
+import OSLog
 import SwiftData
 import SwiftUI
-import OSLog
 
 @main
 struct BikeIndexApp: App {
@@ -64,11 +64,12 @@ struct BikeIndexApp: App {
             User.self,
             AuthenticatedUser.self,
             AutocompleteManufacturer.self,
-            ScannedBike.self, // QR sticker history
+            ScannedBike.self,  // QR sticker history
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
-        self.sharedModelContainer = try! ModelContainer(for: schema, configurations: [modelConfiguration])
+        self.sharedModelContainer = try! ModelContainer(
+            for: schema, configurations: [modelConfiguration])
 
         self.scannedBikesViewModel = .init(
             context: sharedModelContainer.mainContext,
@@ -76,5 +77,3 @@ struct BikeIndexApp: App {
         )
     }
 }
-
-

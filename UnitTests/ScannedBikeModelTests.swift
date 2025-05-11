@@ -6,8 +6,9 @@
 //
 
 import Foundation
-import Testing
 import SwiftData
+import Testing
+
 @testable import BikeIndex
 
 @MainActor
@@ -35,7 +36,8 @@ class ScannedBikeModelTests {
             let dates = testSamples.map(\.createdAt.timeIntervalSince1970.description)
             let firstDate = dates.first ?? ""
             let lastDate = dates.last ?? ""
-            return "\(numberOfStickers).\(firstId)_\(lastId).\(firstId)_\(lastDate).\(expectedNumberOfStickers)"
+            return
+                "\(numberOfStickers).\(firstId)_\(lastId).\(firstId)_\(lastDate).\(expectedNumberOfStickers)"
         }
     }
 
@@ -47,28 +49,35 @@ class ScannedBikeModelTests {
         Input(numberOfStickers: 1, genesisBase: Date(), expectedNumberOfStickers: 1),
         Input(numberOfStickers: 10, genesisBase: Date()),
         Input(numberOfStickers: 5, genesisBase: Date(), expectedNumberOfStickers: 5),
-        Input(numberOfStickers: 10, genesisBase: Date().addingTimeInterval(-60 * 60 * 24 * 21), expectedNumberOfStickers: 0),
+        Input(
+            numberOfStickers: 10, genesisBase: Date().addingTimeInterval(-60 * 60 * 24 * 21),
+            expectedNumberOfStickers: 0),
         Input(numberOfStickers: 10, genesisBase: Date().addingTimeInterval(-60 * 60 * 24 * 13)),
         Input(numberOfStickers: 20, genesisBase: Date().addingTimeInterval(-60 * 60 * 24 * 14 + 1)),
-        Input(numberOfStickers: 20, genesisBase: Date())
+        Input(numberOfStickers: 20, genesisBase: Date()),
     ])
     func test_handleStickerDeeplinks(input: Input) async throws {
         let invocationName = input.invocationName
-        let config = ModelConfiguration(invocationName, isStoredInMemoryOnly: true, allowsSave: true)
+        let config = ModelConfiguration(
+            invocationName, isStoredInMemoryOnly: true, allowsSave: true)
         let container = try! ModelContainer(
             for: ScannedBike.self,
             configurations: config
         )
         let context = container.mainContext
         context.autosaveEnabled = false
-        let model = ScannedBikesViewModel(context: context,
-                                          client: try! Client())
+        let model = ScannedBikesViewModel(
+            context: context,
+            client: try! Client())
 
         let fetch = FetchDescriptor(predicate: #Predicate<ScannedBike> { _ in true })
         let beginningState = try context.fetchCount(fetch)
         #expect(beginningState == 0)
 
-        #expect(context.hasChanges == false, "\(type(of: self)) should not have pending changes before reaching body of test function \(#function)")
+        #expect(
+            context.hasChanges == false,
+            "\(type(of: self)) should not have pending changes before reaching body of test function \(#function)"
+        )
 
         do {
             try input.testSamples.forEach { sticker in
@@ -78,7 +87,10 @@ class ScannedBikeModelTests {
             #expect(false, "unexpected error \(error)")
         }
 
-        #expect(context.hasChanges == false, "\(type(of: self)) should not have pending changes before reaching body of test function \(#function)")
+        #expect(
+            context.hasChanges == false,
+            "\(type(of: self)) should not have pending changes before reaching body of test function \(#function)"
+        )
         let endState = try! context.fetchCount(FetchDescriptor<ScannedBike>())
         #expect(endState == input.expectedNumberOfStickers)
     }
