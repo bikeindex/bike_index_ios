@@ -42,7 +42,8 @@ struct MainContentPage: View {
                     path: $viewModel.path,
                     loading: $viewModel.fetching,
                     groupMode: $viewModel.groupMode,
-                    sortOrder: $viewModel.sortOrder)
+                    sortOrder: $viewModel.sortOrder,
+                    displayRecentlyScannedStickers: $viewModel.displayRecentlyScannedStickers)
             }
             .navigationTitle("Bike Index")
             .navigationDestination(for: MainContent.self) { selection in
@@ -88,6 +89,9 @@ struct MainContentPage: View {
                         }
                 }
             )
+            .sheet(isPresented: $viewModel.displayRecentlyScannedStickers, content: {
+                Text("Recent stickers!!!!!!!")
+            })
             .alert(isPresented: $viewModel.showError, error: viewModel.lastError) {
                 Text("Okay")
             }
