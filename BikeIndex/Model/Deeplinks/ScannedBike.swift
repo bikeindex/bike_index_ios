@@ -8,22 +8,21 @@
 import Foundation
 import SwiftData
 
-/// QR Code Identifiers are used in the format [A-Z]\d{5}
-/// Example: https://bikeindex.org/bikes/scanned/A40340
-struct Sticker: Equatable {
-    var identifier: String
-
-    init(identifier: String) {
-        self.identifier = identifier
-    }
-}
-
-struct ScannedBike: Equatable, Identifiable {
+@Model
+class ScannedBike: Equatable, Identifiable {
     var id: URL { url }
 
-    var sticker: Sticker
+    /// QR Code Identifiers are used in the format [A-Z]\d{5}
+    /// Example: https://bikeindex.org/bikes/scanned/A40340
+    var sticker: String
 
     var url: URL
+
+    /// Designated initializer only for SwiftData.
+    init(sticker: String, url: URL) {
+        self.sticker = sticker
+        self.url = url
+    }
 }
 
 extension ScannedBike {
@@ -35,7 +34,7 @@ extension ScannedBike {
     ///   - inputUrl: The scanned bike sticker, expected in formats
     ///     - bikeindex://{host}/bikes/scanned/:id
     ///     - {host}/bikes/scanned/:id
-    init?(host provider: HostProvider, url inputUrl: URL?) {
+    convenience init?(host provider: HostProvider, url inputUrl: URL?) {
         guard let inputUrl else { return nil }
         let inputPrefixTrimmed = String(inputUrl.absoluteString.trimmingPrefix("bikeindex://"))
         let inputCorrectedBase = inputPrefixTrimmed.replacingOccurrences(
@@ -59,7 +58,6 @@ extension ScannedBike {
             return nil
         }
 
-        self.url = url
-        self.sticker = Sticker(identifier: identifier)
+        self.init(sticker: identifier, url: url)
     }
 }

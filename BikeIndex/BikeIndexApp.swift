@@ -26,6 +26,7 @@ struct BikeIndexApp: App {
             User.self,
             AuthenticatedUser.self,
             AutocompleteManufacturer.self,
+            // TODO: Add ScannedBike
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -45,24 +46,32 @@ struct BikeIndexApp: App {
                 MainContentPage()
                     .tint(Color.accentColor)
                     .onOpenURL { url in
-                        client.deeplinkManager.scan(url: url)
+                        handleDeeplink(url)
                     }
                     .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
-                        client.deeplinkManager.scan(url: userActivity.webpageURL)
+                        handleDeeplink(userActivity.webpageURL)
                     }
             } else {
                 AuthView()
                     .tint(Color.accentColor)
                     .onOpenURL { url in
-                        client.deeplinkManager.scan(url: url)
+                        handleDeeplink(url)
                     }
                     .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
-                        client.deeplinkManager.scan(url: userActivity.webpageURL)
+                        handleDeeplink(userActivity.webpageURL)
                     }
 
             }
         }
         .environment(client)
         .modelContainer(sharedModelContainer)
+    }
+
+    private func handleDeeplink(_ url: URL?) {
+        let scanResult = client.deeplinkManager.scan(url: url)
+        if let sticker = scanResult?.scannedBike {
+            // Persist to SwiftData after previous changes have more confidence.
+//            sharedModelContainer.mainContext.insert(sticker)
+        }
     }
 }
