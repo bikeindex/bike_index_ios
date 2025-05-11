@@ -71,7 +71,7 @@ struct BikeIndexApp: App {
 }
 
 @MainActor
-class ScannedBikesViewModel {
+struct ScannedBikesViewModel {
     let context: ModelContext
     let client: Client
 
