@@ -35,6 +35,10 @@ class ScannedBikeModelTests {
         }
     }
 
+    /// ``ScannedBikesViewModel`` must only persists the:
+    /// 1. Ten (10) most recent stickers
+    /// 2. Stickers created within the last two weeks.
+    /// All scanned bike stickers older, or in greater quantity, must be forgotten.
     @Test(arguments: [
         Input(numberOfStickers: 1, genesisBase: Date(), expectedNumberOfStickers: 1),
         Input(numberOfStickers: 10, genesisBase: Date()),
