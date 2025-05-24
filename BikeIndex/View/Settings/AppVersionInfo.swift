@@ -16,6 +16,7 @@ struct AppVersionInfo {
         Bundle.main.infoDictionary?["CFBundleVersion"] as? String
     }
 
+    /// Query parameter for donate links. Ex: `referral_source=app-ios-1.4`.
     var referralSource: String {
         marketingVersion.map { "app-ios-\($0)" } ?? "app-ios"
     }

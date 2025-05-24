@@ -6,6 +6,7 @@
 //
 
 import Testing
+
 @testable import BikeIndex
 
 struct AppVersionInfoTests {
@@ -18,8 +19,12 @@ struct AppVersionInfoTests {
         #expect(Int(buildNumber) != nil, "Build number must be an integer. Found \(buildNumber)")
 
         #expect(appVersionInfo.referralSource != "app-ios")
-        #expect(appVersionInfo.referralSource.hasSuffix(marketingVersion), "Referral source should end with the marketing version.")
-        #expect(appVersionInfo.referralSource.hasPrefix("app-ios"), "Referral source must have app-ios prefix.")
+        #expect(
+            appVersionInfo.referralSource.hasSuffix(marketingVersion),
+            "Referral source should end with the marketing version.")
+        #expect(
+            appVersionInfo.referralSource.hasPrefix("app-ios"),
+            "Referral source must have app-ios prefix.")
     }
 
 }
