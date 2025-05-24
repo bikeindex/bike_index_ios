@@ -5,36 +5,18 @@
 //  Created by Jack on 11/18/23.
 //
 
+import OSLog
 import SwiftData
 import SwiftUI
 
 @main
 struct BikeIndexApp: App {
     /// Create a Client instance for stateful networking.
-    @State private var client: Client = {
-        do {
-            return try Client()
-        } catch {
-            fatalError(error.localizedDescription)
-        }
-    }()
-
+    @State private var client: Client
     /// Set up SwiftData
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Bike.self,
-            User.self,
-            AuthenticatedUser.self,
-            AutocompleteManufacturer.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+    var sharedModelContainer: ModelContainer
+    ///
+    var scannedBikesViewModel: ScannedBikesViewModel
 
     /// Set up App
     /// NOTE: MainContentPage and AuthView **each** implement their own universal link handling.
@@ -45,32 +27,53 @@ struct BikeIndexApp: App {
                 MainContentPage()
                     .tint(Color.accentColor)
                     .onOpenURL { url in
-                        client.deeplinkManager = DeeplinkManager(
-                            host: client.hostProvider,
-                            scannedURL: url)
+                        try! handleDeeplink(url)
                     }
                     .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
-                        client.deeplinkManager = DeeplinkManager(
-                            host: client.hostProvider,
-                            scannedURL: userActivity.webpageURL)
+                        try! handleDeeplink(userActivity.webpageURL)
                     }
             } else {
                 AuthView()
                     .tint(Color.accentColor)
                     .onOpenURL { url in
-                        client.deeplinkManager = DeeplinkManager(
-                            host: client.hostProvider,
-                            scannedURL: url)
+                        try! handleDeeplink(url)
                     }
                     .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
-                        client.deeplinkManager = DeeplinkManager(
-                            host: client.hostProvider,
-                            scannedURL: userActivity.webpageURL)
+                        try! handleDeeplink(userActivity.webpageURL)
                     }
 
             }
         }
         .environment(client)
         .modelContainer(sharedModelContainer)
+    }
+
+    func handleDeeplink(_ url: URL?) throws {
+        let scanResult = client.deeplinkManager.scan(url: url)
+        if let sticker = scanResult?.scannedBike {
+            try scannedBikesViewModel.persist(sticker: sticker)
+        }
+    }
+
+    init() {
+        let client = try! Client()
+        self.client = client
+
+        let schema = Schema([
+            Bike.self,
+            User.self,
+            AuthenticatedUser.self,
+            AutocompleteManufacturer.self,
+            ScannedBike.self,  // QR sticker history
+        ])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+        self.sharedModelContainer = try! ModelContainer(
+            for: schema, configurations: [modelConfiguration])
+
+        self.scannedBikesViewModel = .init(
+            context: sharedModelContainer.mainContext,
+            client: client
+        )
     }
 }
