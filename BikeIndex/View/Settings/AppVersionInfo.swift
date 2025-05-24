@@ -15,4 +15,8 @@ struct AppVersionInfo {
     var buildNumber: String? {
         Bundle.main.infoDictionary?["CFBundleVersion"] as? String
     }
+
+    var referralSource: String {
+        marketingVersion.map { "app-ios-\($0)" } ?? "app-ios"
+    }
 }

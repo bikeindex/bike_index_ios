@@ -55,12 +55,11 @@ open class NavigationResponder: NSObject, WKNavigationDelegate {
                     || url.pathComponents.starts(with: ["/", "donate"])
             {
                 // Ex: referral_source=app-ios-1.4
-                let marketingVersion = AppVersionInfo().marketingVersion
-                let referralSource = marketingVersion.map { "app-ios-\($0)" } ?? "app-ios"
-                Logger.webNavigation.debug(
-                    "Redirect from membership to donate with referral \(referralSource)")
+                let referralSource = AppVersionInfo().referralSource
                 let donateUrl = URL(
                     string: "https://bikeindex.org/donate?referral_source=\(referralSource)")!
+                Logger.webNavigation.debug(
+                    "Redirect from membership to donate with referral \(donateUrl)")
                 await UIApplication.shared.open(donateUrl)
                 return (WKNavigationActionPolicy.cancel, preferences)
             }
