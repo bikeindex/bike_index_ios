@@ -9,8 +9,9 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-@MainActor
 struct ScannedBikesViewModel {
+    static let limitOfMostRecent = 10
+
     let context: ModelContext
     let client: Client
 
@@ -24,7 +25,7 @@ struct ScannedBikesViewModel {
         context.insert(sticker)
         try context.save()
 
-        // 2. Purge any sticker outside of:
+        // 2. Find all known-good stickers that meet these conditions
         //      - scanned in the last 2 weeks
         //      - scanned in the 10-most-recent
         // Ex: The 11th sticker scan will be forgotten.
@@ -36,13 +37,15 @@ struct ScannedBikesViewModel {
 
         var fetchDescriptor = FetchDescriptor<ScannedBike>(
             predicate: bikesScannedInTheLastTwoWeeks,
-            sortBy: [SortDescriptor(\.createdAt, order: .forward)])
-
+            sortBy: [SortDescriptor(\.createdAt, order: .reverse)])
         fetchDescriptor.fetchLimit = 10
-        // Cannot use fetchIdentifiers _if_ the FetchDescriptor has a `sortBy` on a non-identifier field.
-        let tenMostRecentStickers = try context.fetch(fetchDescriptor)
-            .map(\.persistentModelID)
 
+        // Cannot use context.fetchIdentifiers() _if_ the FetchDescriptor has a `sortBy` on a non-identifier field
+        // because that field won't be available in the fetch operation.
+        // So just fetch everything and then map on the persistentModelID.
+        let tenMostRecentStickers = try context.fetch(fetchDescriptor).map(\.persistentModelID)
+
+        // 3. Delete the rest
         try context.delete(
             model: ScannedBike.self,
             where: #Predicate<ScannedBike> { model in

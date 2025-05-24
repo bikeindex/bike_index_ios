@@ -32,11 +32,21 @@ struct ScannedBikeModelTests {
             case expectedNumberOfStickers
         }
 
-        init(numberOfStickers: Int = 20, genesisBase: Date, expectedNumberOfStickers: Int = 10) {
+        /// Initialize a test input, will create an array of scanned bike QR stickers, increasingly older, for testing.
+        /// - Parameters:
+        ///   - numberOfStickers: How many stickers to write. Defaults to 20, exceeding the default limit.
+        ///   - genesisBase: The start date, which is adjusted to be 1-minute older for every sticker beyond the first one.
+        ///   - expectedNumberOfStickers: The maximum number of stickers that should be saved in this write. Defaults to limit of 10.
+        init(
+            numberOfStickers: Int = 20,
+            genesisBase: Date = .now,
+            expectedNumberOfStickers: Int = ScannedBikesViewModel.limitOfMostRecent
+        ) {
             self.numberOfStickers = numberOfStickers
             self.testSamples = (0..<numberOfStickers).map { index in
                 let url = URL(string: "https://bikeindex.org/bikes/scanned/\(index)")!
-                let createdAt = genesisBase.addingTimeInterval(-TimeInterval(index * 60))
+                let offset = -TimeInterval(index * 60)
+                let createdAt = genesisBase.addingTimeInterval(offset)
                 return (url, createdAt)
             }
             self.expectedNumberOfStickers = expectedNumberOfStickers
@@ -58,7 +68,7 @@ struct ScannedBikeModelTests {
             let firstDate = dates.first ?? ""
             let lastDate = dates.last ?? ""
             return
-                "\(numberOfStickers).\(firstId)_\(lastId).\(firstId)_\(lastDate).\(expectedNumberOfStickers)"
+                "\(numberOfStickers).\(firstId)_\(lastId).\(firstDate)_\(lastDate).\(expectedNumberOfStickers)"
         }
     }
 
@@ -69,17 +79,18 @@ struct ScannedBikeModelTests {
     @Test(
         "Scanned Sticker History Data Layer",
         arguments: [
-            Input(numberOfStickers: 1, genesisBase: Date(), expectedNumberOfStickers: 1),
-            Input(numberOfStickers: 10, genesisBase: Date()),
-            Input(numberOfStickers: 5, genesisBase: Date(), expectedNumberOfStickers: 5),
-            Input(
-                numberOfStickers: 10, genesisBase: Date().addingTimeInterval(-60 * 60 * 24 * 21),
+            Input(  // count within 10, date within 2 weeks ago
+                numberOfStickers: 10,
+                expectedNumberOfStickers: 10),
+            Input(  // count within 10, date outside of 2 weeks ago
+                numberOfStickers: 10,
+                genesisBase: Date().addingTimeInterval(-60 * 60 * 24 * 21),
                 expectedNumberOfStickers: 0),
-            Input(numberOfStickers: 10, genesisBase: Date().addingTimeInterval(-60 * 60 * 24 * 13)),
-            Input(
-                numberOfStickers: 20, genesisBase: Date().addingTimeInterval(-60 * 60 * 24 * 14 + 1)
-            ),
-            Input(numberOfStickers: 20, genesisBase: Date()),
+            Input(  // count within 10, date within 2 weeks ago
+                numberOfStickers: 10,
+                genesisBase: Date().addingTimeInterval(-60 * 60 * 24 * 13)),
+            Input(  // count outside of 10, date within 2 weeks ago
+                numberOfStickers: 20),
         ])
     func test_handleStickerDeeplinks(input: Input) async throws {
         let invocationName = input.invocationName
@@ -109,7 +120,7 @@ struct ScannedBikeModelTests {
                 try model.persist(sticker: sticker)
             }
         } catch {
-            #expect(false, "unexpected error \(error)")
+            #expect(Bool(false), "unexpected error \(error)")
         }
 
         #expect(
@@ -117,6 +128,22 @@ struct ScannedBikeModelTests {
             "\(type(of: self)) should not have pending changes before reaching body of test function \(#function)"
         )
         let endState = try! context.fetchCount(FetchDescriptor<ScannedBike>())
-        #expect(endState == input.expectedNumberOfStickers)
+        #expect(
+            endState == input.expectedNumberOfStickers,
+            "Expected to find \(input.expectedNumberOfStickers) but actually found \(endState)")
+
+        // Ensure that the 10-most-recent dates in the Input are the same 10-most-recent dates
+        // written to the database.
+        let mostRecentInput = input.scannedBikesHistory
+            .map(\.createdAt)
+            .sorted(by: >)
+            .prefix(upTo: 10)
+
+        let outputPersistedModels = try context.fetch(FetchDescriptor<ScannedBike>())
+        let zipped = zip(mostRecentInput, outputPersistedModels)
+        #expect(zipped.underestimatedCount == input.expectedNumberOfStickers)
+        zipped.forEach { (mostRecent, persisted) in
+            #expect(mostRecent == persisted.createdAt)
+        }
     }
 }
