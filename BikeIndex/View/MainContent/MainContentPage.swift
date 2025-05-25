@@ -42,7 +42,8 @@ struct MainContentPage: View {
                     path: $viewModel.path,
                     loading: $viewModel.fetching,
                     groupMode: $viewModel.groupMode,
-                    sortOrder: $viewModel.sortOrder)
+                    sortOrder: $viewModel.sortOrder,
+                    displayRecentlyScannedStickers: $viewModel.displayRecentlyScannedStickers)
             }
             .navigationTitle("Bike Index")
             .navigationDestination(for: MainContent.self) { selection in
@@ -74,6 +75,7 @@ struct MainContentPage: View {
             .sheet(
                 item: $deeplinkManager.scannedBike,
                 content: { scan in
+                    // Open the new sticker
                     let viewModel = ScannedBikePage.ViewModel(
                         scan: scan,
                         path: viewModel.path,
@@ -86,6 +88,12 @@ struct MainContentPage: View {
                                 viewModel.path.append(exitPath)
                             }
                         }
+                }
+            )
+            .fullScreenCover(
+                isPresented: $viewModel.displayRecentlyScannedStickers,
+                content: {
+                    RecentlyScannedStickersView(display: $viewModel.displayRecentlyScannedStickers)
                 }
             )
             .alert(isPresented: $viewModel.showError, error: viewModel.lastError) {
