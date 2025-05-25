@@ -24,14 +24,18 @@ struct ScannedBikePage: View {
             .environment(client)
             .navigationTitle(viewModel.title)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("Close") {
-                        viewModel.dismiss()
+                if viewModel.dismiss != nil {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button("Close") {
+                            viewModel.dismiss?()
+                        }
                     }
                 }
             }
             .onAppear {
-                Logger.views.debug("ScannedBikePage opening sticker for \(viewModel.scan.url)")
+                Logger.views.debug(
+                    "ScannedBikePage opening sticker for \(viewModel.scan.url) -- \\(viewModel.scan.persistentModelID)"
+                )
             }
         }
     }
@@ -42,14 +46,15 @@ extension ScannedBikePage {
     final class ViewModel {
         var scan: ScannedBike
         var path: NavigationPath
-        var dismiss: () -> Void
+        var dismiss: (() -> Void)?
+        // TODO: onDisappear needs to be connected to NavigableWebView.navigator actions for /register URLs
         var onDisappear: MainContent?
 
         var title: String {
-            scan.sticker
+            scan.displayTitle
         }
 
-        init(scan: ScannedBike, path: NavigationPath, dismiss: @escaping () -> Void) {
+        init(scan: ScannedBike, path: NavigationPath, dismiss: (() -> Void)?) {
             self.scan = scan
             self.path = path
             self.dismiss = dismiss

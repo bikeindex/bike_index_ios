@@ -27,19 +27,19 @@ struct BikeIndexApp: App {
                 MainContentPage()
                     .tint(Color.accentColor)
                     .onOpenURL { url in
-                        try! handleDeeplink(url)
+                        handleDeeplink(url)
                     }
                     .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
-                        try! handleDeeplink(userActivity.webpageURL)
+                        handleDeeplink(userActivity.webpageURL)
                     }
             } else {
                 AuthView()
                     .tint(Color.accentColor)
                     .onOpenURL { url in
-                        try! handleDeeplink(url)
+                        handleDeeplink(url)
                     }
                     .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
-                        try! handleDeeplink(userActivity.webpageURL)
+                        handleDeeplink(userActivity.webpageURL)
                     }
 
             }
@@ -48,10 +48,18 @@ struct BikeIndexApp: App {
         .modelContainer(sharedModelContainer)
     }
 
-    func handleDeeplink(_ url: URL?) throws {
+    /// DeeplinkManager parses out the URL and returns a boxed result.
+    /// If this boxed result contains a QR sticker scanned bike then the view model will persist it.
+    /// After the view model persists the QR sticker, it can be stored in DeeplinkManager as the most-recent.
+    private func handleDeeplink(_ url: URL?) {
         let scanResult = client.deeplinkManager.scan(url: url)
-        if let sticker = scanResult?.scannedBike {
-            try scannedBikesViewModel.persist(sticker: sticker)
+        do {
+            if let sticker = scanResult?.scannedBike {
+                let persistedSticker = try scannedBikesViewModel.persist(sticker: sticker)
+                client.deeplinkManager.scannedBike = persistedSticker
+            }
+        } catch {
+            Logger.model.error("Failed to handle deeplink: \(error)")
         }
     }
 

@@ -5,6 +5,7 @@
 //  Created by Jack on 12/31/23.
 //
 
+import SwiftData
 import SwiftUI
 
 extension MainContentPage {
@@ -15,6 +16,9 @@ extension MainContentPage {
         @Binding var loading: Bool
         @Binding var groupMode: ViewModel.GroupMode
         @Binding var sortOrder: SortOrder
+        @Binding var displayRecentlyScannedStickers: Bool
+
+        @Query var recentStickers: [ScannedBike]
 
         var body: some ToolbarContent {
             ToolbarItemGroup(placement: .topBarLeading) {
@@ -33,6 +37,21 @@ extension MainContentPage {
                     Label("Help", systemImage: "book.closed")
                 }
                 .accessibilityHint("Open frequently asked questions and help pages")
+            }
+
+            if recentStickers.isEmpty == false {
+                ToolbarItem(placement: .status) {
+                    Button {
+                        displayRecentlyScannedStickers = true
+                    } label: {
+                        Label(
+                            "\(recentStickers.count) Recently Scanned Stickers",
+                            systemImage: "qrcode"
+                        )
+                        .labelStyle(.titleAndIcon)
+                    }
+
+                }
             }
 
             ToolbarItemGroup(placement: .topBarTrailing) {
@@ -86,6 +105,7 @@ extension MainContentPage {
     @Previewable @State var path = NavigationPath()
     @Previewable @State var groupMode = MainContentPage.ViewModel.GroupMode.byStatus
     @Previewable @State var sortOrder: SortOrder = .forward
+    @Previewable @State var displayRecentlyScannedStickers = false
     NavigationStack {
         Text("Toolbar preview")
             .toolbar {
@@ -93,7 +113,8 @@ extension MainContentPage {
                     path: $path,
                     loading: .constant(true),
                     groupMode: $groupMode,
-                    sortOrder: $sortOrder)
+                    sortOrder: $sortOrder,
+                    displayRecentlyScannedStickers: $displayRecentlyScannedStickers)
             }
     }
     .environment(try! Client())

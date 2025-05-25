@@ -20,7 +20,7 @@ struct ScannedBikesViewModel {
         self.client = client
     }
 
-    func persist(sticker: ScannedBike) throws {
+    func persist(sticker: ScannedBike) throws -> ScannedBike {
         // 1. Save the latest scanned bike sticker
         context.insert(sticker)
         try context.save()
@@ -51,5 +51,7 @@ struct ScannedBikesViewModel {
             where: #Predicate<ScannedBike> { model in
                 tenMostRecentStickers.contains(model.persistentModelID) == false
             })
+
+        return sticker
     }
 }
