@@ -75,8 +75,6 @@ struct MainContentPage: View {
             .sheet(
                 item: $deeplinkManager.scannedBike,
                 content: { scan in
-                    // Dismiss any previous stickers
-                    // self.viewModel.displayRecentlyScannedStickers = false
                     // Open the new sticker
                     let viewModel = ScannedBikePage.ViewModel(
                         scan: scan,
