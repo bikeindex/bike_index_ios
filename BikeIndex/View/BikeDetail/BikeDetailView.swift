@@ -5,10 +5,58 @@
 //  Created by Jack on 1/7/24.
 //
 
+import Network
 import SwiftData
 import SwiftUI
 import WebKit
 import WebViewKit
+
+extension NWPath.Status {
+    var displayTitle: String {
+        switch self {
+        case .satisfied:
+            "Satisfied"
+        case .unsatisfied:
+            "Unsatisfied"
+        case .requiresConnection:
+            "Requires Connection"
+        @unknown default:
+            "UNKNOWN"
+        }
+    }
+}
+
+@Observable @MainActor
+class Checker {
+    static let shared = Checker()
+
+    private let pathMonitor = NWPathMonitor()
+
+    private(set) var status: NWPath.Status = .requiresConnection
+
+    init() {
+        pathMonitor.start(queue: .main)
+        pathMonitor.pathUpdateHandler = { path in
+            if path.status == .unsatisfied {
+                print(
+                    "@@ Checker.pathUpdateHandler.status SATISFIED \(path.status) on thread \(Thread.current)"
+                )
+            } else {
+                print(
+                    "@@ Checker.pathUpdateHandler.status working? \(path.status) on thread \(Thread.current)"
+                )
+            }
+            Task {
+                await self.update(status: path.status)
+            }
+        }
+    }
+
+    func update(status: NWPath.Status) {
+        print("@@ Checker.update(status:) \(status) on thread \(Thread.current)")
+        self.status = status
+    }
+}
 
 /// Display the details for a single bike by ``Bike/BikeIdentifier`` (Int).
 struct BikeDetailView: View {
@@ -18,6 +66,8 @@ struct BikeDetailView: View {
     @Query private var bikeQuery: [Bike]
 
     @State private var url: URL
+
+    @State private var checker: Checker = .shared
 
     /// Initialize with a BikeIdentifier and base URL. The base URL must be retrieved before Client is available.
     /// With these inputs the Bike's canonical URL can be constructed and displayed in the NavigableWebView.
@@ -50,12 +100,23 @@ struct BikeDetailView: View {
                             }
                         }
                     }
+
+                    statusToolbar
                 })
                 .navigationTitle(bike.title)
         } else {
             // In practice this view is never displayed because SwiftData will find the Bike
             ProgressView()
+                .toolbar(content: {
+                    statusToolbar
+                })
                 .navigationTitle("Loading")
+        }
+    }
+
+    var statusToolbar: ToolbarItem<(), Text> {
+        ToolbarItem(placement: .status) {
+            Text(checker.status.displayTitle)
         }
     }
 }
