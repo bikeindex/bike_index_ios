@@ -50,7 +50,7 @@ extension MainContentPage {
                         )
                         .labelStyle(.titleAndIcon)
                     }
-
+            
                 }
             }
 

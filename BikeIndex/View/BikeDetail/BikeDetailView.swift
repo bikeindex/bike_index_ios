@@ -34,6 +34,8 @@ class Checker {
 
     private(set) var status: NWPath.Status = .requiresConnection
 
+    var presentOfflineMode: Bool = true
+
     init() {
         pathMonitor.start(queue: .main)
         pathMonitor.pathUpdateHandler = { path in
@@ -54,11 +56,12 @@ class Checker {
 
     func update(status: NWPath.Status) {
         print("@@ Checker.update(status:) \(status) on thread \(Thread.current)")
-        self.status = status
+        //        self.status = status
+        //        self.presentOfflineMode = status == .unsatisfied
     }
 }
 
-/// Display the details for a single bike by ``Bike/BikeIdentifier`` (Int).
+/// Display the details for a bike primarily from the network.
 struct BikeDetailView: View {
     @Environment(Client.self) var client
 
@@ -104,6 +107,17 @@ struct BikeDetailView: View {
                     statusToolbar
                 })
                 .navigationTitle(bike.title)
+                .sheet(isPresented: $checker.presentOfflineMode) {
+                    NavigationStack {
+                        BikeDetailOfflineView(bikeIdentifier: bike.identifier)
+                            .navigationBarTitleDisplayMode(.inline)
+                    }
+                    .presentationDragIndicator(.visible)
+                    //                        .interactiveDismissDisabled()
+                }
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+            // .presentationSizing(.page) // TODO: Move this to if #available block
         } else {
             // In practice this view is never displayed because SwiftData will find the Bike
             ProgressView()
@@ -114,9 +128,11 @@ struct BikeDetailView: View {
         }
     }
 
-    var statusToolbar: ToolbarItem<(), Text> {
+    var statusToolbar: some ToolbarContent {
         ToolbarItem(placement: .status) {
-            Text(checker.status.displayTitle)
+            Button(checker.status.displayTitle) {
+                checker.presentOfflineMode.toggle()
+            }
         }
     }
 }
