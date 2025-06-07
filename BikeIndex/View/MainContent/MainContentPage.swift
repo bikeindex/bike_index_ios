@@ -90,12 +90,14 @@ struct MainContentPage: View {
                         }
                 }
             )
+            /* Deactivate Recently Scanned Stickers for this bugfix release
             .fullScreenCover(
                 isPresented: $viewModel.displayRecentlyScannedStickers,
                 content: {
                     RecentlyScannedStickersView(display: $viewModel.displayRecentlyScannedStickers)
                 }
             )
+             */
             .alert(isPresented: $viewModel.showError, error: viewModel.lastError) {
                 Text("Okay")
             }
