@@ -21,23 +21,8 @@ struct AuthView: View {
     var body: some View {
         @Bindable var deeplinkManager = client.deeplinkManager
         NavigationStack(path: $viewModel.topLevelPath) {
-            WelcomeView()
+            WelcomeView(displaySignIn: $viewModel.displaySignIn)
                 .toolbar {
-                    ToolbarItem(placement: .bottomBar) {
-                        Button {
-                            viewModel.display = true
-                        } label: {
-                            Label(
-                                "Sign in and get started",
-                                systemImage: "person.crop.circle.dashed"
-                            )
-                            .accessibilityIdentifier("SignIn")
-                            .font(.title3)
-                            .labelStyle(.titleAndIcon)
-                        }
-                        .buttonStyle(.borderedProminent)
-                    }
-
                     ToolbarItemGroup(placement: .topBarLeading) {
                         #if DEBUG
                         NavigationLink(value: ViewModel.Nav.debugSettings) {
@@ -65,10 +50,10 @@ struct AuthView: View {
                 }
         }
         .sheet(
-            isPresented: $viewModel.display,
+            isPresented: $viewModel.displaySignIn,
             onDismiss: {
                 // Essential to reset state
-                viewModel.historyNavigator.wkWebView?.load(URLRequest(url: URL("about:blank")))
+                viewModel.historyNavigator.wkWebView?.load(URLRequest(url: URL(stringLiteral: "about:blank")))
             },
             content: {
                 // Sign-in Dialog.
@@ -76,7 +61,7 @@ struct AuthView: View {
                 AuthSignInView(
                     baseUrl: viewModel.signInPageRequest.url!,
                     navigator: viewModel.historyNavigator,
-                    display: $viewModel.display
+                    display: $viewModel.displaySignIn
                 )
                 .environment(client)
                 .interactiveDismissDisabled()
@@ -96,7 +81,7 @@ struct AuthView: View {
         .onChange(of: deeplinkManager.scannedBike) { oldValue, newValue in
             /// When a deeplink arrives ``AuthView`` will display ``AuthSignInView`` which will also check
             /// onChange(of: deeplinkManager.scannedBike) to display the universal link.
-            viewModel.display = true
+            viewModel.displaySignIn = true
 
             Logger.deeplinks.info(
                 "AuthView handling scanned deeplink: \(String(describing: client.deeplinkManager.scannedBike?.url))"

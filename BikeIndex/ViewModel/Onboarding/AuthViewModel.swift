@@ -25,7 +25,7 @@ extension AuthView {
     @MainActor @Observable
     final class ViewModel {
         /// Control presenting a modal sheet for app authorization
-        var display: Bool = false
+        var displaySignIn: Bool = false
 
         /// Object to intercept authentication events from the sign-in WebView and forward them to Client
         /// ``AuthenticationNavigator/client`` must be connected at runtime so that AuthNavigator can update ``Client``

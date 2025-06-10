@@ -13,6 +13,7 @@ struct WelcomeView: View {
     @Environment(\.colorScheme) var colorScheme
 
     @State var iconsModel = AlternateIconsModel()
+    @Binding var displaySignIn: Bool
 
     var body: some View {
         VStack {
@@ -35,6 +36,19 @@ struct WelcomeView: View {
             .frame(maxWidth: .infinity, alignment: .center)
             .padding()
             Spacer()
+            Button {
+                displaySignIn = true
+            } label: {
+                Label(
+                    "Sign in and get started",
+                    systemImage: "person.crop.circle.dashed"
+                )
+                .accessibilityIdentifier("SignIn")
+                .font(.title3)
+                .labelStyle(.titleAndIcon)
+            }
+            .buttonStyle(.borderedProminent)
+
         }
         .toolbarTitleDisplayMode(.large)
         .toolbarColorScheme(.dark, for: .navigationBar)
@@ -45,7 +59,7 @@ struct WelcomeView: View {
 
 #Preview {
     NavigationStack {
-        WelcomeView()
+        WelcomeView(displaySignIn: .constant(false))
             .environment(try! Client())
             .navigationTitle("Welcome to Bike Index")
     }
