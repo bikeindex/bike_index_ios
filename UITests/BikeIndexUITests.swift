@@ -73,6 +73,7 @@ final class BikeIndexUITests: XCTestCase {
         debugMenu.tap()
 
         back()
+        app.swipeUp()
 
         let acknowledgements = app.buttons["Acknowledgements"]
         _ = acknowledgements.waitForExistence(timeout: timeout)
@@ -105,6 +106,8 @@ final class BikeIndexUITests: XCTestCase {
         // SETUP
 
         openSettings()
+
+        app.swipeUp()
 
         let acknowledgements = app.buttons["Acknowledgements"]
         _ = acknowledgements.waitForExistence(timeout: timeout)
