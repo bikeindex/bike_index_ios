@@ -73,30 +73,33 @@ struct AppIconPicker: View {
     @Binding var model: AlternateIconsModel
 
     var body: some View {
-        ScrollView {
-            ProportionalLazyVGrid {
-                ForEach(AppIcon.allCases, id: \.id) { icon in
-                    Button {
-                        model.update(icon: icon)
-                    } label: {
-                        VStack {
-                            Image(uiImage: icon.image)
-                                .appIcon()
-                            Text(icon.description)
+        ZStack(alignment: .bottom) {
+            ScrollView {
+                ProportionalLazyVGrid {
+                    ForEach(AppIcon.allCases, id: \.id) { icon in
+                        Button {
+                            model.update(icon: icon)
+                        } label: {
+                            VStack {
+                                Image(uiImage: icon.image)
+                                    .appIcon()
+                                Text(icon.description)
+                            }
                         }
+                        .buttonStyle(.plain)
+                        .padding()
                     }
-                    .buttonStyle(.plain)
-                    .padding()
                 }
+                .padding()
             }
-            .padding()
+            Text("Choose your own app icon")
+                .fontWeight(.medium)
+                .padding(.top, 8)
+                .frame(maxWidth: .infinity)
+                .background(.ultraThinMaterial)
         }
-        .toolbar(content: {
-            ToolbarItem(placement: .status) {
-                Text("Choose your own app icon")
-            }
-        })
         .navigationTitle("App Icon")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

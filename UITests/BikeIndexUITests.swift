@@ -73,6 +73,7 @@ final class BikeIndexUITests: XCTestCase {
         debugMenu.tap()
 
         back()
+        app.swipeUp()
 
         let acknowledgements = app.buttons["Acknowledgements"]
         _ = acknowledgements.waitForExistence(timeout: timeout)
@@ -86,11 +87,19 @@ final class BikeIndexUITests: XCTestCase {
         _ = privacyPolicy.waitForExistence(timeout: timeout)
         privacyPolicy.tap()
 
+        let privacyPolicyLabel = app.staticTexts["General Information"]
+        let privacyPageLoaded = privacyPolicyLabel.waitForExistence(timeout: timeout)
+        XCTAssertTrue(privacyPageLoaded)
+
         back()
 
         let terms = app.buttons["Terms of Service"]
         _ = terms.waitForExistence(timeout: timeout)
         terms.tap()
+
+        let termsOfServiceLabel = app.staticTexts["About our Terms of Service"]
+        let termsPageLoaded = termsOfServiceLabel.waitForExistence(timeout: timeout)
+        XCTAssertTrue(termsPageLoaded)
 
         back()
     }
@@ -105,6 +114,8 @@ final class BikeIndexUITests: XCTestCase {
         // SETUP
 
         openSettings()
+
+        app.swipeUp()
 
         let acknowledgements = app.buttons["Acknowledgements"]
         _ = acknowledgements.waitForExistence(timeout: timeout)

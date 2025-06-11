@@ -17,7 +17,7 @@ struct NavigableWebView: View {
     @Environment(Client.self) var client
 
     @Binding private var url: URL
-    private var navigator: HistoryNavigator
+    @State private var navigator: HistoryNavigator
 
     init(url: Binding<URL>, navigator: HistoryNavigator = HistoryNavigator()) {
         self._url = url
