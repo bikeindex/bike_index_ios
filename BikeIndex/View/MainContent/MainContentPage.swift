@@ -98,9 +98,8 @@ struct MainContentPage: View {
                 }
             )
              */
-            .alert(isPresented: $viewModel.showError, error: viewModel.lastError) {
-                Text("Okay")
-            }
+            // empty action block to rely on default Button("OK") behavior
+            .alert(isPresented: $viewModel.showError, error: viewModel.lastError) {}
             .onAppear {
                 Logger.views.debug(
                     "Starting main content page with deeplink scanned bike \(String(describing: deeplinkManager.scannedBike))"

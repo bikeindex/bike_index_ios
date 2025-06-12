@@ -23,13 +23,9 @@ extension MainContentPage {
         // Normal operation handling
         var fetching = true
         // Error Handling
-        public var lastError: ViewModel.Error? = nil
+        var lastError: ViewModel.Error? = nil
         // Alert presentation
-        var showError: Bool = false {
-            didSet {
-                if showError { fetching = false }
-            }
-        }
+        var showError: Bool = false
 
         // MARK: Query Management
 
@@ -79,6 +75,7 @@ extension MainContentPage {
                 Logger.model.error("Failed to user info: \(error)")
                 lastError = error
                 showError = true
+                fetching = false
             }
         }
 
