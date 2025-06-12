@@ -9,11 +9,16 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-struct ScannedBikesViewModel {
+@MainActor
+class ScannedBikesViewModel {
     static let limitOfMostRecent = 10
 
     let context: ModelContext
     let client: Client
+
+    /// Refer to the last-known ``cleanUpExpiredStickers`` task
+    /// to restart clean-up if multiple stickers are scanned in quick succession.
+    private var cleanUpTask: Task<()?, any Error>? = nil
 
     init(context: ModelContext, client: Client) {
         self.context = context
@@ -25,6 +30,18 @@ struct ScannedBikesViewModel {
         context.insert(sticker)
         try context.save()
 
+        let savedStickersCount = try context.fetchCount(FetchDescriptor<ScannedBike>())
+        if savedStickersCount > Self.limitOfMostRecent {
+            cleanUpTask?.cancel()
+            cleanUpTask = Task { [weak self] in
+                try await self?.cleanUpExpiredStickers()
+            }
+        }
+
+        return sticker
+    }
+
+    private func cleanUpExpiredStickers() async throws {
         // 2. Find all known-good stickers that meet these conditions
         //      - scanned in the last 2 weeks
         //      - scanned in the 10-most-recent
@@ -51,7 +68,5 @@ struct ScannedBikesViewModel {
             where: #Predicate<ScannedBike> { model in
                 tenMostRecentStickers.contains(model.persistentModelID) == false
             })
-
-        return sticker
     }
 }
