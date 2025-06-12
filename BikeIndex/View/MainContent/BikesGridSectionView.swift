@@ -21,7 +21,14 @@ struct BikesGridSectionView: View {
         self._path = path
         self.bikes = bikes
         self.section = section
+
         /// Track expanded state _for each section_
+        /// Uh, oh.
+        /// Swift tip: Avoid using dots in your UserDefaults keys. It will usually be fine, but you'll run into problems if you ever need to observe it using NSObject.addObserver.
+        /// addObserver takes a keyPath, and this will trip up on a key like “myApp.myThing” because it will assume myThing is a nested property.
+        /// There is a didChangeNotification on UserDefaults but only fires for changes that occur in the current process. If you need to observe for changes that occur out-of-process (in an app extension), you'll need to use NSObject.addObserver.
+        /// Super niche, yeah. But something to keep in your back pocket.
+        /// -- https://hachyderm.io/@mattcomi/114617046543758069
         _isExpanded = AppStorage(
             wrappedValue: true, "BikesGridSectionView.isExpanded.\(section)")
     }

@@ -39,7 +39,6 @@ extension MainContentPage {
                 .accessibilityHint("Open frequently asked questions and help pages")
             }
 
-            /*
             if recentStickers.isEmpty == false {
                 ToolbarItem(placement: .status) {
                     Button {
@@ -51,10 +50,9 @@ extension MainContentPage {
                         )
                         .labelStyle(.titleAndIcon)
                     }
-
+            
                 }
             }
-             */
 
             ToolbarItemGroup(placement: .topBarTrailing) {
                 if loading {

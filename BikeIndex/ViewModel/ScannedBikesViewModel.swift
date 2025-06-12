@@ -9,7 +9,8 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-@MainActor
+@MainActor @Observable
+// TODO: Rename to database helper or something (or split into writer/deleter and the deleter can be namespaced to RecentlyScannedStickersView.ViewModel)
 class ScannedBikesViewModel {
     static let limitOfMostRecent = 10
 
@@ -20,6 +21,7 @@ class ScannedBikesViewModel {
     /// to restart clean-up if multiple stickers are scanned in quick succession.
     private var cleanUpTask: Task<()?, any Error>? = nil
 
+    // TODO: Change this to follow MainContentPage+ViewModel's approach of providing ModelContext and Client through function parameters instead of kept-references through init.
     init(context: ModelContext, client: Client) {
         self.context = context
         self.client = client
@@ -41,6 +43,7 @@ class ScannedBikesViewModel {
         return sticker
     }
 
+    // TODO: Consider removing the time interval
     private func cleanUpExpiredStickers() async throws {
         // 2. Find all known-good stickers that meet these conditions
         //      - scanned in the last 2 weeks
@@ -68,5 +71,14 @@ class ScannedBikesViewModel {
             where: #Predicate<ScannedBike> { model in
                 tenMostRecentStickers.contains(model.persistentModelID) == false
             })
+    }
+
+    /// Support deleting for manual removal
+    func delete(stickers: [ScannedBike]) throws {
+        try context.transaction {
+            for sticker in stickers {
+                context.delete(sticker)
+            }
+        }
     }
 }

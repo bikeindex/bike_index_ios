@@ -90,7 +90,6 @@ struct MainContentPage: View {
                         }
                 }
             )
-            /* Deactivate Recently Scanned Stickers for this bugfix release
             .fullScreenCover(
                 isPresented: $viewModel.displayRecentlyScannedStickers,
                 content: {
@@ -117,6 +116,9 @@ struct MainContentPage: View {
 }
 
 // MARK: - Previews
+
+/// [!NOTE]
+/// MainContentPage previews are missing an assignment for @Environment(ScannedBikesViewModel.self)
 
 // MARK: Empty Data Preview
 #Preview("Empty data") {

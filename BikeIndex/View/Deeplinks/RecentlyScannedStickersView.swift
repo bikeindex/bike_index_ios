@@ -9,6 +9,8 @@ import SwiftData
 import SwiftUI
 
 struct RecentlyScannedStickersView: View {
+    @Environment(ScannedBikesViewModel.self) var scannedBikesViewModel
+
     @Query(sort: [SortDescriptor(\ScannedBike.createdAt, order: .reverse)])
     var stickers: [ScannedBike]
 
@@ -20,13 +22,16 @@ struct RecentlyScannedStickersView: View {
         NavigationStack(path: $path) {
             // Duplicated/repeated scans are allowed but duplicates on ScannedBike.id cause problems for List
             // so we need to de-duplicate List on persistentModelID
-            List(stickers, id: \.persistentModelID) { sticker in
-                NavigationLink {
-                    ScannedBikePage(viewModel: .init(scan: sticker, path: path, dismiss: nil))
-                        .interactiveDismissDisabled()
-                } label: {
-                    StickerDisplayLabel(sticker: sticker)
+            List {
+                ForEach(stickers, id: \.persistentModelID) { sticker in
+                    NavigationLink {
+                        ScannedBikePage(viewModel: .init(scan: sticker, path: path, dismiss: nil))
+                            .interactiveDismissDisabled()
+                    } label: {
+                        StickerDisplayLabel(sticker: sticker)
+                    }
                 }
+                .onDelete(perform: delete(indexSet:))
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Recently Scanned Stickers")
@@ -39,30 +44,48 @@ struct RecentlyScannedStickersView: View {
             }
         }
     }
+
+    private func delete(indexSet: IndexSet) {
+        let stickersToDelete = indexSet.map { stickers[$0] }
+        do {
+            try scannedBikesViewModel.delete(stickers: stickersToDelete)
+        } catch {
+            
+        }
+    }
 }
 
-#Preview {
-    @Previewable let client = try! Client()
-
-    @Previewable let container = try! ModelContainer(
+struct RecentlyScannedPreview: PreviewProvider {
+    static let container = try! ModelContainer(
         for: ScannedBike.self,
         configurations: ModelConfiguration(isStoredInMemoryOnly: true))
 
-    RecentlyScannedStickersView(display: .constant(true))
-        .environment(client)
-        .modelContainer(container)
-        .onAppear {
-            for identifier in ["SAM000000", "A40340", "NONMATCH"] {
-                if let sampleSticker = ScannedBike(
-                    host: client.hostProvider,
-                    url: URL(string: "https://bikeindex.org/bikes/scanned/\(identifier)"))
-                {
-                    container.mainContext.insert(sampleSticker)
-                }
-            }
+    static var client = try! Client()
 
-            try! container.mainContext.save()
-        }
+    static var scannedBikesViewModel: ScannedBikesViewModel {
+        ScannedBikesViewModel(
+            context: container.mainContext,
+            client: client)
+    }
+
+    static var previews: some View {
+        RecentlyScannedStickersView(display: .constant(true))
+            .environment(client)
+            .environment(scannedBikesViewModel)
+            .modelContainer(container)
+            .onAppear {
+                for identifier in ["SAM000000", "A40340", "NONMATCH"] {
+                    if let sampleSticker = ScannedBike(
+                        host: client.hostProvider,
+                        url: URL(string: "https://bikeindex.org/bikes/scanned/\(identifier)"))
+                    {
+                        container.mainContext.insert(sampleSticker)
+                    }
+                }
+
+                try! container.mainContext.save()
+            }
+    }
 }
 
 struct StickerDisplayLabel: View {

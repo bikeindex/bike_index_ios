@@ -11,12 +11,13 @@ import SwiftUI
 
 @main
 struct BikeIndexApp: App {
-    /// Create a Client instance for stateful networking.
+    /// A Client instance for stateful networking.
     @State private var client: Client
+    /// A database helper to manage bike stickers.
+    @State private var scannedBikesViewModel: ScannedBikesViewModel
+
     /// Set up SwiftData
     var sharedModelContainer: ModelContainer
-    ///
-    var scannedBikesViewModel: ScannedBikesViewModel
 
     /// Set up App
     /// NOTE: MainContentPage and AuthView **each** implement their own universal link handling.
@@ -45,6 +46,7 @@ struct BikeIndexApp: App {
             }
         }
         .environment(client)
+        .environment(scannedBikesViewModel)
         .modelContainer(sharedModelContainer)
     }
 
@@ -76,12 +78,14 @@ struct BikeIndexApp: App {
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
-        self.sharedModelContainer = try! ModelContainer(
+        let sharedModelContainer =  try! ModelContainer(
             for: schema, configurations: [modelConfiguration])
+        self.sharedModelContainer = sharedModelContainer
 
-        self.scannedBikesViewModel = .init(
+        let scannedBikesViewModel = ScannedBikesViewModel(
             context: sharedModelContainer.mainContext,
             client: client
         )
+        self.scannedBikesViewModel = scannedBikesViewModel
     }
 }
