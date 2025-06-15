@@ -13,11 +13,9 @@ import SwiftUI
 struct BikeIndexApp: App {
     /// A Client instance for stateful networking.
     @State private var client: Client
-    /// A database helper to manage bike stickers.
-    @State private var scannedBikesViewModel: ScannedBikesViewModel
 
     /// Set up SwiftData
-    var sharedModelContainer: ModelContainer
+    private var sharedModelContainer: ModelContainer
 
     /// Set up App
     /// NOTE: MainContentPage and AuthView **each** implement their own universal link handling.
@@ -46,7 +44,6 @@ struct BikeIndexApp: App {
             }
         }
         .environment(client)
-        .environment(scannedBikesViewModel)
         .modelContainer(sharedModelContainer)
     }
 
@@ -57,7 +54,10 @@ struct BikeIndexApp: App {
         let scanResult = client.deeplinkManager.scan(url: url)
         do {
             if let sticker = scanResult?.scannedBike {
-                let persistedSticker = try scannedBikesViewModel.persist(sticker: sticker)
+                let scannedBikesViewModel = ScannedBikesViewModel()
+                let persistedSticker = try scannedBikesViewModel.persist(
+                    context: sharedModelContainer.mainContext,
+                    sticker: sticker)
                 client.deeplinkManager.scannedBike = persistedSticker
             }
         } catch {
@@ -81,11 +81,5 @@ struct BikeIndexApp: App {
         let sharedModelContainer =  try! ModelContainer(
             for: schema, configurations: [modelConfiguration])
         self.sharedModelContainer = sharedModelContainer
-
-        let scannedBikesViewModel = ScannedBikesViewModel(
-            context: sharedModelContainer.mainContext,
-            client: client
-        )
-        self.scannedBikesViewModel = scannedBikesViewModel
     }
 }

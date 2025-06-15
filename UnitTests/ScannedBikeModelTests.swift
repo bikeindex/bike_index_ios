@@ -79,17 +79,17 @@ struct ScannedBikeModelTests {
     @Test(
         "Scanned Sticker History Data Layer",
         arguments: [
-            Input(  // count within 10, date within 2 weeks ago
+            Input(  // count within 10
                 numberOfStickers: 10,
                 expectedNumberOfStickers: 10),
-            Input(  // count within 10, date outside of 2 weeks ago
+            Input(  // count within 10
                 numberOfStickers: 10,
                 genesisBase: Date().addingTimeInterval(-60 * 60 * 24 * 21),
-                expectedNumberOfStickers: 0),
-            Input(  // count within 10, date within 2 weeks ago
+                expectedNumberOfStickers: 10),
+            Input(  // count within 10
                 numberOfStickers: 10,
                 genesisBase: Date().addingTimeInterval(-60 * 60 * 24 * 13)),
-            Input(  // count outside of 10, date within 2 weeks ago
+            Input(  // count outside of 10
                 numberOfStickers: 20),
         ])
     func test_handleStickerDeeplinks(input: Input) async throws {
@@ -102,9 +102,7 @@ struct ScannedBikeModelTests {
         )
         let context = container.mainContext
         context.autosaveEnabled = false
-        let model = ScannedBikesViewModel(
-            context: context,
-            client: try! Client())
+        let model = ScannedBikesViewModel()
 
         let fetch = FetchDescriptor(predicate: #Predicate<ScannedBike> { _ in true })
         let beginningState = try context.fetchCount(fetch)
@@ -117,7 +115,7 @@ struct ScannedBikeModelTests {
 
         do {
             try input.scannedBikesHistory.forEach { sticker in
-                try model.persist(sticker: sticker)
+                try model.persist(context: context, sticker: sticker)
             }
         } catch {
             #expect(Bool(false), "unexpected error \(error)")
@@ -127,6 +125,7 @@ struct ScannedBikeModelTests {
             context.hasChanges == false,
             "\(type(of: self)) should not have pending changes before reaching body of test function \(#function)"
         )
+
         let endState = try! context.fetchCount(FetchDescriptor<ScannedBike>())
         #expect(
             endState == input.expectedNumberOfStickers,

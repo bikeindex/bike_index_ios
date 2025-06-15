@@ -9,7 +9,8 @@ import SwiftData
 import SwiftUI
 
 struct RecentlyScannedStickersView: View {
-    @Environment(ScannedBikesViewModel.self) var scannedBikesViewModel
+    @Environment(\.modelContext) private var modelContext
+    var scannedBikesViewModel = ScannedBikesViewModel()
 
     @Query(sort: [SortDescriptor(\ScannedBike.createdAt, order: .reverse)])
     var stickers: [ScannedBike]
@@ -48,7 +49,8 @@ struct RecentlyScannedStickersView: View {
     private func delete(indexSet: IndexSet) {
         let stickersToDelete = indexSet.map { stickers[$0] }
         do {
-            try scannedBikesViewModel.delete(stickers: stickersToDelete)
+            try scannedBikesViewModel.delete(context: modelContext,
+                                             stickers: stickersToDelete)
         } catch {
             
         }
@@ -62,16 +64,9 @@ struct RecentlyScannedPreview: PreviewProvider {
 
     static var client = try! Client()
 
-    static var scannedBikesViewModel: ScannedBikesViewModel {
-        ScannedBikesViewModel(
-            context: container.mainContext,
-            client: client)
-    }
-
     static var previews: some View {
         RecentlyScannedStickersView(display: .constant(true))
             .environment(client)
-            .environment(scannedBikesViewModel)
             .modelContainer(container)
             .onAppear {
                 for identifier in ["SAM000000", "A40340", "NONMATCH"] {
