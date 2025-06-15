@@ -42,9 +42,11 @@ enum BikeIndexLink: Identifiable {
         case .stolenBikeFAQ:
             markdownSource =
                 "Learn more about [How to get your stolen bike back](\(link(base: base)))"
+        case .howToUseStickers:
+            markdownSource = "[How to use Bike Index QR stickers](\(link(base: base)))"
         case .help, .privacyPolicy, .termsOfService, .deleteAccount, .accountUserSettings,
             .accountPassword, .accountSharingPersonalPage, .accountRegistrationOrganization,
-            .stolenBikeWhatToDo, .howToUseStickers:
+            .stolenBikeWhatToDo:
             return AttributedString()
         }
 

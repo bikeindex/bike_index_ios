@@ -10,29 +10,38 @@ import SwiftUI
 
 struct RecentlyScannedStickersView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(Client.self) private var client
     var scannedBikesViewModel = ScannedBikesViewModel()
 
     @Query(sort: [SortDescriptor(\ScannedBike.createdAt, order: .reverse)])
     var stickers: [ScannedBike]
 
     @State var path = NavigationPath()
-
+    @State var showHowToPage = false
+    /// Control the presentation of this view.
     @Binding var display: Bool
 
     var body: some View {
         NavigationStack(path: $path) {
-            // Duplicated/repeated scans are allowed but duplicates on ScannedBike.id cause problems for List
+            // Duplicated/repeated scans are allowed
+            // but duplicates on ScannedBike.id will cause problems for List
             // so we need to de-duplicate List on persistentModelID
             List {
-                ForEach(stickers, id: \.persistentModelID) { sticker in
-                    NavigationLink {
-                        ScannedBikePage(viewModel: .init(scan: sticker, path: path, dismiss: nil))
-                            .interactiveDismissDisabled()
-                    } label: {
-                        StickerDisplayLabel(sticker: sticker)
+                Section {
+                    ForEach(stickers, id: \.persistentModelID) { sticker in
+                        NavigationLink {
+                            ScannedBikePage(viewModel: .init(scan: sticker, path: path, dismiss: nil))
+                                .interactiveDismissDisabled()
+                        } label: {
+                            StickerDisplayLabel(sticker: sticker)
+                        }
                     }
+                    .onDelete(perform: delete(indexSet:))
+                } footer: {
+                    TextLink(base: client.hostProvider.host,
+                             link: .howToUseStickers)
+                    .environment(\.openURL, openHowToPage)
                 }
-                .onDelete(perform: delete(indexSet:))
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Recently Scanned Stickers")
@@ -43,6 +52,17 @@ struct RecentlyScannedStickersView: View {
                     }
                 }
             }
+            .navigationDestination(isPresented: $showHowToPage) {
+                NavigableWebView(constantLink: .howToUseStickers,
+                                 host: client.hostProvider.host)
+            }
+        }
+    }
+
+    private var openHowToPage: OpenURLAction {
+        OpenURLAction { _ in
+            showHowToPage = true
+            return .handled
         }
     }
 
@@ -52,7 +72,7 @@ struct RecentlyScannedStickersView: View {
             try scannedBikesViewModel.delete(context: modelContext,
                                              stickers: stickersToDelete)
         } catch {
-            
+
         }
     }
 }
