@@ -9,11 +9,34 @@ import CachedAsyncImage
 import SwiftData
 import SwiftUI
 
-//extension URL: Identifiable {
-//    public var id: ObjectIdentifier {
-//        self.absoluteString.hashValue
-//    }
-//}
+struct DetailCell: View {
+    let title: String
+    let subtitle: String?
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(title)
+                .foregroundStyle(.secondary)
+            Text(subtitle ?? "empty")
+        }
+        .frame(
+            maxWidth: .infinity,
+            alignment: .leading
+        )
+        .padding([.leading, .bottom], 6)
+    }
+}
+
+extension DetailCell {
+    init(title: String, subtitle: Int?) {
+        self.title = title
+        if let subtitle {
+            self.subtitle = String(subtitle)
+        } else {
+            self.subtitle = "empty"
+        }
+    }
+}
 
 /// Display the details for a bike from the local cache.
 struct BikeDetailOfflineView: View {
@@ -35,59 +58,90 @@ struct BikeDetailOfflineView: View {
 
     var body: some View {
         if let bike {
-            ScrollView {
-                ScrollView(.horizontal) {
-                    HStack(spacing: 10) {
-                        let largeImage: [URL] = [bike.largeImage]
-                            .compactMap { $0 }
-                        let publicImages = bike.publicImages.compactMap(URL.init(string:))
-                        let allImages = largeImage + publicImages
-                        let imageUrls = allImages.enumerated().map { (offset: $0, element: $1) }
-                        ForEach(imageUrls, id: \.offset) { index, url in
-                            CachedAsyncImage(url: url)
-                        }
-                    }
-                }
-                /*
-                Section {
-                    LazyVGrid(columns: Array(repeating: GridItem(), count: 1)) {
-                        ForEach(models) { item in
-                            GridRow {
-                                VStack(alignment: .leading) {
-                                    content(item)
-                                }.frame(
-                                    minWidth: 0,
-                                    maxWidth: .infinity,
-                                    minHeight: 0,
-                                    maxHeight: .infinity,
-                                    alignment: .topLeading
-                                )
+            Form {
+                ScrollView {
+                    Section {
+                        if let description = bike.bikeDescription {
+                            VStack(alignment: .leading) {
+                                Text(description)
+                                    .lineLimit(nil)
+                                    .multilineTextAlignment(.leading)
+                                    .frame(alignment: .topLeading)
+                                    .border(.red)
                             }
+                            .border(.orange)
                         }
-                    }
-                } header: {
-                    Text("^[\(models.count) \(Model.displayName)](inflect: true)")
-                }
-                 */
+                        DetailCell(
+                            title: "Serial Number",
+                            subtitle: bike.serial)
+                        // TODO: Tap status -> scroll to more details
+                        DetailCell(
+                            title: "Status",
+                            subtitle: bike.statusString)
+                        DetailCell(
+                            title: "Manufacturer",
+                            subtitle: bike.manufacturerName)
+                        DetailCell(
+                            title: "Frame",
+                            subtitle: bike.frameModel)
+                        DetailCell(
+                            title: "Year",
+                            subtitle: bike.year)
+                        Text("Frame size")
+                        Text("Frame Material")
+                        Text("QR Stickers")
+                        Text("Created/updated at")
+                        // TODO: Change FrameColorsView implementation from circles to labels with tokens, ex: [<GREEN background, white text "green">, <RED background, white text "RED>] to be explicit
+                        FrameColorsView(bike: bike)
+                    } header: {
+                        // TODO: Make BikeDetailHeroPhotos edge-to-edge
+                        // TODO: Make BikeDetailHeroPhotos open larger photos full screen
+                        BikeDetailHeroPhotos(bike: bike)
+                            .shadow(radius: 4, x: 0.5, y: 2)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .border(.red)
 
-                Text(bike.bikeDescription ?? "_")
-                Text(bike.manufacturerName)
-                Text(bike.statusString)
-                Text(bike.url.absoluteString)
-                Text(bike.year.debugDescription)
-                Text(bike.typeOfCycle.name)
-                Text(bike.frameColorPrimary.displayValue)
-                Text(bike.frameColorSecondary?.displayValue ?? "secondary")
-                Text(bike.frameColorTertiary?.displayValue ?? "tertiary")
-                Text(bike.frameModel ?? "model")
-                Text(bike.serial ?? BikeRegistration.Serial.unknown)
-                Text(bike.largeImage?.absoluteString ?? "large image")
-                Text(bike.publicImages.joined(separator: "\n"))
-                Text(bike.stolenLocation ?? "stolen location")
-                Text(bike.stolenCoordinates?.description ?? "x")
-                Text(bike.dateStolen?.description ?? "x")
-                Text(bike.editReportStolen?.description ?? "x")
+                        ScrollView(.horizontal) {
+                            HStack {
+                                Button("Edit Bike", action: {})
+                                Button("List for sale", action: {})
+                                Button("Mark bike stolen", action: {})
+                                Button("Add group or organization", action: {})
+                                Button("Transfer ownership", action: {})
+                                Button("Hide or delete registration", action: {})
+                            }
+                            .padding([.leading, .trailing], 8)
+                        }
+                        .scrollIndicators(.hidden)
+                        .buttonStyle(.bordered)
+                    }
+                    .frame(alignment: .leading)
+                    .headerProminence(.increased)
+
+                    Section {
+                        DetailCell(
+                            title: "Type",
+                            subtitle: bike.typeOfCycle.name)
+                        DetailCell(
+                            title: "Propulsion",
+                            subtitle: bike.typeOfPropulsion.name)
+                        Text(bike.largeImage?.absoluteString ?? "large image")
+                        Text(bike.publicImages.joined(separator: "\n"))
+                    }
+
+                    Section {
+                        StolenBikeDetailsView(bike: bike)
+                    } footer: {
+                        Text("Editing is not available in offline mode.")
+                            .font(.caption2)
+                    }
+                }
             }
+            .formStyle(.columns)
+            .headerProminence(.increased)
+
+            //            .listStyle(.grouped)
+            //            .listStyle(.inset)
             .navigationTitle(bike.title)
         } else {
             ContentUnavailableView(
@@ -114,6 +168,11 @@ struct BikeDetailOfflineView: View {
             print("Found mock response \(mockResponse)")
             if let responseBike = mockResponse.bikes.first {
                 let bike = responseBike.modelInstance()
+                bike.publicImages.append(
+                    "https://placecats.com/300/200"
+                )
+                bike.frameColorSecondary = .covered
+                bike.frameColorTertiary = .bareMetal
                 container.mainContext.insert(bike)
                 try container.mainContext.save()
             }
