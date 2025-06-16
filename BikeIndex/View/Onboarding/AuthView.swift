@@ -53,7 +53,8 @@ struct AuthView: View {
             isPresented: $viewModel.displaySignIn,
             onDismiss: {
                 // Essential to reset state
-                viewModel.historyNavigator.wkWebView?.load(URLRequest(url: URL(stringLiteral: "about:blank")))
+                viewModel.historyNavigator.wkWebView?.load(
+                    URLRequest(url: URL(stringLiteral: "about:blank")))
             },
             content: {
                 // Sign-in Dialog.

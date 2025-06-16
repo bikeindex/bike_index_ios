@@ -1,5 +1,5 @@
 //
-//  ScannedBikeModelTests.swift
+//  RecentlyScannedStickersViewModelTests.swift
 //  UnitTests
 //
 //  Created by Jack on 5/11/25.
@@ -11,8 +11,10 @@ import Testing
 
 @testable import BikeIndex
 
+/// Aka RecentlyScannedStickersView.ViewModel
 @MainActor
-struct ScannedBikeModelTests {
+struct RecentlyScannedStickersViewModelTests {
+    typealias ViewModel = RecentlyScannedStickersView.ViewModel
 
     struct Input: CustomTestArgumentEncodable {
         let numberOfStickers: Int
@@ -40,7 +42,7 @@ struct ScannedBikeModelTests {
         init(
             numberOfStickers: Int = 20,
             genesisBase: Date = .now,
-            expectedNumberOfStickers: Int = ScannedBikesViewModel.limitOfMostRecent
+            expectedNumberOfStickers: Int = ViewModel.limitOfMostRecent
         ) {
             self.numberOfStickers = numberOfStickers
             self.testSamples = (0..<numberOfStickers).map { index in
@@ -102,9 +104,7 @@ struct ScannedBikeModelTests {
         )
         let context = container.mainContext
         context.autosaveEnabled = false
-        let model = ScannedBikesViewModel(
-            context: context,
-            client: try! Client())
+        let model = ViewModel()
 
         let fetch = FetchDescriptor(predicate: #Predicate<ScannedBike> { _ in true })
         let beginningState = try context.fetchCount(fetch)
@@ -116,8 +116,8 @@ struct ScannedBikeModelTests {
         )
 
         do {
-            try input.scannedBikesHistory.forEach { sticker in
-                try model.persist(sticker: sticker)
+            for sticker in input.scannedBikesHistory {
+                try model.persist(context: context, sticker: sticker)
             }
         } catch {
             #expect(Bool(false), "unexpected error \(error)")
@@ -127,6 +127,7 @@ struct ScannedBikeModelTests {
             context.hasChanges == false,
             "\(type(of: self)) should not have pending changes before reaching body of test function \(#function)"
         )
+
         let endState = try! context.fetchCount(FetchDescriptor<ScannedBike>())
         #expect(
             endState == input.expectedNumberOfStickers,
@@ -142,7 +143,7 @@ struct ScannedBikeModelTests {
         let outputPersistedModels = try context.fetch(FetchDescriptor<ScannedBike>())
         let zipped = zip(mostRecentInput, outputPersistedModels)
         #expect(zipped.underestimatedCount == input.expectedNumberOfStickers)
-        zipped.forEach { (mostRecent, persisted) in
+        for (mostRecent, persisted) in zipped {
             #expect(mostRecent == persisted.createdAt)
         }
     }
