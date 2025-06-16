@@ -117,9 +117,6 @@ struct MainContentPage: View {
 
 // MARK: - Previews
 
-/// [!NOTE]
-/// MainContentPage previews are missing an assignment for @Environment(ScannedBikesViewModel.self)
-
 // MARK: Empty Data Preview
 #Preview("Empty data") {
     @Previewable let client = try! Client()
