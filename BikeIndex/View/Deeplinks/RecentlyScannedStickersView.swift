@@ -5,9 +5,9 @@
 //  Created by Jack on 5/11/25.
 //
 
+import OSLog
 import SwiftData
 import SwiftUI
-import OSLog
 
 struct RecentlyScannedStickersView: View {
     @Environment(\.modelContext) private var modelContext
@@ -31,16 +31,20 @@ struct RecentlyScannedStickersView: View {
                 Section {
                     ForEach(stickers, id: \.persistentModelID) { sticker in
                         NavigationLink {
-                            ScannedBikePage(viewModel: .init(scan: sticker, path: path, dismiss: nil))
-                                .interactiveDismissDisabled()
+                            ScannedBikePage(
+                                viewModel: .init(scan: sticker, path: path, dismiss: nil)
+                            )
+                            .interactiveDismissDisabled()
                         } label: {
                             StickerDisplayLabel(sticker: sticker)
                         }
                     }
                     .onDelete(perform: delete(indexSet:))
                 } footer: {
-                    TextLink(base: client.hostProvider.host,
-                             link: .howToUseStickers)
+                    TextLink(
+                        base: client.hostProvider.host,
+                        link: .howToUseStickers
+                    )
                     .environment(\.openURL, openHowToPage)
                 }
             }
@@ -54,8 +58,9 @@ struct RecentlyScannedStickersView: View {
                 }
             }
             .navigationDestination(isPresented: $showHowToPage) {
-                NavigableWebView(constantLink: .howToUseStickers,
-                                 host: client.hostProvider.host)
+                NavigableWebView(
+                    constantLink: .howToUseStickers,
+                    host: client.hostProvider.host)
             }
         }
     }
@@ -70,10 +75,12 @@ struct RecentlyScannedStickersView: View {
     private func delete(indexSet: IndexSet) {
         let stickersToDelete = indexSet.map { stickers[$0] }
         do {
-            try viewModel.delete(context: modelContext,
-                                             stickers: stickersToDelete)
+            try viewModel.delete(
+                context: modelContext,
+                stickers: stickersToDelete)
         } catch {
-            Logger.model.error("\(type(of: viewModel)) failed to delete sticker \(error, privacy: .private)")
+            Logger.model.error(
+                "\(type(of: viewModel)) failed to delete sticker \(error, privacy: .private)")
         }
     }
 }

@@ -116,7 +116,7 @@ struct RecentlyScannedStickersViewModelTests {
         )
 
         do {
-            try input.scannedBikesHistory.forEach { sticker in
+            for sticker in input.scannedBikesHistory {
                 try model.persist(context: context, sticker: sticker)
             }
         } catch {
@@ -143,7 +143,7 @@ struct RecentlyScannedStickersViewModelTests {
         let outputPersistedModels = try context.fetch(FetchDescriptor<ScannedBike>())
         let zipped = zip(mostRecentInput, outputPersistedModels)
         #expect(zipped.underestimatedCount == input.expectedNumberOfStickers)
-        zipped.forEach { (mostRecent, persisted) in
+        for (mostRecent, persisted) in zipped {
             #expect(mostRecent == persisted.createdAt)
         }
     }

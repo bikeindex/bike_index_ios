@@ -78,7 +78,7 @@ struct BikeIndexApp: App {
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
-        let sharedModelContainer =  try! ModelContainer(
+        let sharedModelContainer = try! ModelContainer(
             for: schema, configurations: [modelConfiguration])
         self.sharedModelContainer = sharedModelContainer
     }
