@@ -1,5 +1,5 @@
 //
-//  ScannedBikeModelTests.swift
+//  RecentlyScannedStickersViewModelTests.swift
 //  UnitTests
 //
 //  Created by Jack on 5/11/25.
@@ -11,8 +11,10 @@ import Testing
 
 @testable import BikeIndex
 
+/// Aka RecentlyScannedStickersView.ViewModel
 @MainActor
-struct ScannedBikeModelTests {
+struct RecentlyScannedStickersViewModelTests {
+    typealias ViewModel = RecentlyScannedStickersView.ViewModel
 
     struct Input: CustomTestArgumentEncodable {
         let numberOfStickers: Int
@@ -40,7 +42,7 @@ struct ScannedBikeModelTests {
         init(
             numberOfStickers: Int = 20,
             genesisBase: Date = .now,
-            expectedNumberOfStickers: Int = ScannedBikesViewModel.limitOfMostRecent
+            expectedNumberOfStickers: Int = ViewModel.limitOfMostRecent
         ) {
             self.numberOfStickers = numberOfStickers
             self.testSamples = (0..<numberOfStickers).map { index in
@@ -79,17 +81,17 @@ struct ScannedBikeModelTests {
     @Test(
         "Scanned Sticker History Data Layer",
         arguments: [
-            Input(  // count within 10
+            Input(  // count within 10, date within 2 weeks ago
                 numberOfStickers: 10,
                 expectedNumberOfStickers: 10),
-            Input(  // count within 10
+            Input(  // count within 10, date outside of 2 weeks ago
                 numberOfStickers: 10,
                 genesisBase: Date().addingTimeInterval(-60 * 60 * 24 * 21),
-                expectedNumberOfStickers: 10),
-            Input(  // count within 10
+                expectedNumberOfStickers: 0),
+            Input(  // count within 10, date within 2 weeks ago
                 numberOfStickers: 10,
                 genesisBase: Date().addingTimeInterval(-60 * 60 * 24 * 13)),
-            Input(  // count outside of 10
+            Input(  // count outside of 10, date within 2 weeks ago
                 numberOfStickers: 20),
         ])
     func test_handleStickerDeeplinks(input: Input) async throws {
@@ -102,7 +104,7 @@ struct ScannedBikeModelTests {
         )
         let context = container.mainContext
         context.autosaveEnabled = false
-        let model = ScannedBikesViewModel()
+        let model = ViewModel()
 
         let fetch = FetchDescriptor(predicate: #Predicate<ScannedBike> { _ in true })
         let beginningState = try context.fetchCount(fetch)

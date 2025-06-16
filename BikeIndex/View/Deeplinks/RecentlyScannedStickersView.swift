@@ -7,11 +7,12 @@
 
 import SwiftData
 import SwiftUI
+import OSLog
 
 struct RecentlyScannedStickersView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) private var client
-    var scannedBikesViewModel = ScannedBikesViewModel()
+    var viewModel = ViewModel()
 
     @Query(sort: [SortDescriptor(\ScannedBike.createdAt, order: .reverse)])
     var stickers: [ScannedBike]
@@ -69,10 +70,10 @@ struct RecentlyScannedStickersView: View {
     private func delete(indexSet: IndexSet) {
         let stickersToDelete = indexSet.map { stickers[$0] }
         do {
-            try scannedBikesViewModel.delete(context: modelContext,
+            try viewModel.delete(context: modelContext,
                                              stickers: stickersToDelete)
         } catch {
-
+            Logger.model.error("\(type(of: viewModel)) failed to delete sticker \(error, privacy: .private)")
         }
     }
 }

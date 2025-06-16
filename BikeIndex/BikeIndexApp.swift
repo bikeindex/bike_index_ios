@@ -54,7 +54,7 @@ struct BikeIndexApp: App {
         let scanResult = client.deeplinkManager.scan(url: url)
         do {
             if let sticker = scanResult?.scannedBike {
-                let scannedBikesViewModel = ScannedBikesViewModel()
+                let scannedBikesViewModel = RecentlyScannedStickersView.ViewModel()
                 let persistedSticker = try scannedBikesViewModel.persist(
                     context: sharedModelContainer.mainContext,
                     sticker: sticker)
