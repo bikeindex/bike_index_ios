@@ -1,5 +1,5 @@
 //
-//  BikeDetailView.swift
+//  BikeDetailWebView.swift
 //  BikeIndex
 //
 //  Created by Jack on 1/7/24.
@@ -62,7 +62,7 @@ class Checker {
 }
 
 /// Display the details for a bike primarily from the network.
-struct BikeDetailView: View {
+struct BikeDetailWebView: View {
     @Environment(Client.self) var client
 
     /// Query is only returns arrays and we'll pick the only element.
@@ -143,7 +143,7 @@ struct BikeDetailView: View {
         configurations: ModelConfiguration(isStoredInMemoryOnly: true))
 
     NavigationStack {
-        BikeDetailView(bikeIdentifier: 20348, host: URL(stringLiteral: "https://bikeindex.org"))
+        BikeDetailWebView(bikeIdentifier: 20348, host: URL(stringLiteral: "https://bikeindex.org"))
             .environment(try! Client())
             .modelContainer(container)
     }
