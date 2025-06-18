@@ -16,7 +16,7 @@ struct DetailCell: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(title)
-                .foregroundStyle(.secondary)
+                .detailTitle()
             Text(subtitle ?? "empty")
         }
         .frame(
@@ -24,6 +24,19 @@ struct DetailCell: View {
             alignment: .leading
         )
         .padding([.leading, .bottom], 6)
+    }
+}
+
+struct DetailTitleModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .foregroundStyle(.secondary)
+    }
+}
+
+extension View {
+    public func detailTitle() -> some View {
+        modifier(DetailTitleModifier())
     }
 }
 
@@ -173,6 +186,8 @@ struct BikeDetailOfflineView: View {
                 )
                 bike.frameColorSecondary = .covered
                 bike.frameColorTertiary = .bareMetal
+//                bike.frameColorSecondary = .red
+//                bike.frameColorTertiary = .teal
                 container.mainContext.insert(bike)
                 try container.mainContext.save()
             }

@@ -6,28 +6,69 @@
 //
 
 import SwiftUI
+import Flow
 
 struct FrameColorsView: View {
     var bike: Bike
     var body: some View {
-        HStack {
+        HStack(alignment: .firstTextBaseline) {
             Text(bike.frameColors.count > 1 ? "Frame Colors" : "Frame Color")
+                .detailTitle()
+                .fixedSize()
+                .padding([.leading, .bottom], 6)
             Spacer()
 
-            FrameColorShapeView(frame: bike.frameColorPrimary)
-                .frame(maxWidth: 30)
-            if let secondary = bike.frameColorSecondary {
-                FrameColorShapeView(frame: secondary)
-                    .frame(maxWidth: 30)
-            }
-            if let tertiary = bike.frameColorTertiary {
-                FrameColorShapeView(frame: tertiary)
-                    .frame(maxWidth: 30)
+            HFlow(horizontalAlignment: .trailing,
+                  verticalAlignment: .top) {
+                Chip(frame: bike.frameColorPrimary)
+
+                if let secondary = bike.frameColorSecondary {
+                    Chip(frame: secondary)
+                }
+
+                if let tertiary = bike.frameColorTertiary {
+                    Chip(frame: tertiary)
+                }
             }
         }
-        .frame(maxHeight: 30)
+        .frame(maxHeight: .infinity)
+        .border(.red)
     }
 }
+
+extension FrameColor {
+    var color: Color? {
+        switch self {
+        case .bareMetal, .covered:
+            nil
+        case .black:
+            // slightly lighter than pure black for display
+            Color(white: 0.1)
+        case .blue:
+            .blue
+        case .brown:
+            .brown
+        case .green:
+            .green
+        case .orange:
+            .orange
+        case .pink:
+            .pink
+        case .purple:
+            .purple
+        case .red:
+            .red
+        case .teal:
+            .teal
+        case .white:
+            // Slightly darker than pure white for display
+            Color(white: 0.9)
+        case .yellow:
+            .yellow
+        }
+    }
+}
+
 
 extension Color {
     static let dimWhite = Color(white: 0.75)
@@ -36,39 +77,98 @@ extension Color {
     static let almostBlack = Color(white: 0.1)
 }
 
-struct FrameColorShapeView: View {
+#Preview("FrameColorsView Prime") {
+    @Previewable let bike = Bike.init(
+        identifier: 1_234_567_890,
+        primaryColor: .blue,
+        secondaryColor: .pink,
+        tertiaryColor: .bareMetal,
+        manufacturerName: "",
+        typeOfCycle: .bike,
+        typeOfPropulsion: .footPedal,
+        status: .withOwner,
+        stolenCoordinateLatitude: 0.0,
+        stolenCoordinateLongitude: 0.0,
+        url: URL(stringLiteral: "about:blank"),
+        publicImages: [])
+    VStack {
+        Text("Shadows fit better in BikeDetailOfflineView")
+        FrameColorsView(bike: bike)
+        Spacer()
+    }
+}
+
+#Preview("Rainbow iOS 18 Mesh") {
+    if #available(iOS 18.0, *) {
+        VStack {
+            Chip.rainbow
+            Chip(frame: .covered)
+        }
+    } else {
+        VStack {
+            Chip.rainbow2
+            Chip(frame: .covered)
+        }
+    }
+}
+
+#Preview("Frame Color Contact Sheet") {
+    Text("Shadows fit better in BikeDetailOfflineView")
+    ScrollView {
+        LazyVGrid(
+            columns: Array(
+                repeating: GridItem(),
+                count: 3)
+        ) {
+            ForEach(FrameColor.allCases) { frame in
+                VStack {
+                    Chip(frame: frame)
+                    Text(frame.displayValue)
+                        .font(.caption)
+                }
+                .padding(2)
+            }
+        }
+    }
+}
+
+// MARK: - New approach
+
+struct Chip: View {
     let frame: FrameColor
 
-    //    static var bareMetalAngleGradient: AngularGradient {
-    //        AngularGradient(stops: [
-    //            .init(color: .dimWhite, location: 0.0),
-    //            .init(color: .gray, location: 0.04),
-    //            .init(color: .almostBlack, location: 0.08),
-    //
-    //            .init(color: .darkGray, location: 0.12),
-    //            .init(color: .gray, location: 0.2),
-    //            .init(color: .almostBlack, location: 0.24),
-    //            .init(color: .dimWhite, location: 0.29),
-    //
-    //            .init(color: .almostBlack, location: 0.3),
-    //            .init(color: .gray, location: 0.35),
-    //            .init(color: .darkGray, location: 0.39),
-    //
-    //            .init(color: .almostBlack, location: 0.42),
-    //
-    //            .init(color: .gray, location: 0.5),
-    //            .init(color: .almostBlack, location: 0.59),
-    //            .init(color: .gray, location: 0.6),
-    //
-    //            .init(color: .almostBlack, location: 0.69),
-    //            .init(color: .gray, location: 0.75),
-    //            .init(color: .almostBlack, location: 0.81),
-    //
-    //            .init(color: .gray, location: 0.89),
-    //            .init(color: .almostBlack, location: 0.95),
-    //            .init(color: .dimWhite, location: 1.0),
-    //        ], center: .center)
-    //    }
+    private let radius = 6.0
+    private let stroke = 4.0
+
+    var body: some View {
+        Text(frame.displayValue)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background {
+                if let color = frame.color {
+                    RoundedRectangle(cornerRadius: radius)
+                        .stroke(color.gradient,
+                                lineWidth: stroke)
+                        .fill(.background.tertiary)
+                } else if frame == .bareMetal {
+                    RoundedRectangle(cornerRadius: radius)
+                        .stroke(Self.bareMetalAngularGradient,
+                                lineWidth: stroke / 2)
+                } else {
+                    // covered
+                    if #available(iOS 18.0, *) {
+                        RoundedRectangle(cornerRadius: radius)
+                            .strokeBorder(Self.rainbow,
+                                          lineWidth: stroke / 2)
+                    } else {
+                        RoundedRectangle(cornerRadius: radius)
+                            .stroke(Self.rainbow2,
+                                    lineWidth: stroke / 2)
+                    }
+                }
+            }
+            .fixedSize()
+    }
 
     static var bareMetalGradient: LinearGradient {
         let base: [Color] = [
@@ -126,122 +226,14 @@ struct FrameColorShapeView: View {
             gradient: Gradient(colors: [.red, .yellow, .green, .blue, .purple, .red]),
             center: .center)
     }
-
-    let radius = 2.0
-    let shadow = Color.primary.opacity(0.6)
-    let stroke = 9.0
-
-    var body: some View {
-        Group {
-            if let color = frame.color {
-                Circle()
-                    .fill(color)
-            } else if frame == .bareMetal {
-                Circle()
-                    .fill(Self.bareMetalAngularGradient)
-            } else {
-                // covered
-                if #available(iOS 18.0, *) {
-                    Circle()
-                        .fill(.foreground)
-                        .strokeBorder(Self.rainbow, lineWidth: stroke)
-                } else {
-                    Circle()
-                        .fill(.foreground)
-                        .strokeBorder(Self.rainbow2, lineWidth: stroke)
-                }
-            }
-        }
-        .accessibilityLabel(frame.displayValue)
-        .accessibilityHint("Frame color indicator")
-        .compositingGroup()
-        .shadow(
-            color: shadow,
-            radius: radius)
-
-    }
 }
 
-extension FrameColor {
-    var color: Color? {
-        switch self {
-        case .bareMetal, .covered:
-            nil
-        case .black:
-            .black
-        case .blue:
-            .blue
-        case .brown:
-            .brown
-        case .green:
-            .green
-        case .orange:
-            .orange
-        case .pink:
-            .pink
-        case .purple:
-            .purple
-        case .red:
-            .red
-        case .teal:
-            .teal
-        case .white:
-            .white
-        case .yellow:
-            .yellow
-        }
-    }
-}
-
-// let rainbow = AngularGradient(gradient: Gradient(colors: [.red, .yellow, .green, .blue, .purple, .red]), center: .center)
-
-#Preview {
-    @Previewable let bike = Bike.init(
-        identifier: 1_234_567_890,
-        primaryColor: .blue,
-        secondaryColor: .bareMetal,
-        tertiaryColor: .covered,
-        manufacturerName: "",
-        typeOfCycle: .bike,
-        typeOfPropulsion: .footPedal,
-        status: .withOwner,
-        stolenCoordinateLatitude: 0.0,
-        stolenCoordinateLongitude: 0.0,
-        url: URL(stringLiteral: "about:blank"),
-        publicImages: [])
-    Text("Shadows fit better in BikeDetailOfflineView")
-    FrameColorsView(bike: bike)
-}
-
-#Preview("Rainbow iOS 18 Mesh") {
-    if #available(iOS 18.0, *) {
+#Preview("Chip") {
+    ZStack {
+//        Color.pink
         VStack {
-            FrameColorShapeView.rainbow
-            FrameColorShapeView(frame: .covered)
-        }
-    } else {
-        VStack {
-            FrameColorShapeView.rainbow2
-            FrameColorShapeView(frame: .covered)
-        }
-    }
-}
-
-#Preview("Frame Color Contact Sheet") {
-    Text("Shadows fit better in BikeDetailOfflineView")
-    ScrollView {
-        LazyVGrid(
-            columns: Array(
-                repeating: GridItem(),
-                count: 3)
-        ) {
             ForEach(FrameColor.allCases) { frame in
-                VStack {
-                    FrameColorShapeView(frame: frame)
-                    Text(frame.displayValue)
-                        .font(.caption)
-                }
-                .padding(2)
+                Chip(frame: frame)
             }
         }
     }
