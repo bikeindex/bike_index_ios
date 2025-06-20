@@ -22,13 +22,15 @@ extension BikeIndexUITests {
         XCUIDevice.shared.system.open(stickerUrl)
 
         let stickerHeader = app.staticTexts["A40340"]
-        _ = stickerHeader.waitForExistence(timeout: timeout)
+        let stickerHeaderExists = stickerHeader.waitForExistence(timeout: timeout)
+        XCTAssert(stickerHeaderExists)
 
         let unlinkedMessage: [XCUIElement] = [
             app.staticTexts["You scanned the sticker A 403 40, which is assigned to this bike."]
         ]
         for message in unlinkedMessage {
-            _ = message.waitForExistence(timeout: timeout)
+            let messageExists = message.waitForExistence(timeout: timeout)
+            XCTAssert(messageExists)
         }
     }
 
