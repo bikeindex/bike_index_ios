@@ -54,7 +54,7 @@ struct BikeDetailWebView: View {
                         }
                     }
 
-                    statusToolbar
+                    /* statusToolbar */
                 })
                 .navigationTitle(bike.title)
                 .sheet(isPresented: $checker.presentOfflineMode) {
