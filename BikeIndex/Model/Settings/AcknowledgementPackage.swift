@@ -68,6 +68,11 @@ extension AcknowledgementPackage {
                 "https://github.com/lorenzofiamingo/swiftui-cached-async-image"
             )
         ),
+        AcknowledgementPackage(
+            title: "SwiftUI-Flow",
+            license: .mit,
+            copyright: "Copyright © 2023 Laszlo Teveli",
+            repository: URL("https://github.com/tevelee/SwiftUI-Flow")),
     ]
 
     static var gnuAfferoGPLv3Packages: [AcknowledgementPackage] {
