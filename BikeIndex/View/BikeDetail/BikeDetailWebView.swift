@@ -11,56 +11,6 @@ import SwiftUI
 import WebKit
 import WebViewKit
 
-extension NWPath.Status {
-    var displayTitle: String {
-        switch self {
-        case .satisfied:
-            "Satisfied"
-        case .unsatisfied:
-            "Unsatisfied"
-        case .requiresConnection:
-            "Requires Connection"
-        @unknown default:
-            "UNKNOWN"
-        }
-    }
-}
-
-@Observable @MainActor
-class Checker {
-    static let shared = Checker()
-
-    private let pathMonitor = NWPathMonitor()
-
-    private(set) var status: NWPath.Status = .requiresConnection
-
-    var presentOfflineMode: Bool = true
-
-    init() {
-        pathMonitor.start(queue: .main)
-        pathMonitor.pathUpdateHandler = { path in
-            if path.status == .unsatisfied {
-                print(
-                    "@@ Checker.pathUpdateHandler.status SATISFIED \(path.status) on thread \(Thread.current)"
-                )
-            } else {
-                print(
-                    "@@ Checker.pathUpdateHandler.status working? \(path.status) on thread \(Thread.current)"
-                )
-            }
-            Task {
-                await self.update(status: path.status)
-            }
-        }
-    }
-
-    func update(status: NWPath.Status) {
-        print("@@ Checker.update(status:) \(status) on thread \(Thread.current)")
-        //        self.status = status
-        //        self.presentOfflineMode = status == .unsatisfied
-    }
-}
-
 /// Display the details for a bike primarily from the network.
 struct BikeDetailWebView: View {
     @Environment(Client.self) var client
@@ -70,7 +20,7 @@ struct BikeDetailWebView: View {
 
     @State private var url: URL
 
-    @State private var checker: Checker = .shared
+    @State private var checker: NetworkStatusChecker = .shared
 
     /// Initialize with a BikeIdentifier and base URL. The base URL must be retrieved before Client is available.
     /// With these inputs the Bike's canonical URL can be constructed and displayed in the NavigableWebView.
@@ -113,7 +63,7 @@ struct BikeDetailWebView: View {
                             .navigationBarTitleDisplayMode(.inline)
                     }
                     .presentationDragIndicator(.visible)
-                    //                        .interactiveDismissDisabled()
+//                    .interactiveDismissDisabled()
                 }
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
