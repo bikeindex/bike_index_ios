@@ -80,9 +80,7 @@ struct BikeDetailOfflineView: View {
                                     .lineLimit(nil)
                                     .multilineTextAlignment(.leading)
                                     .frame(alignment: .topLeading)
-                                    .border(.red)
                             }
-                            .border(.orange)
                         }
                         DetailCell(
                             title: "Serial Number",
@@ -100,33 +98,18 @@ struct BikeDetailOfflineView: View {
                         DetailCell(
                             title: "Year",
                             subtitle: bike.year)
+                        /* TODO: Add these fields to Bike.swift
                         Text("Frame size")
                         Text("Frame Material")
                         Text("QR Stickers")
                         Text("Created/updated at")
-                        // TODO: Change FrameColorsView implementation from circles to labels with tokens, ex: [<GREEN background, white text "green">, <RED background, white text "RED>] to be explicit
+                         */
                         FrameColorsView(bike: bike)
                     } header: {
-                        // TODO: Make BikeDetailHeroPhotos edge-to-edge
                         // TODO: Make BikeDetailHeroPhotos open larger photos full screen
                         BikeDetailHeroPhotos(bike: bike)
                             .shadow(radius: 4, x: 0.5, y: 2)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .border(.red)
-
-                        ScrollView(.horizontal) {
-                            HStack {
-                                Button("Edit Bike", action: {})
-                                Button("List for sale", action: {})
-                                Button("Mark bike stolen", action: {})
-                                Button("Add group or organization", action: {})
-                                Button("Transfer ownership", action: {})
-                                Button("Hide or delete registration", action: {})
-                            }
-                            .padding([.leading, .trailing], 8)
-                        }
-                        .scrollIndicators(.hidden)
-                        .buttonStyle(.bordered)
                     }
                     .frame(alignment: .leading)
                     .headerProminence(.increased)
@@ -142,19 +125,18 @@ struct BikeDetailOfflineView: View {
                         Text(bike.publicImages.joined(separator: "\n"))
                     }
 
+                    /* TODO: Fill out stolen details
                     Section {
                         StolenBikeDetailsView(bike: bike)
                     } footer: {
                         Text("Editing is not available in offline mode.")
                             .font(.caption2)
                     }
+                     */
                 }
             }
             .formStyle(.columns)
             .headerProminence(.increased)
-
-            //            .listStyle(.grouped)
-            //            .listStyle(.inset)
             .navigationTitle(bike.title)
         } else {
             ContentUnavailableView(
