@@ -72,7 +72,7 @@ extension AcknowledgementPackage {
             title: "SwiftUI-Flow",
             license: .mit,
             copyright: "Copyright © 2023 Laszlo Teveli",
-            repository: URL("https://github.com/tevelee/SwiftUI-Flow"))
+            repository: URL("https://github.com/tevelee/SwiftUI-Flow")),
     ]
 
     static var gnuAfferoGPLv3Packages: [AcknowledgementPackage] {

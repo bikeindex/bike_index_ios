@@ -121,8 +121,8 @@ struct BikeDetailOfflineView: View {
                         DetailCell(
                             title: "Propulsion",
                             subtitle: bike.typeOfPropulsion.name)
-                        Text(bike.largeImage?.absoluteString ?? "large image")
-                        Text(bike.publicImages.joined(separator: "\n"))
+//                        Text(bike.largeImage?.absoluteString ?? "large image")
+//                        Text(bike.publicImages.joined(separator: "\n"))
                     }
 
                     /* TODO: Fill out stolen details
@@ -166,10 +166,10 @@ struct BikeDetailOfflineView: View {
                 bike.publicImages.append(
                     "https://placecats.com/300/200"
                 )
-                bike.frameColorSecondary = .covered
-                bike.frameColorTertiary = .bareMetal
-//                bike.frameColorSecondary = .red
-//                bike.frameColorTertiary = .teal
+//                bike.frameColorSecondary = .covered
+//                bike.frameColorTertiary = .bareMetal
+                bike.frameColorSecondary = .red
+                bike.frameColorTertiary = .teal
                 container.mainContext.insert(bike)
                 try container.mainContext.save()
             }

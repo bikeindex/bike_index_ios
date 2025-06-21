@@ -5,21 +5,22 @@
 //  Created by Jack on 6/15/25.
 //
 
-import SwiftUI
 import Flow
+import SwiftUI
 
 struct FrameColorsView: View {
     var bike: Bike
     var body: some View {
-        HStack(alignment: .firstTextBaseline) {
+        VStack(alignment: .leading, spacing: 0) {
             Text(bike.frameColors.count > 1 ? "Frame Colors" : "Frame Color")
                 .detailTitle()
                 .fixedSize()
                 .padding([.leading, .bottom], 6)
-            Spacer()
 
-            HFlow(horizontalAlignment: .trailing,
-                  verticalAlignment: .top) {
+            HFlow(
+                horizontalAlignment: .leading,
+                verticalAlignment: .top
+            ) {
                 Chip(frame: bike.frameColorPrimary)
 
                 if let secondary = bike.frameColorSecondary {
@@ -31,8 +32,7 @@ struct FrameColorsView: View {
                 }
             }
         }
-        .frame(maxHeight: .infinity)
-        .border(.red)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
@@ -68,7 +68,6 @@ extension FrameColor {
         }
     }
 }
-
 
 extension Color {
     static let dimWhite = Color(white: 0.75)
@@ -141,33 +140,41 @@ struct Chip: View {
     private let stroke = 4.0
 
     var body: some View {
-        Text(frame.displayValue)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background {
-                if let color = frame.color {
+        ZStack {
+            if let color = frame.color {
+                RoundedRectangle(cornerRadius: radius)
+                    .stroke(
+                        color.gradient,
+                        lineWidth: stroke
+                    )
+                    .fill(.background.tertiary)
+            } else if frame == .bareMetal {
+                RoundedRectangle(cornerRadius: radius)
+                    .stroke(
+                        Self.bareMetalAngularGradient,
+                        lineWidth: stroke / 2)
+            } else {
+                // covered
+                if #available(iOS 18.0, *) {
                     RoundedRectangle(cornerRadius: radius)
-                        .stroke(color.gradient,
-                                lineWidth: stroke)
-                        .fill(.background.tertiary)
-                } else if frame == .bareMetal {
-                    RoundedRectangle(cornerRadius: radius)
-                        .stroke(Self.bareMetalAngularGradient,
-                                lineWidth: stroke / 2)
+                        .strokeBorder(
+                            Self.rainbow,
+                            lineWidth: stroke / 2)
                 } else {
-                    // covered
-                    if #available(iOS 18.0, *) {
-                        RoundedRectangle(cornerRadius: radius)
-                            .strokeBorder(Self.rainbow,
-                                          lineWidth: stroke / 2)
-                    } else {
-                        RoundedRectangle(cornerRadius: radius)
-                            .stroke(Self.rainbow2,
-                                    lineWidth: stroke / 2)
-                    }
+                    RoundedRectangle(cornerRadius: radius)
+                        .stroke(
+                            Self.rainbow2,
+                            lineWidth: stroke / 2)
                 }
             }
-            .fixedSize()
+
+            Text(frame.displayValue)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .fixedSize()
     }
 
     static var bareMetalGradient: LinearGradient {
