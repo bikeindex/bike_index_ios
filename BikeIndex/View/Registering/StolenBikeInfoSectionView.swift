@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Used to display information and help pages
 struct StolenBikeInfoSectionView: View {
     @Environment(Client.self) var client
     var body: some View {
