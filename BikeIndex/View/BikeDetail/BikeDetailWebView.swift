@@ -1,23 +1,26 @@
 //
-//  BikeDetailView.swift
+//  BikeDetailWebView.swift
 //  BikeIndex
 //
 //  Created by Jack on 1/7/24.
 //
 
+import Network
 import SwiftData
 import SwiftUI
 import WebKit
 import WebViewKit
 
-/// Display the details for a single bike by ``Bike/BikeIdentifier`` (Int).
-struct BikeDetailView: View {
+/// Display the details for a bike primarily from the network.
+struct BikeDetailWebView: View {
     @Environment(Client.self) var client
 
     /// Query is only returns arrays and we'll pick the only element.
     @Query private var bikeQuery: [Bike]
 
     @State private var url: URL
+
+    @State private var checker: NetworkStatusChecker = .shared
 
     /// Initialize with a BikeIdentifier and base URL. The base URL must be retrieved before Client is available.
     /// With these inputs the Bike's canonical URL can be constructed and displayed in the NavigableWebView.
@@ -50,12 +53,36 @@ struct BikeDetailView: View {
                             }
                         }
                     }
+
+                    /* statusToolbar */
                 })
                 .navigationTitle(bike.title)
+                .sheet(isPresented: $checker.presentOfflineMode) {
+                    NavigationStack {
+                        BikeDetailOfflineView(bikeIdentifier: bike.identifier)
+                            .navigationBarTitleDisplayMode(.inline)
+                    }
+                    .presentationDragIndicator(.visible)
+//                    .interactiveDismissDisabled()
+                }
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+            // .presentationSizing(.page) // TODO: Move this to if #available block
         } else {
             // In practice this view is never displayed because SwiftData will find the Bike
             ProgressView()
+                .toolbar(content: {
+                    statusToolbar
+                })
                 .navigationTitle("Loading")
+        }
+    }
+
+    var statusToolbar: some ToolbarContent {
+        ToolbarItem(placement: .status) {
+            Button(checker.status.displayTitle) {
+                checker.presentOfflineMode.toggle()
+            }
         }
     }
 }
@@ -66,7 +93,7 @@ struct BikeDetailView: View {
         configurations: ModelConfiguration(isStoredInMemoryOnly: true))
 
     NavigationStack {
-        BikeDetailView(bikeIdentifier: 20348, host: URL(stringLiteral: "https://bikeindex.org"))
+        BikeDetailWebView(bikeIdentifier: 20348, host: URL(stringLiteral: "https://bikeindex.org"))
             .environment(try! Client())
             .modelContainer(container)
     }

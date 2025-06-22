@@ -68,7 +68,7 @@ struct MainContentPage: View {
             }
             .navigationDestination(for: Bike.BikeIdentifier.self) { identifier in
                 /// ``ContentBikeButtonView`` uses `NavigationLink`s to ``Bike/identifier``.
-                BikeDetailView(
+                BikeDetailWebView(
                     bikeIdentifier: identifier,
                     host: client.configuration.host)
             }
