@@ -12,7 +12,7 @@ import XCTest
 extension XCTestCase {
     @MainActor
     func signIn(app: XCUIApplication) throws {
-        try Robot(app).signIn()
+        try Robot(app: app, testCase: self).signIn()
     }
 
 }

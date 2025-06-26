@@ -13,9 +13,14 @@ class Robot {
     private static var defaultTimeout: Double = 60
 
     var app: XCUIApplication
+    var testCase: XCTestCase
 
-    init(_ app: XCUIApplication, defaultTimeout: TimeInterval = Robot.defaultTimeout) {
+    init(
+        app: XCUIApplication, testCase: XCTestCase,
+        defaultTimeout: TimeInterval = Robot.defaultTimeout
+    ) {
         self.app = app
+        self.testCase = testCase
         Robot.defaultTimeout = defaultTimeout
     }
 
@@ -43,12 +48,7 @@ class Robot {
         let expectation = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: predicates.map { $0.format }.joined(separator: " AND ")),
             object: element)
-        guard XCTWaiter.wait(for: [expectation], timeout: timeout) == .completed else {
-            XCTFail(
-                "[\(self)] Element \(element.description) did not fulfill expectation: \(predicates.map { $0.format })"
-            )
-            return self
-        }
+        testCase.wait(for: [expectation], timeout: timeout)
 
         return self
     }
