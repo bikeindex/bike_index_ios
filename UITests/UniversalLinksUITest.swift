@@ -15,12 +15,11 @@ extension BikeIndexUITests {
 
     /// Sometimes this fails when a page plainly fails to load, may need to add more resiliency.
     func test_authenticated_bikes_scanned_id_universal_link() throws {
-        XCTAssert(false)
-//        try UniversalLinksRobot(app: app, testCase: self)
-//            .startWithSignIn()
-//            .openLink()
-//            .checkStickerHeader()
-//            .checkUnlinkedMessage()
+        try UniversalLinksRobot(app: app, testCase: self)
+            .startWithSignIn()
+            .openLink()
+            .checkStickerHeader()
+            .checkUnlinkedMessage()
     }
 
 }
