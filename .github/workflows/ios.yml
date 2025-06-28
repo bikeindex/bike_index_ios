@@ -13,7 +13,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        ref: ${{ github.ref }}
+        with:
+          ref: ${{ github.ref }}
       - name: Print git checkout status
         run: |
           git rev-parse --abbrev-ref HEAD
@@ -54,7 +55,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        ref: ${{ github.ref }}
+        with:
+          ref: ${{ github.ref }}
       - name: Print git checkout status
         run: |
           git rev-parse --abbrev-ref HEAD
@@ -95,7 +97,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        ref: ${{ github.ref }}
+        with:
+          ref: ${{ github.ref }}
       - name: Print git checkout status
         run: |
           git rev-parse --abbrev-ref HEAD
