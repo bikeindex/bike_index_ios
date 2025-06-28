@@ -4,7 +4,6 @@ on:
   push:
     branches: [ "main" ]
   pull_request_target:
-    branches: [ "main" ]
 
 jobs:
   tests_iphone16:
@@ -13,6 +12,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        ref: ${{ github.ref }}
       - name: Print git checkout status
         run: |
           git rev-parse --abbrev-ref HEAD
@@ -53,6 +53,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        ref: ${{ github.ref }}
       - name: Print git checkout status
         run: |
           git rev-parse --abbrev-ref HEAD
@@ -93,6 +94,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        ref: ${{ github.ref }}
       - name: Print git checkout status
         run: |
           git rev-parse --abbrev-ref HEAD
