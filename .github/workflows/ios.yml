@@ -20,6 +20,15 @@ jobs:
         run: |
           git rev-parse --abbrev-ref HEAD
           git rev-parse HEAD
+          echo plain ref ${{ github.ref }}
+          echo trigger sha ${{ github.sha }}
+          echo ref name ${{ github.ref_name }}
+          echo protected ${{ github.ref_protected }}
+          echo base ref ${{ github.base_ref }}
+          echo head ref ${{ github.head_ref }}
+          echo event ${{ github.event }}
+          echo workflow_ref ${{ github.workflow_ref }}
+          echo workflow_sha ${{ github.workflow_sha }}
       - name: Set Xcode 16.4
         run: sudo xcode-select -s /Applications/Xcode_16.4.app
       - name: Install tools
@@ -62,6 +71,15 @@ jobs:
         run: |
           git rev-parse --abbrev-ref HEAD
           git rev-parse HEAD
+          echo plain ref ${{ github.ref }}
+          echo trigger sha ${{ github.sha }}
+          echo ref name ${{ github.ref_name }}
+          echo protected ${{ github.ref_protected }}
+          echo base ref ${{ github.base_ref }}
+          echo head ref ${{ github.head_ref }}
+          echo event ${{ github.event }}
+          echo workflow_ref ${{ github.workflow_ref }}
+          echo workflow_sha ${{ github.workflow_sha }}
       - name: Set Xcode 16.4
         run: sudo xcode-select -s /Applications/Xcode_16.4.app
       - name: Install tools
@@ -104,6 +122,15 @@ jobs:
         run: |
           git rev-parse --abbrev-ref HEAD
           git rev-parse HEAD
+          echo plain ref ${{ github.ref }}
+          echo trigger sha ${{ github.sha }}
+          echo ref name ${{ github.ref_name }}
+          echo protected ${{ github.ref_protected }}
+          echo base ref ${{ github.base_ref }}
+          echo head ref ${{ github.head_ref }}
+          echo event ${{ github.event }}
+          echo workflow_ref ${{ github.workflow_ref }}
+          echo workflow_sha ${{ github.workflow_sha }}
       - name: Set Xcode 16.4
         run: sudo xcode-select -s /Applications/Xcode_16.4.app
       - name: Install tools
