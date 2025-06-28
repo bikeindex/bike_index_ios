@@ -51,7 +51,7 @@ extension ScannedBikePage {
         var onDisappear: MainContent?
 
         var title: String {
-            scan.displayTitle
+            scan.displayTitle.trimmingCharacters(in: .whitespaces)
         }
 
         init(scan: ScannedBike, path: NavigationPath, dismiss: (() -> Void)?) {
