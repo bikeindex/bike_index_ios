@@ -131,70 +131,46 @@ struct ManufacturerEntryView: View {
 
 /// NOTE: These bindings are not working correctly
 #Preview {
-    var previewBike: Bike = Bike()
-    let bikeBinding = Binding {
-        previewBike
-    } set: {
-        previewBike = $0
-    }
+    @Previewable @State var previewBike: Bike = Bike()
+    @Previewable @State var searchText = ""
+    @Previewable @State var focusState = FocusState<RegisterBikeView.Field?>()
+    @Previewable @State var valid = false
 
-    var searchText = ""
-    let searchTextBinding = Binding {
-        searchText
-    } set: {
-        searchText = $0
-    }
+    let container = try! ModelContainer(
+        for: AutocompleteManufacturer.self, Bike.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true))
 
-    let state = FocusState<RegisterBikeView.Field?>()
+    VStack {
+        Text(
+            "Search text count is \(searchText.count). Searching? \(String(describing: focusState))"
+        )
 
-    var valid = false
-    let validationBinding = Binding {
-        valid
-    } set: {
-        valid = $0
-    }
+        ManufacturerEntryView(
+            bike: $previewBike,
+            manufacturerSearchText: $searchText,
+            state: focusState.projectedValue,
+            valid: $valid
+        )
+        .environment(try! Client())
+        .modelContainer(container)
+        .onAppear {
+            let mockAutocompleteManufacturers = [
+                AutocompleteManufacturer(
+                    text: "Aaaaaaaa", category: "", slug: "aaa", priority: 1, searchId: "aaa",
+                    identifier: 1),
+                AutocompleteManufacturer(
+                    text: "Bbbbbbbb", category: "", slug: "bbb", priority: 1, searchId: "bbb",
+                    identifier: 1),
+                AutocompleteManufacturer(
+                    text: "Cccccccc", category: "", slug: "ccc", priority: 1, searchId: "ccc",
+                    identifier: 1),
+            ]
 
-    do {
-        let client = try Client()
+            mockAutocompleteManufacturers.forEach { manufacturer in
+                container.mainContext.insert(manufacturer)
+            }
 
-        let mockAutocompleteManufacturers = [
-            AutocompleteManufacturer(
-                text: "Aaaaaaaa", category: "", slug: "aaa", priority: 1, searchId: "aaa",
-                identifier: 1),
-            AutocompleteManufacturer(
-                text: "Bbbbbbbb", category: "", slug: "bbb", priority: 1, searchId: "bbb",
-                identifier: 1),
-            AutocompleteManufacturer(
-                text: "Cccccccc", category: "", slug: "ccc", priority: 1, searchId: "ccc",
-                identifier: 1),
-        ]
-
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let mockContainer = try ModelContainer(
-            for: AutocompleteManufacturer.self, Bike.self,
-            configurations: config)
-
-        mockAutocompleteManufacturers.forEach { manufacturer in
-            mockContainer.mainContext.insert(manufacturer)
+            try? container.mainContext.save()
         }
-
-        try? mockContainer.mainContext.save()
-
-        return Section {
-            Text(
-                "Search text count is \(searchTextBinding.wrappedValue.count). Searching? \(String(describing: state.wrappedValue))"
-            )
-
-            ManufacturerEntryView(
-                bike: bikeBinding,
-                manufacturerSearchText: searchTextBinding,
-                state: state.projectedValue,
-                valid: validationBinding
-            )
-            .environment(client)
-            .modelContainer(mockContainer)
-        }
-    } catch let error {
-        return Text("Failed to load preview \(error.localizedDescription)")
     }
 }
