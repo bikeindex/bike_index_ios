@@ -1,4 +1,5 @@
 name: iOS Test Suite
+permissions: {}
 
 on:
   push:
