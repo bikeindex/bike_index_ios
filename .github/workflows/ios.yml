@@ -1,5 +1,5 @@
 name: iOS Test Suite
-permissions: {}
+permissions: read
 
 on:
   push:
