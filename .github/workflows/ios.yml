@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.ref }}
+          ref: ${{ github.ref }}
       - name: Print git checkout status
         run: |
           git rev-parse --abbrev-ref HEAD
@@ -57,7 +57,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.ref }}
+          ref: ${{ github.ref }}
       - name: Print git checkout status
         run: |
           git rev-parse --abbrev-ref HEAD
@@ -99,7 +99,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.ref }}
+          ref: ${{ github.ref }}
       - name: Print git checkout status
         run: |
           git rev-parse --abbrev-ref HEAD
