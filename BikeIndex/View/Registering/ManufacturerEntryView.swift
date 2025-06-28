@@ -26,7 +26,8 @@ struct ManufacturerEntryView: View {
     init(
         bike: Binding<Bike>,
         manufacturerSearchText: Binding<String>,
-        state: FocusState<RegisterBikeView.Field?>.Binding, valid: Binding<Bool>
+        state: FocusState<RegisterBikeView.Field?>.Binding,
+        valid: Binding<Bool>
     ) {
         _bike = bike
         _manufacturerSearchText = manufacturerSearchText
@@ -133,20 +134,25 @@ struct ManufacturerEntryView: View {
     var previewBike: Bike = Bike()
     let bikeBinding = Binding {
         previewBike
-    } set: { newValue in
-        previewBike = newValue
+    } set: {
+        previewBike = $0
     }
 
     var searchText = ""
-    let searchTextBinding = Binding(
-        get: {
-            searchText
-        },
-        set: {
-            searchText = $0
-        })
+    let searchTextBinding = Binding {
+        searchText
+    } set: {
+        searchText = $0
+    }
 
     let state = FocusState<RegisterBikeView.Field?>()
+
+    var valid = false
+    let validationBinding = Binding {
+        valid
+    } set: {
+        valid = $0
+    }
 
     do {
         let client = try Client()
@@ -183,7 +189,7 @@ struct ManufacturerEntryView: View {
                 bike: bikeBinding,
                 manufacturerSearchText: searchTextBinding,
                 state: state.projectedValue,
-                valid: .constant(false)
+                valid: validationBinding
             )
             .environment(client)
             .modelContainer(mockContainer)
