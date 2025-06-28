@@ -13,6 +13,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Print git checkout status
+        ref: ${{ github.base_ref }}
         run: |
           git rev-parse --abbrev-ref HEAD
           git rev-parse HEAD
