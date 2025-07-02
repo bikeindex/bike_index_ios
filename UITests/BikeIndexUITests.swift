@@ -34,26 +34,13 @@ final class BikeIndexUITests: XCTestCase {
 
     /// Sometimes this fails when a page plainly fails to load, may need to add more resiliency.
     func test_basic_bike_detail_navigation() throws {
-        app.launch()
-        try signIn(app: app)
-
-        let bike1 = app.buttons["Bike 1"]
-        _ = bike1.waitForExistence(timeout: timeout)
-        bike1.tap()
-
-        // On-page
-        let webViewEdit = app.buttons["Edit"]
-        _ = webViewEdit.waitForExistence(timeout: timeout)
-        webViewEdit.tap()
-
-        let webViewBikeView = app.links["View Bike"]
-        _ = webViewBikeView.waitForExistence(timeout: timeout)
-        webViewBikeView.tap()
-
-        _ = webViewEdit.waitForExistence(timeout: timeout)
-        webViewEdit.tap()
-
-        back()
+        try Robot(app)
+            .startWithSignIn()
+            .tapFirstBike()
+            .tapEditButton()
+            .tapViewBikeButton()
+            .tapEditButton()
+            .back()
     }
 
     func test_basic_settings_navigation() throws {
