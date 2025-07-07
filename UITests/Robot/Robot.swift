@@ -5,7 +5,6 @@
 //  Created by Milo Wyner on 6/20/25.
 //
 
-import OSLog
 import XCTest
 
 /// From Robot Pattern for UI testing: https://jhandguy.github.io/posts/robot-pattern-ios/
@@ -25,9 +24,7 @@ class Robot {
     @discardableResult
     func start(timeout: TimeInterval = Robot.defaultTimeout) -> Self {
         app.launch()
-        assert(app, [.exists], timeout: timeout)
-
-        return self
+        return assert(app, [.exists], timeout: timeout)
     }
 
     @discardableResult
@@ -57,8 +54,6 @@ class Robot {
     @discardableResult
     func back(timeout: TimeInterval = Robot.defaultTimeout) -> Self {
         tap(navigationBarButton, timeout: timeout)
-
-        return self
     }
 
     @discardableResult
