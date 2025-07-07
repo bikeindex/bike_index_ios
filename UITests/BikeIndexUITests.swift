@@ -34,7 +34,7 @@ final class BikeIndexUITests: XCTestCase {
 
     /// Sometimes this fails when a page plainly fails to load, may need to add more resiliency.
     func test_basic_bike_detail_navigation() throws {
-        try Robot(app)
+        try MainContentRobot(app)
             .startWithSignIn()
             .tapFirstBike()
             .tapEditButton()
@@ -44,51 +44,23 @@ final class BikeIndexUITests: XCTestCase {
     }
 
     func test_basic_settings_navigation() throws {
-        app.launch()
-        try signIn(app: app)
-
-        openSettings()
-
-        let appIcon = app.buttons["App Icon"]
-        _ = appIcon.waitForExistence(timeout: timeout)
-        appIcon.tap()
-
-        back()
-
-        let debugMenu = app.buttons["Debug menu"]
-        _ = debugMenu.waitForExistence(timeout: timeout)
-        debugMenu.tap()
-
-        back()
-        app.swipeUp()
-
-        let acknowledgements = app.buttons["Acknowledgements"]
-        _ = acknowledgements.waitForExistence(timeout: timeout)
-        acknowledgements.tap()
-
-        back()
-
-        app.swipeUp()
-
-        let privacyPolicy = app.buttons["Privacy Policy"]
-        _ = privacyPolicy.waitForExistence(timeout: timeout)
-        privacyPolicy.tap()
-
-        let privacyPolicyLabel = app.staticTexts["General Information"]
-        let privacyPageLoaded = privacyPolicyLabel.waitForExistence(timeout: timeout)
-        XCTAssertTrue(privacyPageLoaded)
-
-        back()
-
-        let terms = app.buttons["Terms of Service"]
-        _ = terms.waitForExistence(timeout: timeout)
-        terms.tap()
-
-        let termsOfServiceLabel = app.staticTexts["About our Terms of Service"]
-        let termsPageLoaded = termsOfServiceLabel.waitForExistence(timeout: timeout)
-        XCTAssertTrue(termsPageLoaded)
-
-        back()
+        try MainContentRobot(app)
+            .startWithSignIn()
+            .tapSettings()
+            .tapAppIcon()
+            .back()
+            .tapDebugMenu()
+            .back()
+            .swipeUp()
+            .tapAcknowledgements()
+            .back()
+            .swipeUp()
+            .tapPrivacyPolicy()
+            .checkGeneralInformation()
+            .backToSettings()
+            .tapTerms()
+            .checkAbout()
+            .backToSettings()
     }
 
     /// Just remember that GitHub is running its own navigation control with JavaScript/whatever/replacing the page

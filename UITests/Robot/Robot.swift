@@ -16,7 +16,6 @@ class Robot {
 
     lazy var navigationBar = app.navigationBars.firstMatch
     lazy var navigationBarButton = navigationBar.buttons.firstMatch
-    lazy var firstBike = app.buttons["Bike 1"]
 
     init(_ app: XCUIApplication, defaultTimeout: TimeInterval = Robot.defaultTimeout) {
         self.app = app
@@ -63,10 +62,9 @@ class Robot {
     }
 
     @discardableResult
-    func tapFirstBike() -> BikeDetailRobot {
-        tap(firstBike)
+    func swipeUp() -> Self {
+        app.swipeUp()
 
-        return BikeDetailRobot(app)
+        return self
     }
-
 }
