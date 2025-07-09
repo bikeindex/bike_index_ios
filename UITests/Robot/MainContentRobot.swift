@@ -9,6 +9,7 @@
 final class MainContentRobot: Robot {
     lazy var settingsButton = navigationBar.buttons["Settings"]
     lazy var firstBike = app.buttons["Bike 1"]
+    lazy var registerBikeButton = app.buttons["Register a bike"]
 
     @discardableResult
     func tapSettings() -> SettingsRobot {
@@ -22,5 +23,12 @@ final class MainContentRobot: Robot {
         tap(firstBike)
 
         return BikeDetailRobot(app)
+    }
+
+    @discardableResult
+    func tapRegisterBikeButton() -> RegisterBikeRobot {
+        tap(registerBikeButton)
+
+        return RegisterBikeRobot(app)
     }
 }

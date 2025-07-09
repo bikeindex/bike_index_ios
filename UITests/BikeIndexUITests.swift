@@ -101,22 +101,12 @@ final class BikeIndexUITests: XCTestCase {
     }
 
     func test_serial_page_navigation() throws {
-        app.launch()
-        try signIn(app: app)
-
-        let registerBikeButton = app.buttons["Register a bike"]
-        _ = registerBikeButton.waitForExistence(timeout: timeout)
-        registerBikeButton.tap()
-
-        let goToOurSerialPage = app.staticTexts.matching(
-            NSPredicate(format: "label BEGINSWITH %@", "Every bike has a unique"))
-        if goToOurSerialPage.element.waitForExistence(timeout: timeout) {
-            goToOurSerialPage.element.tap()
-        } else {
-            XCTFail("Expected markdown link at 'go to our serial page'")
-        }
-
-        back()
+        try MainContentRobot(app)
+            .startWithSignIn()
+            .tapRegisterBikeButton()
+            .tapGoToOurSerialPage()
+            .checkSerialPageLoaded()
+            .back()
     }
 
     func test_register_bike_stolen_guide_link() throws {
