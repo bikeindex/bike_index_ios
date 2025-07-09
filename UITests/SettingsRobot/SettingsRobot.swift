@@ -24,8 +24,10 @@ final class SettingsRobot: Robot {
     }
 
     @discardableResult
-    func tapAcknowledgements() -> Self {
+    func tapAcknowledgements() -> AcknowledgementsRobot {
         tap(acknowledgements)
+
+        return AcknowledgementsRobot(app)
     }
 
     @discardableResult

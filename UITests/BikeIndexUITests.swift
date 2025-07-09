@@ -57,88 +57,47 @@ final class BikeIndexUITests: XCTestCase {
             .swipeUp()
             .tapPrivacyPolicy()
             .checkGeneralInformation()
-            .backToSettings()
+            .back()
             .tapTerms()
             .checkAbout()
-            .backToSettings()
+            .back()
     }
 
     /// Just remember that GitHub is running its own navigation control with JavaScript/whatever/replacing the page
     /// so the buttons will behave incorrectly when using GitHub links. (Except for their subdomains).
     #warning("As of 2025-03 GitHub navigation does **NOT** respect WebView history")
     func test_acknowledgements_webView_navigation_history() throws {
-        app.launch()
-        try signIn(app: app)
-
-        // SETUP
-
-        openSettings()
-
-        app.swipeUp()
-
-        let acknowledgements = app.buttons["Acknowledgements"]
-        _ = acknowledgements.waitForExistence(timeout: timeout)
-        acknowledgements.tap()
-
-        let iOS_repo = app.collectionViews.cells.element(boundBy: 2)
-        _ = iOS_repo.waitForExistence(timeout: timeout)
-        iOS_repo.tap()
-
-        let linkButton = app.buttons["Open Repository"]
-        _ = linkButton.waitForExistence(timeout: timeout)
-        linkButton.tap()
-
-        // No history is available yet
-        let backButton = app.buttons["WebViewBack"]
-        _ = backButton.waitForExistence(timeout: timeout)
-        XCTAssertFalse(backButton.isEnabled)
-
-        let forwardButton = app.buttons["WebViewForward"]
-        _ = forwardButton.waitForExistence(timeout: timeout)
-        XCTAssertFalse(forwardButton.isEnabled)
-
-        // SUBSTANCE
-
-        let oauthApplicationsLink = link(with: "https://bikeindex.org/oauth/applications")
-        _ = oauthApplicationsLink.waitForExistence(timeout: timeout)
-        oauthApplicationsLink.tap()
-        // PUSH: bikeindex.org OAuth Applications
-
-        let documentationLink = link(with: "/documentation")
-        _ = documentationLink.waitForExistence(timeout: timeout)
-        // Wait for the page to finish loading before testing back button
-
-        // Back should be available after navigating forward
-        XCTAssertTrue(backButton.isEnabled)
-        XCTAssertFalse(forwardButton.isEnabled)
-
-        backButton.tap()
-
-        // Conditional because iPad has enough space to display LICENSE.txt without tapping "View all files"
-        let viewAllFiles = app.webViews.buttons["View all files"]
-        if viewAllFiles.waitForExistence(timeout: timeout) {
-            viewAllFiles.tap()
-        }
-
-        let licenseTxtLink = link(with: "LICENSE.txt")
-        let licenseExists = licenseTxtLink.waitForExistence(timeout: timeout)
-        if licenseExists {
-            licenseTxtLink.tap()
-        } else {
-            Logger.tests.error("License.txt doesn't exist")
-        }
-        // PUSH: github.com LICENSE.txt
-
-        // Back should be available after navigating forward but it will _not be available_ because of GitHub
-        // XCTAssertFalse(backButton.isEnabled)
-        // Technically should be false but because GitHub has JS navigation some behaviors are imperfect.
-        // XCTAssertTrue(forwardButton.isEnabled)
-
-        backButton.tap()
-        // POP: github.com LICENSE.txt
-
-        XCTAssertFalse(backButton.isEnabled)
-        XCTAssertTrue(forwardButton.isEnabled)
+        try MainContentRobot(app)
+            .startWithSignIn()
+            // SETUP
+            .tapSettings()
+            .swipeUp()
+            .tapAcknowledgements()
+            .tap_iOS_repo()
+            .tapLinkButton()
+            // No history is available yet
+            .checkBackButton(isEnabled: false)
+            .checkForwardButton(isEnabled: false)
+            // SUBSTANCE
+            // PUSH: bikeindex.org OAuth Applications
+            .tapOauthLink()
+            .checkDocumentationLink()
+            // Wait for the page to finish loading before testing back button
+            // Back should be available after navigating forward
+            .checkBackButton(isEnabled: true)
+            .checkForwardButton(isEnabled: false)
+            .tapBackButton()
+            .tapViewAllFilesIfNeeded()
+            // PUSH: github.com LICENSE.txt
+            .tapLicenseTxt()
+            // Back should be available after navigating forward but it will _not be available_ because of GitHub
+            // .checkBackButton(isEnabled: false)
+            // Technically should be false but because GitHub has JS navigation some behaviors are imperfect.
+            // .checkForwardButton(isEnabled: true)
+            // POP: github.com LICENSE.txt
+            .tapBackButton()
+            .checkBackButton(isEnabled: false)
+            .checkForwardButton(isEnabled: true)
     }
 
     func test_serial_page_navigation() throws {

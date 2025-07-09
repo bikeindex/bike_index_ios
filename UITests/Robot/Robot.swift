@@ -9,7 +9,7 @@ import XCTest
 
 /// From Robot Pattern for UI testing: https://jhandguy.github.io/posts/robot-pattern-ios/
 class Robot {
-    private static var defaultTimeout: Double = 60
+    static var defaultTimeout: Double = 60
 
     var app: XCUIApplication
 
@@ -44,7 +44,9 @@ class Robot {
             predicate: NSPredicate(format: predicates.map { $0.format }.joined(separator: " AND ")),
             object: element)
         guard XCTWaiter.wait(for: [expectation], timeout: timeout) == .completed else {
-            XCTFail("[\(self)] Element \(element.description) did not fulfill expectation: \(predicates.map { $0.format })")
+            XCTFail(
+                "[\(self)] Element \(element.description) did not fulfill expectation: \(predicates.map { $0.format })"
+            )
             return self
         }
 

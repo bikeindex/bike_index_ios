@@ -5,15 +5,8 @@
 //  Created by Milo Wyner on 7/2/25.
 //
 
-final class PrivacyPolicyRobot: Robot {
+final class PrivacyPolicyRobot: Robot, NavigatesBackToSettings {
     lazy var generalInformation = app.staticTexts["General Information"]
-
-    @discardableResult
-    func backToSettings() -> SettingsRobot {
-        back()
-
-        return SettingsRobot(app)
-    }
 
     @discardableResult
     func checkGeneralInformation() -> Self {
