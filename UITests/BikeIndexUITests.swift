@@ -110,24 +110,11 @@ final class BikeIndexUITests: XCTestCase {
     }
 
     func test_register_bike_stolen_guide_link() throws {
-        app.launch()
-        try signIn(app: app)
-
-        let registerBikeButton = app.buttons["Register a stolen bike"]
-        _ = registerBikeButton.waitForExistence(timeout: timeout)
-        registerBikeButton.tap()
-
-        let whatToDoIfYourBikeIStolenPage = app.buttons["What to do if your bike is stolen"]
-        _ = whatToDoIfYourBikeIStolenPage.waitForExistence(timeout: timeout)
-        whatToDoIfYourBikeIStolenPage.tap()
-
-        back()
-
-        let goToHowToGetYourBikeBackPage = app.buttons["How to get your stolen bike back"]
-        _ = goToHowToGetYourBikeBackPage.waitForExistence(timeout: timeout)
-        goToHowToGetYourBikeBackPage.tap()
-
-        back()
+        try MainContentRobot(app)
+            .startWithSignIn()
+            .tapRegisterStolenBikeButton()
+            .checkWhatToDoPageLoads()
+            .checkHowToPageLoads()
     }
 
     func test_settings_account_pages() throws {
