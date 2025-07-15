@@ -118,37 +118,25 @@ final class BikeIndexUITests: XCTestCase {
     }
 
     func test_settings_account_pages() throws {
-        app.launch()
-        try signIn(app: app)
+        try MainContentRobot(app)
+            .startWithSignIn()
+            .tapSettings()
 
-        openSettings()
+            .tapUserSettings()
+            .checkTextExists("Give us permission to contact you if we believe your bike has been stolen, even if it isn't marked stolen")
+            .back()
 
-        button(named: "User Settings")
-            .tap()
-        let userSettingsConfirmation = app.staticTexts[
-            "Give us permission to contact you if we believe your bike has been stolen, even if it isn't marked stolen"
-        ]
-        _ = userSettingsConfirmation.waitForExistence(timeout: timeout)
-        back()
+            .tapPassword()
+            .checkTextExists("Password must be at least 12 characters. Longer is")
+            .back()
 
-        button(named: "Password")
-            .tap()
-        let resetPassword = app.staticTexts["Password must be at least 12 characters. Longer is"]
-        _ = resetPassword.waitForExistence(timeout: timeout)
-        back()
+            .tapSharingAndPersonalPage()
+            .checkTextExists("Show Personal Site")
+            .back()
 
-        button(named: "Sharing + Personal Page")
-            .tap()
-        let sharingPageConfirmation = app.staticTexts["Show Personal Site"]
-        _ = sharingPageConfirmation.waitForExistence(timeout: timeout)
-        back()
-
-        button(named: "Registration Organization")
-            .tap()
-        let regOrgsConfirmation = app.staticTexts[
-            "Manage the organizations your bikes are registered with."]
-        _ = regOrgsConfirmation.waitForExistence(timeout: timeout)
-        back()
+            .tapRegistrationOrganization()
+            .checkTextExists("Manage the organizations your bikes are registered with.")
+            .back()
     }
 
     // MARK: - Helpers
