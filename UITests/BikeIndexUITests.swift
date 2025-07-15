@@ -169,23 +169,16 @@ extension BikeIndexUITests {
     /// to test through the `BikeIndex/AuthView` flow. This omission is passable for this
     /// test because MainContentPage has the same button. But it may need an answer later.
     func testUnauthenticatedHelp() throws {
-        app.launch()
-
-        let unauthenticatedHelpButton = app.buttons["Help"]
-        _ = unauthenticatedHelpButton.waitForExistence(timeout: timeout)
-        unauthenticatedHelpButton.tap()
-
-        back()
+        MainContentRobot(app)
+            .start()
+            .tapHelpButton()
+            .back()
     }
 
     func testMainContentPageHelp() throws {
-        app.launch()
-        try signIn(app: app)
-
-        let unauthenticatedHelpButton = app.buttons["Help"]
-        _ = unauthenticatedHelpButton.waitForExistence(timeout: timeout)
-        unauthenticatedHelpButton.tap()
-
-        back()
+        try MainContentRobot(app)
+            .startWithSignIn()
+            .tapHelpButton()
+            .back()
     }
 }

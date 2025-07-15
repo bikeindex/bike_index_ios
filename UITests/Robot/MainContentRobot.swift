@@ -8,6 +8,7 @@
 /// Robot for testing the main content page.
 final class MainContentRobot: Robot {
     lazy var settingsButton = navigationBar.buttons["Settings"]
+    lazy var helpButton = navigationBar.buttons["Help"]
     lazy var firstBike = app.buttons["Bike 1"]
     lazy var registerBikeButton = app.buttons["Register a bike"]
     lazy var registerStolenBikeButton = app.buttons["Register a stolen bike"]
@@ -17,6 +18,11 @@ final class MainContentRobot: Robot {
         tap(settingsButton)
 
         return SettingsRobot(app)
+    }
+
+    @discardableResult
+    func tapHelpButton() -> Self {
+        tap(helpButton)
     }
 
     @discardableResult
