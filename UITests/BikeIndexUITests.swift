@@ -10,9 +10,7 @@ import XCTest
 
 @MainActor
 final class BikeIndexUITests: XCTestCase {
-    let timeout: TimeInterval = 60
     let app = XCUIApplication()
-    lazy var backButton = app.navigationBars.buttons.element(boundBy: 0)
 
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -123,7 +121,9 @@ final class BikeIndexUITests: XCTestCase {
             .tapSettings()
 
             .tapUserSettings()
-            .checkTextExists("Give us permission to contact you if we believe your bike has been stolen,")
+            .checkTextExists(
+                "Give us permission to contact you if we believe your bike has been stolen,"
+            )
             .back()
 
             .tapPassword()
@@ -137,29 +137,6 @@ final class BikeIndexUITests: XCTestCase {
             .tapRegistrationOrganization()
             .checkTextExists("Manage the organizations your bikes are registered with.")
             .back()
-    }
-
-    // MARK: - Helpers
-
-    func back() {
-        _ = backButton.waitForExistence(timeout: timeout)
-        backButton.tap()
-    }
-
-    func link(with prefix: String) -> XCUIElement {
-        app.links.matching(NSPredicate(format: "label BEGINSWITH %@", prefix)).element
-    }
-
-    func openSettings() {
-        let settings = app.buttons["Settings"]
-        _ = settings.waitForExistence(timeout: timeout)
-        settings.tap()
-    }
-
-    func button(named: String) -> XCUIElement {
-        let button = app.buttons[named]
-        _ = button.waitForExistence(timeout: timeout)
-        return button
     }
 }
 
