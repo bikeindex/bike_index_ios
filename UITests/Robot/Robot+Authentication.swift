@@ -11,10 +11,8 @@ import XCTest
 extension Robot {
     @discardableResult
     func startWithSignIn() throws -> Self {
-        start()
-        try signIn()
-
-        return self
+        try start()
+            .signIn()
     }
 
     // TODO: Refactor method to use Robot pattern

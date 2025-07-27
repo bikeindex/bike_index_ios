@@ -12,7 +12,7 @@ final class UniversalLinksRobot: Robot {
     private lazy var unlinkedMessage: [XCUIElement] = [
         app.webViews.staticTexts["You scanned the sticker"],
         app.webViews.staticTexts["A 403 40"],
-        app.webViews.staticTexts[", which is assigned to this bike."]
+        app.webViews.staticTexts[", which is assigned to this bike."],
     ]
 
     @discardableResult

@@ -13,6 +13,9 @@ extension Robot {
         case exists
         case doesNotExist
 
+        case isEnabled
+        case isNotEnabled
+
         case isHittable
         case isNotHittable
 
@@ -26,6 +29,10 @@ extension Robot {
                 return "exists == true"
             case .doesNotExist:
                 return "exists == false"
+            case .isEnabled:
+                return "isEnabled == true"
+            case .isNotEnabled:
+                return "isEnabled == false"
             case .isHittable:
                 return "isHittable == true"
             case .isNotHittable:
