@@ -302,10 +302,6 @@ struct RegisterBikeView: View {
                         "Oh no, your authorization doesn't include the ability to register a bike!")
                 }
             }
-            .listRowBackground(
-                PrettyView()
-            )
-
             .disabled(client.userCanRegisterBikes && requiredFieldsNotMet)
         }
         .navigationBarTitleDisplayMode(mode.navigationBarDisplayMode)
@@ -521,65 +517,5 @@ extension RegisterBikeView {
         }
     } else {
         previewContent
-    }
-}
-
-#Preview("Button") {
-    List {
-
-        if #available(iOS 18.0, *) {
-            Section {
-                Button {
-                    print("Tapped")
-                } label: {
-                    Text("Register")
-                        .foregroundStyle(.black)
-                }
-                .buttonStyle(.plain)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-            .listRowBackground(
-                PrettyView()
-            )
-        } else {
-            // Fallback on earlier versions
-        }
-    }
-
-}
-
-// https://codingwithrashid.com/how-to-create-shape-masks-in-swiftui/
-//
-struct PrettyView: View {
-    var body: some View {
-        if #available(iOS 18.0, *) {
-            // TODO: Put this in a configurable view to adjust all the parameters on the fly!!!!!! Configurable kit!
-            Text(
-                "TODO: Put this in a configurable view to adjust all the parameters on the fly!!!!!! Configurable kit!"
-            )
-            TimelineView(.animation) { timeline in
-                let x = (sin(timeline.date.timeIntervalSince1970) + 1) / 4
-
-                MeshGradient(
-                    width: 3, height: 3,
-                    points: [
-                        [0, 0], [0.5, 0], [1, 0],
-                        [0, 0.5], [Float(x), Float(x)], [1, 0.5],
-                        [0, 1], [0.5, 1], [1, 1],
-                    ],
-                    colors: [
-                        .blue, .white, .white,
-                        .blue, .accent, .accent,
-                        .accent, .blue, .white,
-                    ])
-            }
-            .mask(
-                RoundedRectangle(cornerRadius: 6)
-                    .stroke(lineWidth: 10)
-            )
-            .background(Color.primary.colorInvert())
-        } else {
-            EmptyView()
-        }
     }
 }
