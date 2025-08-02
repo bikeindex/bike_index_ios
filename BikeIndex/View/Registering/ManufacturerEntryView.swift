@@ -65,37 +65,39 @@ struct ManufacturerEntryView: View {
 
             // Next step: run .task to fetch query from the network API
             valid = false
-        }
-        .task {
-            let fetch_manufacturer = await client.api.get(
-                Autocomplete.manufacturer(query: manufacturerSearchText))
-            switch fetch_manufacturer {
-            case .success(let success):
-                guard
-                    let autocompleteResponse = success
-                        as? AutocompleteManufacturerContainerResponse
-                else {
-                    Logger.views.debug(
-                        "ManufacturerEntryView search failed to parse response from \(String(reflecting: success), privacy: .public)"
-                    )
-                    return
-                }
 
-                do {
-                    for manufacturer in autocompleteResponse.matches {
-                        modelContext.insert(manufacturer.modelInstance())
+            Task {
+                print("ManufacturerEntryView task with query \(manufacturerSearchText)")
+                let fetch_manufacturer = await client.api.get(
+                    Autocomplete.manufacturer(query: manufacturerSearchText))
+                switch fetch_manufacturer {
+                case .success(let success):
+                    guard
+                        let autocompleteResponse = success
+                            as? AutocompleteManufacturerContainerResponse
+                    else {
+                        Logger.views.debug(
+                            "ManufacturerEntryView search failed to parse response from \(String(reflecting: success), privacy: .public)"
+                        )
+                        return
                     }
-                    try? modelContext.save()
+
+                    do {
+                        for manufacturer in autocompleteResponse.matches {
+                            modelContext.insert(manufacturer.modelInstance())
+                        }
+                        try? modelContext.save()
+                    }
+
+                    Logger.views.debug(
+                        "ManufacturerEntryView received response \(String(describing: autocompleteResponse), privacy: .public)"
+                    )
+
+                case .failure(let failure):
+                    Logger.views.error(
+                        "ManufacturerEntryView search failed with \(String(reflecting: failure), privacy: .public)"
+                    )
                 }
-
-                Logger.views.debug(
-                    "ManufacturerEntryView received response \(String(describing: autocompleteResponse), privacy: .public)"
-                )
-
-            case .failure(let failure):
-                Logger.views.error(
-                    "ManufacturerEntryView search failed with \(String(reflecting: failure), privacy: .public)"
-                )
             }
         }
         .onSubmit {
@@ -103,10 +105,12 @@ struct ManufacturerEntryView: View {
         }
         if manufacturers.count == 1 && manufacturerSearchText == manufacturers.first?.text {
             /// After the user taps a selection, stop displaying the suggestions list
-            EmptyView()
+            /* EmptyView() */
+            Text("Debug: field=\(String(describing: focus)), manufacturers.count=\(manufacturers.count), focus manf? \(focus == .manufacturerText)")
         } else if !manufacturerSearchText.isEmpty, manufacturers.count > 0,
             focus == .manufacturerText
         {
+            Text("List of manufacturers, focus is manufacturer? \(focus == .manufacturerText)")
             List {
                 ForEach(manufacturers) { manufacturer in
                     Button(manufacturer.text) {
@@ -119,6 +123,8 @@ struct ManufacturerEntryView: View {
             }
             .padding([.leading, .trailing], 8)
         } else if manufacturers.count > 0 {
+            Text("Debug: field=\(String(describing: focus)), manufacturers.count=\(manufacturers.count), focus manufacturer? \(focus == .manufacturerText)")
+
             Button("Other") {
                 bike.manufacturerName = "Other"
                 manufacturerSearchText = "Other"
@@ -133,7 +139,7 @@ struct ManufacturerEntryView: View {
 #Preview {
     @Previewable @State var previewBike: Bike = Bike()
     @Previewable @State var searchText = ""
-    @Previewable @State var focusState = FocusState<RegisterBikeView.Field?>()
+    @Previewable @FocusState var focusState: RegisterBikeView.Field?
     @Previewable @State var valid = false
 
     let container = try! ModelContainer(
@@ -148,7 +154,7 @@ struct ManufacturerEntryView: View {
         ManufacturerEntryView(
             bike: $previewBike,
             manufacturerSearchText: $searchText,
-            state: focusState.projectedValue,
+            state: $focusState,
             valid: $valid
         )
         .environment(try! Client())
@@ -172,5 +178,7 @@ struct ManufacturerEntryView: View {
 
             try? container.mainContext.save()
         }
+
+        Spacer()
     }
 }
