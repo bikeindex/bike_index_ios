@@ -13,6 +13,8 @@ struct ManufacturerEntryView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
+    let debugID = UUID()
+
     @FocusState.Binding var focus: RegisterBikeView.Field?
 
     /// Stores temporary search text input.
@@ -20,7 +22,7 @@ struct ManufacturerEntryView: View {
     @Binding var manufacturerSearchText: String
     /// Control display of the required field asterisk or validation checkmark.
     /// Provided by the parent because refreshes occur very often
-    var valid: Bool
+    @Binding var valid: Bool
 
     /// Live search query results.
     @Query private var manufacturers: [AutocompleteManufacturer]
@@ -30,12 +32,14 @@ struct ManufacturerEntryView: View {
     init(
         manufacturerSearchText: Binding<String>,
         state: FocusState<RegisterBikeView.Field?>.Binding,
-        valid: Bool,
+        valid: Binding<Bool>,
         selectAction: @escaping (String) -> Void
     ) {
+        print("Instantiated new ManufacturerEntryView \(debugID.uuidString) with query \(manufacturerSearchText.wrappedValue)")
+
         self._manufacturerSearchText = manufacturerSearchText
         self._focus = state
-        self.valid = valid
+        self._valid = valid
         self.selectAction = selectAction
 
         let searchTerm = manufacturerSearchText.wrappedValue
@@ -45,6 +49,10 @@ struct ManufacturerEntryView: View {
         var descriptor = FetchDescriptor<AutocompleteManufacturer>(predicate: predicate)
         descriptor.fetchLimit = 10
         self._manufacturers = Query(descriptor)
+    }
+
+    private var prompt: Text {
+        Text("Search for manufacturer")
     }
 
     var body: some View {
@@ -57,7 +65,7 @@ struct ManufacturerEntryView: View {
         .autocorrectionDisabled()
         .accessibilityIdentifier("manufacturerSearchTextField")
         .focused($focus, equals: .manufacturerText)
-        .onChange(of: manufacturerSearchText) { oldQuery, newQuery in
+        .onChange(of: manufacturerSearchText, initial: false) { oldQuery, newQuery in
             focus = .manufacturerText
 
             guard !newQuery.isEmpty else {
@@ -84,6 +92,7 @@ struct ManufacturerEntryView: View {
                     do {
                         for manufacturer in autocompleteResponse.matches {
                             modelContext.insert(manufacturer.modelInstance())
+                            print("Inserted: \(manufacturer.search_id)")
                         }
                         try? modelContext.save()
                     }
@@ -103,6 +112,7 @@ struct ManufacturerEntryView: View {
             selectFirst()
         }
         .onAppear {
+            print("Debug identifier is \(debugID.uuidString)")
             if manufacturers.count == 1 {
                 selectFirst()
             }
@@ -132,6 +142,7 @@ struct ManufacturerEntryView: View {
 
     private func selectFirst() {
         if let firstManufacturer = manufacturers.first?.text, manufacturerSearchText == firstManufacturer {
+            print("\(#function) Debug: field=\(String(describing: focus)), manufacturers.count=\(manufacturers.count), focus manf? \(focus == .manufacturerText)")
             select(result: firstManufacturer)
         }
     }
@@ -150,10 +161,11 @@ struct ManufacturerEntryView: View {
     @Previewable @State var previewBike: Bike = Bike()
     @Previewable @State var searchText = ""
     @Previewable @FocusState var focusState: RegisterBikeView.Field?
-    var valid: Bool {
+    let valid = Binding {
         !previewBike.manufacturerName.isEmpty &&
         previewBike.manufacturerName == searchText
-    }
+    } set: { _ in }
+
 
     let container = try! ModelContainer(
         for: AutocompleteManufacturer.self, Bike.self,

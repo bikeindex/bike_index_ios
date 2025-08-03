@@ -139,10 +139,14 @@ struct RegisterBikeView: View {
 
             // MARK: Manufacturer
             Section {
+                let readOnlyManufacturerValidity = Binding {
+                    isManufacturerValid
+                } set: { _ in }
+
                 ManufacturerEntryView(
                     manufacturerSearchText: $manufacturerSearchText,
                     state: $focus,
-                    valid: isManufacturerValid
+                    valid: readOnlyManufacturerValidity
                 ) { manufacturerSelection in
                     bike.manufacturerName = manufacturerSelection
                 }
