@@ -112,7 +112,9 @@ struct ManufacturerEntryView: View {
             attemptSelectFirst()
         }
         if !manufacturerSearchText.isEmpty {
-            if manufacturers.count > 0 {
+            if manufacturers.count == 1, let first = manufacturers.first?.text, first == manufacturerSearchText {
+                EmptyView()
+            } else if manufacturers.count > 0 {
                 List {
                     ForEach(manufacturers) { manufacturer in
                         Button(manufacturer.text) {
