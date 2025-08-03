@@ -22,7 +22,8 @@ struct ManufacturerEntryView: View {
     /// Later, if this is matched to a known manufacturer the form can proceed.
     @Binding var manufacturerSearchText: String
     /// Control display of the required field asterisk or validation checkmark.
-    @Binding var valid: Bool
+    /// Provided by the parent because refreshes occur very oten
+    var valid: Bool
 
     /// Live search query results.
     @Query private var manufacturers: [AutocompleteManufacturer]
@@ -31,22 +32,22 @@ struct ManufacturerEntryView: View {
         bikeManufacturer: Binding<String>,
         manufacturerSearchText: Binding<String>,
         state: FocusState<RegisterBikeView.Field?>.Binding,
-        valid: Binding<Bool>
+        valid: Bool
     ) {
-        _bikeManufacturer = bikeManufacturer
-        _manufacturerSearchText = manufacturerSearchText
-        _focus = state
-        _valid = valid
-        let searchTerm = manufacturerSearchText.wrappedValue
+        print("Instantiated new ManufacturerEntryView based at \(Date()) -- with \(bikeManufacturer), search \(manufacturerSearchText), state \(String(describing: state.wrappedValue)), valid \(valid)")
 
+        self._bikeManufacturer = bikeManufacturer
+        self._manufacturerSearchText = manufacturerSearchText
+        self._focus = state
+        self.valid = valid
+
+        let searchTerm = manufacturerSearchText.wrappedValue
         let predicate = #Predicate<AutocompleteManufacturer> { model in
             model.text.contains(searchTerm)
         }
-
         var descriptor = FetchDescriptor<AutocompleteManufacturer>(predicate: predicate)
         descriptor.fetchLimit = 10
-
-        _manufacturers = Query(descriptor)
+        self._manufacturers = Query(descriptor)
     }
 
     var body: some View {
@@ -68,8 +69,6 @@ struct ManufacturerEntryView: View {
             }
 
             // Next step: run .task to fetch query from the network API
-            valid = false
-
             Task {
                 print("ManufacturerEntryView task with query \(manufacturerSearchText)")
                 let fetch_manufacturer = await client.api.get(
@@ -107,10 +106,15 @@ struct ManufacturerEntryView: View {
         .onSubmit {
             focus = focus?.next()
         }
-        if manufacturers.count == 1 && manufacturerSearchText == manufacturers.first?.text {
+        if manufacturers.count == 1,
+            let first = manufacturers.first,
+            manufacturerSearchText == first.text
+        {
             /// After the user taps a selection, stop displaying the suggestions list
-            /* EmptyView() */
-            Text("Debug: field=\(String(describing: focus)), manufacturers.count=\(manufacturers.count), focus manf? \(focus == .manufacturerText)")
+            EmptyView()
+                .onAppear {
+                    select(result: first.text)
+                }
         } else if !manufacturerSearchText.isEmpty, manufacturers.count > 0,
             focus == .manufacturerText
         {
@@ -118,9 +122,7 @@ struct ManufacturerEntryView: View {
             List {
                 ForEach(manufacturers) { manufacturer in
                     Button(manufacturer.text) {
-                        bikeManufacturer = manufacturer.text
-                        manufacturerSearchText = manufacturer.text
-                        focus = focus?.next()
+                        select(result: manufacturer.text)
                     }
                     .foregroundStyle(.primary)
                 }
@@ -130,21 +132,30 @@ struct ManufacturerEntryView: View {
             Text("Debug: field=\(String(describing: focus)), manufacturers.count=\(manufacturers.count), focus manufacturer? \(focus == .manufacturerText)")
 
             Button("Other") {
-                bikeManufacturer = "Other"
-                manufacturerSearchText = "Other"
-                focus = focus?.next()
+                select(result: "Other")
             }
             .foregroundStyle(.primary)
         }
     }
+
+    /// Select a provided Manufacturer name search result.
+    /// Arbitrary string to accept "Other".
+    /// - Parameter result: The name of the manufacturer that the user has selected.
+    private func select(result: String) {
+        bikeManufacturer = result
+        manufacturerSearchText = result
+        focus = focus?.next()
+    }
 }
 
-/// NOTE: These bindings are not working correctly
 #Preview {
     @Previewable @State var previewBike: Bike = Bike()
     @Previewable @State var searchText = ""
     @Previewable @FocusState var focusState: RegisterBikeView.Field?
-    @Previewable @State var valid = false
+    var valid: Bool {
+        !previewBike.manufacturerName.isEmpty &&
+        previewBike.manufacturerName == searchText
+    }
 
     let container = try! ModelContainer(
         for: AutocompleteManufacturer.self, Bike.self,
@@ -154,34 +165,23 @@ struct ManufacturerEntryView: View {
         Text(
             "Search text count is \(searchText.count). Searching? \(String(describing: focusState))"
         )
+        VStack(alignment: .leading) {
+            Text("Stateful Bike manufacturer is \(previewBike.manufacturerName)")
+            Text("Stateful search text is \(searchText)")
+            Text("Stateful focus is \(String(describing: focusState))")
+            Text("Stateful validation is \(valid)")
+        }
+
+        Divider()
 
         ManufacturerEntryView(
             bikeManufacturer: $previewBike.manufacturerName,
             manufacturerSearchText: $searchText,
             state: $focusState,
-            valid: $valid
+            valid: valid
         )
         .environment(try! Client())
         .modelContainer(container)
-        .onAppear {
-            let mockAutocompleteManufacturers = [
-                AutocompleteManufacturer(
-                    text: "Aaaaaaaa", category: "", slug: "aaa", priority: 1, searchId: "aaa",
-                    identifier: 1),
-                AutocompleteManufacturer(
-                    text: "Bbbbbbbb", category: "", slug: "bbb", priority: 1, searchId: "bbb",
-                    identifier: 1),
-                AutocompleteManufacturer(
-                    text: "Cccccccc", category: "", slug: "ccc", priority: 1, searchId: "ccc",
-                    identifier: 1),
-            ]
-
-            mockAutocompleteManufacturers.forEach { manufacturer in
-                container.mainContext.insert(manufacturer)
-            }
-
-            try? container.mainContext.save()
-        }
 
         Spacer()
     }

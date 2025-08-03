@@ -142,9 +142,7 @@ struct RegisterBikeView: View {
                     bikeManufacturer: $bike.manufacturerName,
                     manufacturerSearchText: $manufacturerSearchText,
                     state: $focus,  // focused($focus, equals: .manufacturerText) is assigned inside ManufacturerEntryView
-                    valid: .constant(
-                        !bike.manufacturerName.isEmpty
-                            && bike.manufacturerName == manufacturerSearchText)
+                    valid: isManufacturerValid
                 )
                 //                .foregroundStyle((!bike.manufacturerName.isEmpty && bike.manufacturerName == manufacturerSearchText) ? .green : .secondary) // BUG: this foreground style fails to update *after*
                 .environment(client)
@@ -324,6 +322,8 @@ struct RegisterBikeView: View {
         }
     }
 
+    // MARK: - Field
+
     /// Display a status indicator for serial number validation
     var serialNumberRequiredStatus: Text {
         if missingSerial {
@@ -340,7 +340,7 @@ struct RegisterBikeView: View {
 
     /// Display a status indicator for serial Manufacturer name
     var manufacturerRequiredStatus: Text {
-        if !bike.manufacturerName.isEmpty, bike.manufacturerName == manufacturerSearchText {
+        if isManufacturerValid {
             Text(" ✔︎")
                 .bold()
                 .accessibilityLabel("Valid")
@@ -364,6 +364,10 @@ struct RegisterBikeView: View {
                 .foregroundColor(.red)
                 .accessibilityLabel("Required")
         }
+    }
+
+    var isManufacturerValid: Bool {
+        !bike.manufacturerName.isEmpty && bike.manufacturerName == manufacturerSearchText
     }
 
     func validateEmail(_ email: String) -> Bool {
