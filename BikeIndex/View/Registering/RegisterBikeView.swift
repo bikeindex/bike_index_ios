@@ -312,9 +312,6 @@ struct RegisterBikeView: View {
                     }
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                //                .background {
-                //                    Color.red
-                //                }
             } footer: {
                 if !client.userCanRegisterBikes {
                     Text(

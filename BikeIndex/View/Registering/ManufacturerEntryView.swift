@@ -13,8 +13,6 @@ struct ManufacturerEntryView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
-    let debugID = UUID()
-
     @FocusState.Binding var focus: RegisterBikeView.Field?
 
     /// Stores temporary search text input.
@@ -47,10 +45,6 @@ struct ManufacturerEntryView: View {
         var descriptor = FetchDescriptor<AutocompleteManufacturer>(predicate: predicate)
         descriptor.fetchLimit = 10
         self._manufacturers = Query(descriptor)
-    }
-
-    private var prompt: Text {
-        Text("Search for manufacturer")
     }
 
     var body: some View {
