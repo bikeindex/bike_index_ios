@@ -58,7 +58,15 @@ struct ManufacturerEntryView: View {
             "Search for manufacturer",
             text: $manufacturerSearchText
         )
-        .foregroundStyle(valid ? .green : .secondary)  // BUG: this foreground style fails to update *after*
+        /*
+         // Well! assigning the foreground style on a TextField fails.
+         // I found this question asking for the same effect:
+         // https://stackoverflow.com/questions/56715398/swiftui-how-do-i-change-the-text-color-of-a-textfield
+         // Tested on Xcode 16 / iOS 18, and Xcode 26 / iOS 26
+         // For example, in contrast, changing the scale to flip the text works!
+         .scaleEffect(CGSize(width: 1, height: valid ? 1 : -1))
+         .foregroundStyle(valid ? .green : .secondary)
+         */
         .autocorrectionDisabled()
         .accessibilityIdentifier("manufacturerSearchTextField")
         .focused($focus, equals: .manufacturerText)
@@ -120,15 +128,15 @@ struct ManufacturerEntryView: View {
                         Button(manufacturer.text) {
                             select(result: manufacturer.text)
                         }
-                        .foregroundStyle(.primary)
                     }
                 }
+                .foregroundStyle(.secondary)
                 .padding([.leading, .trailing], 8)
             } else {
                 Button("Other") {
                     select(result: "Other")
                 }
-                .foregroundStyle(.primary)
+                .foregroundStyle(.secondary)
             }
         }
     }
