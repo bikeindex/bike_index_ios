@@ -72,6 +72,11 @@ struct ManufacturerEntryView: View {
                 return
             }
 
+            if manufacturers.count == 1 {
+                attemptSelectFirst()
+                return
+            }
+
             // Next step: run .task to fetch query from the network API
             Task {
                 print("ManufacturerEntryView task with query \(manufacturerSearchText)")
@@ -109,13 +114,10 @@ struct ManufacturerEntryView: View {
             }
         }
         .onSubmit {
-            selectFirst()
+            attemptSelectFirst()
         }
         .onAppear {
             print("Debug identifier is \(debugID.uuidString)")
-            if manufacturers.count == 1 {
-                selectFirst()
-            }
         }
         if !manufacturerSearchText.isEmpty {
             if manufacturers.count > 0 {
@@ -140,7 +142,7 @@ struct ManufacturerEntryView: View {
         }
     }
 
-    private func selectFirst() {
+    private func attemptSelectFirst() {
         if let firstManufacturer = manufacturers.first?.text, manufacturerSearchText == firstManufacturer {
             print("\(#function) Debug: field=\(String(describing: focus)), manufacturers.count=\(manufacturers.count), focus manf? \(focus == .manufacturerText)")
             select(result: firstManufacturer)
