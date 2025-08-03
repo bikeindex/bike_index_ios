@@ -15,29 +15,27 @@ struct ManufacturerEntryView: View {
 
     @FocusState.Binding var focus: RegisterBikeView.Field?
 
-    /// Update the manufacturer values of the pending Bike registration.
-    @Binding var bikeManufacturer: String
-
     /// Stores temporary search text input.
     /// Later, if this is matched to a known manufacturer the form can proceed.
     @Binding var manufacturerSearchText: String
+    /// Inform the parent view whenever a selection is complete or incomplete (still typing, not found in manufacturers list, etc).
+    @Binding var isSelectionComplete: Bool
     /// Control display of the required field asterisk or validation checkmark.
-    /// Provided by the parent because refreshes occur very oten
+    /// Provided by the parent because refreshes occur very often
     var valid: Bool
 
     /// Live search query results.
     @Query private var manufacturers: [AutocompleteManufacturer]
 
     init(
-        bikeManufacturer: Binding<String>,
         manufacturerSearchText: Binding<String>,
+        isSelectionComplete: Binding<Bool>,
         state: FocusState<RegisterBikeView.Field?>.Binding,
         valid: Bool
     ) {
-        print("Instantiated new ManufacturerEntryView based at \(Date()) -- with \(bikeManufacturer), search \(manufacturerSearchText), state \(String(describing: state.wrappedValue)), valid \(valid)")
 
-        self._bikeManufacturer = bikeManufacturer
         self._manufacturerSearchText = manufacturerSearchText
+        self._isSelectionComplete = isSelectionComplete
         self._focus = state
         self.valid = valid
 
@@ -64,7 +62,11 @@ struct ManufacturerEntryView: View {
             focus = .manufacturerText
 
             guard !newQuery.isEmpty else {
-                bikeManufacturer = ""
+                return
+            }
+
+            // Prevent updating the UI after a selection has been made.
+            guard isSelectionComplete == false else {
                 return
             }
 
@@ -92,6 +94,8 @@ struct ManufacturerEntryView: View {
                         try? modelContext.save()
                     }
 
+                    isSelectionComplete = false
+
                     Logger.views.debug(
                         "ManufacturerEntryView received response \(String(describing: autocompleteResponse), privacy: .public)"
                     )
@@ -104,37 +108,39 @@ struct ManufacturerEntryView: View {
             }
         }
         .onSubmit {
-            focus = focus?.next()
+            selectFirst()
         }
-        if manufacturers.count == 1,
-            let first = manufacturers.first,
-            manufacturerSearchText == first.text
-        {
-            /// After the user taps a selection, stop displaying the suggestions list
-            EmptyView()
-                .onAppear {
-                    select(result: first.text)
-                }
-        } else if !manufacturerSearchText.isEmpty, manufacturers.count > 0,
-            focus == .manufacturerText
-        {
-            Text("List of manufacturers, focus is manufacturer? \(focus == .manufacturerText)")
-            List {
-                ForEach(manufacturers) { manufacturer in
-                    Button(manufacturer.text) {
-                        select(result: manufacturer.text)
+        .onAppear {
+            if manufacturers.count == 1 {
+                selectFirst()
+            }
+        }
+        if !manufacturerSearchText.isEmpty {
+            if manufacturers.count > 0 {
+                Text("List of manufacturers, focus is manufacturer? \(focus == .manufacturerText)")
+                List {
+                    ForEach(manufacturers) { manufacturer in
+                        Button(manufacturer.text) {
+                            select(result: manufacturer.text)
+                        }
+                        .foregroundStyle(.primary)
                     }
-                    .foregroundStyle(.primary)
                 }
-            }
-            .padding([.leading, .trailing], 8)
-        } else if manufacturers.count > 0 {
-            Text("Debug: field=\(String(describing: focus)), manufacturers.count=\(manufacturers.count), focus manufacturer? \(focus == .manufacturerText)")
+                .padding([.leading, .trailing], 8)
+            } else {
+                Text("Debug: field=\(String(describing: focus)), manufacturers.count=\(manufacturers.count), focus manufacturer? \(focus == .manufacturerText)")
 
-            Button("Other") {
-                select(result: "Other")
+                Button("Other") {
+                    select(result: "Other")
+                }
+                .foregroundStyle(.primary)
             }
-            .foregroundStyle(.primary)
+        }
+    }
+
+    private func selectFirst() {
+        if let firstManufacturer = manufacturers.first?.text, manufacturerSearchText == firstManufacturer {
+            select(result: firstManufacturer)
         }
     }
 
@@ -142,8 +148,8 @@ struct ManufacturerEntryView: View {
     /// Arbitrary string to accept "Other".
     /// - Parameter result: The name of the manufacturer that the user has selected.
     private func select(result: String) {
-        bikeManufacturer = result
         manufacturerSearchText = result
+        isSelectionComplete = true
         focus = focus?.next()
     }
 }
@@ -151,6 +157,7 @@ struct ManufacturerEntryView: View {
 #Preview {
     @Previewable @State var previewBike: Bike = Bike()
     @Previewable @State var searchText = ""
+    @Previewable @State var isSelectionComplete: Bool = false
     @Previewable @FocusState var focusState: RegisterBikeView.Field?
     var valid: Bool {
         !previewBike.manufacturerName.isEmpty &&
@@ -175,8 +182,8 @@ struct ManufacturerEntryView: View {
         Divider()
 
         ManufacturerEntryView(
-            bikeManufacturer: $previewBike.manufacturerName,
             manufacturerSearchText: $searchText,
+            isSelectionComplete: $isSelectionComplete,
             state: $focusState,
             valid: valid
         )

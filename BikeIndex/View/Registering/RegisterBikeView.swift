@@ -20,7 +20,10 @@ struct RegisterBikeView: View {
 
     // Shadow the serial number, manufacturer, and model to update the UI without unwrapping optionals
     @State var missingSerial = false
+    /// Track the search field value for the manufacturer query _and_ value.
     @State var manufacturerSearchText = ""
+    /// Track if the manufacturer query is a valid manufacturer name value to use.
+    @State var manufacturerSelectionComplete = false
     @FocusState var focus: Field?
     @State var frameModel = ""
 
@@ -139,14 +142,21 @@ struct RegisterBikeView: View {
             // MARK: Manufacturer
             Section {
                 ManufacturerEntryView(
-                    bikeManufacturer: $bike.manufacturerName,
                     manufacturerSearchText: $manufacturerSearchText,
-                    state: $focus,  // focused($focus, equals: .manufacturerText) is assigned inside ManufacturerEntryView
+                    isSelectionComplete: $manufacturerSelectionComplete,
+                    state: $focus,
                     valid: isManufacturerValid
                 )
-                //                .foregroundStyle((!bike.manufacturerName.isEmpty && bike.manufacturerName == manufacturerSearchText) ? .green : .secondary) // BUG: this foreground style fails to update *after*
                 .environment(client)
                 .modelContext(modelContext)
+                .onChange(of: manufacturerSearchText, initial: false) { oldValue, newValue in
+                    bike.manufacturerName = newValue
+                    // if the new manufacturer search text does not match a known-valid old text,
+                    // then the selection is not complete.
+                    if isManufacturerValid == false {
+                        manufacturerSelectionComplete = false
+                    }
+                }
             } header: {
                 Text("Manufacturer") + manufacturerRequiredStatus
             } footer: {
@@ -366,8 +376,12 @@ struct RegisterBikeView: View {
         }
     }
 
+    /// Validate that the manufacturer query text is appropriate to use for the bike.manufacturer name, in sync, and
+    /// valid to proceed.
     var isManufacturerValid: Bool {
-        !bike.manufacturerName.isEmpty && bike.manufacturerName == manufacturerSearchText
+        !bike.manufacturerName.isEmpty
+        && manufacturerSelectionComplete
+        && bike.manufacturerName == manufacturerSearchText
     }
 
     func validateEmail(_ email: String) -> Bool {
