@@ -77,6 +77,10 @@ struct RegisterBikeView: View {
 
     var body: some View {
         Form {
+            #if DEBUG
+            Text("Debug build: BikeRegistrations will be automatically deleted.")
+            #endif
+
             if mode == .myStolenBike {
                 StolenBikeInfoSectionView()
             }
