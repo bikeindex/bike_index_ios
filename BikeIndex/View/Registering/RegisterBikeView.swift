@@ -13,6 +13,7 @@ import WebViewKit
 struct RegisterBikeView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
+    @Environment(\.layoutDirection) var layoutDirection
 
     @Binding var path: NavigationPath
 
@@ -266,13 +267,22 @@ struct RegisterBikeView: View {
             // MARK: Email
             if mode == .myOwnBike || mode == .myStolenBike {
                 Section {
-                    TextField(text: $ownerEmail) {
-                        Text("Who should be contacted?")
-                    }
-                    .textInputAutocapitalization(.never)
-                    .focused($focus, equals: .ownerEmailText)
-                    .onSubmit {
-                        focus = focus?.next()
+                    HStack {
+                        TextField(text: $ownerEmail) {
+                            Text("Who should be contacted?")
+                        }
+                        .textInputAutocapitalization(.never)
+                        .focused($focus, equals: .ownerEmailText)
+                        .onSubmit {
+                            focus = focus?.next()
+                        }
+
+                        Button("Clear", systemImage: clearImage) {
+                            ownerEmail = ""
+                        }
+                        .labelStyle(.iconOnly)
+                        // https://www.hackingwithswift.com/forums/swiftui/buttons-in-a-form-section/6175/6176
+                        .buttonStyle(BorderlessButtonStyle())
                     }
                 } header: {
                     Text("Owner Email") + ownerEmailStatus
@@ -331,7 +341,7 @@ struct RegisterBikeView: View {
         }
     }
 
-    // MARK: - Field
+    // MARK: - Fields
 
     /// Display a status indicator for serial number validation
     var serialNumberRequiredStatus: Text {
@@ -386,6 +396,28 @@ struct RegisterBikeView: View {
         let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
         return email.range(of: emailRegex, options: .regularExpression, range: nil, locale: nil)
             != nil
+    }
+
+    var clearImage: String {
+        switch layoutDirection {
+        case .leftToRight:
+            "delete.left"
+        case .rightToLeft:
+            "delete.right"
+        @unknown default:
+            "delete.left"
+        }
+    }
+
+    var ownerContactStackDirection: Alignment {
+        switch layoutDirection {
+        case .leftToRight:
+                .trailing
+        case .rightToLeft:
+                .leading
+        @unknown default:
+                .trailing
+        }
     }
 
     /// Marshall the Bike model to a ``Postable`` intermediary, write that intermediary to the API client and discard Bike model
