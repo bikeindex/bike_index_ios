@@ -120,7 +120,9 @@ struct ManufacturerEntryView: View {
             attemptSelectFirst()
         }
         if !manufacturerSearchText.isEmpty {
-            if manufacturers.count == 1, let first = manufacturers.first?.text, first == manufacturerSearchText {
+            if manufacturers.count == 1, let first = manufacturers.first?.text,
+                first == manufacturerSearchText
+            {
                 EmptyView()
             } else if manufacturers.count > 0 {
                 List {
@@ -142,7 +144,9 @@ struct ManufacturerEntryView: View {
     }
 
     private func attemptSelectFirst() {
-        if let firstManufacturer = manufacturers.first?.text, manufacturerSearchText == firstManufacturer {
+        if let firstManufacturer = manufacturers.first?.text,
+            manufacturerSearchText == firstManufacturer
+        {
             select(result: firstManufacturer)
         }
     }
@@ -162,10 +166,9 @@ struct ManufacturerEntryView: View {
     @Previewable @State var searchText = ""
     @Previewable @FocusState var focusState: RegisterBikeView.Field?
     let valid = Binding {
-        !previewBike.manufacturerName.isEmpty &&
-        previewBike.manufacturerName == searchText
-    } set: { _ in }
-
+        !previewBike.manufacturerName.isEmpty && previewBike.manufacturerName == searchText
+    } set: { _ in
+    }
 
     let container = try! ModelContainer(
         for: AutocompleteManufacturer.self, Bike.self,

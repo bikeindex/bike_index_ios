@@ -146,7 +146,8 @@ struct RegisterBikeView: View {
             Section {
                 let readOnlyManufacturerValidity = Binding {
                     isManufacturerValid
-                } set: { _ in }
+                } set: { _ in
+                }
 
                 ManufacturerEntryView(
                     manufacturerSearchText: $manufacturerSearchText,
@@ -389,7 +390,7 @@ struct RegisterBikeView: View {
     /// valid to proceed.
     var isManufacturerValid: Bool {
         !bike.manufacturerName.isEmpty
-        && bike.manufacturerName == manufacturerSearchText
+            && bike.manufacturerName == manufacturerSearchText
     }
 
     func validateEmail(_ email: String) -> Bool {
@@ -412,11 +413,11 @@ struct RegisterBikeView: View {
     var ownerContactStackDirection: Alignment {
         switch layoutDirection {
         case .leftToRight:
-                .trailing
+            .trailing
         case .rightToLeft:
-                .leading
+            .leading
         @unknown default:
-                .trailing
+            .trailing
         }
     }
 
