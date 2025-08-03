@@ -35,8 +35,6 @@ struct ManufacturerEntryView: View {
         valid: Binding<Bool>,
         selectAction: @escaping (String) -> Void
     ) {
-        print("Instantiated new ManufacturerEntryView \(debugID.uuidString) with query \(manufacturerSearchText.wrappedValue)")
-
         self._manufacturerSearchText = manufacturerSearchText
         self._focus = state
         self._valid = valid
@@ -56,7 +54,6 @@ struct ManufacturerEntryView: View {
     }
 
     var body: some View {
-        let _ = Self._printChanges()
         TextField(
             "Search for manufacturer",
             text: $manufacturerSearchText
@@ -79,7 +76,6 @@ struct ManufacturerEntryView: View {
 
             // Next step: run .task to fetch query from the network API
             Task {
-                print("ManufacturerEntryView task with query \(manufacturerSearchText)")
                 let fetch_manufacturer = await client.api.get(
                     Autocomplete.manufacturer(query: manufacturerSearchText))
                 switch fetch_manufacturer {
@@ -97,7 +93,6 @@ struct ManufacturerEntryView: View {
                     do {
                         for manufacturer in autocompleteResponse.matches {
                             modelContext.insert(manufacturer.modelInstance())
-                            print("Inserted: \(manufacturer.search_id)")
                         }
                         try? modelContext.save()
                     }
@@ -116,12 +111,8 @@ struct ManufacturerEntryView: View {
         .onSubmit {
             attemptSelectFirst()
         }
-        .onAppear {
-            print("Debug identifier is \(debugID.uuidString)")
-        }
         if !manufacturerSearchText.isEmpty {
             if manufacturers.count > 0 {
-                Text("List of manufacturers, focus is manufacturer? \(focus == .manufacturerText)")
                 List {
                     ForEach(manufacturers) { manufacturer in
                         Button(manufacturer.text) {
@@ -132,8 +123,6 @@ struct ManufacturerEntryView: View {
                 }
                 .padding([.leading, .trailing], 8)
             } else {
-                Text("Debug: field=\(String(describing: focus)), manufacturers.count=\(manufacturers.count), focus manufacturer? \(focus == .manufacturerText)")
-
                 Button("Other") {
                     select(result: "Other")
                 }
@@ -144,7 +133,6 @@ struct ManufacturerEntryView: View {
 
     private func attemptSelectFirst() {
         if let firstManufacturer = manufacturers.first?.text, manufacturerSearchText == firstManufacturer {
-            print("\(#function) Debug: field=\(String(describing: focus)), manufacturers.count=\(manufacturers.count), focus manf? \(focus == .manufacturerText)")
             select(result: firstManufacturer)
         }
     }
