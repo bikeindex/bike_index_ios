@@ -22,8 +22,6 @@ struct RegisterBikeView: View {
     @State var missingSerial = false
     /// Track the search field value for the manufacturer query _and_ value.
     @State var manufacturerSearchText = ""
-    /// Track if the manufacturer query is a valid manufacturer name value to use.
-    @State var manufacturerSelectionComplete = false
     @FocusState var focus: Field?
     @State var frameModel = ""
 
@@ -143,20 +141,13 @@ struct RegisterBikeView: View {
             Section {
                 ManufacturerEntryView(
                     manufacturerSearchText: $manufacturerSearchText,
-                    isSelectionComplete: $manufacturerSelectionComplete,
                     state: $focus,
                     valid: isManufacturerValid
-                )
+                ) { manufacturerSelection in
+                    bike.manufacturerName = manufacturerSelection
+                }
                 .environment(client)
                 .modelContext(modelContext)
-                .onChange(of: manufacturerSearchText, initial: false) { oldValue, newValue in
-                    bike.manufacturerName = newValue
-                    // if the new manufacturer search text does not match a known-valid old text,
-                    // then the selection is not complete.
-                    if isManufacturerValid == false {
-                        manufacturerSelectionComplete = false
-                    }
-                }
             } header: {
                 Text("Manufacturer") + manufacturerRequiredStatus
             } footer: {
@@ -380,7 +371,6 @@ struct RegisterBikeView: View {
     /// valid to proceed.
     var isManufacturerValid: Bool {
         !bike.manufacturerName.isEmpty
-        && manufacturerSelectionComplete
         && bike.manufacturerName == manufacturerSearchText
     }
 

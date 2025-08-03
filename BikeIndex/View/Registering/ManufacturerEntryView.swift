@@ -18,8 +18,6 @@ struct ManufacturerEntryView: View {
     /// Stores temporary search text input.
     /// Later, if this is matched to a known manufacturer the form can proceed.
     @Binding var manufacturerSearchText: String
-    /// Inform the parent view whenever a selection is complete or incomplete (still typing, not found in manufacturers list, etc).
-    @Binding var isSelectionComplete: Bool
     /// Control display of the required field asterisk or validation checkmark.
     /// Provided by the parent because refreshes occur very often
     var valid: Bool
@@ -27,17 +25,18 @@ struct ManufacturerEntryView: View {
     /// Live search query results.
     @Query private var manufacturers: [AutocompleteManufacturer]
 
+    var selectAction: (String) -> Void
+
     init(
         manufacturerSearchText: Binding<String>,
-        isSelectionComplete: Binding<Bool>,
         state: FocusState<RegisterBikeView.Field?>.Binding,
-        valid: Bool
+        valid: Bool,
+        selectAction: @escaping (String) -> Void
     ) {
-
         self._manufacturerSearchText = manufacturerSearchText
-        self._isSelectionComplete = isSelectionComplete
         self._focus = state
         self.valid = valid
+        self.selectAction = selectAction
 
         let searchTerm = manufacturerSearchText.wrappedValue
         let predicate = #Predicate<AutocompleteManufacturer> { model in
@@ -65,11 +64,6 @@ struct ManufacturerEntryView: View {
                 return
             }
 
-            // Prevent updating the UI after a selection has been made.
-            guard isSelectionComplete == false else {
-                return
-            }
-
             // Next step: run .task to fetch query from the network API
             Task {
                 print("ManufacturerEntryView task with query \(manufacturerSearchText)")
@@ -93,8 +87,6 @@ struct ManufacturerEntryView: View {
                         }
                         try? modelContext.save()
                     }
-
-                    isSelectionComplete = false
 
                     Logger.views.debug(
                         "ManufacturerEntryView received response \(String(describing: autocompleteResponse), privacy: .public)"
@@ -149,7 +141,7 @@ struct ManufacturerEntryView: View {
     /// - Parameter result: The name of the manufacturer that the user has selected.
     private func select(result: String) {
         manufacturerSearchText = result
-        isSelectionComplete = true
+        selectAction(result)
         focus = focus?.next()
     }
 }
@@ -157,7 +149,6 @@ struct ManufacturerEntryView: View {
 #Preview {
     @Previewable @State var previewBike: Bike = Bike()
     @Previewable @State var searchText = ""
-    @Previewable @State var isSelectionComplete: Bool = false
     @Previewable @FocusState var focusState: RegisterBikeView.Field?
     var valid: Bool {
         !previewBike.manufacturerName.isEmpty &&
@@ -183,10 +174,11 @@ struct ManufacturerEntryView: View {
 
         ManufacturerEntryView(
             manufacturerSearchText: $searchText,
-            isSelectionComplete: $isSelectionComplete,
             state: $focusState,
             valid: valid
-        )
+        ) { manufacturerSelection in
+            previewBike.manufacturerName = manufacturerSelection
+        }
         .environment(try! Client())
         .modelContainer(container)
 
