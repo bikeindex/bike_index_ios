@@ -272,6 +272,7 @@ struct RegisterBikeView: View {
                         TextField(text: $ownerEmail) {
                             Text("Who should be contacted?")
                         }
+                        .keyboardType(.emailAddress)
                         .textInputAutocapitalization(.never)
                         .focused($focus, equals: .ownerEmailText)
                         .onSubmit {
