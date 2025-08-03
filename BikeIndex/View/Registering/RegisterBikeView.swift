@@ -285,6 +285,7 @@ struct RegisterBikeView: View {
                         .labelStyle(.iconOnly)
                         // https://www.hackingwithswift.com/forums/swiftui/buttons-in-a-form-section/6175/6176
                         .buttonStyle(BorderlessButtonStyle())
+                        .disabled(ownerEmail.isEmpty)
                     }
                 } header: {
                     Text("Owner Email") + ownerEmailStatus
