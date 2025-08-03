@@ -15,21 +15,25 @@ struct ManufacturerEntryView: View {
 
     @FocusState.Binding var focus: RegisterBikeView.Field?
 
-    @Binding var bike: Bike
+    /// Update the manufacturer values of the pending Bike registration.
+    @Binding var bikeManufacturer: String
+
     /// Stores temporary search text input.
     /// Later, if this is matched to a known manufacturer the form can proceed.
     @Binding var manufacturerSearchText: String
+    /// Control display of the required field asterisk or validation checkmark.
     @Binding var valid: Bool
 
-    @Query var manufacturers: [AutocompleteManufacturer]
+    /// Live search query results.
+    @Query private var manufacturers: [AutocompleteManufacturer]
 
     init(
-        bike: Binding<Bike>,
+        bikeManufacturer: Binding<String>,
         manufacturerSearchText: Binding<String>,
         state: FocusState<RegisterBikeView.Field?>.Binding,
         valid: Binding<Bool>
     ) {
-        _bike = bike
+        _bikeManufacturer = bikeManufacturer
         _manufacturerSearchText = manufacturerSearchText
         _focus = state
         _valid = valid
@@ -59,7 +63,7 @@ struct ManufacturerEntryView: View {
             focus = .manufacturerText
 
             guard !newQuery.isEmpty else {
-                bike.manufacturerName = ""
+                bikeManufacturer = ""
                 return
             }
 
@@ -114,7 +118,7 @@ struct ManufacturerEntryView: View {
             List {
                 ForEach(manufacturers) { manufacturer in
                     Button(manufacturer.text) {
-                        bike.manufacturerName = manufacturer.text
+                        bikeManufacturer = manufacturer.text
                         manufacturerSearchText = manufacturer.text
                         focus = focus?.next()
                     }
@@ -126,7 +130,7 @@ struct ManufacturerEntryView: View {
             Text("Debug: field=\(String(describing: focus)), manufacturers.count=\(manufacturers.count), focus manufacturer? \(focus == .manufacturerText)")
 
             Button("Other") {
-                bike.manufacturerName = "Other"
+                bikeManufacturer = "Other"
                 manufacturerSearchText = "Other"
                 focus = focus?.next()
             }
@@ -152,7 +156,7 @@ struct ManufacturerEntryView: View {
         )
 
         ManufacturerEntryView(
-            bike: $previewBike,
+            bikeManufacturer: $previewBike.manufacturerName,
             manufacturerSearchText: $searchText,
             state: $focusState,
             valid: $valid

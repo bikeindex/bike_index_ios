@@ -139,7 +139,7 @@ struct RegisterBikeView: View {
             // MARK: Manufacturer
             Section {
                 ManufacturerEntryView(
-                    bike: $bike,
+                    bikeManufacturer: $bike.manufacturerName,
                     manufacturerSearchText: $manufacturerSearchText,
                     state: $focus,  // focused($focus, equals: .manufacturerText) is assigned inside ManufacturerEntryView
                     valid: .constant(
