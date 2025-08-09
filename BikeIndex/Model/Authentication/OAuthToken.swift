@@ -82,12 +82,8 @@ enum Scope: String, CaseIterable, Identifiable {
 }
 
 extension [Scope] {
-    /// Transform `self` (an array of ``Scope``s) into a string delimited by plus signs
-    /// that only occur between ``Scope`` values. (Do not add a trailing "+").
+    /// Transform this array of `Scope` to be used in an API request for the sign-in page.
     var queryItem: String {
-        self.enumerated().reduce(into: "") { partialResult, iteration in
-            partialResult += iteration.element.rawValue
-            partialResult += (iteration.offset + 1 < self.count) ? "+" : ""
-        }
+        self.map { $0.rawValue }.joined(separator: "+")
     }
 }
