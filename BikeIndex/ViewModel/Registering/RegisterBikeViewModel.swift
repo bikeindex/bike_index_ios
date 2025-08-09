@@ -14,14 +14,31 @@ import SwiftUI
 extension RegisterBikeView {
     @Observable @MainActor
     class ViewModel: ObservableObject {
+        init(
+            mode: RegisterMode, bike: Bike = Bike(),
+            propulsion: BikeRegistration.Propulsion = BikeRegistration.Propulsion(),
+            stolenRecord: StolenRecord = StolenRecord(phone: "", city: ""),
+            output: AddBikeOutput = AddBikeOutput()
+        ) {
+            self.mode = mode
+            self.bike = bike
+            self.propulsion = propulsion
+            self.stolenRecord = stolenRecord
+            self.output = output
+        }
+
         // MARK: Authoritative State
+        var mode: RegisterMode
+
         /// Primary model to mutate and persist
         var bike = Bike()
         /// Sub-model for electric/throttle/pedal-assist behavior. Will be combined with BikeRegistration inside ``registerBike()`` function.
         var propulsion = BikeRegistration.Propulsion()
+        /// Sub-model for stolen bikes.
         var stolenRecord = StolenRecord(phone: "", city: "")
         /// Track if any errors occurred when submitting this bike
-        var validationModel = AddBikeOutput()
+        /// and report them back up to the UI
+        var output = AddBikeOutput()
 
         // MARK: Shadow State
         // Shadow the serial number, manufacturer, and model to update the UI without unwrapping optionals
@@ -47,15 +64,26 @@ extension RegisterBikeView {
         /// 2. manufacturer not empty
         /// 3. Primary frame color not empty
         /// 4. owner email
+        /// Stolen bikes also include:
+        /// 5. phone
+        /// 6. city
         /// Source: attempt to register on the web with any string for the serial number
         var requiredFieldsNotMet: Bool {
             // Serial is required, unless marked missing/unidentified
             // There's also made_without_Serial but that's a more complicated scenario
             // Frame color is assigned by default
             // Email is required, unless the bike is abandoned/impounded
-            !(isSerialNumberValid
-                && isManufacturerValid
-                && isOwnerValid)
+            if mode == .myOwnBike {
+                !(isSerialNumberValid
+                    && isManufacturerValid
+                    && isOwnerValid)
+            } else {
+                !(isSerialNumberValid
+                    && isManufacturerValid
+                    && isOwnerValid
+                    && stolenRecord.isPhoneValid
+                    && stolenRecord.isCityValid)
+            }
         }
 
         var isSerialNumberValid: Bool {
@@ -80,17 +108,34 @@ extension RegisterBikeView {
         /// Frame color is the fourth required field! But it defaults to black because it's much easier to
         /// work with a SwiftUI.Picker that has a default.
         var remainingRequiredFields: String {
-            let fields = [
-                isSerialNumberValid, isManufacturerValid, isFrameColorValid, isOwnerValid,
-            ]
-            let completedFields = fields.filter { $0 == true }.count
-            let glyphs = [
-                1: "¼",
-                2: "²⁄₄",
-                3: "¾",
-                4: "✔︎",
-            ]
-            return glyphs[completedFields, default: ""]
+            if mode == .myOwnBike {
+                let fields = [
+                    isSerialNumberValid, isManufacturerValid, isFrameColorValid, isOwnerValid,
+                ]
+                let completedFields = fields.filter { $0 == true }.count
+                let glyphs = [
+                    1: "¼",
+                    2: "²⁄₄",
+                    3: "¾",
+                    4: "✔︎",
+                ]
+                return glyphs[completedFields, default: ""]
+            } else {
+                let fields = [
+                    isSerialNumberValid, isManufacturerValid, isFrameColorValid, isOwnerValid,
+                    stolenRecord.isPhoneValid, stolenRecord.isCityValid,
+                ]
+                let completedFields = fields.filter { $0 == true }.count
+                let glyphs = [
+                    1: "⅙",
+                    2: "²⁄₆",
+                    3: "³⁄₆",
+                    4: "⁴⁄₆",
+                    5: "⅚",
+                    6: "✔︎",
+                ]
+                return glyphs[completedFields, default: ""]
+            }
         }
 
         func validateEmail(_ email: String) -> Bool {
@@ -133,7 +178,7 @@ extension RegisterBikeView {
                     modelContext.insert(bikeModel)
 
                     try? modelContext.save()
-                    self.validationModel = AddBikeOutput(
+                    self.output = AddBikeOutput(
                         show: true,
                         actions: {
                             // After success, pop RegisterBikeView
@@ -149,7 +194,7 @@ extension RegisterBikeView {
                     "Failed to register bike with failure \(String(reflecting: failure)), response \(String(reflecting: response))"
                 )
 
-                self.validationModel = AddBikeOutput(
+                self.output = AddBikeOutput(
                     show: true,
                     actions: {
 

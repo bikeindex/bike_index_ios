@@ -30,7 +30,20 @@ struct RegisterBikeView: View {
 
     // MARK: Validation State
 
-    @State var viewModel: ViewModel = .init()
+    @State var viewModel: ViewModel
+
+    init(path: Binding<NavigationPath>, mode: RegisterMode, viewModel: ViewModel? = nil) {
+        self._path = path
+        self.mode = mode
+        if let viewModel {
+            assert(
+                viewModel.mode == mode,
+                "RegisterBikeView and its view model _must_ have consistent modes.")
+            self.viewModel = viewModel
+        } else {
+            self.viewModel = .init(mode: mode)
+        }
+    }
 
     var body: some View {
         ScrollViewReader { scrollProxy in
@@ -65,9 +78,6 @@ struct RegisterBikeView: View {
                     }
                     .textInputAutocapitalization(.characters)
                     .focused($focus, equals: .serialNumberText)
-                    .onSubmit {
-                        focus = focus?.next()
-                    }
 
                     HStack {
                         CameraCaptureButton(text: safeSerial)
@@ -82,7 +92,9 @@ struct RegisterBikeView: View {
                             }
                         }
                 } header: {
-                    Text("Serial Number") + serialNumberRequiredStatus
+                    RequiredField(
+                        valid: viewModel.isSerialNumberValid,
+                        label: "Serial Number")
                 } footer: {
                     TextLink(base: client.configuration.host, link: .serials)
                         .environment(
@@ -116,12 +128,12 @@ struct RegisterBikeView: View {
                     ) { manufacturerSelection in
                         viewModel.bike.manufacturerName = manufacturerSelection
                     }
-                    .focusable()
-                    .id(Field.manufacturerText)
                     .environment(client)
                     .modelContext(modelContext)
                 } header: {
-                    Text("Manufacturer") + manufacturerRequiredStatus
+                    RequiredField(
+                        valid: viewModel.isManufacturerValid,
+                        label: "Manufacturer")
                 } footer: {
                     Text("Select 'Other' if manufacturer doesn't show up when entered")
                 }
@@ -160,10 +172,7 @@ struct RegisterBikeView: View {
                             Text(option.displayValue)
                         }
                     } label: {
-                        Text("Primary Frame Color")
-                            + frameColorRequiredStatus
-                            .font(.caption2)
-                            .baselineOffset(2)
+                        PrimaryFrameColorRequiredField()
                     }
                     // SwiftUI.Picker does not seem to support FocusState on iOS
                     /* .focused($focus, equals: .primaryFrameColor) */
@@ -232,39 +241,45 @@ struct RegisterBikeView: View {
                     .id(Field.frame)
                 }
 
-                // MARK: - Mode-special fields
+                // MARK: - Mode-specific fields
                 if mode == .myStolenBike {
-                    StolenRecordEntryView(record: $viewModel.stolenRecord)
+                    StolenRecordEntryView(
+                        record: $viewModel.stolenRecord,
+                        focus: $focus
+                    )
                 }
+
                 // NOTE: Consider adding ImpoundedRecordEntryView in the future
+
                 // MARK: -
 
                 // MARK: Email
-                if mode == .myOwnBike || mode == .myStolenBike {
-                    Section {
-                        HStack {
-                            TextField(text: $viewModel.ownerEmail) {
-                                Text("Who should be contacted?")
+                Section {
+                    HStack {
+                        TextField(text: $viewModel.ownerEmail) {
+                            if mode == .myOwnBike {
+                                Text("Who owns this bike?")
+                            } else {
+                                Text("Who is responsible for this registration?")
                             }
-                            .keyboardType(.emailAddress)
-                            .textInputAutocapitalization(.never)
-                            .focused($focus, equals: .ownerEmailText)
-                            .onSubmit {
-                                focus = focus?.next()
-                            }
-
-                            Button("Clear", systemImage: clearImage) {
-                                viewModel.ownerEmail = ""
-                            }
-                            .labelStyle(.iconOnly)
-                            // https://www.hackingwithswift.com/forums/swiftui/buttons-in-a-form-section/6175/6176
-                            .buttonStyle(BorderlessButtonStyle())
-                            .disabled(viewModel.ownerEmail.isEmpty)
                         }
-                        .id(Field.ownerEmailText)
-                    } header: {
-                        Text("Owner Email") + ownerEmailStatus
+                        .keyboardType(.emailAddress)
+                        .textInputAutocapitalization(.never)
+                        .focused($focus, equals: .ownerEmailText)
+
+                        Button("Clear", systemImage: clearImage) {
+                            viewModel.ownerEmail = ""
+                        }
+                        .labelStyle(.iconOnly)
+                        // https://www.hackingwithswift.com/forums/swiftui/buttons-in-a-form-section/6175/6176
+                        .buttonStyle(BorderlessButtonStyle())
+                        .disabled(viewModel.ownerEmail.isEmpty)
                     }
+                    .id(Field.ownerEmailText)
+                } header: {
+                    RequiredField(
+                        valid: viewModel.isOwnerValid,
+                        label: "Owner Email")
                 }
 
                 // MARK: Save
@@ -282,15 +297,15 @@ struct RegisterBikeView: View {
                     }
                     .focused($focus, equals: .registerButton)
                     .alert(
-                        viewModel.validationModel.title,
-                        isPresented: $viewModel.validationModel.show,
+                        viewModel.output.title,
+                        isPresented: $viewModel.output.show,
                         actions: {
                             Button("Okay") {
-                                viewModel.validationModel.actions()
+                                viewModel.output.actions()
                             }
                         },
                         message: {
-                            Text(viewModel.validationModel.message)
+                            Text(viewModel.output.message)
                         }
                     )
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -312,15 +327,19 @@ struct RegisterBikeView: View {
             )
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-//                    Menu("Scroll to") {
-//                        ForEach(Field.allCases) { field in
-//                            Button(field.title) {
-//                                scrollProxy.scrollTo(field)
-//                                focus = field
-//                            }
-//                        }
-//                    }
+                    #if DEBUG
+                    Menu("Scroll to") {
+                        ForEach(Field.allCases) { field in
+                            Button(field.title) {
+                                scrollProxy.scrollTo(field)
+                                focus = field
+                            }
+                        }
+                    }
+                    #endif
+                }
 
+                ToolbarItem(placement: .topBarTrailing) {
                     if client.userCanRegisterBikes && !viewModel.requiredFieldsNotMet {
                         Button {
                             focus = .registerButton
@@ -336,6 +355,10 @@ struct RegisterBikeView: View {
         }
         .navigationBarTitleDisplayMode(mode.navigationBarDisplayMode)
         .navigationTitle(mode.title)
+        .scrollDismissesKeyboard(.interactively)
+        .onSubmit {
+            focus = focus?.next()
+        }
         .onAppear {
             if let user = authenticatedUsers.first?.user {
                 viewModel.ownerEmail = user.email
@@ -352,57 +375,6 @@ struct RegisterBikeView: View {
             )
             .environment(client)
         }
-    }
-
-    // MARK: - Fields
-
-    /// Display a status indicator for serial number validation
-    var serialNumberRequiredStatus: Text {
-        if viewModel.isSerialNumberValid {
-            Text(" ✔︎")
-                .bold()
-                .accessibilityLabel("Valid")
-        } else {
-            Text("*")
-                .bold()
-                .foregroundColor(.red)
-                .accessibilityLabel("Required")
-        }
-    }
-
-    /// Display a status indicator for serial Manufacturer name
-    var manufacturerRequiredStatus: Text {
-        if viewModel.isManufacturerValid {
-            Text(" ✔︎")
-                .bold()
-                .accessibilityLabel("Valid")
-        } else {
-            Text("*")
-                .bold()
-                .foregroundColor(.red)
-                .accessibilityLabel("Required")
-        }
-    }
-
-    /// Display a status indicator for email address validation
-    var ownerEmailStatus: Text {
-        if viewModel.isOwnerValid {
-            Text(" ✔︎")
-                .bold()
-                .accessibilityLabel("Valid")
-        } else {
-            Text("*")
-                .bold()
-                .foregroundColor(.red)
-                .accessibilityLabel("Required")
-        }
-    }
-
-    /// ``FrameColor/defaultColor`` is used by default to pre-populate the ``RegisterBikeView/colorPrimary`` picker.
-    var frameColorRequiredStatus: Text {
-        Text(" ✔︎")
-            .bold()
-            .accessibilityLabel("Valid")
     }
 
     var clearImage: String {
@@ -430,13 +402,20 @@ struct RegisterBikeView: View {
 }
 
 extension RegisterBikeView {
-    /// Registration field for FocusState
+    /// Registration field for FocusState. Not all fields are required.
+    /// Used for "return ⏎" key to navigate to the next field.
+    /// Only enumerates text fields because iOS FocusState seems to be incompatible with SwiftUI.Picker.
     enum Field: Int, Identifiable, Hashable, CaseIterable {
         case serialNumberText
         case manufacturerText
-        // case primaryFrameColor // Picker does not seem to support FocusState on iOS
-        /// Not required but nice to navigate to
+        /// Frame is not a required field, but nice to navigate to
         case frame
+        /// Phone Number is only shown/required for stolen bikes
+        case phoneNumber
+        case addressOrIntersection
+        /// City is only shown/required for stolen bikes
+        case city
+        case postalCode
         case ownerEmailText
         case registerButton
 
@@ -448,6 +427,8 @@ extension RegisterBikeView {
             return next
         }
 
+        #if DEBUG
+        /// Used for debug-only Scroll To menu
         var title: String {
             switch self {
             case .serialNumberText:
@@ -456,12 +437,21 @@ extension RegisterBikeView {
                 "Manufacturer"
             case .frame:
                 "Frame"
+            case .phoneNumber:
+                "Phone Number"
+            case .addressOrIntersection:
+                "Address or Intersection"
+            case .city:
+                "City"
+            case .postalCode:
+                "Postal Code"
             case .ownerEmailText:
                 "Owner Email"
             case .registerButton:
                 "Register Button"
             }
         }
+        #endif
     }
 }
 
@@ -481,12 +471,12 @@ extension RegisterBikeView {
         bikes: [bike])
 
     let auth = AuthenticatedUser(identifier: "1", bikes: [bike])
-
-    let viewModel = RegisterBikeView.ViewModel()
+    let mode = RegisterMode.myOwnBike
+    let viewModel = RegisterBikeView.ViewModel(mode: mode)
 
     let previewContent = RegisterBikeView(
         path: .constant(NavigationPath()),
-        mode: .myOwnBike,
+        mode: mode,
         viewModel: viewModel
     )
     .environment(client)
@@ -521,11 +511,12 @@ extension RegisterBikeView {
 
     let auth = AuthenticatedUser(identifier: "1", bikes: [bike])
 
-    let viewModel = RegisterBikeView.ViewModel()
+    let mode = RegisterMode.myStolenBike
+    let viewModel = RegisterBikeView.ViewModel(mode: mode)
 
     let previewContent = RegisterBikeView(
         path: .constant(NavigationPath()),
-        mode: .myStolenBike,
+        mode: mode,
         viewModel: viewModel
     )
     .environment(client)

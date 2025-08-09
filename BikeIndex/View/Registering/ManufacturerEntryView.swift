@@ -52,6 +52,7 @@ struct ManufacturerEntryView: View {
             "Search for manufacturer",
             text: $manufacturerSearchText
         )
+        .id(RegisterBikeView.Field.manufacturerText)  // for parent view's onSubmit/FocusState to work
         /*
          // Well! assigning the foreground style on a TextField fails.
          // I found this question asking for the same effect:
