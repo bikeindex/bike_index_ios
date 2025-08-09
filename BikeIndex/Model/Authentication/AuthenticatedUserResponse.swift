@@ -9,13 +9,6 @@ import Foundation
 import OSLog
 import SwiftData
 
-/// Convert a network response from a Decodable struct into its corresponding @Model class instance.
-protocol ResponseModelInstantiable: Decodable {
-    associatedtype ModelInstance
-
-    func modelInstance() -> ModelInstance
-}
-
 struct AuthenticatedUserResponse: Decodable, ResponseModelInstantiable {
     typealias ModelInstance = AuthenticatedUser
 
