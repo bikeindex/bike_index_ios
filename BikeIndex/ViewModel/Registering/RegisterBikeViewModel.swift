@@ -2,7 +2,7 @@
 //  RegisterBikeViewModel.swift
 //  BikeIndex
 //
-//  Created by Jack on 8/7/25.
+//  Created by Jack on 8/9/25.
 //
 
 import Combine
@@ -47,11 +47,14 @@ extension RegisterBikeView {
         var manufacturerSearchText = ""
         var frameModel = ""
 
-        /* Shadow the Bike.frameColors selection with local state to bridge the gap between Binding<FrameColor>
-         * Picker(selection:) changes and updating the Bike [FrameColor] array.
-         */
+        /// Shadow the Bike.frameColors selection with local state to bridge the gap between `Binding<FrameColor>`
+        /// Picker(selection:) changes and updating the Bike [FrameColor] array.
         var colorPrimary = FrameColor.defaultColor
+        /// Shadow the Bike.frameColors selection with local state to bridge the gap between `Binding<FrameColor>`
+        /// Picker(selection:) changes and updating the Bike [FrameColor] array.
         var colorSecondary = FrameColor.defaultColor
+        /// Shadow the Bike.frameColors selection with local state to bridge the gap between `Binding<FrameColor>`
+        /// Picker(selection:) changes and updating the Bike [FrameColor] array.
         var colorTertiary = FrameColor.defaultColor
 
         /// Shadow over Bike cycleType in case there is a non-default value
