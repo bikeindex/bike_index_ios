@@ -237,7 +237,6 @@ struct Chip: View {
 
 #Preview("Chip") {
     ZStack {
-//        Color.pink
         VStack {
             ForEach(FrameColor.allCases) { frame in
                 Chip(frame: frame)

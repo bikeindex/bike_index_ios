@@ -39,7 +39,7 @@ class NetworkStatusChecker {
     init() {
         pathMonitor.start(queue: .main)
         pathMonitor.pathUpdateHandler = { path in
-           Task {
+            Task {
                 await self.update(status: path.status)
             }
         }

@@ -13,48 +13,75 @@ struct ManufacturerEntryView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
-    @FocusState.Binding var state: EditState?
+    @FocusState.Binding var focus: RegisterBikeView.Field?
 
-    @Binding var bike: Bike
+    /// Stores temporary search text input.
+    /// Later, if this is matched to a known manufacturer the form can proceed.
     @Binding var manufacturerSearchText: String
+    /// Control display of the required field asterisk or validation checkmark.
+    /// Provided by the parent because refreshes occur very often
+    @Binding var valid: Bool
 
-    @Query var manufacturers: [AutocompleteManufacturer]
+    /// Live search query results.
+    @Query private var manufacturers: [AutocompleteManufacturer]
+
+    var selectAction: (String) -> Void
 
     init(
-        bike: Binding<Bike>, manufacturerSearchText: Binding<String>,
-        state: FocusState<EditState?>.Binding
+        manufacturerSearchText: Binding<String>,
+        state: FocusState<RegisterBikeView.Field?>.Binding,
+        valid: Binding<Bool>,
+        selectAction: @escaping (String) -> Void
     ) {
-        _bike = bike
-        _manufacturerSearchText = manufacturerSearchText
-        _state = state
-        let searchTerm = manufacturerSearchText.wrappedValue
+        self._manufacturerSearchText = manufacturerSearchText
+        self._focus = state
+        self._valid = valid
+        self.selectAction = selectAction
 
+        let searchTerm = manufacturerSearchText.wrappedValue
         let predicate = #Predicate<AutocompleteManufacturer> { model in
             model.text.contains(searchTerm)
         }
-
         var descriptor = FetchDescriptor<AutocompleteManufacturer>(predicate: predicate)
         descriptor.fetchLimit = 10
-
-        _manufacturers = Query(descriptor)
+        self._manufacturers = Query(descriptor)
     }
 
     var body: some View {
-        TextField(text: $manufacturerSearchText) {
-            Text("Search for manufacturer")
-        }
+        TextField(
+            "Search for manufacturer",
+            text: $manufacturerSearchText
+        )
+        // ID for parent view's onSubmit/FocusState to work
+        .id(RegisterBikeView.Field.manufacturerText)
+        /*
+         // Well! assigning the foreground style on a TextField fails.
+         // I found this question asking for the same effect:
+         // https://stackoverflow.com/questions/56715398/swiftui-how-do-i-change-the-text-color-of-a-textfield
+         // Tested on Xcode 16 / iOS 18, and Xcode 26 Beta 4 / iOS 26
+         // For example, in contrast, changing the scale to flip the text works!
+         .scaleEffect(CGSize(width: 1, height: valid ? 1 : -1))
+         .foregroundStyle(valid ? .green : .secondary)
+         */
+        .autocorrectionDisabled()
         .accessibilityIdentifier("manufacturerSearchTextField")
-        .focused($state, equals: .editing)
-        .onChange(of: manufacturerSearchText) { oldQuery, newQuery in
-            state = .editing
+        .focused($focus, equals: .manufacturerText)
+        .onChange(of: manufacturerSearchText, initial: false) { oldQuery, newQuery in
+            focus = .manufacturerText
 
             guard !newQuery.isEmpty else {
                 return
             }
 
+            if manufacturers.count == 1 {
+                attemptSelectFirst()
+                return
+            }
+
+            // Next step: run .task to fetch query from the network API
             Task {
                 let fetch_manufacturer = await client.api.get(
-                    Autocomplete.manufacturer(query: newQuery))
+                    Autocomplete.manufacturer(query: manufacturerSearchText))
                 switch fetch_manufacturer {
                 case .success(let success):
                     guard
@@ -85,99 +112,87 @@ struct ManufacturerEntryView: View {
                 }
             }
         }
-        if manufacturers.count == 1 && manufacturerSearchText == manufacturers.first?.text {
-            /// After the user taps a selection, stop displaying the suggestions list
-            EmptyView()
-        } else if !manufacturerSearchText.isEmpty, manufacturers.count > 0, state == .editing {
-            List {
-                ForEach(manufacturers) { manufacturer in
-                    Button(manufacturer.text) {
-                        bike.manufacturerName = manufacturer.text
-                        manufacturerSearchText = manufacturer.text
-                        state = nil
+        .onSubmit {
+            attemptSelectFirst()
+        }
+        if !manufacturerSearchText.isEmpty {
+            if manufacturers.count == 1, let first = manufacturers.first?.text,
+                first == manufacturerSearchText
+            {
+                EmptyView()
+            } else if manufacturers.count > 0 {
+                List {
+                    ForEach(manufacturers) { manufacturer in
+                        Button(manufacturer.text) {
+                            select(result: manufacturer.text)
+                        }
                     }
-                    .foregroundStyle(Color.secondary)
                 }
+                .foregroundStyle(.secondary)
+                .padding([.leading, .trailing], 8)
+            } else {
+                Button("Other") {
+                    select(result: "Other")
+                }
+                .foregroundStyle(.secondary)
             }
-            .padding([.leading, .trailing], 8)
-        } else if manufacturers.count > 0 {
-            Button("Other") {
-                bike.manufacturerName = "Other"
-                manufacturerSearchText = "Other"
-                state = nil
-            }
-            .foregroundStyle(Color.secondary)
         }
     }
 
-    // MARK: - State Management
+    private func attemptSelectFirst() {
+        if let firstManufacturer = manufacturers.first?.text,
+            manufacturerSearchText == firstManufacturer
+        {
+            select(result: firstManufacturer)
+        }
+    }
 
-    enum EditState: Hashable {
-        /// Keyboard is active and user is entering text to search for a manufacturer
-        case editing
+    /// Select a provided Manufacturer name search result.
+    /// Arbitrary string to accept "Other".
+    /// - Parameter result: The name of the manufacturer that the user has selected.
+    private func select(result: String) {
+        manufacturerSearchText = result
+        selectAction(result)
+        focus = focus?.next()
     }
 }
 
-/// NOTE: These bindings are not working correctly
 #Preview {
-    var previewBike: Bike = Bike()
-    let bikeBinding = Binding {
-        previewBike
-    } set: { newValue in
-        previewBike = newValue
+    @Previewable @State var previewBike: Bike = Bike()
+    @Previewable @State var searchText = ""
+    @Previewable @FocusState var focusState: RegisterBikeView.Field?
+    let valid = Binding {
+        !previewBike.manufacturerName.isEmpty && previewBike.manufacturerName == searchText
+    } set: { _ in
     }
 
-    var searchText = ""
-    let searchTextBinding = Binding(
-        get: {
-            searchText
-        },
-        set: {
-            searchText = $0
-        })
+    let container = try! ModelContainer(
+        for: AutocompleteManufacturer.self, Bike.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true))
 
-    let state = FocusState<ManufacturerEntryView.EditState?>()
-
-    do {
-        let client = try Client()
-
-        let mockAutocompleteManufacturers = [
-            AutocompleteManufacturer(
-                text: "Aaaaaaaa", category: "", slug: "aaa", priority: 1, searchId: "aaa",
-                identifier: 1),
-            AutocompleteManufacturer(
-                text: "Bbbbbbbb", category: "", slug: "bbb", priority: 1, searchId: "bbb",
-                identifier: 1),
-            AutocompleteManufacturer(
-                text: "Cccccccc", category: "", slug: "ccc", priority: 1, searchId: "ccc",
-                identifier: 1),
-        ]
-
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let mockContainer = try ModelContainer(
-            for: AutocompleteManufacturer.self, Bike.self,
-            configurations: config)
-
-        mockAutocompleteManufacturers.forEach { manufacturer in
-            mockContainer.mainContext.insert(manufacturer)
+    VStack {
+        Text(
+            "Search text count is \(searchText.count). Searching? \(String(describing: focusState))"
+        )
+        VStack(alignment: .leading) {
+            Text("Stateful Bike manufacturer is \(previewBike.manufacturerName)")
+            Text("Stateful search text is \(searchText)")
+            Text("Stateful focus is \(String(describing: focusState))")
+            Text("Stateful validation is \(valid)")
         }
 
-        try? mockContainer.mainContext.save()
+        Divider()
 
-        return Section {
-            Text(
-                "Search text count is \(searchTextBinding.wrappedValue.count). Searching? \(String(describing: state.wrappedValue))"
-            )
-
-            ManufacturerEntryView(
-                bike: bikeBinding,
-                manufacturerSearchText: searchTextBinding,
-                state: state.projectedValue
-            )
-            .environment(client)
-            .modelContainer(mockContainer)
+        ManufacturerEntryView(
+            manufacturerSearchText: $searchText,
+            state: $focusState,
+            valid: valid
+        ) { manufacturerSelection in
+            previewBike.manufacturerName = manufacturerSelection
         }
-    } catch let error {
-        return Text("Failed to load preview \(error.localizedDescription)")
+        .environment(try! Client())
+        .modelContainer(container)
+
+        Spacer()
     }
 }
