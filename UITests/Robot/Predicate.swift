@@ -10,6 +10,9 @@ extension Robot {
         case contains(String)
         case doesNotContain(String)
 
+        case containsValue(Any)
+        case doesNotContainValue(Any)
+
         case exists
         case doesNotExist
 
@@ -25,6 +28,10 @@ extension Robot {
                 return "label == '\(label)'"
             case .doesNotContain(let label):
                 return "label != '\(label)'"
+            case .containsValue(let value):
+                return "value == '\(value)'"
+            case .doesNotContainValue(let value):
+                return "value != '\(value)'"
             case .exists:
                 return "exists == true"
             case .doesNotExist:
