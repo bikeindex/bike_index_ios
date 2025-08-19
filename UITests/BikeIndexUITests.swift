@@ -66,6 +66,7 @@ final class BikeIndexUITests: XCTestCase {
     func test_acknowledgements_webView_navigation_history() throws {
         try MainContentRobot(app)
             .startWithSignIn()
+
             // SETUP
             .tapSettings()
             .swipeUp()
@@ -75,24 +76,24 @@ final class BikeIndexUITests: XCTestCase {
             // No history is available yet
             .checkBackButton(isEnabled: false)
             .checkForwardButton(isEnabled: false)
+
             // SUBSTANCE
-            // PUSH: bikeindex.org OAuth Applications
-            .tapOauthLink()
+            .navigate(to: .oauth)
             .checkDocumentationLink()
             // Wait for the page to finish loading before testing back button
             // Back should be available after navigating forward
             .checkBackButton(isEnabled: true)
             .checkForwardButton(isEnabled: false)
-            .tapBackButton()
+            .navigateBack()
+
             .tapViewAllFilesIfNeeded()
-            // PUSH: github.com LICENSE.txt
-            .tapLicenseTxt()
+            .navigate(to: .license)
             // Back should be available after navigating forward but it will _not be available_ because of GitHub
-            // .checkBackButton(isEnabled: false)
+            .checkBackButton(isEnabled: false)
             // Technically should be false but because GitHub has JS navigation some behaviors are imperfect.
-            // .checkForwardButton(isEnabled: true)
-            // POP: github.com LICENSE.txt
-            .tapBackButton()
+            .checkForwardButton(isEnabled: true)
+            .navigateBack()
+
             .checkBackButton(isEnabled: false)
             .checkForwardButton(isEnabled: true)
     }

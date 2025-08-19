@@ -9,6 +9,14 @@ import XCUIAutomation
 
 // TODO: Refactor into base WebViewRobot and subclass for specific web views, like Acknowledgements page in settings.
 final class WebViewRobot: Robot {
+
+    enum Page: String {
+        case oauth = "https://bikeindex.org/oauth/applications"
+        case license = "LICENSE.txt"
+
+        var linkPrefix: String { rawValue }
+    }
+
     lazy var backButton = app.buttons["WebViewBack"]
     lazy var forwardButton = app.buttons["WebViewForward"]
 
@@ -28,12 +36,17 @@ final class WebViewRobot: Robot {
     }
 
     @discardableResult
-    func tapOauthLink() -> Self {
-        tapLink(link(with: "https://bikeindex.org/oauth/applications"))
+    func navigate(to page: Page) -> Self {
+        // Links may not be hittable if off screen, so check if exists instead before tapping.
+        let link = link(with: page.linkPrefix)
+        assert(link, [.exists])
+        link.tap()
+
+        return self
     }
 
     @discardableResult
-    func tapBackButton() -> Self {
+    func navigateBack() -> Self {
         tap(backButton)
     }
 
@@ -48,21 +61,8 @@ final class WebViewRobot: Robot {
         return self
     }
 
-    @discardableResult
-    func tapLicenseTxt() -> Self {
-        tapLink(link(with: "LICENSE.txt"))
-    }
-
     private func check(_ element: XCUIElement, isEnabled: Bool) -> Self {
         assert(element, [isEnabled ? .isEnabled : .isNotEnabled])
-    }
-
-    /// Links may not be hittable if off screen, so check if exists instead before tapping.
-    private func tapLink(_ link: XCUIElement) -> Self {
-        assert(link, [.exists])
-        link.tap()
-
-        return self
     }
 
     private func link(with prefix: String) -> XCUIElement {
