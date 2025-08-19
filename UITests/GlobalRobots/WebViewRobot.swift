@@ -7,6 +7,7 @@
 
 import XCUIAutomation
 
+// TODO: Refactor into base WebViewRobot and subclass for specific web views, like Acknowledgements page in settings.
 final class WebViewRobot: Robot {
     lazy var backButton = app.buttons["WebViewBack"]
     lazy var forwardButton = app.buttons["WebViewForward"]

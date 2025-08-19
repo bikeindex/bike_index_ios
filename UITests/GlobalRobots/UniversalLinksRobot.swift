@@ -14,6 +14,7 @@ final class UniversalLinksRobot: Robot {
         app.webViews.staticTexts["A 403 40"],
         app.webViews.staticTexts[", which is assigned to this bike."],
     ]
+    private let stickerUrl = URL(string: "bikeindex://https://bikeindex.org/bikes/scanned/A40340")!
 
     @discardableResult
     func openLink() -> Self {

@@ -16,10 +16,7 @@ final class MainContentUITestCase: XCTestCase {
         var id: String { rawValue }
     }
 
-    let timeout: TimeInterval = 60
-    let nonExistenceTimeout: TimeInterval = 1
     let app = XCUIApplication()
-    lazy var backButton = app.navigationBars.buttons.element(boundBy: 0)
 
     override func setUpWithError() throws {
         continueAfterFailure = false

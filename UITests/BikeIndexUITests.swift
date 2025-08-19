@@ -5,7 +5,6 @@
 //  Created by Jack on 11/18/23.
 //
 
-import OSLog
 import XCTest
 
 @MainActor
