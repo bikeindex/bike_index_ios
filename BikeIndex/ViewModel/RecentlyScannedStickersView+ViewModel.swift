@@ -24,7 +24,7 @@ extension RecentlyScannedStickersView {
             return sticker
         }
 
-        private func cleanUpExpiredStickers(context: ModelContext) throws {
+        func cleanUpExpiredStickers(context: ModelContext) throws {
             // 2. Find all known-good stickers that meet these conditions
             //      - scanned in the last 2 weeks
             //      - scanned in the 10-most-recent

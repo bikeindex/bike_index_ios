@@ -15,6 +15,7 @@ enum APIError: Error, LocalizedError {
     case cacheHit
     case clientError(code: Int, data: Data?)
     case postMissingContents(endpoint: APIEndpoint)
+    case failedToDecodedExpectedModelType(URLResponse)
 
     var errorDescription: String? {
         switch self {
@@ -29,6 +30,12 @@ enum APIError: Error, LocalizedError {
             }
         case .postMissingContents(let endpoint):
             "Could not POST, missing contents for \(endpoint)"
+        case .failedToDecodedExpectedModelType(let response):
+            "Failed to decode expected model type from response: \(response)"
         }
+    }
+
+    var error: Error {
+        self
     }
 }

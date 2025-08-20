@@ -63,6 +63,9 @@ struct RecentlyScannedStickersView: View {
                     host: client.hostProvider.host)
             }
         }
+        .onDisappear {
+            cleanUp()
+        }
     }
 
     private var openHowToPage: OpenURLAction {
@@ -81,6 +84,17 @@ struct RecentlyScannedStickersView: View {
         } catch {
             Logger.model.error(
                 "\(type(of: viewModel)) failed to delete sticker \(error, privacy: .private)")
+        }
+    }
+
+    /// Run a clean up pass when RecentlyScannedStickersView is dismissed.
+    /// If the user last scanned stickers outside of the expiration window they will either
+    /// be cleaned up here (by way of onDisappear) or at the next scan.
+    private func cleanUp() {
+        do {
+            try viewModel.cleanUpExpiredStickers(context: modelContext)
+        } catch {
+            Logger.model.error("Failed to run regular sticker model clean-up. \(error, privacy: .private)")
         }
     }
 }
