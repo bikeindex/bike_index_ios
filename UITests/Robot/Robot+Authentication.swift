@@ -15,7 +15,6 @@ extension Robot {
             .signIn()
     }
 
-    // TODO: Refactor method to use Robot pattern
     @discardableResult
     func signIn() throws -> Self {
         // Step 1: Open the Sign In Page
