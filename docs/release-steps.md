@@ -3,12 +3,12 @@
 1. Create a release branch in the format `release/v1.5`
 2. Open the project and run the test suite
 3. Increment the BikeIndex Target Version and Build numbers in the project settings
-4. Capture screenshots for iPhone
+4. Capture screenshots for "iPhone 16 Plus"
 	1. Build and run the project for iPhone
 	2. Set the simulator date/time with `xcrun simctl status_bar booted override --time "2007-01-09T14:41:00.000Z" --dataNetwork wifi --wifiMode active --wifiBars 3 --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100`
 	3. Capture each screenshot as needed
 5. Capture screenshots for iPad
-	1. Build and run the project for iPad
+	1. Build and run the project for "iPad Air 13-inch (M3)"
 	2. Set the simulator date/time with `xcrun simctl status_bar booted override --time "2007-01-09T14:41:00.000Z" --dataNetwork wifi --wifiMode active --wifiBars 3 --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100`
 	3. Capture each screenshot as needed
 	4. When opening "Register a bike" page, clear the "Owner Email" field
