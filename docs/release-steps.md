@@ -22,3 +22,4 @@
 11. After the build is approved and merged, 
 	1. create a new git tag for the release on main with the short form of the release `v1.5`
 	2. create a new GitHub release https://github.com/bikeindex/bike_index_ios/releases/new with the `v1.5` tag on main with two \# sections: "What's New" and "Description", copy and paste these paragraphs from App Store Connect
+12. Write release notes based on the changes from the previous tag (such as `v1.4.1`) and the earlier TestFlight build release notes.
