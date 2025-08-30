@@ -20,11 +20,12 @@ To get started:
 1. Copy the BikeIndex-template.xcconfig file into BikeIndex-development.xcconfig and BikeIndex-production.xcconfig files.
 	- BikeIndex-development is used for the `Debug (development)` build scheme. This should use your local development instance.
 	- BikeIndex-production is used for the `Debug (production)` build scheme and for archive/release builds. This is only required for releases.
-2. Follow the template instructions to provide your own application configuration
-	- Sign in to https://bikeindex.org/oauth/applications and create an application
-	- or sign in to your local instance and create an API key
-	- Add a Callback URL to the application
-	- Paste the callback URL, application ID, and secret into the corresponding .xcconfig file
+2. Follow the [instructions in BikeIndex-template.xcconfig](BikeIndex-template.xcconfig#L11-L18) and these steps to register your own OAuth application with bikeindex.org/oauth
+	- Sign in to the OAuth admin page at https://bikeindex.org/oauth/applications and create an new application
+	- (or sign in to your localhost instance and create an API key)
+	- Add a Redirect URI / callback URL with value `bikeindex://` to the application on the oauth admin page. Paste this value into your .xcconfig file `API_REDIRECT_URI=bikeindex:\/\/` — the slashes must be escaped.
+	- Copy the application ID from the OAuth admin page and paste it into your .xcconfig file `API_CLIENT_ID` value.
+	- Copy the secret from the OAuth admin page and paste it into your .xcconfig file `API_SECRET` value.
 3. If building for a device you will need to provide a bundle identifier and your development team
 4. Build and run!
 
