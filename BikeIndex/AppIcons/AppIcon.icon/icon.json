@@ -1,13 +1,24 @@
 {
   "fill" : {
-    "automatic-gradient" : "extended-srgb:0.00000,0.47843,1.00000,1.00000"
+    "linear-gradient" : [
+      "display-p3:0.20392,0.59608,0.85882,1.00000",
+      "extended-srgb:0.00000,0.47843,1.00000,1.00000"
+    ]
   },
   "groups" : [
     {
       "layers" : [
         {
           "blend-mode" : "normal",
-          "fill" : "none",
+          "fill-specializations" : [
+            {
+              "value" : "none"
+            },
+            {
+              "appearance" : "tinted",
+              "value" : "none"
+            }
+          ],
           "image-name-specializations" : [
             {
               "value" : "logo 2.svg"
@@ -15,16 +26,34 @@
             {
               "appearance" : "dark",
               "value" : "logo_blue_black.svg"
+            },
+            {
+              "appearance" : "tinted",
+              "value" : "logo 3.svg"
             }
           ],
           "name" : "logo_blue_black",
-          "position" : {
-            "scale" : 10.4,
-            "translation-in-points" : [
-              0,
-              34.3
-            ]
-          }
+          "position-specializations" : [
+            {
+              "value" : {
+                "scale" : 10.4,
+                "translation-in-points" : [
+                  0,
+                  34.3
+                ]
+              }
+            },
+            {
+              "appearance" : "tinted",
+              "value" : {
+                "scale" : 4,
+                "translation-in-points" : [
+                  0,
+                  34.3
+                ]
+              }
+            }
+          ]
         }
       ],
       "shadow" : {
