@@ -53,8 +53,6 @@ struct BikeDetailWebView: View {
                             }
                         }
                     }
-
-                    /* statusToolbar */
                 })
                 .navigationTitle(bike.title)
                 .sheet(isPresented: $checker.presentOfflineMode) {
@@ -63,11 +61,9 @@ struct BikeDetailWebView: View {
                             .navigationBarTitleDisplayMode(.inline)
                     }
                     .presentationDragIndicator(.visible)
-//                    .interactiveDismissDisabled()
                 }
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
-            // .presentationSizing(.page) // TODO: Move this to if #available block
         } else {
             // In practice this view is never displayed because SwiftData will find the Bike
             ProgressView()
