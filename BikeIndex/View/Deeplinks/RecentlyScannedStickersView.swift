@@ -129,20 +129,22 @@ struct StickerDisplayLabel: View {
     var sticker: ScannedBike
 
     var body: some View {
-        HStack {
+        LabeledContent {
+            Text("\(sticker.createdAt, style: .relative)")
+                .foregroundStyle(.primary)
+        } label: {
             Text(sticker.displayTitle)
                 .monospaced()
                 .bold()
                 .foregroundStyle(.white)
+                .frame(maxHeight: .infinity)
                 .background {
-                    RoundedRectangle(cornerRadius: 2, style: .continuous)
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
                         .scale(1.15)
                         .fill(.accent)
                 }
-                .padding(.leading, 2)
+                .padding(.leading, 4)
 
-            Spacer()
-            Text("\(sticker.createdAt, style: .relative)")
         }
     }
 }
