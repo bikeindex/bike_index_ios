@@ -45,7 +45,7 @@ extension MainContentPage {
                         displayRecentlyScannedStickers = true
                     } label: {
                         Label(
-                            "\(recentStickers.count) Recently Scanned Stickers",
+                            "^[\(recentStickers.count) Recently Scanned Stickers](inflect: true)",
                             systemImage: "qrcode"
                         )
                         .labelStyle(.titleAndIcon)
