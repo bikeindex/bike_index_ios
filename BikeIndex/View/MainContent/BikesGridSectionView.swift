@@ -64,6 +64,8 @@ struct BikesGridSectionView: View {
                     }
                 }
                 .background(.ultraThinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 24))
+                .padding(.horizontal, 8)
             }
             .accessibilityValue("\(isExpanded ? "Expanded" : "Collapsed")")
             .accessibilityIdentifier("Section toggle \(section)")
