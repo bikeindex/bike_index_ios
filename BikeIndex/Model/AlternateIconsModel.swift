@@ -14,10 +14,10 @@ import UIKit
 /// For display in-app, 1) append "-in-app" and 2) see Assets/AppIcons-in-app catalog.
 enum AppIcon: String, CaseIterable, Identifiable {
     case primary = "AppIcon"
-    case blackOnWhite = "AppIcon-bow"
-    case whiteOnBlack = "AppIcon-wob"
-    case striped = "AppIcon-striped"
-    case pride = "AppIcon-pride"
+    case blueOnInverse = "Blue-on-inverse"
+    case Grayscale = "Grayscale"
+    case striped = "Striped"
+    case pride = "Pride"
     #if DEBUG
     case doodle = "Doodle"
     #endif
@@ -50,9 +50,9 @@ enum AppIcon: String, CaseIterable, Identifiable {
         switch self {
         case .primary:
             return "Default"
-        case .blackOnWhite:
+        case .blueOnInverse:
             return "Black on white"
-        case .whiteOnBlack:
+        case .Grayscale:
             return "White on black"
         case .striped:
             return "Striped"
