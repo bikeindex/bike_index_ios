@@ -29,8 +29,8 @@ jobs:
           echo event ${{ github.event }}
           echo workflow_ref ${{ github.workflow_ref }}
           echo workflow_sha ${{ github.workflow_sha }}
-      - name: Set Xcode 16.4
-        run: sudo xcode-select -s /Applications/Xcode_16.4.app
+      - name: Set Xcode 26.0
+        run: sudo xcode-select -s /Applications/Xcode_26.0.app
       - name: Install tools
         run: |
           brew install rbenv
@@ -80,8 +80,8 @@ jobs:
           echo event ${{ github.event }}
           echo workflow_ref ${{ github.workflow_ref }}
           echo workflow_sha ${{ github.workflow_sha }}
-      - name: Set Xcode 16.4
-        run: sudo xcode-select -s /Applications/Xcode_16.4.app
+      - name: Set Xcode 26.0
+        run: sudo xcode-select -s /Applications/Xcode_26.0.app
       - name: Install tools
         run: |
           brew install rbenv
@@ -131,8 +131,8 @@ jobs:
           echo event ${{ github.event }}
           echo workflow_ref ${{ github.workflow_ref }}
           echo workflow_sha ${{ github.workflow_sha }}
-      - name: Set Xcode 16.4
-        run: sudo xcode-select -s /Applications/Xcode_16.4.app
+      - name: Set Xcode 26.0
+        run: sudo xcode-select -s /Applications/Xcode_26.0.app
       - name: Install tools
         run: |
           brew install rbenv
