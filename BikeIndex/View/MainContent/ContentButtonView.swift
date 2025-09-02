@@ -52,17 +52,6 @@ enum ContentButton: String, Identifiable, Codable, CaseIterable {
     /// Search!
     case search
 
-    var icon: ImageResource {
-        switch self {
-        case .registerBike:
-            return .iconRegister
-        case .alertBike:
-            return .iconAlert
-        case .search:
-            return .stolenRegistry
-        }
-    }
-
     var title: String {
         switch self {
         case .registerBike:
