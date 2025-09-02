@@ -49,11 +49,11 @@ enum AppIcon: String, CaseIterable, Identifiable {
     var description: String {
         switch self {
         case .primary:
-            return "Default"
+            return "Bike Index"
         case .blueOnInverse:
-            return "Black on white"
+            return "Blue on inverse"
         case .Grayscale:
-            return "White on black"
+            return "Grayscale"
         case .striped:
             return "Striped"
         case .pride:
