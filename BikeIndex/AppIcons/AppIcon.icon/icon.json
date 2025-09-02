@@ -1,8 +1,8 @@
 {
   "fill" : {
     "linear-gradient" : [
-      "display-p3:0.20392,0.59608,0.85882,1.00000",
-      "extended-srgb:0.00000,0.47843,1.00000,1.00000"
+      "extended-gray:0.00000,1.00000",
+      "display-p3:0.17255,0.24314,0.31373,1.00000"
     ]
   },
   "groups" : [
@@ -19,41 +19,15 @@
               "value" : "none"
             }
           ],
-          "image-name-specializations" : [
-            {
-              "value" : "logo 2.svg"
-            },
-            {
-              "appearance" : "dark",
-              "value" : "logo_blue_black.svg"
-            },
-            {
-              "appearance" : "tinted",
-              "value" : "logo 3.svg"
-            }
-          ],
+          "image-name" : "logo 2.svg",
           "name" : "logo_blue_black",
-          "position-specializations" : [
-            {
-              "value" : {
-                "scale" : 10.4,
-                "translation-in-points" : [
-                  0,
-                  34.3
-                ]
-              }
-            },
-            {
-              "appearance" : "tinted",
-              "value" : {
-                "scale" : 4,
-                "translation-in-points" : [
-                  0,
-                  34.3
-                ]
-              }
-            }
-          ]
+          "position" : {
+            "scale" : 10.4,
+            "translation-in-points" : [
+              0,
+              34.3
+            ]
+          }
         }
       ],
       "shadow" : {
@@ -63,31 +37,6 @@
       "translucency" : {
         "enabled" : true,
         "value" : 0.5
-      }
-    },
-    {
-      "layers" : [
-        {
-          "hidden" : false,
-          "image-name-specializations" : [
-            {
-              "value" : "white-base.jpg"
-            },
-            {
-              "appearance" : "light",
-              "value" : "black-base.jpg"
-            }
-          ],
-          "name" : "black-base"
-        }
-      ],
-      "shadow" : {
-        "kind" : "neutral",
-        "opacity" : 0.5
-      },
-      "translucency" : {
-        "enabled" : true,
-        "value" : 0.25
       }
     }
   ],
