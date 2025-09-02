@@ -8,28 +8,8 @@
 import OSLog
 import SwiftUI
 
-/// Validates Views with UIImages (without using models)
-//#Preview("App Icon Direct UIImage Access") {
-//    VStack {
-//        Form {
-//            Section {
-//                Image(uiImage: UIImage(named: "AppIcon-in-app").unsafelyUnwrapped)
-//                    .appIcon(scale: .large)
-//
-//                Label(
-//                    title: { Text("App Icon") },
-//                    icon: {
-//                        Image(uiImage: UIImage(named: "AppIcon-in-app").unsafelyUnwrapped)
-//                            .appIcon(scale: .small)
-//                    }
-//                )
-//            }
-//        }
-//    }
-//}
-
+/// UIImage will handle light / dark mode asset switching automatically
 struct AppIconPicker: View {
-    @Environment(\.colorScheme) var colorScheme
     @Binding var model: AlternateIconsModel
 
     var body: some View {
