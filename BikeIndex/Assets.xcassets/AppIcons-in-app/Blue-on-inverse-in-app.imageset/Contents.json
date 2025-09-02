@@ -1,9 +1,19 @@
 {
   "images" : [
     {
-      "filename" : "AppIcon.jpg",
+      "filename" : "AppIcon-light.jpg",
       "idiom" : "universal"
     },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "AppIcon-dark.jpg",
+      "idiom" : "universal"
+    }
   ],
   "info" : {
     "author" : "xcode",
