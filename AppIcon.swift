@@ -1,10 +1,3 @@
-//
-//  AppIcon.swift
-//  BikeIndex
-//
-//  Created by Jack on 11/19/23.
-//
-
 import SwiftUI
 import UIKit
 
@@ -52,7 +45,7 @@ enum AppIcon: String, CaseIterable, Identifiable {
             return "Bike Index"
         case .blue:
             return "Blue on inverse"
-        case .grayscale:
+        case .Grayscale:
             return "Grayscale"
         case .striped:
             return "Striped"
@@ -62,26 +55,6 @@ enum AppIcon: String, CaseIterable, Identifiable {
         case .doodle:
             return "Jack's Doodle"
         #endif
-        }
-    }
-}
-
-// Validates Views with UIImages (without using models)
-#Preview("App Icon Direct UIImage Access") {
-    VStack {
-        Form {
-            Section {
-                Image(uiImage: UIImage(named: "AppIcon-in-app").unsafelyUnwrapped)
-                    .appIcon(scale: .large)
-
-                Label(
-                    title: { Text("App Icon") },
-                    icon: {
-                        Image(uiImage: UIImage(named: "AppIcon-in-app").unsafelyUnwrapped)
-                            .appIcon(scale: .small)
-                    }
-                )
-            }
         }
     }
 }
