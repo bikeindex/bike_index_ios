@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "AppIcon-light.jpg",
+      "filename" : "AppIcon-light.png",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "AppIcon-dark.jpg",
+      "filename" : "AppIcon-dark.png",
       "idiom" : "universal"
     }
   ],
