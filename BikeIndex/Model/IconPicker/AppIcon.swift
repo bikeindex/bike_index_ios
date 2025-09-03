@@ -13,7 +13,6 @@ import UIKit
 /// Actual icons are in Icon Composer format for iOS 26.
 enum AppIcon: String, CaseIterable, Identifiable {
     case primary = "AppIcon"
-    #warning("Blue alternate app icon is currently failing with error The File Doesn't Exist")
     case blue = "Blue"
     case grayscale = "Grayscale"
     case striped = "Striped"
