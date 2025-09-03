@@ -33,15 +33,19 @@ To automate this process follow these steps:
 | AppIcon-in-app (Light) | AppIcon-in-app (Dark) |
 | -- | -- |
 | ![Light AppIcon-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/AppIcon-in-app.imageset/AppIcon-light.png) | ![Dark AppIcon-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/AppIcon-in-app.imageset/AppIcon-dark.png) |
+
 | Blue-in-app (Light) | Blue-in-app (Dark) |
 | -- | -- |
 | ![Light Blue-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Blue-in-app.imageset/AppIcon-light.png) | ![Dark Blue-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Blue-in-app.imageset/AppIcon-dark.png) |
+
 | Grayscale-in-app (Light) | Grayscale-in-app (Dark) |
 | -- | -- |
 | ![Light Grayscale-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Grayscale-in-app.imageset/AppIcon-light.png) | ![Dark Grayscale-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Grayscale-in-app.imageset/AppIcon-dark.png) |
+
 | Striped-in-app (Light) | Striped-in-app (Dark) |
 | -- | -- |
 | ![Light Striped-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Striped-in-app.imageset/AppIcon-light.png) | ![Dark Striped-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Striped-in-app.imageset/AppIcon-dark.png) |
+
 | Pride-in-app (Light) | Pride-in-app (Dark) |
 | -- | -- |
 | ![Light Pride-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Pride-in-app.imageset/AppIcon-light.png) | ![Dark Pride-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Pride-in-app.imageset/AppIcon-dark.png) |
