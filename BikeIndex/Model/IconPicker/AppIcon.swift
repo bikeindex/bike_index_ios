@@ -48,7 +48,7 @@ enum AppIcon: String, CaseIterable, Identifiable {
         case .primary:
             return "Bike Index"
         case .blue:
-            return "Blue on inverse"
+            return "Blue"
         case .grayscale:
             return "Grayscale"
         case .striped:
