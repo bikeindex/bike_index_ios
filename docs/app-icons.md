@@ -2,6 +2,18 @@
 
 Bike Index is adopting iOS 26 style app icons. Icons are stored in [BikeIndex/AppIcons/](BikeIndex/AppIcons/) and each icon is in the Icon Composer format.
 
+## Adding a new alternate app icon:
+
+1. Create a new Icon Composer resource and add it to BikeIndex/AppIcons
+2. Edit Project > BikeIndex target > Build Settings > Alternate App Icon Sets > edit the strings for each build scheme and add the name of the new icon resource.
+	- Attempting to move this `ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES` configuration to the BikeIndex-{development,production}.xcconfig files did show the right build setting in Xcode 26 beta 7 but failed to support alternate app icons at runtime.
+3. Run the `./scripts/update-icons.sh` utility to create a preview png asset of this resoure
+4. Check BikeIndex/Assets.xcassets > AppIcons-in-app and make sure the new icon is present and configured correctly (light icon in the Any Appearance, dark icon in the Dark theme)
+5. Edit AppIcon.swift to:
+	- add a new case for this icon
+	- update the `description` field to add a user-facing display name
+6. Test the icon on a device!
+
 ## In-app display
 
 Since iOS 18 and later A) the previous app icon asset catalog resources and B) the new Icon Composer icon resoures are not bundled into the app directly. This means we need to bundle our own previews of the app icon into the asset catalog _as regular images_ to build a user-facing app icon picker.
