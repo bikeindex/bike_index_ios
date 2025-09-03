@@ -23,12 +23,13 @@ for ((i=0; i<${#icon_composer_files[@]}; i++)); do
     echo "${icon_composer_files[$i]}"
     icon_name=`echo ${icon_composer_files[$i]} | cut -d '/' -f 3 | sed 's/.icon//'`
     asset_path="BikeIndex/Assets.xcassets/AppIcons-in-app/${icon_name}-in-app.imageset"
+    scale=1
 
     light_output_path="${asset_path}/AppIcon-light.png"
-    ictool "${icon_composer_files[$i]}" --export-preview iOS Light 1024 1024 2 "$light_output_path"
+    ictool "${icon_composer_files[$i]}" --export-preview iOS Light 1024 1024 $scale "$light_output_path"
 
     dark_output_path="${asset_path}/AppIcon-dark.png"
-    ictool "${icon_composer_files[$i]}" --export-preview iOS Dark 1024 1024 2 "$dark_output_path"
+    ictool "${icon_composer_files[$i]}" --export-preview iOS Dark 1024 1024 $scale "$dark_output_path"
 done
 
 xed BikeIndex.xcodeproj
