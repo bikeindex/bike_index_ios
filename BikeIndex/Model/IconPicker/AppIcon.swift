@@ -17,9 +17,6 @@ enum AppIcon: String, CaseIterable, Identifiable {
     case grayscale = "Grayscale"
     case striped = "Striped"
     case pride = "Pride"
-    #if DEBUG
-    case doodle = "Doodle"
-    #endif
 
     /// From iOS 18+ icon 'previews' must be in a regular image asset catalog, thus "-in-app".
     var id: String { rawValue + "-in-app" }
@@ -58,10 +55,6 @@ enum AppIcon: String, CaseIterable, Identifiable {
             return "Striped"
         case .pride:
             return "Pride 🏳️‍🌈"
-        #if DEBUG
-        case .doodle:
-            return "Jack's Doodle"
-        #endif
         }
     }
 }
@@ -71,13 +64,13 @@ enum AppIcon: String, CaseIterable, Identifiable {
     VStack {
         Form {
             Section {
-                Image(uiImage: UIImage(named: "AppIcon-in-app").unsafelyUnwrapped)
+                Image(uiImage: UIImage(named: "AppIcon-in-app")!)
                     .appIcon(scale: .large)
 
                 Label(
                     title: { Text("App Icon") },
                     icon: {
-                        Image(uiImage: UIImage(named: "AppIcon-in-app").unsafelyUnwrapped)
+                        Image(uiImage: UIImage(named: "AppIcon-in-app")!)
                             .appIcon(scale: .small)
                     }
                 )
