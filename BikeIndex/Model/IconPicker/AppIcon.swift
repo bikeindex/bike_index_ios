@@ -13,12 +13,14 @@ import UIKit
 /// Actual icons are in Icon Composer format for iOS 26.
 enum AppIcon: String, CaseIterable, Identifiable {
     case primary = "AppIcon"
+    #warning("Blue alternate app icon is currently failing with error The File Doesn't Exist")
     case blue = "Blue"
     case grayscale = "Grayscale"
     case striped = "Striped"
     case pride = "Pride"
 
     /// From iOS 18+ icon 'previews' must be in a regular image asset catalog, thus "-in-app".
+    /// See Assets.xcassets
     var id: String { rawValue + "-in-app" }
 
     /// Provide a name suitable for the Alternate App Icon API to ingest.

@@ -42,7 +42,9 @@ final class AlternateIconsModel {
             } catch {
                 // We're only logging the error here and not actively handling the app icon failure
                 // since it's very unlikely to fail.
-                Logger.views.error("Updating icon to \(String(describing: icon.id)) failed.")
+                Logger.views.error(
+                    "Updating icon to \(String(describing: icon.id)) failed due to error '\(error.localizedDescription)'"
+                )
 
                 // Restore previous app icon
                 selectedAppIcon = previousAppIcon
