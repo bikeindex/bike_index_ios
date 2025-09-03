@@ -33,6 +33,3 @@ To automate this process follow these steps:
 | Pride-in-app (Light) | Pride-in-app (Dark) |
 | -- | -- |
 | ![Light Pride-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Pride-in-app.imageset/AppIcon-light.png) | ![Dark Pride-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Pride-in-app.imageset/AppIcon-dark.png) |
-| Doodle-in-app (Light) | Doodle-in-app (Dark) |
-| -- | -- |
-| ![Light Doodle-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Doodle-in-app.imageset/AppIcon-light.png) | ![Dark Doodle-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Doodle-in-app.imageset/AppIcon-dark.png) |
