@@ -15,6 +15,7 @@ enum AppIcon: String, CaseIterable, Identifiable {
     case primary = "AppIcon"
     case blue = "Blue"
     case grayscale = "Grayscale"
+    case shield = "Shield"
     case striped = "Striped"
     case pride = "Pride"
 
@@ -52,6 +53,8 @@ enum AppIcon: String, CaseIterable, Identifiable {
             return "Blue"
         case .grayscale:
             return "Grayscale"
+        case .shield:
+            return "Shield"
         case .striped:
             return "Striped"
         case .pride:

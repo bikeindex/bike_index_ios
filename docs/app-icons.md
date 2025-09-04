@@ -12,7 +12,8 @@ Bike Index is adopting iOS 26 style app icons. Icons are stored in [BikeIndex/Ap
 5. Edit AppIcon.swift to:
 	- add a new case for this icon
 	- update the `description` field to add a user-facing display name
-6. Test the icon on a device!
+6. Update this docs/app-icons.md file if any icons have been added or removed!
+7. Test the icon on a device!
 
 ## In-app display
 
@@ -41,6 +42,10 @@ To automate this process follow these steps:
 | Grayscale-in-app (Light) | Grayscale-in-app (Dark) |
 | -- | -- |
 | ![Light Grayscale-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Grayscale-in-app.imageset/AppIcon-light.png) | ![Dark Grayscale-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Grayscale-in-app.imageset/AppIcon-dark.png) |
+
+| Shield (Light) | Shield (Dark) |
+| -- | -- |
+| ![Light Shield-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Shield-in-app.imageset/AppIcon-light.png) | ![Dark Shield-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Shield-in-app.imageset/AppIcon-dark.png) | 
 
 | Striped-in-app (Light) | Striped-in-app (Dark) |
 | -- | -- |
