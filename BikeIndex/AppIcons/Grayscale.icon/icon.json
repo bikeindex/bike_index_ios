@@ -1,5 +1,7 @@
 {
-  "fill" : "automatic",
+  "fill" : {
+    "solid" : "srgb:1.00000,1.00000,1.00000,1.00000"
+  },
   "groups" : [
     {
       "blur-material" : null,
@@ -26,30 +28,6 @@
               34.3203125
             ]
           }
-        },
-        {
-          "fill-specializations" : [
-            {
-              "value" : {
-                "solid" : "srgb:1.00000,1.00000,1.00000,1.00000"
-              }
-            },
-            {
-              "appearance" : "dark",
-              "value" : "none"
-            }
-          ],
-          "hidden" : false,
-          "image-name-specializations" : [
-            {
-              "value" : "black-base.jpg"
-            },
-            {
-              "appearance" : "light",
-              "value" : "white-base.jpg"
-            }
-          ],
-          "name" : "white-base"
         }
       ],
       "lighting" : "individual",
