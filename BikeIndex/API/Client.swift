@@ -61,7 +61,7 @@ typealias QueryItemTuple = (name: String, value: String)
     init(
         keychain: KeychainSwift = KeychainSwift(),
         refreshRunLoop: RunLoop = RunLoop.main
-    ) async throws {
+    ) throws {
         self.keychain = keychain
         self.refreshRunLoop = refreshRunLoop
         let configuration = try ClientConfiguration.bundledConfig()
@@ -70,7 +70,9 @@ typealias QueryItemTuple = (name: String, value: String)
             session: session)
         self.configuration = configuration
         self.deeplinkManager = DeeplinkManager(host: configuration.hostProvider)
-        await loadLastToken()
+        Task {
+            await loadLastToken()
+        }
 
         // Configure webView manipulation scripts
         Task {
