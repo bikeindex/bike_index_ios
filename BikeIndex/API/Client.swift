@@ -35,6 +35,7 @@ typealias QueryItemTuple = (name: String, value: String)
         configuration.hostProvider
     }
     /// Stateless API class belonging to this stateful instance that performs network operations for us.
+    @MainActor
     private(set) var api: API
     /// Stateful shared webview configuration to manage cookie storage for logout and javascript/css injection scripts.
     private(set) var webConfiguration = WKWebViewConfiguration()
@@ -60,7 +61,7 @@ typealias QueryItemTuple = (name: String, value: String)
     init(
         keychain: KeychainSwift = KeychainSwift(),
         refreshRunLoop: RunLoop = RunLoop.main
-    ) throws {
+    ) async throws {
         self.keychain = keychain
         self.refreshRunLoop = refreshRunLoop
         let configuration = try ClientConfiguration.bundledConfig()
@@ -69,7 +70,7 @@ typealias QueryItemTuple = (name: String, value: String)
             session: session)
         self.configuration = configuration
         self.deeplinkManager = DeeplinkManager(host: configuration.hostProvider)
-        loadLastToken()
+        await loadLastToken()
 
         // Configure webView manipulation scripts
         Task {
@@ -99,7 +100,7 @@ typealias QueryItemTuple = (name: String, value: String)
     }
 
     /// Load any persisted OAuth Token and attempt to use it to continue the last session.
-    private func loadLastToken() {
+    private func loadLastToken() async {
         if let lastKnownToken = KeychainSwift().get(Keychain.oauthToken),
             let rawData = lastKnownToken.data(using: .utf8)
         {
@@ -108,7 +109,7 @@ typealias QueryItemTuple = (name: String, value: String)
 
                 auth = lastKnownAuth
                 accessToken = lastKnownAuth.accessToken
-                api.accessToken = lastKnownAuth.accessToken
+                await api.set(accessToken: lastKnownAuth.accessToken)
 
                 setupRefreshTimer()
 
@@ -202,7 +203,7 @@ typealias QueryItemTuple = (name: String, value: String)
                 return false
             }
             self.auth = fullTokenAuth
-            self.api.accessToken = fullTokenAuth.accessToken
+            await self.api.set(accessToken: fullTokenAuth.accessToken)
             self.setupRefreshTimer()
             do {
                 let data = try JSONEncoder().encode(fullTokenAuth)
@@ -273,7 +274,7 @@ typealias QueryItemTuple = (name: String, value: String)
                 }
 
                 self.auth = refreshedToken
-                self.api.accessToken = refreshedToken.accessToken
+                await self.api.set(accessToken: refreshedToken.accessToken)
                 self.setupRefreshTimer()
                 do {
                     let data = try JSONEncoder().encode(refreshedToken)
@@ -283,6 +284,7 @@ typealias QueryItemTuple = (name: String, value: String)
                         "Failed to persist /oauth/token to keychain after fetching successfully, continuing"
                     )
                 }
+                Logger.client.info("Refreshed oauth token to keychain")
             case .failure(let failure):
                 Logger.client.error("Failed to fetch /oauth/token \(failure)")
             }

@@ -14,7 +14,7 @@ private let v3 = "v3"
 /// Convenience default empty object endpoints that will not provide any request model.
 struct EmptyPost: Postable {}
 
-struct EmptyResponse: Decodable {}
+struct EmptyResponse: ResponseDecodable {}
 
 /// Endpoints related to authorization.
 /// https://bikeindex.org/documentation/api_v3#ref_oauth
@@ -53,7 +53,7 @@ enum OAuth: APIEndpoint {
         nil
     }
 
-    var responseModel: Decodable.Type {
+    var responseModel: ResponseDecodable.Type {
         switch self {
         case .authorize, .token, .refresh:
             OAuthToken.self
@@ -126,7 +126,7 @@ enum Search: APIEndpoint {
         nil
     }
 
-    var responseModel: Decodable.Type {
+    var responseModel: ResponseDecodable.Type {
         OAuthToken.self
     }
 
@@ -184,7 +184,7 @@ enum Bikes: APIEndpoint {
         }
     }
 
-    var responseModel: Decodable.Type {
+    var responseModel: ResponseDecodable.Type {
         switch self {
         case .postBikes:
             return SingleBikeResponseContainer.self
@@ -224,7 +224,7 @@ enum Me: APIEndpoint {
         nil
     }
 
-    var responseModel: Decodable.Type {
+    var responseModel: ResponseDecodable.Type {
         switch self {
         case .self:
             return AuthenticatedUserResponse.self
@@ -259,7 +259,7 @@ enum Autocomplete: APIEndpoint {
         nil
     }
 
-    var responseModel: Decodable.Type {
+    var responseModel: ResponseDecodable.Type {
         switch self {
         case .manufacturer:
             AutocompleteManufacturerContainerResponse.self
@@ -307,7 +307,7 @@ enum Manufacturers: APIEndpoint {
         nil
     }
 
-    var responseModel: Decodable.Type {
+    var responseModel: ResponseDecodable.Type {
         fatalError()
     }
 
@@ -360,7 +360,7 @@ enum Selections: APIEndpoint {
 
     var authorized: Bool { true }
 
-    var responseModel: Decodable.Type {
+    var responseModel: ResponseDecodable.Type {
         fatalError()
     }
 

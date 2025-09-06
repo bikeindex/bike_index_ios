@@ -24,6 +24,8 @@ public typealias BikeId = String
 /// Internal type to signify that POSTs use an Encodable type
 public protocol Postable: Encodable, Sendable {}
 
+public protocol ResponseDecodable: Decodable, Sendable {}
+
 protocol APIEndpoint: Sendable {
     /// Array of path components to-be concatenated to the URL
     var path: [String] { get }
@@ -34,14 +36,13 @@ protocol APIEndpoint: Sendable {
     var authorized: Bool { get }
 
     var requestModel: Encodable? { get }
-    var responseModel: any Decodable.Type { get }
+    var responseModel: any ResponseDecodable.Type { get }
 
     func request(for config: HostProvider) -> URLRequest
 }
 
 /// API client to perform networking operations with only essential state.
-@MainActor
-final class API {
+final actor API {
     /// Retrieve networking essentials, namely host URL, to apply to all requests
     private var configuration: HostProvider
     /// Receive the known-good accessToken from Client for stateful network requests.
@@ -53,7 +54,11 @@ final class API {
         self.session = session
     }
 
-    func get(_ endpoint: APIEndpoint) async -> Result<(any Decodable), Error> {
+    func set(accessToken: String?) async {
+        self.accessToken = accessToken
+    }
+
+    func get(_ endpoint: APIEndpoint) async -> Result<(any ResponseDecodable), Error> {
         var request = endpoint.request(for: configuration)
         if endpoint.authorized, let accessToken {
             request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]

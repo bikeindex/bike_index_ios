@@ -8,11 +8,11 @@
 import Foundation
 
 /// API endpoint: api/autocomplete
-struct AutocompleteManufacturerContainerResponse: Decodable {
+struct AutocompleteManufacturerContainerResponse: ResponseDecodable {
     var matches: [AutocompleteManufacturerResponse]
 }
 
-struct AutocompleteManufacturerResponse: ResponseModelInstantiable {
+struct AutocompleteManufacturerResponse: ResponseModelInstantiable, ResponseDecodable {
     var text: String
     var category: String
     var slug: String
