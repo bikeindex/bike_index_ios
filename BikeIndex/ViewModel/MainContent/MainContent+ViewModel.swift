@@ -31,7 +31,7 @@ extension MainContentPage {
 
         /// Will fetch last known value from user defaults.
         /// Will persist after `didSet`.
-        var groupMode: GroupMode = GroupMode.lastKnownGroupMode {
+        var groupMode: GroupMode = GroupMode.lastKnown {
             didSet {
                 groupMode.persist()
             }
@@ -137,9 +137,9 @@ extension MainContentPage {
                         let descriptor = FetchDescriptor<Bike>(predicate: predicate)
 
                         let bikes = try modelContext.fetch(descriptor)
-                        bikes.forEach {
-                            $0.authenticatedOwner = myProfile
-                            $0.owner = myProfile.user
+                        for bike in bikes {
+                            bike.authenticatedOwner = myProfile
+                            bike.owner = myProfile.user
                         }
                         myProfile.bikes = bikes
                     }
