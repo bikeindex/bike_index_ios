@@ -120,14 +120,7 @@ struct BikeDetailOfflineView: View {
                         // Text(bike.publicImages.joined(separator: "\n"))
                     }
 
-                    /* TODO: Fill out stolen details
-                    Section {
-                        StolenBikeDetailsView(bike: bike)
-                    } footer: {
-                        Text("Editing is not available in offline mode.")
-                            .font(.caption2)
-                    }
-                     */
+                    // TODO: Fill out StolenBikeDetailsView(bike:)
                 }
             }
             .formStyle(.columns)

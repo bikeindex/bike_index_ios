@@ -71,7 +71,8 @@ extension MainContentPage.ViewModel {
         static private let groupMode_persistenceKey = "groupMode_id"
         static private let sortOrder_baseKey = "sortOrder_id"
 
-        static var lastKnownGroupMode: Self {
+        /// Retrieve the persisted group mode from UserDefaults or fall back to a default value
+        static var lastKnown: Self {
             if let id = UserDefaults.standard.string(forKey: groupMode_persistenceKey),
                 let mode = Self(rawValue: id)
             {
@@ -81,8 +82,9 @@ extension MainContentPage.ViewModel {
             }
         }
 
+        /// Retrieve the persisted sort order scoped to this GroupMode from UserDefaults or fall back to a defeault value
         static var lastKnownSortOrder: SortOrder {
-            let sortOrder_persistenceKey = "\(Self.lastKnownGroupMode.id)-\(Self.sortOrder_baseKey)"
+            let sortOrder_persistenceKey = "\(Self.lastKnown.id)-\(Self.sortOrder_baseKey)"
             guard let id = UserDefaults.standard.string(forKey: sortOrder_persistenceKey) else {
                 Logger.views.debug("\(#function) failed to read \(sortOrder_persistenceKey)")
                 return .forward
@@ -99,10 +101,12 @@ extension MainContentPage.ViewModel {
             }
         }
 
+        /// Persist the GroupMode to UserDefaults
         func persist() {
             UserDefaults.standard.set(self.id, forKey: Self.groupMode_persistenceKey)
         }
 
+        /// Persist the SortOrder scoped to this GroupMode to UserDefaults
         func persist(sortOrder: SortOrder) {
             let sortOrder_persistenceKey = "\(self.id)-\(Self.sortOrder_baseKey)"
             UserDefaults.standard.set(sortOrder.identifier, forKey: sortOrder_persistenceKey)

@@ -54,15 +54,14 @@ struct ManufacturerEntryView: View {
         )
         // ID for parent view's onSubmit/FocusState to work
         .id(RegisterBikeView.Field.manufacturerText)
-        /*
-         // Well! assigning the foreground style on a TextField fails.
-         // I found this question asking for the same effect:
-         // https://stackoverflow.com/questions/56715398/swiftui-how-do-i-change-the-text-color-of-a-textfield
-         // Tested on Xcode 16 / iOS 18, and Xcode 26 Beta 4 / iOS 26
-         // For example, in contrast, changing the scale to flip the text works!
-         .scaleEffect(CGSize(width: 1, height: valid ? 1 : -1))
-         .foregroundStyle(valid ? .green : .secondary)
-         */
+        // Well! assigning the foreground style on a TextField fails.
+        // I found this question asking for the same effect:
+        // https://stackoverflow.com/questions/56715398/swiftui-how-do-i-change-the-text-color-of-a-textfield
+        // Tested on Xcode 16 / iOS 18, and Xcode 26 Beta 4 / iOS 26
+        // For example, in contrast, changing the scale to flip the text works!
+        // .scaleEffect(CGSize(width: 1, height: valid ? 1 : -1))
+        // .foregroundStyle(valid ? .green : .secondary)
+        // End foreground style dicsussion
         .autocorrectionDisabled()
         .accessibilityIdentifier("manufacturerSearchTextField")
         .focused($focus, equals: .manufacturerText)

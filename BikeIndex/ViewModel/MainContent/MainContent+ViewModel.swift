@@ -31,7 +31,7 @@ extension MainContentPage {
 
         /// Will fetch last known value from user defaults.
         /// Will persist after `didSet`.
-        var groupMode: GroupMode = GroupMode.lastKnownGroupMode {
+        var groupMode: GroupMode = GroupMode.lastKnown {
             didSet {
                 groupMode.persist()
             }
