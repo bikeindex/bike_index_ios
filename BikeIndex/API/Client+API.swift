@@ -41,24 +41,9 @@ protocol APIEndpoint: Sendable {
 }
 
 /// API client to perform networking operations with only essential state.
-final actor API {
-    /// Retrieve networking essentials, namely host URL, to apply to all requests
-    private var configuration: HostProvider
-    /// Receive the known-good accessToken from Client for stateful network requests.
-    var accessToken: String?
-    private(set) var session: URLSession
-
-    init(configuration: HostProvider, session: URLSession = URLSession.shared) {
-        self.configuration = configuration
-        self.session = session
-    }
-
-    func set(accessToken: String?) async {
-        self.accessToken = accessToken
-    }
-
+extension Client {
     func get(_ endpoint: APIEndpoint) async -> Result<(any ResponseDecodable), Error> {
-        var request = endpoint.request(for: configuration)
+        var request = endpoint.request(for: configuration.hostProvider)
         if endpoint.authorized, let accessToken {
             request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
             )
@@ -89,7 +74,7 @@ final actor API {
     }
 
     func post<T: Decodable>(_ endpoint: APIEndpoint) async -> Result<T, Error> {
-        var request = endpoint.request(for: configuration)
+        var request = endpoint.request(for: configuration.hostProvider)
         if endpoint.authorized, let accessToken {
             request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
             )
@@ -146,11 +131,14 @@ enum HttpMethod: String {
 }
 
 extension HTTPURLResponse {
-
+    /// HTTP 304 "Not Modified"
+    /// https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/304
     var cacheHit: Bool {
         statusCode == 304
     }
 
+    /// HTTP 400 to 499 codes are Client Error Responses
+    /// https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status#client_error_responses
     var clientError: Bool {
         statusCode >= 400 && statusCode < 500
     }
