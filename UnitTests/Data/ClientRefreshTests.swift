@@ -73,7 +73,6 @@ final class ClientRefreshTests: XCTestCase {
         let responseToken = try JSONDecoder().decode(OAuthToken.self, from: inputData)
 
         client.setAuth(responseToken)
-        client.accessToken = client.auth?.accessToken
         XCTAssertEqual(client.state, .authenticated)
 
         let expectation = XCTestExpectation(

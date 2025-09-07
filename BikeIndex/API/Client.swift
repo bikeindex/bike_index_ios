@@ -39,11 +39,10 @@ typealias QueryItemTuple = (name: String, value: String)
 
     // MARK: Authorization State
 
-    /// Full OAuth token response.
-    internal var auth: OAuthToken?
     /// Access token is provided by the OAuth flow to the application from `ASWebAuthenticationSession`.
     /// The access token may be required in requests and it may be used to retrieve the full OAuth token (see ``auth``).
-    internal var accessToken: Token?
+    internal var auth: OAuthToken?
+    /// Persist OAuth tokens in the keychain
     private var keychain = KeychainSwift()
 
     // MARK: Refresh Properties
@@ -100,10 +99,7 @@ typealias QueryItemTuple = (name: String, value: String)
         {
             do {
                 let lastKnownAuth = try JSONDecoder().decode(OAuthToken.self, from: rawData)
-
                 auth = lastKnownAuth
-                accessToken = lastKnownAuth.accessToken
-
                 setupRefreshTimer()
 
                 Logger.api.debug(
@@ -140,7 +136,6 @@ typealias QueryItemTuple = (name: String, value: String)
 
         // Clear app state
         KeychainSwift().delete(Keychain.oauthToken)
-        accessToken = nil
         auth = nil
     }
 
@@ -173,7 +168,6 @@ typealias QueryItemTuple = (name: String, value: String)
             )
             return false
         }
-        accessToken = newToken
 
         // Step 2: Perform the full token fetch now that we have a requisite access code.
         let tokenQuery = [
@@ -193,7 +187,6 @@ typealias QueryItemTuple = (name: String, value: String)
                 return false
             }
             self.auth = fullTokenAuth
-            self.accessToken = fullTokenAuth.accessToken
             self.setupRefreshTimer()
             do {
                 let data = try JSONEncoder().encode(fullTokenAuth)
@@ -264,7 +257,6 @@ typealias QueryItemTuple = (name: String, value: String)
                 }
 
                 self.auth = refreshedToken
-                self.accessToken = refreshedToken.accessToken
                 self.setupRefreshTimer()
                 do {
                     let data = try JSONEncoder().encode(refreshedToken)

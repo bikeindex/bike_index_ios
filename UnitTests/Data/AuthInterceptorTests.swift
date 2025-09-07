@@ -62,7 +62,7 @@ struct AuthInterceptorTests {
             client: mockClient)
         try #require(output != nil)
         #expect(output == WKNavigationActionPolicy.cancel)
-        let accessToken = try #require(mockClient.accessToken)
+        let accessToken = try #require(mockClient.auth?.accessToken)
         #expect(accessToken == rawInput.split(separator: "=")[1])
     }
 
