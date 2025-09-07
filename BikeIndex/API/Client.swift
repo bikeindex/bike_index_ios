@@ -21,8 +21,8 @@ struct HostProvider: Sendable {
 typealias QueryItemTuple = (name: String, value: String)
 
 /// Stateful API client for interacting with bikeindex.org
-/// Wraps ``API`` class.
 /// Controls networking state and loads app configuration from the bundle.
+/// Performs ``get(_:)`` and ``post(_:)`` requests.
 @MainActor
 @Observable class Client {
     // MARK: Configuration and Helpers
