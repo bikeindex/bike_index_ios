@@ -39,6 +39,7 @@ final class BikeModelTests: XCTestCase {
         XCTAssertEqual(bike.publicImages, [])
     }
 
+    // TODO: Bike.swift needs to support additional fields that are not currently available (as of v1.5) to complete this test
     /// Make sure that parsing JSON into a Bike model and encoding it back to JSON is idempotent.
     func test_reading_writing_json() throws {
         let rawJsonData = try XCTUnwrap(MockData.sampleBikeJson.data(using: .utf8))

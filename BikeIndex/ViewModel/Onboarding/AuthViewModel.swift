@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 extension ClientConfiguration {
-    fileprivate var authorizeQueryItems: [URLQueryItem] {
+    internal var authorizeQueryItems: [URLQueryItem] {
         return [
             ("client_id", clientId),
             ("response_type", "code"),

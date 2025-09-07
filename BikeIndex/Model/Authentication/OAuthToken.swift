@@ -11,11 +11,19 @@ typealias Token = String
 
 struct OAuthToken: Codable, Sendable, Equatable {
     // MARK: JSON properties
+    /// OAuth access token strng that must be used for authenticated network requests. Valid until ``expiration``.
     let accessToken: Token
+    /// Ex: "Bearer"
     let tokenType: String
+    /// Ex: 3\_600 (1 hour)
     let expiresIn: TimeInterval
+    /// Refresh token string that can be used to request a refreshed OAuthToken
     let refreshToken: Token
+    /// OAuth Scopes contained in this token.
+    /// By default BikeIndex iOS will request [readUser, writeUser, readBikes, writeBikes] (aka Scopes.allCases)
+    /// See ``ClientConfiguration/oauthScopes`` and ``ClientConfiguration/authorizeQueryItems``
     let scope: [Scope]
+    /// Date of creation
     let createdAt: Date
 
     // MARK: Synthesized property

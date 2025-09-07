@@ -103,7 +103,13 @@ class MockClient: Client {
             )
             return false
         }
-        accessToken = newToken
+        auth = OAuthToken(
+            accessToken: newToken,
+            tokenType: "",
+            expiresIn: 3_600,
+            refreshToken: newToken,  // of course an actual refresh token would be different than the access token
+            scope: Scope.allCases,
+            createdAt: .now)
         return true
     }
 }
