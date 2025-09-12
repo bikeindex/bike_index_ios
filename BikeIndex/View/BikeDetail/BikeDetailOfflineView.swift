@@ -98,12 +98,7 @@ struct BikeDetailOfflineView: View {
                         DetailCell(
                             title: "Year",
                             subtitle: bike.year)
-                        /* TODO: Add these fields to Bike.swift
-                        Text("Frame size")
-                        Text("Frame Material")
-                        Text("QR Stickers")
-                        Text("Created/updated at")
-                         */
+                        // TODO: Add these fields to Bike.swift: Frame Size, Frame Material, QR Stickers, Created At, Updated AT
                         FrameColorsView(bike: bike)
                     } header: {
                         // TODO: Make BikeDetailHeroPhotos open larger photos full screen
@@ -121,18 +116,11 @@ struct BikeDetailOfflineView: View {
                         DetailCell(
                             title: "Propulsion",
                             subtitle: bike.typeOfPropulsion.name)
-//                        Text(bike.largeImage?.absoluteString ?? "large image")
-//                        Text(bike.publicImages.joined(separator: "\n"))
+                        // Text(bike.largeImage?.absoluteString ?? "large image")
+                        // Text(bike.publicImages.joined(separator: "\n"))
                     }
 
-                    /* TODO: Fill out stolen details
-                    Section {
-                        StolenBikeDetailsView(bike: bike)
-                    } footer: {
-                        Text("Editing is not available in offline mode.")
-                            .font(.caption2)
-                    }
-                     */
+                    // TODO: Fill out StolenBikeDetailsView(bike:)
                 }
             }
             .formStyle(.columns)
@@ -166,8 +154,8 @@ struct BikeDetailOfflineView: View {
                 bike.publicImages.append(
                     "https://placecats.com/300/200"
                 )
-//                bike.frameColorSecondary = .covered
-//                bike.frameColorTertiary = .bareMetal
+                // bike.frameColorSecondary = .covered
+                // bike.frameColorTertiary = .bareMetal
                 bike.frameColorSecondary = .red
                 bike.frameColorTertiary = .teal
                 container.mainContext.insert(bike)

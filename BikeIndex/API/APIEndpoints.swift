@@ -136,12 +136,12 @@ enum Search: APIEndpoint {
 }
 
 enum Bikes: APIEndpoint {
-    /// Add a new bike to the index
+    /// Add a new bike to the index via `POST v3/bikes`
     case postBikes(form: BikeRegistration)
-    /// Fetch bike details via `v3/bikes/{id}`
+    /// Fetch bike details via `GET v3/bikes/{id}`
     case bikes(identifier: BikeId)
-    /// Update a bike
-    case putBikes(identifier: BikeId, form: Postable)  // aka v3/bikes/{id} also available with no parameter
+    /// Update a bike (must be owned by this user) via `PUT v3/bikes/{id}`
+    case putBikes(identifier: BikeId, form: Postable)
     case check_if_registered
     case recover(identifier: BikeId)
     case image(identifier: BikeId)
@@ -269,7 +269,7 @@ enum Autocomplete: APIEndpoint {
     func request(for config: HostProvider) -> URLRequest {
         var url = config.host.appending(components: path)
 
-        if case let .manufacturer(query) = self {
+        if case .manufacturer(let query) = self {
             url.append(queryItems: [
                 URLQueryItem(name: "per_page", value: "10"),
                 URLQueryItem(name: "categories", value: "frame_mnfg"),

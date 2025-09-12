@@ -94,7 +94,9 @@ struct RecentlyScannedStickersView: View {
         do {
             try viewModel.cleanUpExpiredStickers(context: modelContext)
         } catch {
-            Logger.model.error("Failed to run regular sticker model clean-up. \(error, privacy: .private)")
+            Logger.model.error(
+                "Failed to run regular sticker model clean-up. \(error, privacy: .private)"
+            )
         }
     }
 }
