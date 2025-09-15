@@ -883,7 +883,7 @@
 			repositoryURL = "https://github.com/EmergeTools/SnapshotPreviews";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.10.22;
+				minimumVersion = 0.10.24;
 			};
 		};
 		04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */ = {

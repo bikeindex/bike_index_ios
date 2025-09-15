@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/EmergeTools/SnapshotPreviews",
       "state" : {
-        "revision" : "d2e18d1d8d8737f424babaeeeda88a63f9325b70",
-        "version" : "0.10.22"
+        "revision" : "0d1c6c282a83e5350899046efd3493558dc2d3c8",
+        "version" : "0.10.24"
       }
     },
     {

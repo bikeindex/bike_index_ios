@@ -29,8 +29,8 @@ jobs:
           echo event ${{ github.event }}
           echo workflow_ref ${{ github.workflow_ref }}
           echo workflow_sha ${{ github.workflow_sha }}
-      - name: Set Xcode 16.4
-        run: sudo xcode-select -s /Applications/Xcode_16.4.app
+      - name: Set Xcode 26.0
+        run: sudo xcode-select -s /Applications/Xcode_26.0.app
       - name: Install tools
         run: |
           brew install rbenv
@@ -47,6 +47,8 @@ jobs:
           BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
         run: |
           echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
+      - name: Install iOS 26 simulator
+        run: xcodebuild -downloadPlatform iOS
       - name: List available simulators
         run: xcodebuild -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
       - name: Run tests
@@ -80,8 +82,8 @@ jobs:
           echo event ${{ github.event }}
           echo workflow_ref ${{ github.workflow_ref }}
           echo workflow_sha ${{ github.workflow_sha }}
-      - name: Set Xcode 16.4
-        run: sudo xcode-select -s /Applications/Xcode_16.4.app
+      - name: Set Xcode 26.0
+        run: sudo xcode-select -s /Applications/Xcode_26.0.app
       - name: Install tools
         run: |
           brew install rbenv
@@ -98,6 +100,8 @@ jobs:
           BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
         run: |
           echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
+      - name: Install iOS 26 simulator
+        run: xcodebuild -downloadPlatform iOS
       - name: List available simulators
         run: xcodebuild -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
       - name: Run tests
@@ -131,8 +135,8 @@ jobs:
           echo event ${{ github.event }}
           echo workflow_ref ${{ github.workflow_ref }}
           echo workflow_sha ${{ github.workflow_sha }}
-      - name: Set Xcode 16.4
-        run: sudo xcode-select -s /Applications/Xcode_16.4.app
+      - name: Set Xcode 26.0
+        run: sudo xcode-select -s /Applications/Xcode_26.0.app
       - name: Install tools
         run: |
           brew install rbenv
@@ -149,6 +153,8 @@ jobs:
           BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
         run: |
           echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
+      - name: Install iOS 26 simulator
+        run: xcodebuild -downloadPlatform iOS
       - name: List available simulators
         run: xcodebuild -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
       - name: Run tests
