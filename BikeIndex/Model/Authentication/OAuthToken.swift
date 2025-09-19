@@ -9,7 +9,7 @@ import Foundation
 
 typealias Token = String
 
-struct OAuthToken: Codable, Equatable {
+struct OAuthToken: Codable, Sendable, Equatable {
     // MARK: JSON properties
     let accessToken: Token
     let tokenType: String

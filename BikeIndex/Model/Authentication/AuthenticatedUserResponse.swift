@@ -9,7 +9,7 @@ import Foundation
 import OSLog
 import SwiftData
 
-struct AuthenticatedUserResponse: Decodable, ResponseModelInstantiable {
+struct AuthenticatedUserResponse: ResponseDecodable, ResponseModelInstantiable {
     typealias ModelInstance = AuthenticatedUser
 
     let id: String

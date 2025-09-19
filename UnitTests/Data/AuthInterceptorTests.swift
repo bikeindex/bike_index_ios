@@ -56,7 +56,7 @@ struct AuthInterceptorTests {
     func test_webview_redirect(rawInput: String) async throws {
         let input = try #require(URL(string: rawInput))
         let interceptor = AuthenticationNavigator.Interceptor(hostProvider: hostProvider)
-        let mockClient = try #require(try MockClient())
+        let mockClient = try MockClient()
         let output = await interceptor.filterCompletedAuthentication(
             input,
             client: mockClient)

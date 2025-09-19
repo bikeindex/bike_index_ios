@@ -117,7 +117,7 @@ struct RecentlyScannedStickersViewModelTests {
 
         do {
             for sticker in input.scannedBikesHistory {
-                try model.persist(context: context, sticker: sticker)
+                _ = try model.persist(context: context, sticker: sticker)
             }
         } catch {
             #expect(Bool(false), "unexpected error \(error)")

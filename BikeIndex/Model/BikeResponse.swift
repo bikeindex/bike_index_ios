@@ -8,12 +8,12 @@
 import Foundation
 import MapKit
 
-struct SingleBikeResponseContainer: Decodable {
+struct SingleBikeResponseContainer: ResponseDecodable {
     var bike: BikeResponse
     var claim_url: URL?
 }
 
-struct MultipleBikeResponseContainer: Decodable {
+struct MultipleBikeResponseContainer: ResponseDecodable {
     var bikes: [BikeResponse]
 }
 

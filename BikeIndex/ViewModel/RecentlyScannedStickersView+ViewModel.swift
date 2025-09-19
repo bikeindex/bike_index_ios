@@ -10,7 +10,6 @@ import SwiftData
 import SwiftUI
 
 extension RecentlyScannedStickersView {
-    @MainActor
     class ViewModel {
         static let limitOfMostRecent = 10
 

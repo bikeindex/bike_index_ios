@@ -79,7 +79,7 @@ struct ManufacturerEntryView: View {
 
             // Next step: run .task to fetch query from the network API
             Task {
-                let fetch_manufacturer = await client.api.get(
+                let fetch_manufacturer = await client.get(
                     Autocomplete.manufacturer(query: manufacturerSearchText))
                 switch fetch_manufacturer {
                 case .success(let success):
