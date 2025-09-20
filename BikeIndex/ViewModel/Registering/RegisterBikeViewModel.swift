@@ -25,6 +25,9 @@ extension RegisterBikeView {
             self.propulsion = propulsion
             self.stolenRecord = stolenRecord
             self.output = output
+
+            self.bike.createdAt = .now
+            self.bike.updatedAt = .now
         }
 
         // MARK: Authoritative State
