@@ -19,7 +19,7 @@ struct RegisterBikeViewModelTests {
         let testStolenRecord = StolenRecord(phone: "", city: "")
         let testOutput = AddBikeOutput()
 
-        let system = await ViewModel(
+        let system = ViewModel(
             mode: .myOwnBike,
             bike: testBike,
             propulsion: testPropulsion,
@@ -39,6 +39,9 @@ struct RegisterBikeViewModelTests {
         #expect(
             system.remainingRequiredFields == "¼",
             "Frame color should always provide '¼' valid because it has a default value.")
+
+        #expect(system.bike.createdAt == .distantPast)
+        #expect(system.bike.updatedAt == .distantPast)
 
         testBike.manufacturerName = "Test"
         system.manufacturerSearchText = "Test"

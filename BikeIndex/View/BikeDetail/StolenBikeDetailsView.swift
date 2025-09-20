@@ -46,6 +46,8 @@ struct StolenBikeDetailsView: View {
         stolenCoordinateLatitude: 0.0,
         stolenCoordinateLongitude: 0.0,
         url: URL(stringLiteral: "about:blank"),
-        publicImages: [])
+        publicImages: [],
+        createdAt: .now,
+        updatedAt: .now)
     StolenBikeDetailsView(bike: bike)
 }
