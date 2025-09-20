@@ -83,8 +83,8 @@ import SwiftData
     var apiUrl: URL?
     var publicImages: [String]
 
-    var createdAt: Date = Date()
-    var updatedAt: Date = Date()
+    var createdAt: Date = Date.distantPast
+    var updatedAt: Date = Date.distantPast
 
     struct Constants {
         /// The range of supported years for Bike models
