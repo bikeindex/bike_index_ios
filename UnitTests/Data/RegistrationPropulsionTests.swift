@@ -26,8 +26,8 @@ final class RegistrationPropulsionTests: XCTestCase {
         stolenCoordinateLongitude: 0,
         url: URL(string: "about:blank")!,
         publicImages: [],
-        createdAt: Date(),
-        updatedAt: Date())
+        createdAt: .now,
+        updatedAt: .now)
 
     func test_propulsion_invalid_states_var_closed() throws {
         var propulsion = BikeRegistration.Propulsion(
