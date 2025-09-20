@@ -23,19 +23,15 @@ extension MainContentPage {
         // Normal operation handling
         var fetching = true
         // Error Handling
-        public var lastError: ViewModel.Error? = nil
+        var lastError: ViewModel.Error? = nil
         // Alert presentation
-        var showError: Bool = false {
-            didSet {
-                if showError { fetching = false }
-            }
-        }
+        var showError: Bool = false
 
         // MARK: Query Management
 
         /// Will fetch last known value from user defaults.
         /// Will persist after `didSet`.
-        var groupMode: GroupMode = GroupMode.lastKnownGroupMode {
+        var groupMode: GroupMode = GroupMode.lastKnown {
             didSet {
                 groupMode.persist()
             }
@@ -48,8 +44,11 @@ extension MainContentPage {
 
         // MARK: Child View State
 
-        // Control the navigation hierarchy for all views after this one
+        /// Control the navigation hierarchy for all views after this one
         var path = NavigationPath()
+
+        /// Present a sheet for Recently Scanned Stickers
+        var displayRecentlyScannedStickers: Bool = false
 
         // MARK: - Network Operations
 
@@ -76,6 +75,7 @@ extension MainContentPage {
                 Logger.model.error("Failed to user info: \(error)")
                 lastError = error
                 showError = true
+                fetching = false
             }
         }
 
@@ -137,9 +137,9 @@ extension MainContentPage {
                         let descriptor = FetchDescriptor<Bike>(predicate: predicate)
 
                         let bikes = try modelContext.fetch(descriptor)
-                        bikes.forEach {
-                            $0.authenticatedOwner = myProfile
-                            $0.owner = myProfile.user
+                        for bike in bikes {
+                            bike.authenticatedOwner = myProfile
+                            bike.owner = myProfile.user
                         }
                         myProfile.bikes = bikes
                     }

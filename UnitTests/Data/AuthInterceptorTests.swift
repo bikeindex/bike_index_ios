@@ -13,6 +13,7 @@ import WebKit
 @testable import BikeIndex
 
 /// Tests for
+@MainActor
 struct AuthInterceptorTests {
 
     let hostProvider = HostProvider(host: URL("https://bikeindex.org"))
@@ -26,8 +27,8 @@ struct AuthInterceptorTests {
     ])
     func test_redirect_web_signin_to_app(rawInput: String) async throws {
         let input = try #require(URL(string: rawInput))
-        let interceptor = await AuthenticationNavigator.Interceptor(hostProvider: hostProvider)
-        let output = await interceptor.filterSignInRedirect(input)
+        let interceptor = AuthenticationNavigator.Interceptor(hostProvider: hostProvider)
+        let output = interceptor.filterSignInRedirect(input)
         try #require(output != nil)
         #expect(output == WKNavigationActionPolicy.cancel)
     }
@@ -43,8 +44,8 @@ struct AuthInterceptorTests {
     ])
     func test_redirect_web_signing_irrelevant_url(rawInput: String) async throws {
         let input = try #require(URL(string: rawInput))
-        let interceptor = await AuthenticationNavigator.Interceptor(hostProvider: hostProvider)
-        let output = await interceptor.filterSignInRedirect(input)
+        let interceptor = AuthenticationNavigator.Interceptor(hostProvider: hostProvider)
+        let output = interceptor.filterSignInRedirect(input)
         try #require(output == nil)
     }
 
@@ -54,14 +55,14 @@ struct AuthInterceptorTests {
     @Test(arguments: ["bikeindex://?code=edf1d0dec505adfd97e89ad2b76c2e71"])
     func test_webview_redirect(rawInput: String) async throws {
         let input = try #require(URL(string: rawInput))
-        let interceptor = await AuthenticationNavigator.Interceptor(hostProvider: hostProvider)
-        let mockClient = try await #require(try MockClient())
+        let interceptor = AuthenticationNavigator.Interceptor(hostProvider: hostProvider)
+        let mockClient = try #require(try MockClient())
         let output = await interceptor.filterCompletedAuthentication(
             input,
             client: mockClient)
         try #require(output != nil)
         #expect(output == WKNavigationActionPolicy.cancel)
-        let accessToken = try #require(await mockClient.accessToken)
+        let accessToken = try #require(mockClient.accessToken)
         #expect(accessToken == rawInput.split(separator: "=")[1])
     }
 
@@ -71,8 +72,8 @@ struct AuthInterceptorTests {
     ])
     func test_webview_redirect_non_intercepted(rawInput: String) async throws {
         let input = try #require(URL(string: rawInput))
-        let interceptor = await AuthenticationNavigator.Interceptor(hostProvider: hostProvider)
-        let mockClient = try await #require(try Client())
+        let interceptor = AuthenticationNavigator.Interceptor(hostProvider: hostProvider)
+        let mockClient = try #require(try Client())
         let output = await interceptor.filterCompletedAuthentication(
             input,
             client: mockClient)

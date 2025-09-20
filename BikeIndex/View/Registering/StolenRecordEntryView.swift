@@ -9,16 +9,23 @@ import SwiftUI
 
 struct StolenRecordEntryView: View {
     @Binding var record: StolenRecord
+    @FocusState.Binding var focus: RegisterBikeView.Field?
 
     var body: some View {
         Section {
-            TextField("Who to contact when this bike is found", text: $record.phone)
-                .keyboardType(.phonePad)
-
+            TextField(
+                "Who to contact when this bike is found",
+                text: $record.phone
+            )
+            .keyboardType(.phonePad)
+            .focused($focus, equals: .phoneNumber)
+            .id(RegisterBikeView.Field.phoneNumber)
         } header: {
-            Text("Phone Number")
+            RequiredField(
+                valid: record.isPhoneValid,
+                label: "Phone Number")
         } footer: {
-            Text("**Required** to register a stolen bike")
+            Text("Phone Number is required to register a stolen bike")
         }
 
         Section {
@@ -30,9 +37,31 @@ struct StolenRecordEntryView: View {
             }
 
             TextField(
-                "Address or intersection", text: Binding($record.address, replacingNilWith: ""))
-            TextField("City", text: $record.city)
-            TextField("Postal Code", text: Binding($record.zipcode, replacingNilWith: ""))
+                "Address or intersection", text: Binding($record.address, replacingNilWith: "")
+            )
+            .focused($focus, equals: .addressOrIntersection)
+            .id(RegisterBikeView.Field.addressOrIntersection)
+
+            LabeledContent {
+                TextField("City is required", text: $record.city)
+                    .focused($focus, equals: .city)
+                    .id(RegisterBikeView.Field.city)
+            } label: {
+                RequiredField(
+                    valid: record.isCityValid,
+                    label: "City"
+                )
+                .foregroundStyle(.secondary)
+            }
+
+            LabeledContent {
+                TextField("", text: Binding($record.zipcode, replacingNilWith: ""))
+                    .focused($focus, equals: .postalCode)
+                    .id(RegisterBikeView.Field.postalCode)
+            } label: {
+                Text("Postal Code")
+                    .foregroundStyle(.secondary)
+            }
 
             if let country = record.country,
                 country == Countries.us.isoCode
@@ -48,22 +77,18 @@ struct StolenRecordEntryView: View {
 
         } header: {
             Text("Where was it stolen?")
-        } footer: {
-            Text("**City** is required to register a stolen bike")
         }
 
     }
 }
 
 #Preview {
-    var backingRecord = StolenRecord(phone: "", city: "")
-    let record = Binding {
-        backingRecord
-    } set: { value in
-        backingRecord = value
-    }
+    @Previewable @State var record = StolenRecord(phone: "", city: "")
+    @Previewable @FocusState var focus: RegisterBikeView.Field?
 
-    return Form(content: {
-        StolenRecordEntryView(record: record)
-    })
+    Form {
+        StolenRecordEntryView(
+            record: $record,
+            focus: $focus)
+    }
 }

@@ -1,5 +1,5 @@
 {
-  "originHash" : "e9b1cf963d0fb17cfd73f99e9ab03c749fc91d82e420d787f9cc5643498ce5e9",
+  "originHash" : "9259fcf422692f5f3faa294a4fcee9f5ad053185cbd9f25442d308349c207968",
   "pins" : [
     {
       "identity" : "accessibilitysnapshot",
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/EmergeTools/SnapshotPreviews",
       "state" : {
-        "revision" : "d2e18d1d8d8737f424babaeeeda88a63f9325b70",
-        "version" : "0.10.22"
+        "revision" : "0d1c6c282a83e5350899046efd3493558dc2d3c8",
+        "version" : "0.10.24"
       }
     },
     {
@@ -65,6 +65,15 @@
       }
     },
     {
+      "identity" : "swiftui-flow",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tevelee/SwiftUI-Flow.git",
+      "state" : {
+        "revision" : "d227f999b2894ab737ef5786d9b14d02d3e5362e",
+        "version" : "3.1.1"
+      }
+    },
+    {
       "identity" : "urlencodedform",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/interactord/URLEncodedForm.git",
@@ -78,8 +87,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/danielsaidi/WebViewKit.git",
       "state" : {
-        "revision" : "bae09cfa4bae29f22dcf9d98f197aba50b5dc4bb",
-        "version" : "0.5.0"
+        "revision" : "a24f91e6dceb6255f1652482c8f2d0a57e391b55",
+        "version" : "1.0.0"
       }
     }
   ],

@@ -151,7 +151,7 @@ struct ContentBikeButtonView: View {
         configurations: config
     )
 
-    samples.forEach { model in
+    for model in samples {
         mockContainer.mainContext.insert(model)
     }
     try! mockContainer.mainContext.save()

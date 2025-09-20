@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 
+/// Corresponds to https://github.com/bikeindex/bike_index/blob/main/app/models/manufacturer.rb#L24
 @Model class AutocompleteManufacturer {
     var text: String
     var category: String

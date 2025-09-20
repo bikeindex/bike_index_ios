@@ -42,7 +42,7 @@ struct AuthSignInView: View {
                     /// the user decides to dismiss it.
                     if let scan = newValue, navigator.wkWebView?.url != scan.url {
                         navigator.wkWebView?.load(URLRequest(url: scan.url))
-                        title = scan.sticker.identifier
+                        title = scan.sticker
                     }
                 }
             )

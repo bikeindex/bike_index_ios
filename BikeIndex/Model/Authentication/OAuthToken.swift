@@ -70,24 +70,3 @@ extension OAuthToken {
         Date() < expiration
     }
 }
-
-enum Scope: String, CaseIterable, Identifiable {
-    var id: Self { self }
-
-    case readUser = "read_user"
-    case writeUser = "write_user"
-
-    case readBikes = "read_bikes"
-    case writeBikes = "write_bikes"
-}
-
-extension [Scope] {
-    /// Transform `self` (an array of ``Scope``s) into a string delimited by plus signs
-    /// that only occur between ``Scope`` values. (Do not add a trailing "+").
-    var queryItem: String {
-        self.enumerated().reduce(into: "") { partialResult, iteration in
-            partialResult += iteration.element.rawValue
-            partialResult += (iteration.offset + 1 < self.count) ? "+" : ""
-        }
-    }
-}

@@ -1,46 +1,35 @@
 //
-//  AuthenticatedUITestCase.swift
-//  UITests
+//  Robot+Authentication.swift
+//  BikeIndex
 //
-//  Created by Jack on 12/4/24.
+//  Created by Milo Wyner on 6/20/25.
 //
 
 import OSLog
 import XCTest
 
-extension XCTestCase {
-    @MainActor
-    func attemptOAuthAuthorize(app: XCUIApplication) throws {
-        let timeout: TimeInterval = 10
-
-        /// If the Authorized Applications ever lapses (https://bikeindex.org/oauth/authorized_applications) then
-        /// the CI runner will begin to fail tests and should have this prompt in the sign-in page.
-        let guardAgainstAuthorizationRequired = app.webViews.firstMatch.staticTexts[
-            "AUTHORIZATION REQUIRED"]
-        if guardAgainstAuthorizationRequired.waitForExistence(timeout: timeout) {
-            let authorizeButton = app.webViews.firstMatch.buttons["Authorize"]
-            if authorizeButton.waitForExistence(timeout: timeout) {
-                authorizeButton.tap()
-                authorizeButton.tap()
-            }
-        }
+extension Robot {
+    @discardableResult
+    func startWithSignIn() throws -> Self {
+        try start()
+            .signIn()
     }
 
-    @MainActor
-    func signIn(app: XCUIApplication) throws {
+    @discardableResult
+    func signIn() throws -> Self {
         // Step 1: Open the Sign In Page
         let signIn = app.buttons["SignIn"]
         let result = signIn.waitForExistence(timeout: 2)
 
         guard result else {
             Logger.tests.debug("Already signed-in, skipping UI-test sign-in.")
-            return
+            return self
         }
 
         signIn.tap()
 
         // Try to tap Authorize __if it exists__, continue if it is absent.
-        try attemptOAuthAuthorize(app: app)
+        attemptOAuthAuthorize()
 
         let timeout: TimeInterval = 120
 
@@ -69,11 +58,28 @@ extension XCTestCase {
         loginButton.tap()
 
         // Step 3: Make sure that this OAuth Application is authorized.
-        try authorizeOAuthApplication(app: app)
+        authorizeOAuthApplication()
+
+        return self
     }
 
-    @MainActor
-    func authorizeOAuthApplication(app: XCUIApplication) throws {
+    private func attemptOAuthAuthorize() {
+        let timeout: TimeInterval = 10
+
+        /// If the Authorized Applications ever lapses (https://bikeindex.org/oauth/authorized_applications) then
+        /// the CI runner will begin to fail tests and should have this prompt in the sign-in page.
+        let guardAgainstAuthorizationRequired = app.webViews.firstMatch.staticTexts[
+            "AUTHORIZATION REQUIRED"]
+        if guardAgainstAuthorizationRequired.waitForExistence(timeout: timeout) {
+            let authorizeButton = app.webViews.firstMatch.buttons["Authorize"]
+            if authorizeButton.waitForExistence(timeout: timeout) {
+                authorizeButton.tap()
+                authorizeButton.tap()
+            }
+        }
+    }
+
+    private func authorizeOAuthApplication() {
         let timeout: TimeInterval = 10
 
         /// If the Authorized Applications ever lapses (https://bikeindex.org/oauth/authorized_applications) then
@@ -88,5 +94,4 @@ extension XCTestCase {
             authorizeButton.tap()
         }
     }
-
 }

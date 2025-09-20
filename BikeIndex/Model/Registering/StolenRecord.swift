@@ -7,6 +7,9 @@
 
 import Foundation
 
+/// Data model to represent a stolen bike when creating a new registration.
+/// Required fields are phone and city.
+/// See https://bikeindex.org/documentation/api_v3#!/bikes/POST_version_bikes_format_post_3
 struct StolenRecord: Encodable {
     var phone: String
     var city: String
@@ -21,4 +24,14 @@ struct StolenRecord: Encodable {
     var police_report_department: String?
     var show_address: Bool?
     var theft_description: String?
+
+    // MARK: Validation
+
+    var isPhoneValid: Bool {
+        !phone.isEmpty
+    }
+
+    var isCityValid: Bool {
+        !city.isEmpty
+    }
 }

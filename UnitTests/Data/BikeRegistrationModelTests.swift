@@ -1,5 +1,5 @@
 //
-//  BikeRegistration.swift
+//  BikeRegistrationModelTests.swift
 //  UnitTests
 //
 //  Created by Jack on 12/28/23.
@@ -10,7 +10,7 @@ import Testing
 
 @testable import BikeIndex
 
-struct BikeRegistrationTest {
+struct BikeRegistrationModelTests {
     /// Ensure that the BikeRegistration model uses lower-case values for the frame colors.
     /// All other frame color usages must be title-case.
     @Test func test_lowercase_color() throws {

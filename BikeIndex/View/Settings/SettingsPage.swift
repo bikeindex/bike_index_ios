@@ -166,12 +166,14 @@ struct SettingsPage: View {
                     constantLink: .privacyPolicy,
                     host: client.configuration.host
                 )
+                .environment(client)
                 .navigationTitle("Privacy Policy")
             case .termsOfService:
                 NavigableWebView(
                     constantLink: .termsOfService,
                     host: client.configuration.host
                 )
+                .environment(client)
                 .navigationTitle("Terms of Service")
             }
         }

@@ -16,7 +16,7 @@ struct MainContentPage: View {
     @Environment(Client.self) var client
 
     /// ViewModel for state management.
-    /// Forwards dynamic query changes to ``BikesList`` to support dynamic grouping selection.
+    /// Forwards dynamic query changes to ``BikesGridContainerView`` to support dynamic grouping selection.
     @State private var viewModel = ViewModel()
 
     var body: some View {
@@ -31,7 +31,7 @@ struct MainContentPage: View {
                     }
                 }
 
-                BikesList(
+                BikesGridContainerView(
                     path: $viewModel.path,
                     fetching: $viewModel.fetching,
                     sectionGroup: viewModel.groupMode,
@@ -42,7 +42,8 @@ struct MainContentPage: View {
                     path: $viewModel.path,
                     loading: $viewModel.fetching,
                     groupMode: $viewModel.groupMode,
-                    sortOrder: $viewModel.sortOrder)
+                    sortOrder: $viewModel.sortOrder,
+                    displayRecentlyScannedStickers: $viewModel.displayRecentlyScannedStickers)
             }
             .navigationTitle("Bike Index")
             .navigationDestination(for: MainContent.self) { selection in
@@ -67,13 +68,14 @@ struct MainContentPage: View {
             }
             .navigationDestination(for: Bike.BikeIdentifier.self) { identifier in
                 /// ``ContentBikeButtonView`` uses `NavigationLink`s to ``Bike/identifier``.
-                BikeDetailView(
+                BikeDetailWebView(
                     bikeIdentifier: identifier,
                     host: client.configuration.host)
             }
             .sheet(
                 item: $deeplinkManager.scannedBike,
                 content: { scan in
+                    // Open the new sticker
                     let viewModel = ScannedBikePage.ViewModel(
                         scan: scan,
                         path: viewModel.path,
@@ -88,9 +90,15 @@ struct MainContentPage: View {
                         }
                 }
             )
-            .alert(isPresented: $viewModel.showError, error: viewModel.lastError) {
-                Text("Okay")
-            }
+            .fullScreenCover(
+                isPresented: $viewModel.displayRecentlyScannedStickers,
+                content: {
+                    RecentlyScannedStickersView(display: $viewModel.displayRecentlyScannedStickers)
+                        .environment(client)
+                }
+            )
+            // empty action block to rely on default Button("OK") behavior
+            .alert(isPresented: $viewModel.showError, error: viewModel.lastError) {}
             .onAppear {
                 Logger.views.debug(
                     "Starting main content page with deeplink scanned bike \(String(describing: deeplinkManager.scannedBike))"

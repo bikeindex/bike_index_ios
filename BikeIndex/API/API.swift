@@ -89,8 +89,7 @@ final class API {
         }
     }
 
-    /// Endpoint
-    func post(_ endpoint: APIEndpoint) async -> Result<(any Decodable), Error> {
+    func post<T: Decodable>(_ endpoint: APIEndpoint) async -> Result<T, Error> {
         var request = endpoint.request(for: configuration)
         if endpoint.authorized, let accessToken {
             request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
@@ -103,7 +102,7 @@ final class API {
                 Logger.api.error(
                     "\(#function) Failed to find model for POST body encoding for endpoint \(String(reflecting: endpoint))"
                 )
-                return .failure(APIError.postMissingContents(endpoint: endpoint))
+                return .failure(APIError.postMissingContents(endpoint: endpoint).error)
             }
             request.httpBody = try URLEncodedFormEncoder().encode(requestModel)
         } catch {
@@ -120,7 +119,11 @@ final class API {
             Logger.api.debug("\(#function) posted data with response \(response)")
 
             return Result {
-                try jsonDecoder.decode(endpoint.responseModel, from: data)
+                if let result = try jsonDecoder.decode(endpoint.responseModel, from: data) as? T {
+                    return result
+                } else {
+                    throw APIError.failedToDecodedExpectedModelType(response)
+                }
             }
         } catch {
             Logger.api.error(

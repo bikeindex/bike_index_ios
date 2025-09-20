@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-/// Display attirbution captions about the app, usually in a SettingsPage footer
+/// Display attribution captions about the app, usually in a SettingsPage footer
 struct SettingsAttributionCaption: View {
     let appVersion = AppVersionInfo()
 
