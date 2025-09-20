@@ -83,8 +83,8 @@ import SwiftData
     var apiUrl: URL?
     var publicImages: [String]
 
-    var createdAt: Date = Date.distantPast
-    var updatedAt: Date = Date.distantPast
+    var createdAt: Date
+    var updatedAt: Date
 
     struct Constants {
         /// The range of supported years for Bike models
@@ -144,6 +144,8 @@ import SwiftData
         self.url = url
         self.apiUrl = apiUrl
         self.publicImages = publicImages
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
     }
 
     init() {
@@ -168,6 +170,8 @@ import SwiftData
         url = defaultUrl
         apiUrl = defaultUrl
         publicImages = []
+        createdAt = .distantPast
+        updatedAt = .distantPast
     }
 
     // https://www.hackingwithswift.com/quick-start/swiftdata/how-to-create-derived-attributes-with-swiftdata
