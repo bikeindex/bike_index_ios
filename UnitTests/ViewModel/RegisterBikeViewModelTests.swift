@@ -40,8 +40,8 @@ struct RegisterBikeViewModelTests {
             system.remainingRequiredFields == "¼",
             "Frame color should always provide '¼' valid because it has a default value.")
 
-        #expect(system.bike.createdAt == .distantPast)
-        #expect(system.bike.updatedAt == .distantPast)
+        #expect(system.bike.createdAt == .now)
+        #expect(system.bike.updatedAt == .now)
 
         testBike.manufacturerName = "Test"
         system.manufacturerSearchText = "Test"
