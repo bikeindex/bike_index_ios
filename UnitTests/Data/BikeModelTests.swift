@@ -26,6 +26,11 @@ final class BikeModelTests: XCTestCase {
         XCTAssertEqual(bike.manufacturerName, "Giant")
         XCTAssertEqual(bike.serial, "GS020355")
 
+        XCTAssertEqual(bike.createdAt, Date.init(timeIntervalSince1970: 1_377_151_200))
+        XCTAssertEqual(bike.createdAt.description, "2013-08-22 06:00:00 +0000")
+        XCTAssertEqual(bike.updatedAt, Date.init(timeIntervalSince1970: 1_585_269_739))
+        XCTAssertEqual(bike.updatedAt.description, "2020-03-27 00:42:19 +0000")
+
         XCTAssertEqual(bike.status, .stolen)
         let stolenCoordinates = try XCTUnwrap(bike.stolenCoordinates)
         XCTAssertEqual(
@@ -39,6 +44,7 @@ final class BikeModelTests: XCTestCase {
         XCTAssertEqual(bike.publicImages, [])
     }
 
+    // TODO: This can be completed when Bike.swift and BikeResponse.swift support **ALL** fields, full parity with the API
     /// Make sure that parsing JSON into a Bike model and encoding it back to JSON is idempotent.
     func test_reading_writing_json() throws {
         let rawJsonData = try XCTUnwrap(MockData.sampleBikeJson.data(using: .utf8))
