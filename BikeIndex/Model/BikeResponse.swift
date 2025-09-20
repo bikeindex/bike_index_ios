@@ -46,13 +46,10 @@ struct BikeResponse: ResponseModelInstantiable {
     let api_url: URL?
     let public_images: [String]?
 
-    /// Requires decoder to assign dateDecodingStrategy to .secondsSince1970
-    let registration_created_at: Date
-    let registration_updated_at: Date
+    let registration_created_at: TimeInterval
+    let registration_updated_at: TimeInterval
 
     // MARK: - ResponseModelInstantiable for BikeResponse
-
-    typealias ModelInstance = Bike
 
     func modelInstance() -> Bike {
         let stolenCoordinateLatitude: CLLocationDegrees
@@ -103,8 +100,8 @@ struct BikeResponse: ResponseModelInstantiable {
             url: url,
             apiUrl: api_url,
             publicImages: public_images ?? [],
-            createdAt: registration_created_at,
-            updatedAt: registration_updated_at
+            createdAt: Date(timeIntervalSince1970: registration_created_at),
+            updatedAt: Date(timeIntervalSince1970: registration_updated_at)
         )
     }
 }
