@@ -63,7 +63,7 @@
         "scale" : 1,
         "translation-in-points" : [
           0,
-          5
+          -40
         ]
       },
       "shadow-specializations" : [

@@ -22,10 +22,10 @@
           "image-name" : "logo 2.svg",
           "name" : "logo_blue_black",
           "position" : {
-            "scale" : 10.4,
+            "scale" : 9.5,
             "translation-in-points" : [
               0,
-              34.3
+              0
             ]
           }
         }
