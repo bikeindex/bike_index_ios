@@ -1,7 +1,5 @@
 {
-  "fill" : {
-    "solid" : "srgb:1.00000,1.00000,1.00000,1.00000"
-  },
+  "fill" : "automatic",
   "groups" : [
     {
       "blur-material" : null,
@@ -32,16 +30,16 @@
             },
             {
               "appearance" : "tinted",
-              "value" : false
+              "value" : true
             }
           ],
-          "image-name" : "shield-two-tone-black-logo.svg",
+          "image-name" : "shield-1024.svg",
           "name" : "logo 3",
           "position" : {
-            "scale" : 7.25,
+            "scale" : 1,
             "translation-in-points" : [
               0,
-              34.3203125
+              0
             ]
           }
         }
@@ -64,7 +62,7 @@
         {
           "appearance" : "tinted",
           "value" : {
-            "kind" : "neutral",
+            "kind" : "none",
             "opacity" : 1
           }
         }

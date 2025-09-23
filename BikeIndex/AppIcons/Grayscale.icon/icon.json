@@ -1,10 +1,18 @@
 {
-  "fill" : {
-    "solid" : "srgb:1.00000,1.00000,1.00000,1.00000"
-  },
+  "fill-specializations" : [
+    {
+      "value" : {
+        "solid" : "srgb:1.00000,1.00000,1.00000,1.00000"
+      }
+    },
+    {
+      "appearance" : "dark",
+      "value" : "automatic"
+    }
+  ],
   "groups" : [
     {
-      "blur-material" : null,
+      "blur-material" : 0.5,
       "layers" : [
         {
           "fill-specializations" : [
@@ -19,13 +27,13 @@
             }
           ],
           "glass" : true,
-          "image-name" : "logo_white.svg",
+          "image-name" : "white-text-1024.svg",
           "name" : "logo 3",
           "position" : {
-            "scale" : 4,
+            "scale" : 1,
             "translation-in-points" : [
               0,
-              34.3203125
+              0
             ]
           }
         }
@@ -37,7 +45,7 @@
       },
       "specular" : true,
       "translucency" : {
-        "enabled" : false,
+        "enabled" : true,
         "value" : 0.5
       }
     }

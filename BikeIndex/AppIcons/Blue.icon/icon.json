@@ -21,13 +21,13 @@
             }
           ],
           "glass" : true,
-          "image-name" : "logo_white.svg",
-          "name" : "logo_white",
+          "image-name" : "white-on-blue-border.svg",
+          "name" : "white-on-blue-border",
           "position" : {
-            "scale" : 4,
+            "scale" : 1,
             "translation-in-points" : [
               0,
-              34.3
+              0
             ]
           }
         }

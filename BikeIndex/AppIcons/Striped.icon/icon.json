@@ -10,7 +10,7 @@
           "glass" : true,
           "image-name-specializations" : [
             {
-              "value" : "logo_striped.svg"
+              "value" : "striped-dark-1024.svg"
             },
             {
               "appearance" : "dark",
@@ -19,10 +19,10 @@
           ],
           "name" : "logo_striped-white-pxm-edit",
           "position" : {
-            "scale" : 14.5,
+            "scale" : 1,
             "translation-in-points" : [
-              -645,
-              45.34375
+              0,
+              0
             ]
           }
         },
