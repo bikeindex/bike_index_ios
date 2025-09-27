@@ -43,9 +43,9 @@ To automate this process follow these steps:
 | -- | -- |
 | ![Light Grayscale-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Grayscale-in-app.imageset/AppIcon-light.png) | ![Dark Grayscale-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Grayscale-in-app.imageset/AppIcon-dark.png) |
 
-| Shield (Light) | Shield (Dark) |
+| Navy (Light) | Navy (Dark) |
 | -- | -- |
-| ![Light Shield-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Shield-in-app.imageset/AppIcon-light.png) | ![Dark Shield-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Shield-in-app.imageset/AppIcon-dark.png) | 
+| ![Light Navy-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Navy-in-app.imageset/AppIcon-light.png) | ![Dark Navy-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Navy-in-app.imageset/AppIcon-dark.png) | 
 
 | Striped-in-app (Light) | Striped-in-app (Dark) |
 | -- | -- |
