@@ -1,17 +1,22 @@
 {
-  "fill" : {
-    "linear-gradient" : [
-      "extended-gray:0.00000,1.00000",
-      "display-p3:0.17255,0.24314,0.31373,1.00000"
-    ]
-  },
+  "fill" : "automatic",
   "groups" : [
     {
+      "blur-material" : null,
       "layers" : [
         {
-          "blend-mode" : "normal",
+          "blend-mode-specializations" : [
+            {
+              "appearance" : "tinted",
+              "value" : "normal"
+            }
+          ],
           "fill-specializations" : [
             {
+              "value" : "none"
+            },
+            {
+              "appearance" : "dark",
               "value" : "none"
             },
             {
@@ -19,23 +24,52 @@
               "value" : "none"
             }
           ],
-          "image-name" : "logo 2.svg",
-          "name" : "logo_blue_black",
+          "glass-specializations" : [
+            {
+              "value" : true
+            },
+            {
+              "appearance" : "tinted",
+              "value" : true
+            }
+          ],
+          "image-name" : "shield-1024.svg",
+          "name" : "logo 3",
           "position" : {
-            "scale" : 9.5,
+            "scale" : 1,
             "translation-in-points" : [
               0,
-              0
+              -40
             ]
           }
         }
       ],
-      "shadow" : {
-        "kind" : "neutral",
-        "opacity" : 0.5
-      },
+      "lighting" : "individual",
+      "shadow-specializations" : [
+        {
+          "value" : {
+            "kind" : "layer-color",
+            "opacity" : 0.5
+          }
+        },
+        {
+          "appearance" : "dark",
+          "value" : {
+            "kind" : "neutral",
+            "opacity" : 0.5
+          }
+        },
+        {
+          "appearance" : "tinted",
+          "value" : {
+            "kind" : "none",
+            "opacity" : 1
+          }
+        }
+      ],
+      "specular" : true,
       "translucency" : {
-        "enabled" : true,
+        "enabled" : false,
         "value" : 0.5
       }
     }
