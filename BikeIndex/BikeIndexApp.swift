@@ -8,6 +8,7 @@
 import OSLog
 import SwiftData
 import SwiftUI
+import AppIntents
 
 @main
 struct BikeIndexApp: App {
@@ -81,5 +82,16 @@ struct BikeIndexApp: App {
         let sharedModelContainer = try! ModelContainer(
             for: schema, configurations: [modelConfiguration])
         self.sharedModelContainer = sharedModelContainer
+
+        setupAppIntentsDependancies()
+    }
+
+    // MARK: - App Intents Setup
+
+    /// Registers the app's `ModelContainer` with the `AppDependencyManager`
+    /// This allows App Intents (such as Siri and Shortcuts) to access SwiftData models.
+    func setupAppIntentsDependancies() {
+        AppDependencyManager.shared.add(key: "ModelContainer", dependency: sharedModelContainer)
+        BikeIndexShortcutsProvider.updateAppShortcutParameters()
     }
 }

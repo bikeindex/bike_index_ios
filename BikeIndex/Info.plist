@@ -19,6 +19,8 @@
 	<array>
 		<string>remote-notification</string>
 	</array>
+	<key>NSSiriUsageDescription</key>
+	<string>Siri interacts with the app to complete your shortcuts.</string>
 	<key>API_SECRET</key>
 	<string>$(API_SECRET)</string>
 	<key>API_CLIENT_ID</key>
