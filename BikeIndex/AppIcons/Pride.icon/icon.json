@@ -2,6 +2,12 @@
   "fill" : "automatic",
   "groups" : [
     {
+      "blend-mode-specializations" : [
+        {
+          "appearance" : "dark",
+          "value" : "normal"
+        }
+      ],
       "blur-material" : null,
       "layers" : [
         {
@@ -13,8 +19,8 @@
           ],
           "glass" : true,
           "hidden" : false,
-          "image-name" : "logo_pride_2025-highest-alpha.png",
-          "name" : "logo_pride_2025-highest-alpha",
+          "image-name" : "pride-blue-on-blue.svg",
+          "name" : "pride-blue-on-blue",
           "position" : {
             "scale" : 1,
             "translation-in-points" : [
@@ -47,8 +53,8 @@
             }
           ],
           "glass" : true,
-          "image-name" : "logo_pride_2025-badge-alpha.png",
-          "name" : "logo_pride_2025-badge-alpha",
+          "image-name" : "pride-shield-raster.png",
+          "name" : "pride-shield-raster",
           "position" : {
             "scale" : 1,
             "translation-in-points" : [
@@ -100,8 +106,29 @@
         {
           "fill" : "none",
           "glass" : false,
-          "image-name" : "pride-base.jpg",
-          "name" : "pride-base"
+          "image-name" : "pride-base.svg",
+          "name" : "pride-base",
+          "position-specializations" : [
+            {
+              "value" : {
+                "scale" : 1,
+                "translation-in-points" : [
+                  0,
+                  0
+                ]
+              }
+            },
+            {
+              "idiom" : "watchOS",
+              "value" : {
+                "scale" : 1.07,
+                "translation-in-points" : [
+                  0,
+                  0
+                ]
+              }
+            }
+          ]
         }
       ],
       "shadow" : {

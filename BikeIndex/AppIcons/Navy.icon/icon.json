@@ -19,13 +19,13 @@
               "value" : "none"
             }
           ],
-          "image-name" : "logo 2.svg",
+          "image-name" : "white-on-blue-border.svg",
           "name" : "logo_blue_black",
           "position" : {
-            "scale" : 9.5,
+            "scale" : 1,
             "translation-in-points" : [
               0,
-              40
+              0
             ]
           }
         }
