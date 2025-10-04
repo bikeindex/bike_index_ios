@@ -13,8 +13,8 @@ import UIKit
 /// Actual icons are in Icon Composer format for iOS 26.
 enum AppIcon: String, CaseIterable, Identifiable {
     case primary = "AppIcon"
-    case grayscale = "Grayscale"
     case shadow = "Shadow"
+    case grayscale = "Grayscale"
     case striped = "Striped"
     case pride = "Pride"
 
