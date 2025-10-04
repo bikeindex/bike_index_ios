@@ -35,10 +35,6 @@ To automate this process follow these steps:
 | -- | -- |
 | ![Light AppIcon-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/AppIcon-in-app.imageset/AppIcon-light.png) | ![Dark AppIcon-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/AppIcon-in-app.imageset/AppIcon-dark.png) |
 
-| Blue-in-app (Light) | Blue-in-app (Dark) |
-| -- | -- |
-| ![Light Blue-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Blue-in-app.imageset/AppIcon-light.png) | ![Dark Blue-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Blue-in-app.imageset/AppIcon-dark.png) |
-
 | Grayscale-in-app (Light) | Grayscale-in-app (Dark) |
 | -- | -- |
 | ![Light Grayscale-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Grayscale-in-app.imageset/AppIcon-light.png) | ![Dark Grayscale-in-app.imageset](../BikeIndex/Assets.xcassets/AppIcons-in-app/Grayscale-in-app.imageset/AppIcon-dark.png) |
