@@ -62,18 +62,16 @@ struct BikeIndexApp: App {
         let client = try! Client()
         self.client = client
 
-        let schema = Schema([
-            Bike.self,
-            User.self,
-            AuthenticatedUser.self,
-            AutocompleteManufacturer.self,
+        //        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        let config = ModelConfiguration()
+        let modelContainer = try! ModelContainer(
+            for: Bike.self, User.self, AuthenticatedUser.self, AutocompleteManufacturer.self,
             ScannedBike.self,  // QR sticker history
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+            migrationPlan: MigrationPlan_v1_v2.self,
+            configurations: config
+        )
 
-        let sharedModelContainer = try! ModelContainer(
-            for: schema, configurations: [modelConfiguration])
-        self.sharedModelContainer = sharedModelContainer
+        self.sharedModelContainer = modelContainer
 
         // Give AppDelegate access to client's background session delegate
         appDelegate.backgroundSessionDelegate = client.backgroundSessionDelegate
