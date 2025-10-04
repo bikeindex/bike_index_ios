@@ -29,6 +29,13 @@ To automate this process follow these steps:
 # 2. When complete the script will open the Xcode project and then open the in-app asset catalog
 ```
 
+#### Compressing assets
+
+```bash
+brew install pngcrush
+find BikeIndex -name "*.png" -exec pngcrush -ow -rem allb -f 9 -brute -reduce "{}" \;
+```
+
 ## App Icon Previews (docs)
 
 | AppIcon-in-app (Light) | AppIcon-in-app (Dark) |
