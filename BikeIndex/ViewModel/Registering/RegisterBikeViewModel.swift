@@ -242,7 +242,7 @@ extension RegisterBikeView {
                                     try? modelContext.save()
                                 case .failure(let failure):
                                     Logger.model.debug(
-                                        "\(#function) Failed to upload image after bike registration"
+                                        "\(#function) Failed to upload image after bike registration: \(failure)"
                                     )
                                 }
                             } else {
