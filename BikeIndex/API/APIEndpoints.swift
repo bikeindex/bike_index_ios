@@ -144,7 +144,7 @@ enum Bikes: APIEndpoint {
     case putBikes(identifier: BikeId, form: Postable)
     case check_if_registered
     case recover(identifier: BikeId)
-    case image(identifier: BikeId)
+    case image(identifier: BikeId, imageData: Data)
     case images(identifier: BikeId, imageIdentifier: String)
     case send_stolen_notification(identifier: BikeId)
 
@@ -160,7 +160,7 @@ enum Bikes: APIEndpoint {
             [api, v3, "bikes", "check_if_registered"]
         case .recover(let identifier):
             [api, v3, "bikes", identifier, "recover"]
-        case .image(let identifier):
+        case .image(let identifier, _):
             [api, v3, "bikes", identifier, "image"]
         case .images(let bikeIdentifier, let imageIdentifier):
             [api, v3, "bikes", bikeIdentifier, "images", imageIdentifier]
@@ -179,6 +179,8 @@ enum Bikes: APIEndpoint {
         switch self {
         case .postBikes(let form):
             return form
+        case .image(_, let imageData):
+            return imageData
         default:
             return nil
         }
@@ -188,8 +190,21 @@ enum Bikes: APIEndpoint {
         switch self {
         case .postBikes:
             return SingleBikeResponseContainer.self
+        case .image:
+            return ImageResponseContainer.self
         default:
             return EmptyResponse.self
+        }
+    }
+
+    var formType: FormType? {
+        switch self {
+        case .postBikes:
+            return .formURLEncoded
+        case .image:
+            return .multipartFormData
+        default:
+            return nil
         }
     }
 
