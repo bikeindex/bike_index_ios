@@ -278,25 +278,5 @@ extension RegisterBikeView {
                     title: "Registering bike failed")
             }
         }
-
-    }
-}
-
-enum TransferError: Error {
-    case importFailed
-}
-
-extension UIImage: Transferable {
-    public static var transferRepresentation: some TransferRepresentation {
-        DataRepresentation(importedContentType: .image) { data in
-            #if canImport(UIKit)
-            guard let uiImage = UIImage(data: data) else {
-                throw TransferError.importFailed
-            }
-            return uiImage
-            #else
-            throw TransferError.importFailed
-            #endif
-        }
     }
 }
