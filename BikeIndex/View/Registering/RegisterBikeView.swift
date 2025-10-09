@@ -6,6 +6,7 @@
 //
 
 import OSLog
+import PhotosUI
 import SwiftData
 import SwiftUI
 import WebViewKit
@@ -56,6 +57,56 @@ struct RegisterBikeView: View {
                     StolenBikeInfoSectionView()
                 }
 
+                // MARK: Photo
+                // Disabled until properly tested
+                #if DEBUG
+                Section {
+                    switch viewModel.imageState {
+                    case .success(let image):
+                        Image(uiImage: image)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .clipShape(.rect(cornerRadius: 16))
+                            .overlay {
+                                deleteButton
+                            }
+                    case .loading:
+                        ProgressView()
+                            .frame(maxWidth: .infinity, idealHeight: 200)
+                    case .empty:
+                        CameraButton(photo: $viewModel.cameraPhoto) {
+                            Label("Take Photo", systemImage: "camera")
+                        }
+                        .padding(.leading, 2)
+
+                        PhotosPicker(selection: $viewModel.photosPickerItem) {
+                            Label("Choose Photo", systemImage: "photo.on.rectangle")
+                        }
+                        .padding(.leading, 2)
+                    case .failure(let error):
+                        Color.gray
+                            .frame(height: 200)
+                            .clipShape(.rect(cornerRadius: 16))
+                            .overlay {
+                                VStack(spacing: 8) {
+                                    Image(systemName: "exclamationmark.triangle.fill")
+                                        .font(.system(size: 40))
+                                        .foregroundStyle(.yellow)
+                                    Text(error.localizedDescription)
+                                        .foregroundStyle(.white)
+                                        .fontWeight(.medium)
+                                }
+                                .padding()
+                            }
+                            .overlay {
+                                deleteButton
+                            }
+                    }
+                } header: {
+                    Text("Photo")
+                }
+                #endif
+
                 // MARK: Serial number
                 Section {
                     let safeSerial = Binding(
@@ -80,7 +131,7 @@ struct RegisterBikeView: View {
                     .focused($focus, equals: .serialNumberText)
 
                     HStack {
-                        CameraCaptureButton(text: safeSerial)
+                        CameraTextCaptureButton(text: safeSerial)
                         Spacer()
                             .frame(maxWidth: .infinity)
                     }
@@ -397,6 +448,22 @@ struct RegisterBikeView: View {
         @unknown default:
             .trailing
         }
+    }
+
+    var deleteButton: some View {
+        Button {
+            viewModel.imageState = .empty
+        } label: {
+            Image(systemName: "xmark.circle.fill")
+                .imageScale(.large)
+                .background {
+                    Circle()
+                        .foregroundStyle(.primary)
+                }
+                .padding(8)
+                .foregroundStyle(.white, .separator)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
     }
 
 }
