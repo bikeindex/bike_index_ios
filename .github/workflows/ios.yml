@@ -8,8 +8,8 @@ on:
   pull_request:
 
 jobs:
-  tests_iphone16:
-    name: Run iPhone 16 test suite with fastlane
+  setup-project:
+    name: Project setup
     runs-on: macos-15
     steps:
       - name: Checkout
@@ -51,6 +51,12 @@ jobs:
         run: xcodebuild -downloadPlatform iOS
       - name: List available simulators
         run: xcodebuild -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
+
+  tests_iphone16:
+    name: Run iPhone 16 test suite with fastlane
+    runs-on: macos-15
+    needs: [setup-project]
+    steps:
       - name: Run tests
         id: fastlane-ios-tests
         run: bundle exec fastlane ios tests_iphone16
@@ -64,44 +70,8 @@ jobs:
   tests_iphone16plus:
     name: Run iPhone 16 Plus test suite with fastlane
     runs-on: macos-15
+    needs: [setup-project]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-      - name: Print git checkout status
-        run: |
-          git rev-parse --abbrev-ref HEAD
-          git rev-parse HEAD
-          echo plain ref ${{ github.ref }}
-          echo trigger sha ${{ github.sha }}
-          echo ref name ${{ github.ref_name }}
-          echo protected ${{ github.ref_protected }}
-          echo base ref ${{ github.base_ref }}
-          echo head ref ${{ github.head_ref }}
-          echo event ${{ github.event }}
-          echo workflow_ref ${{ github.workflow_ref }}
-          echo workflow_sha ${{ github.workflow_sha }}
-      - name: Set Xcode 26.0
-        run: sudo xcode-select -s /Applications/Xcode_26.0.app
-      - name: Install tools
-        run: |
-          brew install rbenv
-          brew install ruby-build
-          brew install gh
-          bundler install
-      - name: Set up xcconfig secrets (see README.md#quick-start)
-        env:
-          BIKE_INDEX_DEVELOPMENT_XCCONFIG: ${{ secrets.BIKE_INDEX_DEVELOPMENT_XCCONFIG }}
-        run: |
-          echo "$BIKE_INDEX_DEVELOPMENT_XCCONFIG" >> BikeIndex-development.xcconfig
-      - name: Set up xcconfig UI test credentials (see README.md#UI-Test-configuration)
-        env:
-          BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
-        run: |
-          echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
-      - name: Install iOS 26 simulator
-        run: xcodebuild -downloadPlatform iOS
       - name: List available simulators
         run: xcodebuild -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
       - name: Run tests
@@ -117,44 +87,8 @@ jobs:
   tests_ipad:
     name: Run iPad (10th generation) test suite with fastlane
     runs-on: macos-15
+    needs: [setup-project]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-      - name: Print git checkout status
-        run: |
-          git rev-parse --abbrev-ref HEAD
-          git rev-parse HEAD
-          echo plain ref ${{ github.ref }}
-          echo trigger sha ${{ github.sha }}
-          echo ref name ${{ github.ref_name }}
-          echo protected ${{ github.ref_protected }}
-          echo base ref ${{ github.base_ref }}
-          echo head ref ${{ github.head_ref }}
-          echo event ${{ github.event }}
-          echo workflow_ref ${{ github.workflow_ref }}
-          echo workflow_sha ${{ github.workflow_sha }}
-      - name: Set Xcode 26.0
-        run: sudo xcode-select -s /Applications/Xcode_26.0.app
-      - name: Install tools
-        run: |
-          brew install rbenv
-          brew install ruby-build
-          brew install gh
-          bundler install
-      - name: Set up xcconfig secrets (see README.md#quick-start)
-        env:
-          BIKE_INDEX_DEVELOPMENT_XCCONFIG: ${{ secrets.BIKE_INDEX_DEVELOPMENT_XCCONFIG }}
-        run: |
-          echo "$BIKE_INDEX_DEVELOPMENT_XCCONFIG" >> BikeIndex-development.xcconfig
-      - name: Set up xcconfig UI test credentials (see README.md#UI-Test-configuration)
-        env:
-          BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
-        run: |
-          echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
-      - name: Install iOS 26 simulator
-        run: xcodebuild -downloadPlatform iOS
       - name: List available simulators
         run: xcodebuild -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
       - name: Run tests
