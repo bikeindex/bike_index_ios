@@ -43,8 +43,6 @@ jobs:
           BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
         run: |
           echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
-      - name: Install iOS 26 simulator
-        run: xcodebuild -downloadPlatform iOS
       - name: List available simulators
         run: xcodebuild -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
       - name: Run tests
@@ -92,8 +90,6 @@ jobs:
           BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
         run: |
           echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
-      - name: Install iOS 26 simulator
-        run: xcodebuild -downloadPlatform iOS
       - name: List available simulators
         run: xcodebuild -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
       - name: Run tests
@@ -141,8 +137,6 @@ jobs:
           BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
         run: |
           echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
-      - name: Install iOS 26 simulator
-        run: xcodebuild -downloadPlatform iOS
       - name: List available simulators
         run: xcodebuild -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
       - name: Run tests
