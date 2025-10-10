@@ -58,8 +58,6 @@
 		04566C7D2E67475E00E3EC6E /* Scanfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Scanfile; sourceTree = "<group>"; };
 		04566C7F2E67475E00E3EC6E /* update-icons.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "update-icons.sh"; sourceTree = "<group>"; };
 		0496C6702CB36BED00B88D1B /* Brewfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Brewfile; sourceTree = "<group>"; };
-		0496C6712CB36BF100B88D1B /* .ruby-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".ruby-version"; sourceTree = "<group>"; };
-		0496C6722CB36BF600B88D1B /* Gemfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Gemfile; sourceTree = "<group>"; };
 		04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Test-credentials.xcconfig"; sourceTree = "<group>"; };
 		04D80BB72D8673F200E29577 /* Test-credentials-template.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Test-credentials-template.xcconfig"; sourceTree = "<group>"; };
 		04F4B8F72B098ADB009442B5 /* BikeIndex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BikeIndex.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -192,10 +190,7 @@
 				04CDF16F2D3C344C00F90515 /* SharedTests */,
 				04CDF1632D3C344800F90515 /* UITests */,
 				04CDF1502D3C344500F90515 /* UnitTests */,
-				0496C6712CB36BF100B88D1B /* .ruby-version */,
 				0496C6702CB36BED00B88D1B /* Brewfile */,
-				0496C6722CB36BF600B88D1B /* Gemfile */,
-				0496C6712CB36BF100B88D1B /* .ruby-version */,
 				0423F2632E6CA34F00199160 /* .swift-format */,
 				04566C802E67475E00E3EC6E /* scripts */,
 				04566C792E67475E00E3EC6E /* docs */,

@@ -31,21 +31,18 @@ To get started:
 
 ### Development
 
-- Requirements: Xcode 16.2
+- Requirements: Xcode 26.0
 - Target deployment: iOS 17.2
 
 This project uses SwiftUI and SwiftData. At this time iOS (iPhone) is the primary development target with a goal to include iPad and Mac support.
 
 ###### Set up suite of tools
 
-1. Install brew
-2. `brew install bundle`
+1. Install [brew](https://brew.sh/)
+2. `brew bundle install`
     - Note: Brew bundle is separate from the Gem bundle
-3. `brew bundle install`
-4. `rbenv install`
-5. `bundle install`
 
-At this point the full suite of tools should be installed and available.
+At this point the `fastlane` tools should be installed and available.
 
 ###### Git hooks
 
