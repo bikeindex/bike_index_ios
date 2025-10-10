@@ -15,11 +15,14 @@
         "value" : "1"
       }
     ],
+    "repeatInNewRunnerProcess" : true,
     "targetForVariableExpansion" : {
       "containerPath" : "container:BikeIndex.xcodeproj",
       "identifier" : "04F4B8F62B098ADB009442B5",
       "name" : "BikeIndex"
     },
+    "testExecutionOrdering" : "random",
+    "testRepetitionMode" : "retryOnFailure",
     "testTimeoutsEnabled" : true
   },
   "testTargets" : [
