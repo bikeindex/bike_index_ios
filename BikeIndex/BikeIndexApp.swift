@@ -23,29 +23,19 @@ struct BikeIndexApp: App {
     /// Scene does not implement `onOpenURL` so each applies a basic handler to kickstart the process.
     var body: some Scene {
         WindowGroup {
-            if client.authenticated {
-                MainContentPage()
-                    .tint(Color.accentColor)
-                    .onOpenURL { url in
-                        handleDeeplink(url)
-                    }
-                    .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
-                        handleDeeplink(userActivity.webpageURL)
-                    }
-            } else {
-                AuthView()
-                    .tint(Color.accentColor)
-                    .onOpenURL { url in
-                        handleDeeplink(url)
-                    }
-                    .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
-                        handleDeeplink(userActivity.webpageURL)
-                    }
-
+            Group {
+                if client.authenticated {
+                    MainContentPage()
+                } else {
+                    AuthView()
+                }
             }
+            .tint(.accentColor)
+            .onOpenURL(perform: handleDeeplink)
+            .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { handleDeeplink($0.webpageURL) }
+            .environment(client)
+            .modelContainer(sharedModelContainer)
         }
-        .environment(client)
-        .modelContainer(sharedModelContainer)
     }
 
     /// DeeplinkManager parses out the URL and returns a boxed result.
