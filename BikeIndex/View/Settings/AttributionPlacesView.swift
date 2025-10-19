@@ -13,7 +13,7 @@ struct AttributionPlacesView: View {
 
     var body: some View {
         Text("Made with 💝 in:")
-        
+
         HFlow(horizontalAlignment: .center, verticalAlignment: .top) {
             ForEach(contributorPlacesByChipColor, id: \.0) { place, color in
                 Chip(title: place.rawValue, color: color)
@@ -26,8 +26,9 @@ struct AttributionPlacesView: View {
         let places = ContributorPlaces.randomized
         let count = Int(round(Double(places.count) / Double(FrameColor.allCases.count)))
         let backgroundColors = Array(
-            repeating: FrameColor.allCases, count: count)
-            .flatMap { $0 }
+            repeating: FrameColor.allCases, count: count
+        )
+        .flatMap { $0 }
 
         return Array(zip(places, backgroundColors))
     }

@@ -39,6 +39,7 @@ enum FrameColor: String, Codable, CaseIterable, Identifiable, Equatable {
 
     /// All frame colors ordered in typical ROYGBIV rainbow order followed by special material colors
     static let allCases: [FrameColor] = [
-        .red, .pink, .orange, .yellow, .green, .teal, .blue, .purple, .brown, .black, .white, .bareMetal, .covered,
+        .red, .pink, .orange, .yellow, .green, .teal, .blue, .purple, .brown, .black, .white,
+        .bareMetal, .covered,
     ]
 }
