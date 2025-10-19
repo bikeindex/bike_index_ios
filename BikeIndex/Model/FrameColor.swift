@@ -37,7 +37,7 @@ enum FrameColor: String, Codable, CaseIterable, Identifiable, Equatable {
     /// Provide a default value to the UI when a selection has not yet been made.
     static var defaultColor: Self { .black }
 
-    /// All frame colors ordered in typical ROYGBIV rainbow order
+    /// All frame colors ordered in typical ROYGBIV rainbow order followed by special material colors
     static let allCases: [FrameColor] = [
         .red, .pink, .orange, .yellow, .green, .teal, .blue, .purple, .brown, .black, .white, .bareMetal, .covered,
     ]

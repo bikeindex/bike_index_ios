@@ -20,7 +20,7 @@ struct SettingsAttributionCaption: View {
                 Spacer()
                 Text("[Candid.org profile](https://app.candid.org/profile/9575027)")
                 Spacer()
-                AttributionPlaces()
+                AttributionPlacesView()
                 if let marketingVersion = appVersion.marketingVersion,
                     let buildNumber = appVersion.buildNumber
                 {

@@ -1,5 +1,5 @@
 //
-//  AttributionPlaces.swift
+//  AttributionPlacesView.swift
 //  BikeIndex
 //
 //  Created by Jack on 10/19/25.
@@ -9,9 +9,11 @@ import Flow
 import SwiftUI
 
 /// List the city/place of each contributor with a background color Chip
-struct AttributionPlaces: View {
+struct AttributionPlacesView: View {
+
     var body: some View {
         Text("Made with 💝 in:")
+        
         HFlow(horizontalAlignment: .center, verticalAlignment: .top) {
             ForEach(contributorPlacesByChipColor, id: \.0) { place, color in
                 Chip(title: place.rawValue, color: color)
@@ -32,5 +34,5 @@ struct AttributionPlaces: View {
 }
 
 #Preview {
-    AttributionPlaces()
+    AttributionPlacesView()
 }
