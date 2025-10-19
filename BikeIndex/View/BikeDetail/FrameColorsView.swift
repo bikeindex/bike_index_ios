@@ -134,10 +134,18 @@ extension Color {
 // MARK: - New approach
 
 struct Chip: View {
+    /// In the absence of `title`, frameColor will be displayed
+    let title: String?
+    // TODO: Rename
     let frame: FrameColor
 
     private let radius = 6.0
     private let stroke = 4.0
+
+    init(title: String? = nil, frame: FrameColor) {
+        self.title = title
+        self.frame = frame
+    }
 
     var body: some View {
         ZStack {
@@ -168,7 +176,7 @@ struct Chip: View {
                 }
             }
 
-            Text(frame.displayValue)
+            Text(title ?? frame.displayValue)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
         }

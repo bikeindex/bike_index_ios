@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Flow
 
 /// Display attribution captions about the app, usually in a SettingsPage footer
 struct SettingsAttributionCaption: View {
@@ -20,7 +21,7 @@ struct SettingsAttributionCaption: View {
                 Spacer()
                 Text("[Candid.org profile](https://app.candid.org/profile/9575027)")
                 Spacer()
-                Text("Made with 💝 in Pittsburgh, PA")
+                AttributionPlaces()
                 if let marketingVersion = appVersion.marketingVersion,
                     let buildNumber = appVersion.buildNumber
                 {
