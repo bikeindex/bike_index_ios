@@ -14,7 +14,7 @@ struct AttributionPlaces: View {
         Text("Made with 💝 in:")
         HFlow(horizontalAlignment: .center, verticalAlignment: .top) {
             ForEach(contributorPlacesByChipColor, id: \.0) { place, color in
-                Chip(title: place.rawValue, frame: color)
+                Chip(title: place.rawValue, color: color)
             }
         }
     }

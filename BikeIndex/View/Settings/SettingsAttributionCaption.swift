@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Flow
 
 /// Display attribution captions about the app, usually in a SettingsPage footer
 struct SettingsAttributionCaption: View {
