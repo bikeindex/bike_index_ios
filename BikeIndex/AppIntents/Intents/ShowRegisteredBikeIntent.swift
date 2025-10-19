@@ -15,7 +15,8 @@ struct ShowRegisteredBikeIntent: AppIntent {
     static let title: LocalizedStringResource = "Open Bike Details"
 
     /// Description shown when viewing this shortcut’s details.
-    static let description = IntentDescription("Open the app and launch details of a registered bike.")
+    static let description = IntentDescription(
+        "Open the app and launch details of a registered bike.")
 
     /// Ensures the main app launches when this intent runs.
     static let openAppWhenRun = true

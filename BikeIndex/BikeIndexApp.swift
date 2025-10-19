@@ -5,10 +5,10 @@
 //  Created by Jack on 11/18/23.
 //
 
+import AppIntents
 import OSLog
 import SwiftData
 import SwiftUI
-import AppIntents
 
 @main
 struct BikeIndexApp: App {

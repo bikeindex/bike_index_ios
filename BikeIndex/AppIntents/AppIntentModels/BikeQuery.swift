@@ -23,12 +23,14 @@ struct BikeQuery: EntityQuery {
     /// Fetches specific `Bike` objects matching the given identifiers,
     /// and maps them into `BikeEntity` types for use in App Intents (e.g. during perform).
     func entities(for identifiers: [Int]) async throws -> [BikeEntity] {
-        let descriptor = FetchDescriptor<Bike>(predicate: #Predicate { identifiers.contains($0.identifier) })
+        let descriptor = FetchDescriptor<Bike>(
+            predicate: #Predicate { identifiers.contains($0.identifier) })
         let results = try context.fetch(descriptor)
 
         return results.map {
-            BikeEntity(id: $0.identifier,
-                       title: displayTitle(for: $0))
+            BikeEntity(
+                id: $0.identifier,
+                title: displayTitle(for: $0))
         }
     }
 
@@ -41,8 +43,9 @@ struct BikeQuery: EntityQuery {
         let results = try context.fetch(descriptor)
 
         return results.map {
-            BikeEntity(id: $0.identifier,
-                       title: displayTitle(for: $0))
+            BikeEntity(
+                id: $0.identifier,
+                title: displayTitle(for: $0))
         }
     }
 
