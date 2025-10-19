@@ -9,6 +9,7 @@ import Foundation
 
 /// NOTE: **Reading** FrameColor from the API is in title-case.
 /// **Writing** FrameColor to the API must be in lower-case.
+/// Discussion: https://github.com/bikeindex/bike_index/issues/2524
 enum FrameColor: String, Codable, CaseIterable, Identifiable, Equatable {
     case black = "Black"
     case blue = "Blue"
@@ -35,4 +36,10 @@ enum FrameColor: String, Codable, CaseIterable, Identifiable, Equatable {
 
     /// Provide a default value to the UI when a selection has not yet been made.
     static var defaultColor: Self { .black }
+
+    /// All frame colors ordered in typical ROYGBIV rainbow order followed by special material colors
+    static let allCases: [FrameColor] = [
+        .red, .pink, .orange, .yellow, .green, .teal, .blue, .purple, .brown, .black, .white,
+        .bareMetal, .covered,
+    ]
 }

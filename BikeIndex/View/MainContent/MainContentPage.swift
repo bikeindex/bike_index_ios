@@ -19,6 +19,9 @@ struct MainContentPage: View {
     /// Forwards dynamic query changes to ``BikesGridContainerView`` to support dynamic grouping selection.
     @State private var viewModel = ViewModel()
 
+    /// Binds to the shared App Intent navigation state to handle sheet presentation.
+    @Bindable(AppIntentNavigationManager.shared) var appIntentNavManager
+
     var body: some View {
         NavigationStack(path: $viewModel.path) {
             @Bindable var deeplinkManager = client.deeplinkManager
@@ -88,6 +91,17 @@ struct MainContentPage: View {
                                 viewModel.path.append(exitPath)
                             }
                         }
+                }
+            )
+            .sheet(
+                item: $appIntentNavManager.presentedItem,
+                content: { presentedItem in
+                    // Opens directly into the BikeDetailOfflineView for the bike selected via App Intents
+                    NavigationStack {
+                         BikeDetailOfflineView(bikeIdentifier: presentedItem.bikeIdentifier)
+                             .navigationBarTitleDisplayMode(.inline)
+                     }
+                     .presentationDragIndicator(.visible)
                 }
             )
             .fullScreenCover(
