@@ -28,7 +28,7 @@ struct BikeQuery: EntityQuery {
 
         return results.map {
             BikeEntity(id: $0.identifier,
-                       title: "\($0.frameColorPrimary.displayValue) \($0.manufacturerName)")
+                       title: displayTitle(for: $0))
         }
     }
 
@@ -42,7 +42,17 @@ struct BikeQuery: EntityQuery {
 
         return results.map {
             BikeEntity(id: $0.identifier,
-                       title: "\($0.frameColorPrimary.displayValue) \($0.manufacturerName)")
+                       title: displayTitle(for: $0))
+        }
+    }
+
+    //MARK: Helpers
+    ///Adds the year of the bike to the displayable title, if it's available
+    func displayTitle(for bike: Bike) -> String {
+        if let year = bike.year {
+            return "\(bike.frameColorPrimary.displayValue) \(bike.manufacturerName) (\(year))"
+        } else {
+            return "\(bike.frameColorPrimary.displayValue) \(bike.manufacturerName)"
         }
     }
 }
