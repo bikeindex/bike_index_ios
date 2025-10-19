@@ -10,7 +10,7 @@ import Testing
 
 @testable import BikeIndex
 
-/// A touch of excessive assurances to prove that changing ContributorPlaces will always wrap around the FrameColors and to provide the right data to `AttributionPlacesView`.
+/// Excessive assurances to prove that changing ContributorPlaces will always wrap around the FrameColors and to provide the right data to `AttributionPlacesView`.
 /// Additionally any change to FrameColors count would need strict attention.
 struct ContributorAttributionBackgroundChipTests {
 
@@ -25,6 +25,11 @@ struct ContributorAttributionBackgroundChipTests {
         #expect(backgroundColors.count > 0)
         #expect(backgroundColors.count >= places.count)
         #expect(backgroundColors.count >= frameColors.count)
+
+        let combined = Array(zip(places, backgroundColors))
+        #expect(combined.count > 0)
+        #expect(combined.count == places.count)
+        #expect(combined.count <= backgroundColors.count)
     }
 
     @Test func test_contributor_places_randomized_is_sufficient() async throws {
