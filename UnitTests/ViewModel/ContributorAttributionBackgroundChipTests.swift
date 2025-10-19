@@ -17,14 +17,14 @@ struct ContributorAttributionBackgroundChipTests {
     @Test func test_repeating_backgroundColors() async throws {
         let places = ContributorPlaces.allCases
         let frameColors = FrameColor.allCases
-        let count = Int(round(Double(places.count) / Double(frameColors.count)))
+        let count = Int(max(1, round(Double(places.count) / Double(frameColors.count))))
         let backgroundColors = Array(
             repeating: frameColors, count: count
         )
         .flatMap { $0 }
+        #expect(backgroundColors.count > 0)
         #expect(backgroundColors.count >= places.count)
         #expect(backgroundColors.count >= frameColors.count)
-        #expect(places.count >= frameColors.count)
     }
 
     @Test func test_contributor_places_randomized_is_sufficient() async throws {

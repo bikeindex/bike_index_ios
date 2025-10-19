@@ -24,7 +24,7 @@ struct AttributionPlacesView: View {
     /// If there are ever more contributors than FrameColors/Chip-colors, then repeat the FrameColors to still display
     var contributorPlacesByChipColor: [(ContributorPlaces, FrameColor)] {
         let places = ContributorPlaces.randomized
-        let count = Int(round(Double(places.count) / Double(FrameColor.allCases.count)))
+        let count = Int(max(1, round(Double(places.count) / Double(FrameColor.allCases.count))))
         let backgroundColors = Array(
             repeating: FrameColor.allCases, count: count
         )
