@@ -1,5 +1,5 @@
 //
-//  ContributorAttribution.swift
+//  ContributorPlaces.swift
 //  BikeIndex
 //
 //  Created by Jack on 10/19/25.
