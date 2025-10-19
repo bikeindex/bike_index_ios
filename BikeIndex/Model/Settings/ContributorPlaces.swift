@@ -14,6 +14,8 @@ enum ContributorPlaces: String, Identifiable, CaseIterable {
     // for the backend
     case sf = "San Francisco, CA"
 
+    case sheppey = "Isle of Sheppey, UK"
+
     /// At first access, randomized/shuffle all contributor places and store it
     /// in this static value to 1) give no preference to places and 2) keep the
     /// order consistent within this app launch.
