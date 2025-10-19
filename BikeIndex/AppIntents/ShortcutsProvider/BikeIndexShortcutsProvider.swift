@@ -11,9 +11,10 @@ import AppIntents
 /// Siri can use to trigger the shortcut.
 struct BikeIndexShortcutsProvider: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
-        AppShortcut(intent: ShowRegisteredBikeIntent(),
-                phrases: [ "View bike in \(.applicationName)"],
-                shortTitle: "Launch Bike Details",
-                systemImageName: "bicycle")
+        AppShortcut(
+            intent: ShowRegisteredBikeIntent(),
+            phrases: ["View bike in \(.applicationName)"],
+            shortTitle: "Launch Bike Details",
+            systemImageName: "bicycle")
     }
 }

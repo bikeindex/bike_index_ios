@@ -98,10 +98,10 @@ struct MainContentPage: View {
                 content: { presentedItem in
                     // Opens directly into the BikeDetailOfflineView for the bike selected via App Intents
                     NavigationStack {
-                         BikeDetailOfflineView(bikeIdentifier: presentedItem.bikeIdentifier)
-                             .navigationBarTitleDisplayMode(.inline)
-                     }
-                     .presentationDragIndicator(.visible)
+                        BikeDetailOfflineView(bikeIdentifier: presentedItem.bikeIdentifier)
+                            .navigationBarTitleDisplayMode(.inline)
+                    }
+                    .presentationDragIndicator(.visible)
                 }
             )
             .fullScreenCover(

@@ -18,6 +18,6 @@ struct BikeEntity: AppEntity {
     static let typeDisplayRepresentation = TypeDisplayRepresentation(name: "Bike")
 
     var displayRepresentation: DisplayRepresentation {
-           DisplayRepresentation(title: "\(title)")
+        DisplayRepresentation(title: "\(title)")
     }
 }
