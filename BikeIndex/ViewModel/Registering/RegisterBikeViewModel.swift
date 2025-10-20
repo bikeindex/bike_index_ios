@@ -228,7 +228,7 @@ extension RegisterBikeView {
                                 let endpoint = Bikes.image(
                                     identifier: "\(bikeModel.identifier)", imageData: data)
                                 let response: Result<ImageResponseContainer, any Error> =
-                                    await client.api.post(endpoint)
+                                    await client.post(endpoint)
                                 switch response {
                                 case .success(let imageResponseContainer):
                                     Logger.model.debug(
