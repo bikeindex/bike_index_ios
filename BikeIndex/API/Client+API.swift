@@ -37,7 +37,13 @@ protocol APIEndpoint: Sendable {
     var requestModel: Encodable? { get }
     var responseModel: any ResponseDecodable.Type { get }
 
+    var formType: FormType? { get }
+
     func request(for config: HostProvider) -> URLRequest
+}
+
+extension APIEndpoint {
+    var formType: FormType? { nil }
 }
 
 /// API client to perform networking operations with only essential state.
@@ -88,7 +94,44 @@ extension Client {
                 )
                 return .failure(APIError.postMissingContents(endpoint: endpoint).error)
             }
-            request.httpBody = try URLEncodedFormEncoder().encode(requestModel)
+            guard let formType = endpoint.formType else {
+                Logger.api.error(
+                    "\(#function) Failed to find form type for POST endpoint \(String(reflecting: endpoint))"
+                )
+                return .failure(APIError.postMissingContents(endpoint: endpoint).error)
+            }
+
+            switch formType {
+            case .formURLEncoded:
+                request.httpBody = try URLEncodedFormEncoder().encode(requestModel)
+            case .multipartFormData:
+                // TODO: Refactor into something like URLEncodedFormEncoder or import Swift package for multipart forms
+
+                // Get file data from request model
+                guard let fileData = requestModel as? Data else {
+                    Logger.api.error(
+                        "\(#function) Failed to get data from model for multipart POST endpoint \(String(reflecting: endpoint))"
+                    )
+                    return .failure(APIError.postMissingContents(endpoint: endpoint).error)
+                }
+
+                // Set content type to multipart/form-data
+                let boundary = UUID().uuidString
+                request.setValue(
+                    "multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+                // Create multipart form data
+                var body = Data()
+                body.append("--\(boundary)\r\n".data(using: .utf8)!)
+                body.append(
+                    "Content-Disposition: form-data; name=\"file\"; filename=\"\("bike.jpg")\"\r\n"
+                        .data(using: .utf8)!)
+                body.append("Content-Type: application/octet-stream\r\n\r\n".data(using: .utf8)!)
+                body.append(fileData)
+                body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+
+                request.httpBody = body
+            }
         } catch {
             Logger.api.error("\(#function) Failed to encode POST body with \(error)")
             return .failure(error)
@@ -128,6 +171,11 @@ enum HttpMethod: String {
     case options = "OPTIONS"
     case trace = "TRACE"
     case patch = "PATCH"
+}
+
+enum FormType {
+    case formURLEncoded
+    case multipartFormData
 }
 
 extension HTTPURLResponse {

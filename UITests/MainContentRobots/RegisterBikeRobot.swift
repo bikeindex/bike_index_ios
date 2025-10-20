@@ -8,8 +8,8 @@
 import Foundation
 
 final class RegisterBikeRobot: Robot {
-    lazy var goToOurSerialPage = app.staticTexts.matching(
-        NSPredicate(format: "label BEGINSWITH %@", "Every bike has a unique")
+    lazy var goToOurSerialPage = app.links.matching(
+        NSPredicate(format: "label == %@", "go to our serial page")
     ).element
     lazy var serialPageHeading = app.webViews.staticTexts["BIKE SERIAL NUMBERS"]
     lazy var manufacturerTextField = app.textFields["manufacturerSearchTextField"]

@@ -21,14 +21,14 @@ struct FrameColorsView: View {
                 horizontalAlignment: .leading,
                 verticalAlignment: .top
             ) {
-                Chip(frame: bike.frameColorPrimary)
+                Chip(color: bike.frameColorPrimary)
 
                 if let secondary = bike.frameColorSecondary {
-                    Chip(frame: secondary)
+                    Chip(color: secondary)
                 }
 
                 if let tertiary = bike.frameColorTertiary {
-                    Chip(frame: tertiary)
+                    Chip(color: tertiary)
                 }
             }
         }
@@ -101,12 +101,12 @@ extension Color {
     if #available(iOS 18.0, *) {
         VStack {
             Chip.rainbow
-            Chip(frame: .covered)
+            Chip(color: .covered)
         }
     } else {
         VStack {
             Chip.rainbow2
-            Chip(frame: .covered)
+            Chip(color: .covered)
         }
     }
 }
@@ -121,7 +121,7 @@ extension Color {
         ) {
             ForEach(FrameColor.allCases) { frame in
                 VStack {
-                    Chip(frame: frame)
+                    Chip(color: frame)
                     Text(frame.displayValue)
                         .font(.caption)
                 }
@@ -134,21 +134,28 @@ extension Color {
 // MARK: - New approach
 
 struct Chip: View {
-    let frame: FrameColor
+    /// In the absence of `title`, frameColor will be displayed
+    let title: String?
+    let color: FrameColor
 
     private let radius = 6.0
     private let stroke = 4.0
 
+    init(title: String? = nil, color: FrameColor) {
+        self.title = title
+        self.color = color
+    }
+
     var body: some View {
         ZStack {
-            if let color = frame.color {
+            if let color = color.color {
                 RoundedRectangle(cornerRadius: radius)
                     .stroke(
                         color.gradient,
                         lineWidth: stroke
                     )
                     .fill(.background.tertiary)
-            } else if frame == .bareMetal {
+            } else if color == .bareMetal {
                 RoundedRectangle(cornerRadius: radius)
                     .stroke(
                         Self.bareMetalAngularGradient,
@@ -168,7 +175,7 @@ struct Chip: View {
                 }
             }
 
-            Text(frame.displayValue)
+            Text(title ?? color.displayValue)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
         }
@@ -239,7 +246,7 @@ struct Chip: View {
     ZStack {
         VStack {
             ForEach(FrameColor.allCases) { frame in
-                Chip(frame: frame)
+                Chip(color: frame)
             }
         }
     }

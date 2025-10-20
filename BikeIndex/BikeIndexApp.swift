@@ -5,6 +5,7 @@
 //  Created by Jack on 11/18/23.
 //
 
+import AppIntents
 import OSLog
 import SwiftData
 import SwiftUI
@@ -22,29 +23,19 @@ struct BikeIndexApp: App {
     /// Scene does not implement `onOpenURL` so each applies a basic handler to kickstart the process.
     var body: some Scene {
         WindowGroup {
-            if client.authenticated {
-                MainContentPage()
-                    .tint(Color.accentColor)
-                    .onOpenURL { url in
-                        handleDeeplink(url)
-                    }
-                    .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
-                        handleDeeplink(userActivity.webpageURL)
-                    }
-            } else {
-                AuthView()
-                    .tint(Color.accentColor)
-                    .onOpenURL { url in
-                        handleDeeplink(url)
-                    }
-                    .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
-                        handleDeeplink(userActivity.webpageURL)
-                    }
-
+            Group {
+                if client.authenticated {
+                    MainContentPage()
+                } else {
+                    AuthView()
+                }
             }
+            .tint(.accentColor)
+            .onOpenURL(perform: handleDeeplink)
+            .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { handleDeeplink($0.webpageURL) }
+            .environment(client)
+            .modelContainer(sharedModelContainer)
         }
-        .environment(client)
-        .modelContainer(sharedModelContainer)
     }
 
     /// DeeplinkManager parses out the URL and returns a boxed result.
@@ -81,5 +72,16 @@ struct BikeIndexApp: App {
         let sharedModelContainer = try! ModelContainer(
             for: schema, configurations: [modelConfiguration])
         self.sharedModelContainer = sharedModelContainer
+
+        setupAppIntentsDependancies()
+    }
+
+    // MARK: - App Intents Setup
+
+    /// Registers the app's `ModelContainer` with the `AppDependencyManager`
+    /// This allows App Intents (such as Siri and Shortcuts) to access SwiftData models.
+    func setupAppIntentsDependancies() {
+        AppDependencyManager.shared.add(key: "ModelContainer", dependency: sharedModelContainer)
+        BikeIndexShortcutsProvider.updateAppShortcutParameters()
     }
 }

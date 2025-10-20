@@ -8,6 +8,7 @@
 import Combine
 import Foundation
 import OSLog
+import PhotosUI
 import SwiftData
 import SwiftUI
 
@@ -61,6 +62,43 @@ extension RegisterBikeView {
         var traditionalBicycle = true
         /// Shadow over the User.email in case there are local changes
         var ownerEmail: String = ""
+
+        var cameraPhoto: UIImage? = nil {
+            didSet {
+                if let cameraPhoto {
+                    imageState = .success(cameraPhoto)
+                }
+            }
+        }
+
+        var photosPickerItem: PhotosPickerItem? = nil {
+            didSet {
+                if let photosPickerItem {
+                    let progress = photosPickerItem.loadTransferable(type: UIImage.self) { result in
+                        DispatchQueue.main.async { [weak self] in
+                            switch result {
+                            case .success(let image?):
+                                self?.imageState = .success(image)
+                            case .success(nil):
+                                self?.imageState = .empty
+                            case .failure(let error):
+                                self?.imageState = .failure(error)
+                            }
+                        }
+                    }
+                    imageState = .loading(progress)
+                }
+            }
+        }
+
+        enum ImageState {
+            case empty
+            case loading(Progress)
+            case success(UIImage)
+            case failure(Error)
+        }
+
+        var imageState: ImageState = .empty
 
         /// Required fields include
         /// 1. serialNumber not empty || missingSerialNumber == true
@@ -180,13 +218,48 @@ extension RegisterBikeView {
                     let bikeModel = registrationResponseSource.bike.modelInstance()
                     modelContext.insert(bikeModel)
 
+                    var message: LocalizedStringKey = ""
+                    let start = Date()
+                    if case .success(let image) = imageState {
+                        message = "Bike photo should finish uploading in the background."
+                        Task {
+                            // TODO: Find a way to reduce file size further without reducing quality
+                            if let data = image.jpegData(compressionQuality: 0.9) {
+                                let endpoint = Bikes.image(
+                                    identifier: "\(bikeModel.identifier)", imageData: data)
+                                let response: Result<ImageResponseContainer, any Error> =
+                                    await client.api.post(endpoint)
+                                switch response {
+                                case .success(let imageResponseContainer):
+                                    Logger.model.debug(
+                                        "\(#function) Image upload successful in \(Date().timeIntervalSince(start)) seconds"
+                                    )
+                                    let image = imageResponseContainer.image
+                                    bikeModel.largeImage = image.large
+                                    bikeModel.thumb = image.thumb
+
+                                    modelContext.insert(bikeModel)
+                                    try? modelContext.save()
+                                case .failure(let failure):
+                                    Logger.model.debug(
+                                        "\(#function) Failed to upload image after bike registration: \(failure)"
+                                    )
+                                }
+                            } else {
+                                Logger.model.debug(
+                                    "\(#function) Failed to convert image to jpeg data"
+                                )
+                            }
+                        }
+                    }
+
                     try? modelContext.save()
                     self.output = AddBikeOutput(
                         show: true,
                         actions: {
                             // After success, pop RegisterBikeView
                             path.wrappedValue.removeLast()
-                        }, message: "", title: "Success!")
+                        }, message: message, title: "Success!")
                 }
 
             case .failure(let failure):
@@ -205,6 +278,5 @@ extension RegisterBikeView {
                     title: "Registering bike failed")
             }
         }
-
     }
 }
