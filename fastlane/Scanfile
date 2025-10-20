@@ -17,10 +17,13 @@ devices([
 	"iPad (10th generation)"
 ])
 
-disable_concurrent_testing(true)
+skip_detect_devices(true)
+
+# disable_concurrent_testing(true)
 result_bundle(true)
-reset_simulator(true)
-force_quit_simulator(true)
-include_simulator_logs(false)
+include_simulator_logs(true)
+
+# reinstall_app(true)
+# app_identifier("org.bikeindex.app")
 
 # Retries are configured in AllTests.xctestplan

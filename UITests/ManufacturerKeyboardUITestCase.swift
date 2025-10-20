@@ -24,6 +24,7 @@ final class ManufacturerKeyboardUITestCase: XCTestCase {
         try MainContentRobot(app)
             .startWithSignIn()
             .tapRegisterBikeButton()
+            .scrollToManufacturerTextView()
             .tapManufacturerTextField()
             .typeIntoManufacturerTextField("J")
             .typeIntoManufacturerTextField("a")

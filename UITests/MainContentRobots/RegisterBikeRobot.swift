@@ -25,6 +25,12 @@ final class RegisterBikeRobot: Robot {
     }
 
     @discardableResult
+    func scrollToManufacturerTextView() -> Self {
+        app.swipeUp()
+        return self
+    }
+
+    @discardableResult
     func tapManufacturerTextField() -> Self {
         tap(manufacturerTextField)
     }
