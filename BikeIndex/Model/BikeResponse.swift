@@ -46,9 +46,10 @@ struct BikeResponse: ResponseModelInstantiable {
     let api_url: URL?
     let public_images: [String]?
 
-    // MARK: - ResponseModelInstantiable for BikeResponse
+    let registration_created_at: TimeInterval
+    let registration_updated_at: TimeInterval
 
-    typealias ModelInstance = Bike
+    // MARK: - ResponseModelInstantiable for BikeResponse
 
     func modelInstance() -> Bike {
         let stolenCoordinateLatitude: CLLocationDegrees
@@ -98,6 +99,9 @@ struct BikeResponse: ResponseModelInstantiable {
             thumb: thumb,
             url: url,
             apiUrl: api_url,
-            publicImages: public_images ?? [])
+            publicImages: public_images ?? [],
+            createdAt: Date(timeIntervalSince1970: registration_created_at),
+            updatedAt: Date(timeIntervalSince1970: registration_updated_at)
+        )
     }
 }

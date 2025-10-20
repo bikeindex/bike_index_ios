@@ -53,6 +53,11 @@ final class API {
     /// Receive the known-good accessToken from Client for stateful network requests.
     var accessToken: String?
     private(set) var session: URLSession
+    private(set) lazy var jsonDecoder: JSONDecoder = {
+        var decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .secondsSince1970
+        return decoder
+    }()
 
     init(configuration: HostProvider, session: URLSession = URLSession.shared) {
         self.configuration = configuration
@@ -80,7 +85,7 @@ final class API {
             )
 
             return Result {
-                try JSONDecoder().decode(endpoint.responseModel, from: data)
+                try jsonDecoder.decode(endpoint.responseModel, from: data)
             }
         } catch {
             Logger.api.error(
@@ -157,7 +162,7 @@ final class API {
             Logger.api.debug("\(#function) posted data with response \(response)")
 
             return Result {
-                if let result = try JSONDecoder().decode(endpoint.responseModel, from: data) as? T {
+                if let result = try jsonDecoder.decode(endpoint.responseModel, from: data) as? T {
                     return result
                 } else {
                     throw APIError.failedToDecodedExpectedModelType(response)
