@@ -19,6 +19,8 @@ struct WebScripts {
             .primary-footer .terms-and-stuff { display: none }
             body, .organized-left-menu { padding-top: 16px }
             .bike-overlay-wrapper { display: none }
+            div.card.organized-access-panel { display: none }
+            .credibility-score, .parking-notifications-wrap { display: none }
             """
         let escapedNewlines = source.replacingOccurrences(of: "\n", with: "\\n")
         let javascript =
