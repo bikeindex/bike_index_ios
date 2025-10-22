@@ -79,7 +79,7 @@ struct RegisterBikeView: View {
                         }
                         .padding(.leading, 2)
 
-                        PhotosPicker(selection: $viewModel.photosPickerItem) {
+                        PhotosPicker(selection: $viewModel.photosPickerItem, matching: .images) {
                             Label("Choose Photo", systemImage: "photo.on.rectangle")
                         }
                         .padding(.leading, 2)
