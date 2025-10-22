@@ -99,7 +99,7 @@ extension MainContentPage {
                 return
             }
 
-            let fetch_v3_me = await client.api.get(Me.`self`)
+            let fetch_v3_me = await client.get(Me.`self`)
 
             switch fetch_v3_me {
             case .success(let success):
@@ -168,7 +168,7 @@ extension MainContentPage {
                 return
             }
 
-            let fetchMyBikes = await client.api.get(Me.bikes)
+            let fetchMyBikes = await client.get(Me.bikes)
 
             switch fetchMyBikes {
             case .success(let success):

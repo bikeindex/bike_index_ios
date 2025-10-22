@@ -13,7 +13,7 @@ import URLEncodedForm
 import WebKit
 
 /// Provide a subset of ``ClientConfiguration`` to control access.
-struct HostProvider {
+struct HostProvider: Sendable {
     let host: URL
 }
 
@@ -21,12 +21,12 @@ struct HostProvider {
 typealias QueryItemTuple = (name: String, value: String)
 
 /// Stateful API client for interacting with bikeindex.org
-/// Wraps ``API`` class.
 /// Controls networking state and loads app configuration from the bundle.
+/// Performs ``get(_:)`` and ``post(_:)`` requests.
 @MainActor
 @Observable class Client {
     // MARK: Configuration and Helpers
-    private let session = URLSession(configuration: .default)
+    internal let session = URLSession(configuration: .default)
 
     /// App configuration loaded from .xcconfig files to determine the network environment
     private(set) var configuration: ClientConfiguration
@@ -34,8 +34,6 @@ typealias QueryItemTuple = (name: String, value: String)
     var hostProvider: HostProvider {
         configuration.hostProvider
     }
-    /// Stateless API class belonging to this stateful instance that performs network operations for us.
-    private(set) var api: API
     /// Stateful shared webview configuration to manage cookie storage for logout and javascript/css injection scripts.
     private(set) var webConfiguration = WKWebViewConfiguration()
 
@@ -64,9 +62,6 @@ typealias QueryItemTuple = (name: String, value: String)
         self.keychain = keychain
         self.refreshRunLoop = refreshRunLoop
         let configuration = try ClientConfiguration.bundledConfig()
-        self.api = API(
-            configuration: configuration.hostProvider,
-            session: session)
         self.configuration = configuration
         self.deeplinkManager = DeeplinkManager(host: configuration.hostProvider)
         loadLastToken()
@@ -108,7 +103,6 @@ typealias QueryItemTuple = (name: String, value: String)
 
                 auth = lastKnownAuth
                 accessToken = lastKnownAuth.accessToken
-                api.accessToken = lastKnownAuth.accessToken
 
                 setupRefreshTimer()
 
@@ -127,7 +121,7 @@ typealias QueryItemTuple = (name: String, value: String)
     func destroySession() async {
         // Clear web state
         // NOTE: We could parse this for a 302 redirect to /goodbye but that seems unnecessary
-        _ = await api.get(OAuth.logout)
+        _ = await get(OAuth.logout)
 
         let allCookies = await webConfiguration.websiteDataStore.httpCookieStore.allCookies()
         var authCookie: HTTPCookie?
@@ -148,9 +142,6 @@ typealias QueryItemTuple = (name: String, value: String)
         KeychainSwift().delete(Keychain.oauthToken)
         accessToken = nil
         auth = nil
-        api = API(
-            configuration: configuration.hostProvider,
-            session: session)
     }
 
     var userCanRegisterBikes: Bool {
@@ -195,14 +186,14 @@ typealias QueryItemTuple = (name: String, value: String)
             URLQueryItem(name: item.name, value: item.value)
         }
 
-        let fullToken = await api.get(OAuth.token(queryItems: tokenQuery))
+        let fullToken = await get(OAuth.token(queryItems: tokenQuery))
         switch fullToken {
         case .success(let success):
             guard let fullTokenAuth = success as? OAuthToken else {
                 return false
             }
             self.auth = fullTokenAuth
-            self.api.accessToken = fullTokenAuth.accessToken
+            self.accessToken = fullTokenAuth.accessToken
             self.setupRefreshTimer()
             do {
                 let data = try JSONEncoder().encode(fullTokenAuth)
@@ -264,7 +255,7 @@ typealias QueryItemTuple = (name: String, value: String)
         }
 
         Task {
-            let renewedTokenRequest = await api.get(OAuth.refresh(queryItems: tokenQuery))
+            let renewedTokenRequest = await get(OAuth.refresh(queryItems: tokenQuery))
             switch renewedTokenRequest {
             case .success(let success):
                 guard let refreshedToken = success as? OAuthToken else {
@@ -273,7 +264,7 @@ typealias QueryItemTuple = (name: String, value: String)
                 }
 
                 self.auth = refreshedToken
-                self.api.accessToken = refreshedToken.accessToken
+                self.accessToken = refreshedToken.accessToken
                 self.setupRefreshTimer()
                 do {
                     let data = try JSONEncoder().encode(refreshedToken)
@@ -283,6 +274,7 @@ typealias QueryItemTuple = (name: String, value: String)
                         "Failed to persist /oauth/token to keychain after fetching successfully, continuing"
                     )
                 }
+                Logger.client.info("Refreshed oauth token to keychain")
             case .failure(let failure):
                 Logger.client.error("Failed to fetch /oauth/token \(failure)")
             }

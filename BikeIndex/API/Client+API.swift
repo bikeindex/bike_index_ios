@@ -22,7 +22,8 @@ extension URL {
 public typealias BikeId = String
 
 /// Internal type to signify that POSTs use an Encodable type
-public protocol Postable: Encodable, Sendable {}
+typealias Postable = Encodable & Sendable
+typealias ResponseDecodable = Decodable & Sendable
 
 protocol APIEndpoint: Sendable {
     /// Array of path components to-be concatenated to the URL
@@ -34,7 +35,7 @@ protocol APIEndpoint: Sendable {
     var authorized: Bool { get }
 
     var requestModel: Encodable? { get }
-    var responseModel: any Decodable.Type { get }
+    var responseModel: any ResponseDecodable.Type { get }
 
     var formType: FormType? { get }
 
@@ -46,21 +47,9 @@ extension APIEndpoint {
 }
 
 /// API client to perform networking operations with only essential state.
-@MainActor
-final class API {
-    /// Retrieve networking essentials, namely host URL, to apply to all requests
-    private var configuration: HostProvider
-    /// Receive the known-good accessToken from Client for stateful network requests.
-    var accessToken: String?
-    private(set) var session: URLSession
-
-    init(configuration: HostProvider, session: URLSession = URLSession.shared) {
-        self.configuration = configuration
-        self.session = session
-    }
-
-    func get(_ endpoint: APIEndpoint) async -> Result<(any Decodable), Error> {
-        var request = endpoint.request(for: configuration)
+extension Client {
+    func get(_ endpoint: APIEndpoint) async -> Result<(any ResponseDecodable), Error> {
+        var request = endpoint.request(for: configuration.hostProvider)
         if endpoint.authorized, let accessToken {
             request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
             )
@@ -91,7 +80,7 @@ final class API {
     }
 
     func post<T: Decodable>(_ endpoint: APIEndpoint) async -> Result<T, Error> {
-        var request = endpoint.request(for: configuration)
+        var request = endpoint.request(for: configuration.hostProvider)
         if endpoint.authorized, let accessToken {
             request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
             )
@@ -190,11 +179,14 @@ enum FormType {
 }
 
 extension HTTPURLResponse {
-
+    /// HTTP 304 "Not Modified"
+    /// https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/304
     var cacheHit: Bool {
         statusCode == 304
     }
 
+    /// HTTP 400 to 499 codes are Client Error Responses
+    /// https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status#client_error_responses
     var clientError: Bool {
         statusCode >= 400 && statusCode < 500
     }
