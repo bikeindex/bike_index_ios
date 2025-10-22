@@ -11,6 +11,7 @@ enum ContributorPlaces: String, Identifiable, CaseIterable {
     var id: String { rawValue }
 
     case pittsburgh = "Pittsburgh, PA"
+    case portland = "Portland, OR"
     // for the backend
     case sf = "San Francisco, CA"
 
