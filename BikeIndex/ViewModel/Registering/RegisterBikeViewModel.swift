@@ -227,23 +227,33 @@ extension RegisterBikeView {
                             if let data = image.jpegData(compressionQuality: 0.9) {
                                 let endpoint = Bikes.image(
                                     identifier: "\(bikeModel.identifier)", imageData: data)
-                                let response: Result<ImageResponseContainer, any Error> =
-                                    await client.post(endpoint)
-                                switch response {
-                                case .success(let imageResponseContainer):
-                                    Logger.model.debug(
-                                        "\(#function) Image upload successful in \(Date().timeIntervalSince(start)) seconds"
-                                    )
-                                    let image = imageResponseContainer.image
-                                    bikeModel.largeImage = image.large
-                                    bikeModel.thumb = image.thumb
+                                client.postInBackground(endpoint) { result in
+                                    do {
+                                        switch result {
+                                        case .success(let data):
+                                            guard let imageResponseContainer = try JSONDecoder().decode(endpoint.responseModel, from: data) as? ImageResponseContainer else {
+                                                Logger.model.debug(
+                                                    "\(#function) Failed to decode image upload response after bike registration"
+                                                )
+                                                return
+                                            }
+                                            Logger.model.debug(
+                                                "\(#function) Image upload successful in \(Date().timeIntervalSince(start)) seconds"
+                                            )
+                                            let image = imageResponseContainer.image
+                                            bikeModel.largeImage = image.large
+                                            bikeModel.thumb = image.thumb
 
-                                    modelContext.insert(bikeModel)
-                                    try? modelContext.save()
-                                case .failure(let failure):
-                                    Logger.model.debug(
-                                        "\(#function) Failed to upload image after bike registration: \(failure)"
-                                    )
+                                            modelContext.insert(bikeModel)
+                                            try? modelContext.save()
+                                        case .failure(let failure):
+                                            Logger.model.debug(
+                                                "\(#function) Failed to upload image after bike registration: \(failure)"
+                                            )
+                                        }
+                                    } catch {
+
+                                    }
                                 }
                             } else {
                                 Logger.model.debug(

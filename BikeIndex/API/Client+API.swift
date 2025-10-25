@@ -159,6 +159,90 @@ extension Client {
             return .failure(error)
         }
     }
+
+    func postInBackground(_ endpoint: APIEndpoint, completion: @escaping (Result<Data, Error>) -> Void) {
+        backgroundSessionDelegate.setCompletionHandler(completion)
+
+        var request = endpoint.request(for: configuration.hostProvider)
+        if endpoint.authorized, let accessToken {
+            request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
+            )
+        }
+
+        guard let requestModel = endpoint.requestModel else {
+            Logger.api.error(
+                "\(#function) Failed to find model for POST body encoding for endpoint \(String(reflecting: endpoint))"
+            )
+            completion(.failure(APIError.postMissingContents(endpoint: endpoint).error))
+            return
+        }
+        guard let formType = endpoint.formType else {
+            Logger.api.error(
+                "\(#function) Failed to find form type for POST endpoint \(String(reflecting: endpoint))"
+            )
+            completion(.failure(APIError.postMissingContents(endpoint: endpoint).error))
+            return
+        }
+
+        // Prepare HTTP body contents
+        do {
+            switch formType {
+            case .formURLEncoded:
+                request.httpBody = try URLEncodedFormEncoder().encode(requestModel)
+            case .multipartFormData:
+                // TODO: Refactor into something like URLEncodedFormEncoder or import Swift package for multipart forms
+
+                // Get file data from request model
+                guard let fileData = requestModel as? Data else {
+                    Logger.api.error(
+                        "\(#function) Failed to get data from model for multipart POST endpoint \(String(reflecting: endpoint))"
+                    )
+                    completion(.failure(APIError.postMissingContents(endpoint: endpoint).error))
+                    return
+                }
+
+                // Set content type to multipart/form-data
+                let boundary = UUID().uuidString
+                request.setValue(
+                    "multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+                // Create multipart form data
+                var body = Data()
+                body.append("--\(boundary)\r\n".data(using: .utf8)!)
+                body.append(
+                    "Content-Disposition: form-data; name=\"file\"; filename=\"\("bike.jpg")\"\r\n"
+                        .data(using: .utf8)!)
+                body.append("Content-Type: application/octet-stream\r\n\r\n".data(using: .utf8)!)
+                body.append(fileData)
+                body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+
+                request.httpBody = body
+            }
+        } catch {
+            Logger.api.error("\(#function) Failed to encode POST body with \(error)")
+            completion(.failure(error))
+        }
+
+        // Send POST request
+        do {
+            // Save body to temporary file. Required for uploading in background. See: https://developer.apple.com/documentation/Foundation/downloading-files-in-the-background#Comply-with-background-transfer-limitations
+            let tempDirectory = FileManager.default.temporaryDirectory
+            let tempFileURL = tempDirectory.appendingPathComponent(UUID().uuidString)
+            guard let httpBody = request.httpBody else {
+                Logger.api.error("\(#function) Could not find POST HTTP body")
+                throw APIError.postMissingContents(endpoint: endpoint)
+            }
+            try httpBody.write(to: tempFileURL)
+            request.httpBody = nil
+            let uploadTask = backgroundSession.uploadTask(with: request, fromFile: tempFileURL)
+            uploadTask.resume()
+        } catch {
+            Logger.api.error(
+                "\(#function) failed to fetch \(String(describing: request.url))) with error \(error)"
+            )
+            completion(.failure(error))
+        }
+    }
 }
 
 enum HttpMethod: String {
