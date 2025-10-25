@@ -27,6 +27,8 @@ typealias QueryItemTuple = (name: String, value: String)
 @Observable class Client {
     // MARK: Configuration and Helpers
     internal let session = URLSession(configuration: .default)
+    internal let backgroundSessionDelegate: BackgroundSessionDelegate
+    internal let backgroundSession: URLSession
 
     /// App configuration loaded from .xcconfig files to determine the network environment
     private(set) var configuration: ClientConfiguration
@@ -59,6 +61,8 @@ typealias QueryItemTuple = (name: String, value: String)
         keychain: KeychainSwift = KeychainSwift(),
         refreshRunLoop: RunLoop = RunLoop.main
     ) throws {
+        self.backgroundSessionDelegate = BackgroundSessionDelegate()
+        self.backgroundSession = URLSession(configuration: .background(withIdentifier: "BackgroundSession"), delegate: backgroundSessionDelegate, delegateQueue: nil)
         self.keychain = keychain
         self.refreshRunLoop = refreshRunLoop
         let configuration = try ClientConfiguration.bundledConfig()
@@ -280,4 +284,49 @@ typealias QueryItemTuple = (name: String, value: String)
             }
         }
     }
+}
+
+final class BackgroundSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDelegate {
+    // TODO: Fix Sendable warning
+    private var completionHandler: ((Result<Data, Error>) -> Void)?
+    private var data: Data?
+
+    func setCompletionHandler(_ handler: @escaping (Result<Data, Error>) -> Void) {
+        self.completionHandler = handler
+    }
+
+    func urlSession(_ session: URLSession, didBecomeInvalidWithError error: (any Error)?) {
+        // TODO: Handle
+        Logger.api.debug("\(#function) error.debugDescription")
+    }
+
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+        Logger.api.debug("\(#function) data: \(data)")
+        self.data = data
+    }
+
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
+        Logger.api.debug("\(#function) error: \(error)")
+        if let error {
+            completionHandler?(.failure(error))
+            return
+        }
+        guard let data else {
+            completionHandler?(.failure(BackgroundSessionError.noData))
+            return
+        }
+        do {
+            try (task.response as? HTTPURLResponse)?.validate(with: data)
+        } catch {
+            completionHandler?(.failure(error))
+        }
+        Logger.api.debug("\(#function) posted data \(data)")
+        Logger.api.debug("\(#function) posted data with response \(task.response)")
+        self.completionHandler?(.success(data))
+    }
+}
+
+// TODO: Move somewhere else?
+enum BackgroundSessionError: Error {
+    case noData
 }
