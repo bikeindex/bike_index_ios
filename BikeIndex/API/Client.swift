@@ -321,8 +321,28 @@ final class BackgroundSessionDelegate: NSObject, URLSessionTaskDelegate, URLSess
             completionHandler?(.failure(error))
         }
         Logger.api.debug("\(#function) posted data \(data)")
-        Logger.api.debug("\(#function) posted data with response \(task.response)")
+        if completionHandler == nil {
+            Logger.api.debug("\(#function) completion handler is nil")
+        } else {
+            Logger.api.debug("\(#function) calling completion handler")
+        }
         self.completionHandler?(.success(data))
+    }
+
+    func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
+        Logger.api.debug("\(#function) session \(session)")
+        DispatchQueue.main.async {
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+                Logger.api.error("\(#function) No app delegate")
+                return
+            }
+            guard let backgroundCompletionHandler = appDelegate.backgroundCompletionHandler else {
+                Logger.api.error("\(#function) No background handler")
+                return
+            }
+            Logger.api.error("\(#function) backgroundCompletionHandler called")
+            backgroundCompletionHandler()
+        }
     }
 }
 

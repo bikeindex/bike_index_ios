@@ -8,6 +8,7 @@
 import Foundation
 import OSLog
 import URLEncodedForm
+import UIKit
 
 /// URL's appending(components: String...) variadic function cannot accept arrays (splatting) so use reduce instead
 extension URL {
@@ -49,6 +50,14 @@ extension APIEndpoint {
 /// API client to perform networking operations with only essential state.
 extension Client {
     func get(_ endpoint: APIEndpoint) async -> Result<(any ResponseDecodable), Error> {
+//        if let appDelegate = UIApplication.shared.delegate {
+//            print("UIApplicationDelegate exists")
+//            if let customDelegate = appDelegate as? AppDelegate {
+//                print("UIApplicationDelegate is AppDelegate")
+//            }
+//        } else {
+//            print("UIApplicationDelegate doesn't exist")
+//        }
         var request = endpoint.request(for: configuration.hostProvider)
         if endpoint.authorized, let accessToken {
             request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
@@ -236,6 +245,7 @@ extension Client {
             request.httpBody = nil
             let uploadTask = backgroundSession.uploadTask(with: request, fromFile: tempFileURL)
             uploadTask.resume()
+            Logger.api.debug("\(#function) submitted background POST request for \(request.url ?? "nil")")
         } catch {
             Logger.api.error(
                 "\(#function) failed to fetch \(String(describing: request.url))) with error \(error)"

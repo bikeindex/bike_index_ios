@@ -9,11 +9,16 @@ import AppIntents
 import OSLog
 import SwiftData
 import SwiftUI
+import WidgetKit
 
 @main
 struct BikeIndexApp: App {
+    @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
+
     /// A Client instance for stateful networking.
     @State private var client: Client
+
+    @State private var backgroundTaskFinished = false
 
     /// Set up SwiftData
     private var sharedModelContainer: ModelContainer
@@ -35,7 +40,17 @@ struct BikeIndexApp: App {
             .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { handleDeeplink($0.webpageURL) }
             .environment(client)
             .modelContainer(sharedModelContainer)
+            .alert("Background", isPresented: $backgroundTaskFinished) {
+
+            }
         }
+//        .backgroundTask(.urlSession) { sendable in
+//            print("backgroundTask", sendable)
+//            await MainActor.run {
+//                backgroundTaskFinished = true
+////                client.backgroundSessionDelegate.completionHandler()
+//            }
+//        }
     }
 
     /// DeeplinkManager parses out the URL and returns a boxed result.
@@ -83,5 +98,16 @@ struct BikeIndexApp: App {
     func setupAppIntentsDependancies() {
         AppDependencyManager.shared.add(key: "ModelContainer", dependency: sharedModelContainer)
         BikeIndexShortcutsProvider.updateAppShortcutParameters()
+    }
+}
+
+class AppDelegate: NSObject, UIApplicationDelegate {
+    var backgroundCompletionHandler: (() -> Void)?
+
+    func application(_ application: UIApplication,
+                     handleEventsForBackgroundURLSession identifier: String,
+                     completionHandler: @escaping () -> Void) {
+        Logger.client.debug("\(#function) identifier: \(identifier)")
+        backgroundCompletionHandler = completionHandler
     }
 }
