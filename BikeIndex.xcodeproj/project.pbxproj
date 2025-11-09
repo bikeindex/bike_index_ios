@@ -400,7 +400,7 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		04EA11232B25135D0024CDDD /* Debug BikeIndex.org */ = {
+		04EA11232B25135D0024CDDD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -462,9 +462,9 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
-			name = "Debug BikeIndex.org";
+			name = Debug;
 		};
-		04EA11242B25135D0024CDDD /* Debug BikeIndex.org */ = {
+		04EA11242B25135D0024CDDD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F4B9272B098B44009442B5 /* BikeIndex-production.xcconfig */;
 			buildSettings = {
@@ -505,9 +505,9 @@
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = "Debug BikeIndex.org";
+			name = Debug;
 		};
-		04EA11252B25135D0024CDDD /* Debug BikeIndex.org */ = {
+		04EA11252B25135D0024CDDD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -526,9 +526,9 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BikeIndex.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BikeIndex";
 			};
-			name = "Debug BikeIndex.org";
+			name = Debug;
 		};
-		04EA11262B25135D0024CDDD /* Debug BikeIndex.org */ = {
+		04EA11262B25135D0024CDDD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */;
 			buildSettings = {
@@ -548,7 +548,7 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = BikeIndex;
 			};
-			name = "Debug BikeIndex.org";
+			name = Debug;
 		};
 		04F4B91D2B098ADE009442B5 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -698,7 +698,7 @@
 		04F4B8F22B098ADB009442B5 /* Build configuration list for PBXProject "BikeIndex" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				04EA11232B25135D0024CDDD /* Debug BikeIndex.org */,
+				04EA11232B25135D0024CDDD /* Debug */,
 				04F4B91D2B098ADE009442B5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -707,7 +707,7 @@
 		04F4B91E2B098ADE009442B5 /* Build configuration list for PBXNativeTarget "BikeIndex" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				04EA11242B25135D0024CDDD /* Debug BikeIndex.org */,
+				04EA11242B25135D0024CDDD /* Debug */,
 				04F4B9202B098ADE009442B5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -716,7 +716,7 @@
 		04F4B9212B098ADE009442B5 /* Build configuration list for PBXNativeTarget "UnitTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				04EA11252B25135D0024CDDD /* Debug BikeIndex.org */,
+				04EA11252B25135D0024CDDD /* Debug */,
 				04F4B9232B098ADE009442B5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -725,7 +725,7 @@
 		04F4B9242B098ADE009442B5 /* Build configuration list for PBXNativeTarget "UITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				04EA11262B25135D0024CDDD /* Debug BikeIndex.org */,
+				04EA11262B25135D0024CDDD /* Debug */,
 				04F4B9262B098ADE009442B5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
