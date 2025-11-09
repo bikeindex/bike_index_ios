@@ -88,6 +88,9 @@ struct BikeIndexApp: App {
             for: schema, configurations: [modelConfiguration])
         self.sharedModelContainer = sharedModelContainer
 
+        appDelegate.backgroundSessionDelegate = client.backgroundSessionDelegate
+        Logger.api.debug("\(#function) stored client.backgroundSessionDelegate in appDelegate")
+
         setupAppIntentsDependancies()
     }
 
@@ -102,12 +105,17 @@ struct BikeIndexApp: App {
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-    var backgroundCompletionHandler: (() -> Void)?
+    var backgroundSessionDelegate: BackgroundSessionDelegate?
 
     func application(_ application: UIApplication,
                      handleEventsForBackgroundURLSession identifier: String,
                      completionHandler: @escaping () -> Void) {
         Logger.client.debug("\(#function) identifier: \(identifier)")
-        backgroundCompletionHandler = completionHandler
+        if let backgroundSessionDelegate {
+            Logger.client.debug("\(#function) stored appDelegateCompletionHandler in backgroundSessionDelegate")
+            backgroundSessionDelegate.appDelegateCompletionHandler = completionHandler
+        } else {
+            Logger.client.error("\(#function) can't store appDelegateCompletionHandler because backgroundSessionDelegate is nil")
+        }
     }
 }

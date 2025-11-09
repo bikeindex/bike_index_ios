@@ -251,44 +251,43 @@ extension RegisterBikeView {
                     let start = Date()
                     if case .success(let image) = imageState {
                         message = "Bike photo should finish uploading in the background."
-                        Task {
-                            // TODO: Find a way to reduce file size further without reducing quality
-                            if let data = image.jpegData(compressionQuality: 0.9) {
-                                let endpoint = Bikes.image(
-                                    identifier: "\(bikeModel.identifier)", imageData: data)
-                                client.postInBackground(endpoint) { result in
-                                    do {
-                                        switch result {
-                                        case .success(let data):
-                                            guard let imageResponseContainer = try JSONDecoder().decode(endpoint.responseModel, from: data) as? ImageResponseContainer else {
-                                                Logger.model.debug(
-                                                    "\(#function) Failed to decode image upload response after bike registration"
-                                                )
-                                                return
-                                            }
+                        // TODO: Find a way to reduce file size further without reducing quality
+                        if let data = image.jpegData(compressionQuality: 0.9) {
+                            let endpoint = Bikes.image(
+                                identifier: "\(bikeModel.identifier)", imageData: data)
+                            client.postInBackground(endpoint) { result in
+                                do {
+                                    switch result {
+                                    case .success(let data):
+                                        guard let imageResponseContainer = try JSONDecoder().decode(endpoint.responseModel, from: data) as? ImageResponseContainer else {
                                             Logger.model.debug(
-                                                "\(#function) Image upload successful in \(Date().timeIntervalSince(start)) seconds"
+                                                "\(#function) Failed to decode image upload response after bike registration"
                                             )
-                                            let image = imageResponseContainer.image
-                                            bikeModel.largeImage = image.large
-                                            bikeModel.thumb = image.thumb
-
-                                            modelContext.insert(bikeModel)
-                                            try? modelContext.save()
-                                        case .failure(let failure):
-                                            Logger.model.debug(
-                                                "\(#function) Failed to upload image after bike registration: \(failure)"
-                                            )
+                                            return
                                         }
-                                    } catch {
+                                        Logger.model.debug(
+                                            "\(#function) Image upload successful in \(Date().timeIntervalSince(start)) seconds"
+                                        )
+                                        let image = imageResponseContainer.image
+                                        bikeModel.largeImage = image.large
+                                        bikeModel.thumb = image.thumb
 
+                                        // TODO: See if this needs to be on the main thread
+                                        modelContext.insert(bikeModel)
+                                        try? modelContext.save()
+                                    case .failure(let failure):
+                                        Logger.model.debug(
+                                            "\(#function) Failed to upload image after bike registration: \(failure)"
+                                        )
                                     }
+                                } catch {
+
                                 }
-                            } else {
-                                Logger.model.debug(
-                                    "\(#function) Failed to convert image to jpeg data"
-                                )
                             }
+                        } else {
+                            Logger.model.debug(
+                                "\(#function) Failed to convert image to jpeg data"
+                            )
                         }
                     }
 

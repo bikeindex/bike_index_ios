@@ -170,8 +170,6 @@ extension Client {
     }
 
     func postInBackground(_ endpoint: APIEndpoint, completion: @escaping (Result<Data, Error>) -> Void) {
-        backgroundSessionDelegate.setCompletionHandler(completion)
-
         var request = endpoint.request(for: configuration.hostProvider)
         if endpoint.authorized, let accessToken {
             request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
