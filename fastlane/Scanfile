@@ -5,7 +5,7 @@
 # fastlane scan --help
 
 project("BikeIndex.xcodeproj")
-scheme("Debug (development)")
+scheme("Debug")
 testplan("AllTests")
 
 # Scanfile contains defaults and these can be overridden by Fastfile
