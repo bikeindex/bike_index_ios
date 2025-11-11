@@ -135,7 +135,7 @@ extension Client {
         }
     }
 
-    func postInBackground(_ endpoint: APIEndpoint, completion: @escaping (Result<Data, Error>) -> Void) {
+    func postInBackground(_ endpoint: APIEndpoint, onFailure: @escaping (Error) -> Void) {
         var request = endpoint.request(for: configuration.hostProvider)
         if endpoint.authorized, let accessToken {
             request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)])
@@ -145,14 +145,14 @@ extension Client {
             Logger.api.error(
                 "\(#function) Failed to find model for POST body encoding for endpoint \(String(reflecting: endpoint))"
             )
-            completion(.failure(APIError.postMissingContents(endpoint: endpoint).error))
+            onFailure(APIError.postMissingContents(endpoint: endpoint).error)
             return
         }
         guard let formType = endpoint.formType else {
             Logger.api.error(
                 "\(#function) Failed to find form type for POST endpoint \(String(reflecting: endpoint))"
             )
-            completion(.failure(APIError.postMissingContents(endpoint: endpoint).error))
+            onFailure(APIError.postMissingContents(endpoint: endpoint).error)
             return
         }
 
@@ -166,7 +166,7 @@ extension Client {
             }
         } catch {
             Logger.api.error("\(#function) Failed to encode POST body with \(error)")
-            completion(.failure(error))
+            onFailure(error)
         }
 
         // Send POST request
@@ -187,7 +187,7 @@ extension Client {
             Logger.api.error(
                 "\(#function) failed to fetch \(String(describing: request.url))) with error \(error)"
             )
-            completion(.failure(error))
+            onFailure(error)
         }
     }
 

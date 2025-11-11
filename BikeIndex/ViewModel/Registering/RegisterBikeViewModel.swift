@@ -255,34 +255,10 @@ extension RegisterBikeView {
                         if let data = image.jpegData(compressionQuality: 0.9) {
                             let endpoint = Bikes.image(
                                 identifier: "\(bikeModel.identifier)", imageData: data)
-                            client.postInBackground(endpoint) { result in
-                                do {
-                                    switch result {
-                                    case .success(let data):
-                                        guard let imageResponseContainer = try JSONDecoder().decode(endpoint.responseModel, from: data) as? ImageResponseContainer else {
-                                            Logger.model.debug(
-                                                "\(#function) Failed to decode image upload response after bike registration"
-                                            )
-                                            return
-                                        }
-                                        Logger.model.debug(
-                                            "\(#function) Image upload successful in \(Date().timeIntervalSince(start)) seconds"
-                                        )
-                                        let image = imageResponseContainer.image
-                                        bikeModel.largeImage = image.large
-                                        bikeModel.thumb = image.thumb
-
-                                        // TODO: See if this needs to be on the main thread
-                                        modelContext.insert(bikeModel)
-                                        try? modelContext.save()
-                                    case .failure(let failure):
-                                        Logger.model.debug(
-                                            "\(#function) Failed to upload image after bike registration: \(failure)"
-                                        )
-                                    }
-                                } catch {
-
-                                }
+                            client.postInBackground(endpoint) { error in
+                                Logger.model.debug(
+                                    "\(#function) Failed to upload image after bike registration: \(error)"
+                                )
                             }
                         } else {
                             Logger.model.debug(
