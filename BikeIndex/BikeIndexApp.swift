@@ -18,8 +18,6 @@ struct BikeIndexApp: App {
     /// A Client instance for stateful networking.
     @State private var client: Client
 
-    @State private var backgroundTaskFinished = false
-
     /// Set up SwiftData
     private var sharedModelContainer: ModelContainer
 
@@ -40,17 +38,7 @@ struct BikeIndexApp: App {
             .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { handleDeeplink($0.webpageURL) }
             .environment(client)
             .modelContainer(sharedModelContainer)
-            .alert("Background", isPresented: $backgroundTaskFinished) {
-
-            }
         }
-//        .backgroundTask(.urlSession) { sendable in
-//            print("backgroundTask", sendable)
-//            await MainActor.run {
-//                backgroundTaskFinished = true
-////                client.backgroundSessionDelegate.completionHandler()
-//            }
-//        }
     }
 
     /// DeeplinkManager parses out the URL and returns a boxed result.
@@ -88,8 +76,8 @@ struct BikeIndexApp: App {
             for: schema, configurations: [modelConfiguration])
         self.sharedModelContainer = sharedModelContainer
 
+        // Give AppDelegate access to client's background session delegate
         appDelegate.backgroundSessionDelegate = client.backgroundSessionDelegate
-        Logger.api.debug("\(#function) stored client.backgroundSessionDelegate in appDelegate")
 
         setupAppIntentsDependancies()
     }
@@ -110,12 +98,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      handleEventsForBackgroundURLSession identifier: String,
                      completionHandler: @escaping () -> Void) {
-        Logger.client.debug("\(#function) identifier: \(identifier)")
         if let backgroundSessionDelegate {
-            Logger.client.debug("\(#function) stored appDelegateCompletionHandler in backgroundSessionDelegate")
             backgroundSessionDelegate.appDelegateCompletionHandler = completionHandler
         } else {
-            Logger.client.error("\(#function) can't store appDelegateCompletionHandler because backgroundSessionDelegate is nil")
+            Logger.client.error("\(#function) Can't store AppDelegate's background URL session completion handler because backgroundSessionDelegate is nil")
         }
     }
 }
