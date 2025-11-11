@@ -287,7 +287,7 @@ typealias QueryItemTuple = (name: String, value: String)
     }
 }
 
-final class BackgroundSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDelegate {
+final class BackgroundSessionDelegate: NSObject {
     // TODO: Fix Sendable warning
     var appDelegateCompletionHandler: (() -> Void)?
     private var data: Data?
@@ -332,17 +332,29 @@ final class BackgroundSessionDelegate: NSObject, URLSessionTaskDelegate, URLSess
             Logger.model.error("\(#function) Error: \(error)")
         }
     }
+}
 
+
+extension BackgroundSessionDelegate: URLSessionDelegate {
     func urlSession(_ session: URLSession, didBecomeInvalidWithError error: (any Error)?) {
         // TODO: Handle
         Logger.api.debug("\(#function) error.debugDescription")
     }
 
-    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        Logger.api.debug("\(#function) data: \(data)")
-        self.data = data
+    func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
+        DispatchQueue.main.async { [self] in
+            Logger.api.debug("\(#function) session \(session), thread: \(Thread.current), isMain: \(Thread.isMainThread)")
+            guard let appDelegateCompletionHandler else {
+                Logger.api.error("\(#function) appDelegateCompletionHandler is nil")
+                return
+            }
+            Logger.api.debug("\(#function) appDelegateCompletionHandler called")
+            appDelegateCompletionHandler()
+        }
     }
+}
 
+extension BackgroundSessionDelegate: URLSessionTaskDelegate {
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
         DispatchQueue.main.async { [self] in
             if let error {
@@ -375,17 +387,14 @@ final class BackgroundSessionDelegate: NSObject, URLSessionTaskDelegate, URLSess
         }
     }
 
-    func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
-        DispatchQueue.main.async { [self] in
-            Logger.api.debug("\(#function) session \(session), thread: \(Thread.current), isMain: \(Thread.isMainThread)")
-            guard let appDelegateCompletionHandler else {
-                Logger.api.error("\(#function) appDelegateCompletionHandler is nil")
-                return
-            }
-            Logger.api.debug("\(#function) appDelegateCompletionHandler called")
-            appDelegateCompletionHandler()
-        }
+}
+
+extension BackgroundSessionDelegate: URLSessionDataDelegate {
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+        Logger.api.debug("\(#function) data: \(data)")
+        self.data = data
     }
+
 }
 
 // TODO: Move somewhere else?
