@@ -185,35 +185,6 @@ extension RegisterBikeView {
                 != nil
         }
 
-//        func imageUploadCompletion(result: Result<Data, Error>) { result in
-//            do {
-//                switch result {
-//                case .success(let data):
-//                    guard let imageResponseContainer = try JSONDecoder().decode(endpoint.responseModel, from: data) as? ImageResponseContainer else {
-//                        Logger.model.debug(
-//                            "\(#function) Failed to decode image upload response after bike registration"
-//                        )
-//                        return
-//                    }
-//                    Logger.model.debug(
-//                        "\(#function) Image upload successful in \(Date().timeIntervalSince(start)) seconds"
-//                    )
-//                    let image = imageResponseContainer.image
-//                    bikeModel.largeImage = image.large
-//                    bikeModel.thumb = image.thumb
-//
-//                    modelContext.insert(bikeModel)
-//                    try? modelContext.save()
-//                case .failure(let failure):
-//                    Logger.model.debug(
-//                        "\(#function) Failed to upload image after bike registration: \(failure)"
-//                    )
-//                }
-//            } catch {
-//
-//            }
-//        }
-
         /// Marshall the Bike model to a ``Postable`` intermediary, write that intermediary to the API client and discard Bike model
         /// Receive the result and persist the server's model
         /// Update the UI
@@ -248,7 +219,6 @@ extension RegisterBikeView {
                     modelContext.insert(bikeModel)
 
                     var message: LocalizedStringKey = ""
-                    let start = Date()
                     if case .success(let image) = imageState {
                         message = "Bike photo should finish uploading in the background."
                         // TODO: Find a way to reduce file size further without reducing quality
