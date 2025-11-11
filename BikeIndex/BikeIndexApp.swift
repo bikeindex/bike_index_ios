@@ -9,7 +9,6 @@ import AppIntents
 import OSLog
 import SwiftData
 import SwiftUI
-import WidgetKit
 
 @main
 struct BikeIndexApp: App {
@@ -89,23 +88,5 @@ struct BikeIndexApp: App {
     func setupAppIntentsDependancies() {
         AppDependencyManager.shared.add(key: "ModelContainer", dependency: sharedModelContainer)
         BikeIndexShortcutsProvider.updateAppShortcutParameters()
-    }
-}
-
-class AppDelegate: NSObject, UIApplicationDelegate {
-    var backgroundSessionDelegate: BackgroundSessionDelegate?
-
-    func application(
-        _ application: UIApplication,
-        handleEventsForBackgroundURLSession identifier: String,
-        completionHandler: @escaping () -> Void
-    ) {
-        if let backgroundSessionDelegate {
-            backgroundSessionDelegate.appDelegateCompletionHandler = completionHandler
-        } else {
-            Logger.client.error(
-                "\(#function) Can't store AppDelegate's background URL session completion handler because backgroundSessionDelegate is nil"
-            )
-        }
     }
 }
