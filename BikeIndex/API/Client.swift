@@ -288,9 +288,8 @@ typealias QueryItemTuple = (name: String, value: String)
 }
 
 final class BackgroundSessionDelegate: NSObject {
-    // TODO: Fix Sendable warning
-    var appDelegateCompletionHandler: (() -> Void)?
-    private var data: Data?
+    @MainActor var appDelegateCompletionHandler: (() -> Void)?
+    @MainActor private var data: Data?
     private let container = try? ModelContainer(for: Bike.self)
 
     @MainActor
@@ -356,7 +355,7 @@ extension BackgroundSessionDelegate: URLSessionDelegate {
 
 extension BackgroundSessionDelegate: URLSessionTaskDelegate {
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
-        DispatchQueue.main.async { [self] in
+        Task { @MainActor in
             if let error {
                 Logger.api.error("\(#function) error: \(error), thread: \(Thread.current), isMain: \(Thread.isMainThread)")
                 imageUploadCompletion(.failure(error))
@@ -391,8 +390,10 @@ extension BackgroundSessionDelegate: URLSessionTaskDelegate {
 
 extension BackgroundSessionDelegate: URLSessionDataDelegate {
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        Logger.api.debug("\(#function) data: \(data)")
-        self.data = data
+        Task { @MainActor in
+            Logger.api.debug("\(#function) data: \(data)")
+            self.data = data
+        }
     }
 
 }
