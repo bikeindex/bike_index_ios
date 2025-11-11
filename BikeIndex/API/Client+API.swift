@@ -51,7 +51,8 @@ extension Client {
     func get(_ endpoint: APIEndpoint) async -> Result<(any ResponseDecodable), Error> {
         var request = endpoint.request(for: configuration.hostProvider)
         if endpoint.authorized, let accessToken {
-            request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)])
+            request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
+            )
         }
 
         do {
@@ -116,7 +117,8 @@ extension Client {
             request.httpBody = nil
 
             // Send POST request
-            Logger.api.debug("\(#function) Submitting background POST request for \(request.url ?? "nil")")
+            Logger.api.debug(
+                "\(#function) Submitting background POST request for \(request.url ?? "nil")")
             let uploadTask = backgroundSession.uploadTask(with: request, fromFile: tempFileURL)
             uploadTask.resume()
         } catch {
@@ -127,7 +129,8 @@ extension Client {
     private func preparePOSTRequest(for endpoint: APIEndpoint) throws -> URLRequest {
         var request = endpoint.request(for: configuration.hostProvider)
         if endpoint.authorized, let accessToken {
-            request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)])
+            request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
+            )
         }
 
         // Prepare HTTP body contents
@@ -159,7 +162,9 @@ extension Client {
         return request
     }
 
-    private func addMultipartFormBodyToRequest(_ request: inout URLRequest, for endpoint: APIEndpoint) throws {
+    private func addMultipartFormBodyToRequest(
+        _ request: inout URLRequest, for endpoint: APIEndpoint
+    ) throws {
         // Get file data from request model
         guard let fileData = endpoint.requestModel as? Data else {
             Logger.api.error(

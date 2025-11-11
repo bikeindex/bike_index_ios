@@ -62,7 +62,9 @@ typealias QueryItemTuple = (name: String, value: String)
         refreshRunLoop: RunLoop = RunLoop.main
     ) throws {
         self.backgroundSessionDelegate = BackgroundSessionDelegate()
-        self.backgroundSession = URLSession(configuration: .background(withIdentifier: "BackgroundSession"), delegate: backgroundSessionDelegate, delegateQueue: nil)
+        self.backgroundSession = URLSession(
+            configuration: .background(withIdentifier: "BackgroundSession"),
+            delegate: backgroundSessionDelegate, delegateQueue: nil)
         self.keychain = keychain
         self.refreshRunLoop = refreshRunLoop
         let configuration = try ClientConfiguration.bundledConfig()

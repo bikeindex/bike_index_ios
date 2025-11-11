@@ -24,21 +24,32 @@ final class BackgroundSessionDelegate: NSObject {
         do {
             switch result {
             case .success(let data):
-                let imageResponseContainer = try JSONDecoder().decode(ImageResponseContainer.self, from: data)
+                let imageResponseContainer = try JSONDecoder().decode(
+                    ImageResponseContainer.self, from: data)
                 let image = imageResponseContainer.image
                 guard let bikeIdentifier else {
-                    Logger.api.error("\(#function) Bike identifier is nil. Can't save bike image to context")
+                    Logger.api.error(
+                        "\(#function) Bike identifier is nil. Can't save bike image to context")
                     return
                 }
-                Logger.api.debug("\(#function) Image upload successful for bike with ID: \(bikeIdentifier)")
+                Logger.api.debug(
+                    "\(#function) Image upload successful for bike with ID: \(bikeIdentifier)")
 
                 // Get bike model from data
                 guard let context = container?.mainContext else {
-                    Logger.api.error("\(#function) Bike model container is nil. Can't save bike image to context")
+                    Logger.api.error(
+                        "\(#function) Bike model container is nil. Can't save bike image to context"
+                    )
                     return
                 }
-                guard let bikeModel = try context.fetch(FetchDescriptor<Bike>(predicate: #Predicate { $0.identifier == bikeIdentifier })).first else {
-                    Logger.api.error("\(#function) Failed to fetch bike with ID \(bikeIdentifier) from context")
+                guard
+                    let bikeModel = try context.fetch(
+                        FetchDescriptor<Bike>(
+                            predicate: #Predicate { $0.identifier == bikeIdentifier })
+                    ).first
+                else {
+                    Logger.api.error(
+                        "\(#function) Failed to fetch bike with ID \(bikeIdentifier) from context")
                     return
                 }
 
@@ -77,7 +88,9 @@ extension BackgroundSessionDelegate: URLSessionDelegate {
 }
 
 extension BackgroundSessionDelegate: URLSessionTaskDelegate {
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
+    func urlSession(
+        _ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?
+    ) {
         Task { @MainActor in
             if let error {
                 Logger.api.error("\(#function) Error: \(error)")

@@ -95,13 +95,17 @@ struct BikeIndexApp: App {
 class AppDelegate: NSObject, UIApplicationDelegate {
     var backgroundSessionDelegate: BackgroundSessionDelegate?
 
-    func application(_ application: UIApplication,
-                     handleEventsForBackgroundURLSession identifier: String,
-                     completionHandler: @escaping () -> Void) {
+    func application(
+        _ application: UIApplication,
+        handleEventsForBackgroundURLSession identifier: String,
+        completionHandler: @escaping () -> Void
+    ) {
         if let backgroundSessionDelegate {
             backgroundSessionDelegate.appDelegateCompletionHandler = completionHandler
         } else {
-            Logger.client.error("\(#function) Can't store AppDelegate's background URL session completion handler because backgroundSessionDelegate is nil")
+            Logger.client.error(
+                "\(#function) Can't store AppDelegate's background URL session completion handler because backgroundSessionDelegate is nil"
+            )
         }
     }
 }
