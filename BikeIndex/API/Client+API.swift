@@ -50,18 +50,9 @@ extension APIEndpoint {
 /// API client to perform networking operations with only essential state.
 extension Client {
     func get(_ endpoint: APIEndpoint) async -> Result<(any ResponseDecodable), Error> {
-//        if let appDelegate = UIApplication.shared.delegate {
-//            print("UIApplicationDelegate exists")
-//            if let customDelegate = appDelegate as? AppDelegate {
-//                print("UIApplicationDelegate is AppDelegate")
-//            }
-//        } else {
-//            print("UIApplicationDelegate doesn't exist")
-//        }
         var request = endpoint.request(for: configuration.hostProvider)
         if endpoint.authorized, let accessToken {
-            request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
-            )
+            request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)])
         }
 
         do {
@@ -114,32 +105,7 @@ extension Client {
             case .formURLEncoded:
                 request.httpBody = try URLEncodedFormEncoder().encode(requestModel)
             case .multipartFormData:
-                // TODO: Refactor into something like URLEncodedFormEncoder or import Swift package for multipart forms
-
-                // Get file data from request model
-                guard let fileData = requestModel as? Data else {
-                    Logger.api.error(
-                        "\(#function) Failed to get data from model for multipart POST endpoint \(String(reflecting: endpoint))"
-                    )
-                    return .failure(APIError.postMissingContents(endpoint: endpoint).error)
-                }
-
-                // Set content type to multipart/form-data
-                let boundary = UUID().uuidString
-                request.setValue(
-                    "multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-
-                // Create multipart form data
-                var body = Data()
-                body.append("--\(boundary)\r\n".data(using: .utf8)!)
-                body.append(
-                    "Content-Disposition: form-data; name=\"file\"; filename=\"\("bike.jpg")\"\r\n"
-                        .data(using: .utf8)!)
-                body.append("Content-Type: application/octet-stream\r\n\r\n".data(using: .utf8)!)
-                body.append(fileData)
-                body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
-
-                request.httpBody = body
+                try addMultipartFormBodyToRequest(&request, for: endpoint)
             }
         } catch {
             Logger.api.error("\(#function) Failed to encode POST body with \(error)")
@@ -172,8 +138,7 @@ extension Client {
     func postInBackground(_ endpoint: APIEndpoint, completion: @escaping (Result<Data, Error>) -> Void) {
         var request = endpoint.request(for: configuration.hostProvider)
         if endpoint.authorized, let accessToken {
-            request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
-            )
+            request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)])
         }
 
         guard let requestModel = endpoint.requestModel else {
@@ -197,33 +162,7 @@ extension Client {
             case .formURLEncoded:
                 request.httpBody = try URLEncodedFormEncoder().encode(requestModel)
             case .multipartFormData:
-                // TODO: Refactor into something like URLEncodedFormEncoder or import Swift package for multipart forms
-
-                // Get file data from request model
-                guard let fileData = requestModel as? Data else {
-                    Logger.api.error(
-                        "\(#function) Failed to get data from model for multipart POST endpoint \(String(reflecting: endpoint))"
-                    )
-                    completion(.failure(APIError.postMissingContents(endpoint: endpoint).error))
-                    return
-                }
-
-                // Set content type to multipart/form-data
-                let boundary = UUID().uuidString
-                request.setValue(
-                    "multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-
-                // Create multipart form data
-                var body = Data()
-                body.append("--\(boundary)\r\n".data(using: .utf8)!)
-                body.append(
-                    "Content-Disposition: form-data; name=\"file\"; filename=\"\("bike.jpg")\"\r\n"
-                        .data(using: .utf8)!)
-                body.append("Content-Type: application/octet-stream\r\n\r\n".data(using: .utf8)!)
-                body.append(fileData)
-                body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
-
-                request.httpBody = body
+                try addMultipartFormBodyToRequest(&request, for: endpoint)
             }
         } catch {
             Logger.api.error("\(#function) Failed to encode POST body with \(error)")
@@ -250,6 +189,33 @@ extension Client {
             )
             completion(.failure(error))
         }
+    }
+
+    private func addMultipartFormBodyToRequest(_ request: inout URLRequest, for endpoint: APIEndpoint) throws {
+        // Get file data from request model
+        guard let fileData = endpoint.requestModel as? Data else {
+            Logger.api.error(
+                "\(#function) Failed to get data from multipart POST request model"
+            )
+            throw APIError.postMissingContents(endpoint: endpoint).error
+        }
+
+        // Set content type to multipart/form-data
+        let boundary = UUID().uuidString
+        request.setValue(
+            "multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+        // Create multipart form data
+        var body = Data()
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append(
+            "Content-Disposition: form-data; name=\"file\"; filename=\"\("bike.jpg")\"\r\n"
+                .data(using: .utf8)!)
+        body.append("Content-Type: application/octet-stream\r\n\r\n".data(using: .utf8)!)
+        body.append(fileData)
+        body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+
+        request.httpBody = body
     }
 }
 
