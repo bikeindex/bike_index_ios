@@ -80,40 +80,10 @@ extension Client {
     }
 
     func post<T: Decodable>(_ endpoint: APIEndpoint) async -> Result<T, Error> {
-        var request = endpoint.request(for: configuration.hostProvider)
-        if endpoint.authorized, let accessToken {
-            request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
-            )
-        }
-
-        // Prepare HTTP body contents
         do {
-            guard let requestModel = endpoint.requestModel else {
-                Logger.api.error(
-                    "\(#function) Failed to find model for POST body encoding for endpoint \(String(reflecting: endpoint))"
-                )
-                return .failure(APIError.postMissingContents(endpoint: endpoint).error)
-            }
-            guard let formType = endpoint.formType else {
-                Logger.api.error(
-                    "\(#function) Failed to find form type for POST endpoint \(String(reflecting: endpoint))"
-                )
-                return .failure(APIError.postMissingContents(endpoint: endpoint).error)
-            }
+            let request = try preparePOSTRequest(for: endpoint)
 
-            switch formType {
-            case .formURLEncoded:
-                request.httpBody = try URLEncodedFormEncoder().encode(requestModel)
-            case .multipartFormData:
-                try addMultipartFormBodyToRequest(&request, for: endpoint)
-            }
-        } catch {
-            Logger.api.error("\(#function) Failed to encode POST body with \(error)")
-            return .failure(error)
-        }
-
-        // Send POST request
-        do {
+            // Send POST request
             let (data, response) = try await session.data(for: request)
             try (response as? HTTPURLResponse)?.validate(with: data)
 
@@ -128,49 +98,14 @@ extension Client {
                 }
             }
         } catch {
-            Logger.api.error(
-                "\(#function) failed to fetch \(String(describing: request.url))) with error \(error)"
-            )
             return .failure(error)
         }
     }
 
     func postInBackground(_ endpoint: APIEndpoint, onFailure: @escaping (Error) -> Void) {
-        var request = endpoint.request(for: configuration.hostProvider)
-        if endpoint.authorized, let accessToken {
-            request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)])
-        }
-
-        guard let requestModel = endpoint.requestModel else {
-            Logger.api.error(
-                "\(#function) Failed to find model for POST body encoding for endpoint \(String(reflecting: endpoint))"
-            )
-            onFailure(APIError.postMissingContents(endpoint: endpoint).error)
-            return
-        }
-        guard let formType = endpoint.formType else {
-            Logger.api.error(
-                "\(#function) Failed to find form type for POST endpoint \(String(reflecting: endpoint))"
-            )
-            onFailure(APIError.postMissingContents(endpoint: endpoint).error)
-            return
-        }
-
-        // Prepare HTTP body contents
         do {
-            switch formType {
-            case .formURLEncoded:
-                request.httpBody = try URLEncodedFormEncoder().encode(requestModel)
-            case .multipartFormData:
-                try addMultipartFormBodyToRequest(&request, for: endpoint)
-            }
-        } catch {
-            Logger.api.error("\(#function) Failed to encode POST body with \(error)")
-            onFailure(error)
-        }
+            var request = try preparePOSTRequest(for: endpoint)
 
-        // Send POST request
-        do {
             // Save body to temporary file. Required for uploading in background. See: https://developer.apple.com/documentation/Foundation/downloading-files-in-the-background#Comply-with-background-transfer-limitations
             let tempDirectory = FileManager.default.temporaryDirectory
             let tempFileURL = tempDirectory.appendingPathComponent(UUID().uuidString)
@@ -180,15 +115,49 @@ extension Client {
             }
             try httpBody.write(to: tempFileURL)
             request.httpBody = nil
+
+            // Send POST request
+            Logger.api.debug("\(#function) Submitting background POST request for \(request.url ?? "nil")")
             let uploadTask = backgroundSession.uploadTask(with: request, fromFile: tempFileURL)
             uploadTask.resume()
-            Logger.api.debug("\(#function) submitted background POST request for \(request.url ?? "nil")")
         } catch {
-            Logger.api.error(
-                "\(#function) failed to fetch \(String(describing: request.url))) with error \(error)"
-            )
             onFailure(error)
         }
+    }
+
+    private func preparePOSTRequest(for endpoint: APIEndpoint) throws -> URLRequest {
+        var request = endpoint.request(for: configuration.hostProvider)
+        if endpoint.authorized, let accessToken {
+            request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)])
+        }
+
+        // Prepare HTTP body contents
+        do {
+            guard let requestModel = endpoint.requestModel else {
+                Logger.api.error(
+                    "\(#function) Failed to find model for POST body encoding for endpoint \(String(reflecting: endpoint))"
+                )
+                throw APIError.postMissingContents(endpoint: endpoint).error
+            }
+            guard let formType = endpoint.formType else {
+                Logger.api.error(
+                    "\(#function) Failed to find form type for POST endpoint \(String(reflecting: endpoint))"
+                )
+                throw APIError.postMissingContents(endpoint: endpoint).error
+            }
+
+            switch formType {
+            case .formURLEncoded:
+                request.httpBody = try URLEncodedFormEncoder().encode(requestModel)
+            case .multipartFormData:
+                try addMultipartFormBodyToRequest(&request, for: endpoint)
+            }
+        } catch {
+            Logger.api.error("\(#function) Failed to encode POST body with \(error)")
+            throw error
+        }
+
+        return request
     }
 
     private func addMultipartFormBodyToRequest(_ request: inout URLRequest, for endpoint: APIEndpoint) throws {
