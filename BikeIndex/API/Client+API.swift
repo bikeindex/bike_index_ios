@@ -8,7 +8,6 @@
 import Foundation
 import OSLog
 import URLEncodedForm
-import UIKit
 
 /// URL's appending(components: String...) variadic function cannot accept arrays (splatting) so use reduce instead
 extension URL {
