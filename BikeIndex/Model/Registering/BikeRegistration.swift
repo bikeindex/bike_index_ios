@@ -30,7 +30,7 @@ struct BikeRegistration: Encodable {
     // MARK: Optional fields
     var owner_email_is_phone_number: Bool?
     var cycle_type_name: BicycleType?
-    var no_duplicate: Bool?
+    var no_duplicate: Bool? = true
     var rear_wheel_bsd: Int?
     var rear_tire_narrow: Bool?
     var front_wheel_bsd: String?
@@ -59,7 +59,7 @@ struct BikeRegistration: Encodable {
         serial: String?, manufacturer: String, owner_email: String, primary_frame_color: FrameColor,
         test: Bool = false, owner_email_is_phone_number: Bool? = nil,
         cycle_type_name: BicycleType? = nil,
-        no_duplicate: Bool? = nil, rear_wheel_bsd: Int? = nil, rear_tire_narrow: Bool? = nil,
+        no_duplicate: Bool? = true, rear_wheel_bsd: Int? = nil, rear_tire_narrow: Bool? = nil,
         front_wheel_bsd: String? = nil, front_tire_narrow: Bool? = nil, frame_model: String? = nil,
         year: UInt? = nil, description: String? = nil, secondary_frame_color: FrameColor? = nil,
         tertiary_frame_color: FrameColor? = nil, rear_gear_type_slug: String? = nil,
@@ -133,10 +133,10 @@ struct BikeRegistration: Encodable {
         } else {
             self.stolen_record = nil
         }
+        self.no_duplicate = nil
 
         // TODO: Unsupported fields, support in future changes
         self.owner_email_is_phone_number = nil
-        self.no_duplicate = nil
         self.rear_wheel_bsd = nil
         self.rear_tire_narrow = nil
         self.front_wheel_bsd = nil
