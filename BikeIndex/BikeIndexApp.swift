@@ -12,6 +12,8 @@ import SwiftUI
 
 @main
 struct BikeIndexApp: App {
+    @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
+
     /// A Client instance for stateful networking.
     @State private var client: Client
 
@@ -72,6 +74,9 @@ struct BikeIndexApp: App {
         let sharedModelContainer = try! ModelContainer(
             for: schema, configurations: [modelConfiguration])
         self.sharedModelContainer = sharedModelContainer
+
+        // Give AppDelegate access to client's background session delegate
+        appDelegate.backgroundSessionDelegate = client.backgroundSessionDelegate
 
         setupAppIntentsDependancies()
     }

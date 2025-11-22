@@ -27,6 +27,8 @@ typealias QueryItemTuple = (name: String, value: String)
 @Observable class Client {
     // MARK: Configuration and Helpers
     internal let session = URLSession(configuration: .default)
+    internal let backgroundSessionDelegate: BackgroundSessionDelegate
+    internal let backgroundSession: URLSession
 
     /// App configuration loaded from .xcconfig files to determine the network environment
     private(set) var configuration: ClientConfiguration
@@ -59,6 +61,10 @@ typealias QueryItemTuple = (name: String, value: String)
         keychain: KeychainSwift = KeychainSwift(),
         refreshRunLoop: RunLoop = RunLoop.main
     ) throws {
+        self.backgroundSessionDelegate = BackgroundSessionDelegate()
+        self.backgroundSession = URLSession(
+            configuration: .background(withIdentifier: "BackgroundSession"),
+            delegate: backgroundSessionDelegate, delegateQueue: nil)
         self.keychain = keychain
         self.refreshRunLoop = refreshRunLoop
         let configuration = try ClientConfiguration.bundledConfig()

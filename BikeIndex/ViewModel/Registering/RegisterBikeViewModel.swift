@@ -219,37 +219,21 @@ extension RegisterBikeView {
                     modelContext.insert(bikeModel)
 
                     var message: LocalizedStringKey = ""
-                    let start = Date()
                     if case .success(let image) = imageState {
                         message = "Bike photo should finish uploading in the background."
-                        Task {
-                            // TODO: Find a way to reduce file size further without reducing quality
-                            if let data = image.jpegData(compressionQuality: 0.9) {
-                                let endpoint = Bikes.image(
-                                    identifier: "\(bikeModel.identifier)", imageData: data)
-                                let response: Result<ImageResponseContainer, any Error> =
-                                    await client.post(endpoint)
-                                switch response {
-                                case .success(let imageResponseContainer):
-                                    Logger.model.debug(
-                                        "\(#function) Image upload successful in \(Date().timeIntervalSince(start)) seconds"
-                                    )
-                                    let image = imageResponseContainer.image
-                                    bikeModel.largeImage = image.large
-                                    bikeModel.thumb = image.thumb
-
-                                    modelContext.insert(bikeModel)
-                                    try? modelContext.save()
-                                case .failure(let failure):
-                                    Logger.model.debug(
-                                        "\(#function) Failed to upload image after bike registration: \(failure)"
-                                    )
-                                }
-                            } else {
+                        // TODO: Find a way to reduce file size further without reducing quality
+                        if let data = image.jpegData(compressionQuality: 0.9) {
+                            let endpoint = Bikes.image(
+                                identifier: "\(bikeModel.identifier)", imageData: data)
+                            client.postInBackground(endpoint) { error in
                                 Logger.model.debug(
-                                    "\(#function) Failed to convert image to jpeg data"
+                                    "\(#function) Failed to upload image after bike registration: \(error)"
                                 )
                             }
+                        } else {
+                            Logger.model.debug(
+                                "\(#function) Failed to convert image to jpeg data"
+                            )
                         }
                     }
 
