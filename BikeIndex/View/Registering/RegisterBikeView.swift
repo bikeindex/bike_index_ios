@@ -59,7 +59,6 @@ struct RegisterBikeView: View {
 
                 // MARK: Photo
                 // Disabled until properly tested
-                #if DEBUG
                 Section {
                     switch viewModel.imageState {
                     case .success(let image):
@@ -105,7 +104,6 @@ struct RegisterBikeView: View {
                 } header: {
                     Text("Photo")
                 }
-                #endif
 
                 // MARK: Serial number
                 Section {
