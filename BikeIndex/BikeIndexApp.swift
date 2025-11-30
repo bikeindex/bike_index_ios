@@ -62,7 +62,6 @@ struct BikeIndexApp: App {
         let client = try! Client()
         self.client = client
 
-        //        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         let config = ModelConfiguration()
         let modelContainer = try! ModelContainer(
             for: Bike.self, User.self, AuthenticatedUser.self, AutocompleteManufacturer.self,

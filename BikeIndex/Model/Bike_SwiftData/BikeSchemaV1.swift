@@ -12,7 +12,7 @@ import SwiftData
 /// "V1" suffix does NOT relate to the app version
 /// ``BikeSchemaV1/versionIdentifier`` DOES relate to the app version
 enum BikeSchemaV1: VersionedSchema {
-    static let versionIdentifier = Schema.Version(1, 5, 1)
+    static let versionIdentifier = Schema.Version(1, 6, 0)
 
     static var models: [any PersistentModel.Type] {
         [Bike.self, User.self, AuthenticatedUser.self]
@@ -20,7 +20,7 @@ enum BikeSchemaV1: VersionedSchema {
 }
 
 enum BikeSchemaV2: VersionedSchema {
-    static let versionIdentifier = Schema.Version(1, 6, 0)
+    static let versionIdentifier = Schema.Version(1, 6, 1)
 
     static var models: [any PersistentModel.Type] {
         [Bike.self, User.self, AuthenticatedUser.self]
