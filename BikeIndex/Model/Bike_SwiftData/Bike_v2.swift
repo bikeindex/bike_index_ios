@@ -87,9 +87,9 @@ extension BikeSchemaV2 {
         var publicImages: [String]
 
         /// Date the bike was first created. Note that this is read-only from the API.
-        var createdAt: Date
+        var createdAt: Date?
         /// Date the bike was most-recently updated. Note that this is read-only from the API.
-        var updatedAt: Date
+        var updatedAt: Date?
 
         struct Constants {
             /// The range of supported years for Bike models
