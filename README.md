@@ -31,7 +31,7 @@ To get started:
 
 ### Development
 
-- Requirements: Xcode 26.0
+- Requirements: Xcode 26.1
 - Target deployment: iOS 17.2
 
 This project uses SwiftUI and SwiftData. At this time iOS (iPhone) is the primary development target with a goal to include iPad and Mac support.

@@ -1,3 +1,6 @@
+##
+# Image details: https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md
+##
 name: iOS Test Suite
 permissions:
   contents: read
@@ -10,7 +13,7 @@ on:
 jobs:
   tests_iphone16:
     name: Run iPhone 16 test suite with fastlane
-    runs-on: macos-15
+    runs-on: macos-26
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,8 +32,8 @@ jobs:
           echo event ${{ github.event }}
           echo workflow_ref ${{ github.workflow_ref }}
           echo workflow_sha ${{ github.workflow_sha }}
-      - name: Set Xcode 26.0
-        run: sudo xcode-select -s /Applications/Xcode_26.0.app
+      - name: Set Xcode 26.1
+        run: sudo xcode-select -s /Applications/Xcode_26.1.app
       - name: Install tools
         run: brew bundle install
       - name: Set up xcconfig secrets (see README.md#quick-start)
@@ -57,7 +60,7 @@ jobs:
 
   tests_iphone16plus:
     name: Run iPhone 16 Plus test suite with fastlane
-    runs-on: macos-15
+    runs-on: macos-26
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -76,8 +79,8 @@ jobs:
           echo event ${{ github.event }}
           echo workflow_ref ${{ github.workflow_ref }}
           echo workflow_sha ${{ github.workflow_sha }}
-      - name: Set Xcode 26.0
-        run: sudo xcode-select -s /Applications/Xcode_26.0.app
+      - name: Set Xcode 26.1
+        run: sudo xcode-select -s /Applications/Xcode_26.1.app
       - name: Install tools
         run: brew bundle install
       - name: Set up xcconfig secrets (see README.md#quick-start)
@@ -104,7 +107,7 @@ jobs:
 
   tests_ipad:
     name: Run iPad (10th generation) test suite with fastlane
-    runs-on: macos-15
+    runs-on: macos-26
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -123,8 +126,8 @@ jobs:
           echo event ${{ github.event }}
           echo workflow_ref ${{ github.workflow_ref }}
           echo workflow_sha ${{ github.workflow_sha }}
-      - name: Set Xcode 26.0
-        run: sudo xcode-select -s /Applications/Xcode_26.0.app
+      - name: Set Xcode 26.1
+        run: sudo xcode-select -s /Applications/Xcode_26.1.app
       - name: Install tools
         run: brew bundle install
       - name: Set up xcconfig secrets (see README.md#quick-start)
