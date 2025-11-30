@@ -10,7 +10,7 @@ testplan("AllTests")
 
 # Scanfile contains defaults and these can be overridden by Fastfile
 # or CLI arguments
-deployment_target_version = "26.0"
+deployment_target_version = "26.1"
 devices([
 	"iPhone 16",
 	"iPhone 16 Plus",
