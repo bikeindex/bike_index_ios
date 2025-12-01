@@ -13,7 +13,10 @@ extension ClientConfiguration {
         return [
             ("client_id", clientId),
             ("response_type", "code"),
-            ("redirect_uri", redirectUri),
+            (
+                "redirect_uri",
+                redirectUri.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? ""
+            ),
             ("scope", oauthScopes.queryItem),
         ].map { (item: QueryItemTuple) in
             URLQueryItem(name: item.name, value: item.value)
