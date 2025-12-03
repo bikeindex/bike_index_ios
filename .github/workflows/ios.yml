@@ -47,7 +47,7 @@ jobs:
         run: |
           echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
       - name: List available simulators
-        run: xcodebuild -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
+        run: xcodebuild -scheme BikeIndex -project BikeIndex.xcodeproj -showdestinations
       - name: Run tests
         id: fastlane-ios-tests
         run: fastlane ios tests_iphone16
@@ -94,7 +94,7 @@ jobs:
         run: |
           echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
       - name: List available simulators
-        run: xcodebuild -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
+        run: xcodebuild -scheme BikeIndex -project BikeIndex.xcodeproj -showdestinations
       - name: Run tests
         id: fastlane-ios-tests
         run: fastlane ios tests_iphone16plus
@@ -141,7 +141,7 @@ jobs:
         run: |
           echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
       - name: List available simulators
-        run: xcodebuild -scheme Debug\ \(development\) -project BikeIndex.xcodeproj -showdestinations
+        run: xcodebuild -scheme BikeIndex -project BikeIndex.xcodeproj -showdestinations
       - name: Run tests
         id: fastlane-ios-tests
         run: fastlane ios tests_ipad
