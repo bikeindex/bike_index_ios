@@ -22,3 +22,6 @@ Test-credentials.xcconfig
 
 # scan temporary files
 **/fastlane/test_output
+
+# symbolic link to metadata elsewhere on disk
+app-store-metadata

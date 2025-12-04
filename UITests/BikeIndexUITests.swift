@@ -62,7 +62,6 @@ final class BikeIndexUITests: XCTestCase {
 
     /// Just remember that GitHub is running its own navigation control with JavaScript/whatever/replacing the page
     /// so the buttons will behave incorrectly when using GitHub links. (Except for their subdomains).
-    #warning("As of 2025-03 GitHub navigation does **NOT** respect WebView history")
     func test_acknowledgements_webView_navigation_history() throws {
         try MainContentRobot(app)
             .startWithSignIn()
@@ -88,10 +87,8 @@ final class BikeIndexUITests: XCTestCase {
 
             .tapViewAllFilesIfNeeded()
             .navigate(to: .license)
-            // Back should be available after navigating forward but it will _not be available_ because of GitHub
-            .checkBackButton(isEnabled: false)
-            // Technically should be false but because GitHub has JS navigation some behaviors are imperfect.
-            .checkForwardButton(isEnabled: true)
+            .checkBackButton(isEnabled: true)
+            .checkForwardButton(isEnabled: false)
             .navigateBack()
 
             .checkBackButton(isEnabled: false)

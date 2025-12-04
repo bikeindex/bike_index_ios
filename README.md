@@ -18,8 +18,8 @@ The public beta for pre-release builds is available at https://testflight.apple.
 To get started:
 
 1. Copy the BikeIndex-template.xcconfig file into BikeIndex-development.xcconfig and BikeIndex-production.xcconfig files.
-	- BikeIndex-development is used for the `Debug (development)` build scheme. This should use your local development instance.
-	- BikeIndex-production is used for the `Debug (production)` build scheme and for archive/release builds. This is only required for releases.
+	- BikeIndex-development is used for the Debug Project Configuration in Run, Test, and Analyze builds.
+	- BikeIndex-production is used for the Release Project Configuration and for Profile and Archive builds.
 2. Follow the [instructions in BikeIndex-template.xcconfig](BikeIndex-template.xcconfig#L11-L18) and these steps to register your own OAuth application with bikeindex.org/oauth
 	- Sign in to the OAuth admin page at https://bikeindex.org/oauth/applications and create an new application
 	- (or sign in to your localhost instance and create an API key)
@@ -31,16 +31,15 @@ To get started:
 
 ### Development
 
-- Requirements: Xcode 26.0
+- Requirements: Xcode 26.1
 - Target deployment: iOS 17.2
 
-This project uses SwiftUI and SwiftData. At this time iOS (iPhone) is the primary development target with a goal to include iPad and Mac support.
+This project uses SwiftUI and SwiftData. At this time iPhone and iPad are the primary targets with a goal to include Mac support.
 
 ###### Set up suite of tools
 
 1. Install [brew](https://brew.sh/)
 2. `brew bundle install`
-    - Note: Brew bundle is separate from the Gem bundle
 
 At this point the `fastlane` tools should be installed and available.
 
