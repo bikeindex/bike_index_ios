@@ -15,7 +15,7 @@ enum BikeSchemaV1: VersionedSchema {
     static let versionIdentifier = Schema.Version(1, 6, 0)
 
     static var models: [any PersistentModel.Type] {
-        [Bike.self, User.self, AuthenticatedUser.self]
+        [BikeSchemaV1.Bike.self, User.self, AuthenticatedUser.self, ScannedBike.self, AutocompleteManufacturer.self]
     }
 }
 
@@ -23,6 +23,6 @@ enum BikeSchemaV2: VersionedSchema {
     static let versionIdentifier = Schema.Version(1, 6, 1)
 
     static var models: [any PersistentModel.Type] {
-        [Bike.self, User.self, AuthenticatedUser.self]
+        [BikeSchemaV2.Bike.self]
     }
 }

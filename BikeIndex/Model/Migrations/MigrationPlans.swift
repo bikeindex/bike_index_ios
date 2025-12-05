@@ -9,7 +9,8 @@ import SwiftData
 
 enum MigrationPlan_v1_v2: SchemaMigrationPlan {
     static let schemas: [any VersionedSchema.Type] = [
-        BikeSchemaV1.self
+        BikeSchemaV1.self,
+        BikeSchemaV2.self
     ]
 
     static let stages: [MigrationStage] = [

@@ -46,8 +46,8 @@ struct BikeResponse: ResponseModelInstantiable {
     let api_url: URL?
     let public_images: [String]?
 
-    let registration_created_at: TimeInterval
-    let registration_updated_at: TimeInterval
+    let registration_created_at: TimeInterval?
+    let registration_updated_at: TimeInterval?
 
     // MARK: - ResponseModelInstantiable for BikeResponse
 
@@ -79,6 +79,19 @@ struct BikeResponse: ResponseModelInstantiable {
             thirdColor = FrameColor(rawValue: frame_colors[2])
         }
 
+        let created_at: Date
+        if let registration_created_at {
+            created_at = Date(timeIntervalSince1970: registration_created_at)
+        } else {
+            created_at = .distantPast
+        }
+        let updated_at: Date
+        if let registration_updated_at {
+            updated_at = Date(timeIntervalSince1970: registration_updated_at)
+        } else {
+            updated_at = .distantPast
+        }
+
         return Bike(
             identifier: id ?? Int.min,
             bikeDescription: description,
@@ -100,8 +113,8 @@ struct BikeResponse: ResponseModelInstantiable {
             url: url,
             apiUrl: api_url,
             publicImages: public_images ?? [],
-            createdAt: Date(timeIntervalSince1970: registration_created_at),
-            updatedAt: Date(timeIntervalSince1970: registration_updated_at)
+            createdAt: created_at,
+            updatedAt: updated_at,
         )
     }
 }

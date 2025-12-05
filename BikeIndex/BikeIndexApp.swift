@@ -63,14 +63,18 @@ struct BikeIndexApp: App {
         self.client = client
 
         let config = ModelConfiguration()
-        let modelContainer = try! ModelContainer(
-            for: Bike.self, User.self, AuthenticatedUser.self, AutocompleteManufacturer.self,
-            ScannedBike.self,  // QR sticker history
-            migrationPlan: MigrationPlan_v1_v2.self,
-            configurations: config
-        )
+        do {
+            let modelContainer = try ModelContainer(
+                for: Bike.self, User.self, AuthenticatedUser.self, AutocompleteManufacturer.self,
+                ScannedBike.self,  // QR sticker history
+                migrationPlan: MigrationPlan_v1_v2.self,
+                configurations: config
+            )
 
-        self.sharedModelContainer = modelContainer
+            self.sharedModelContainer = modelContainer
+        } catch {
+            fatalError("Failed to complete database migrations \(error)")
+        }
 
         // Give AppDelegate access to client's background session delegate
         appDelegate.backgroundSessionDelegate = client.backgroundSessionDelegate
