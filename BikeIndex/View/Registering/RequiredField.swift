@@ -14,7 +14,6 @@ struct RequiredField: View {
     var body: some View {
         HStack(spacing: 0) {
             Text(label)
-                .font(.footnote)
                 .baselineOffset(0)
 
             if valid {
@@ -51,6 +50,24 @@ struct PrimaryFrameColorRequiredField: View {
                     .foregroundColor(.red)
                     .accessibilityLabel("Required \(label)")
             }
+        }
+    }
+}
+
+#Preview {
+    List {
+        Section {
+            Text("Content")
+        } header: {
+            RequiredField(
+                valid: true,
+                label: "Serial Number")
+        }
+
+        Section {
+            Text("Content")
+        } header: {
+            Text("Control")
         }
     }
 }
