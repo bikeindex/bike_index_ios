@@ -57,17 +57,25 @@ struct PrimaryFrameColorRequiredField: View {
 #Preview {
     List {
         Section {
-            Text("Content")
+            Text("System default header")
         } header: {
-            RequiredField(
-                valid: true,
-                label: "Serial Number")
+            Text("Control")
         }
 
         Section {
             Text("Content")
         } header: {
-            Text("Control")
+            RequiredField(
+                valid: true,
+                label: "Valid")
+        }
+
+        Section {
+            Text("Content")
+        } header: {
+            RequiredField(
+                valid: false,
+                label: "Invalid")
         }
     }
 }
