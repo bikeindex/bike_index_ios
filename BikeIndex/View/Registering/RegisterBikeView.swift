@@ -221,7 +221,7 @@ struct RegisterBikeView: View {
                             Text(option.displayValue)
                         }
                     } label: {
-                        PrimaryFrameColorRequiredField()
+                        RequiredField(valid: true, label: "Primary Frame Color")
                     }
                     // SwiftUI.Picker does not seem to support FocusState on iOS
                     // .focused($focus, equals: .primaryFrameColor)
