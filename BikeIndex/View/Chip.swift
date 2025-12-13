@@ -26,39 +26,50 @@ struct Chip: View {
     var body: some View {
         ZStack {
             if let color = color.color {
-                RoundedRectangle(cornerRadius: radius)
+                shape
                     .stroke(
                         color.gradient,
                         lineWidth: stroke
                     )
                     .fill(.background.tertiary)
             } else if color == .bareMetal {
-                RoundedRectangle(cornerRadius: radius)
+                shape
                     .stroke(
                         Self.bareMetalAngularGradient,
                         lineWidth: stroke / 2)
             } else {
-                // covered
+                /// ``FrameColor/covered`` color values
                 if #available(iOS 18.0, *) {
                     RoundedRectangle(cornerRadius: radius)
                         .strokeBorder(
                             Self.rainbow,
                             lineWidth: stroke / 2)
                 } else {
-                    RoundedRectangle(cornerRadius: radius)
+                    shape
                         .stroke(
                             Self.rainbow2,
                             lineWidth: stroke / 2)
                 }
             }
 
-            Text(title ?? color.displayValue)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
+            if style == .roundedLabel {
+                Text(title ?? color.displayValue)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+            }
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
         .fixedSize()
+    }
+
+    var shape: AnyShape {
+        switch style {
+        case .roundedLabel:
+            AnyShape(RoundedRectangle(cornerRadius: radius))
+        case .circle:
+            AnyShape(Circle())
+        }
     }
 
     static var bareMetalGradient: LinearGradient {
@@ -149,6 +160,12 @@ extension Chip {
 #Preview {
     Chip(color: .red)
         .style(.circle)
+
+    Chip(color: .blue)
+        .style(.roundedLabel)
+
+    Chip(color: .covered)
+        .style(.roundedLabel)
 }
 
 #Preview("Chip") {
