@@ -9,6 +9,11 @@ import Flow
 import SwiftUI
 
 struct Chip: View {
+    enum ChipStyle {
+        case roundedLabel
+        case circle
+    }
+
     /// In the absence of `title`, frameColor will be displayed
     let title: String?
     let color: FrameColor
@@ -74,14 +79,15 @@ struct Chip: View {
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
+        .scaleEffect(style == .roundedLabel ? 1 : 1.5)
         .fixedSize()
     }
 
-    var roundedLabel: RoundedRectangle {
+    private var roundedLabel: RoundedRectangle {
         RoundedRectangle(cornerRadius: radius)
     }
 
-    var circle: Circle {
+    private var circle: Circle {
         Circle()
     }
 
@@ -143,47 +149,16 @@ struct Chip: View {
     }
 }
 
-// MARK: -
-
-enum ChipStyle {
-    case roundedLabel
-    case circle
-}
-
-// MARK: -
-
-struct ChipStyleModifier: ViewModifier {
-    let title: String?
-    let color: FrameColor
-    let style: ChipStyle
-
-    func body(content: Content) -> some View {
-        Chip(title: title, color: color, style: style)
-    }
-}
-
-extension Chip {
-    func style(_ style: ChipStyle) -> Chip {
-        Chip(title: title, color: color, style: style)
-    }
-}
-
-// MARK:
-
 #Preview {
-    Chip(color: .blue)
-        .style(.roundedLabel)
+    Chip(color: .blue, style: .roundedLabel)
 
-    Chip(color: .red)
-        .style(.circle)
+    Chip(color: .red, style: .circle)
 
     // Special case
-    Chip(color: .covered)
-        .style(.circle)
+    Chip(color: .covered, style: .circle)
 
     // Special case
-    Chip(color: .bareMetal)
-        .style(.circle)
+    Chip(color: .bareMetal, style: .circle)
 }
 
 #Preview("Chip") {
@@ -193,8 +168,7 @@ extension Chip {
                 HStack {
                     Chip(color: frame)
                     Spacer()
-                    Chip(color: frame)
-                        .style(.circle)
+                    Chip(color: frame, style: .circle)
                 }
             }
         }

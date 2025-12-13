@@ -223,8 +223,7 @@ struct RegisterBikeView: View {
                     } label: {
                         HStack {
                             Text("Primary Frame Color")
-                            Chip(color: viewModel.colorPrimary)
-                                .style(.circle)
+                            Chip(color: viewModel.colorPrimary, style: .circle)
                         }
                     }
                     // SwiftUI.Picker does not seem to support FocusState on iOS
@@ -251,8 +250,7 @@ struct RegisterBikeView: View {
                         } label: {
                             HStack {
                                 Text("Secondary Frame Color")
-                                Chip(color: viewModel.colorSecondary)
-                                    .style(.circle)
+                                Chip(color: viewModel.colorSecondary, style: .circle)
                             }
                         }
                         .onChange(
@@ -280,8 +278,7 @@ struct RegisterBikeView: View {
                         } label: {
                             HStack {
                                 Text("Tertiary Frame Color")
-                                Chip(color: viewModel.colorTertiary)
-                                    .style(.circle)
+                                Chip(color: viewModel.colorTertiary, style: .circle)
                             }
                         }
                         .onChange(
