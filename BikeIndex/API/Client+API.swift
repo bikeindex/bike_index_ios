@@ -18,8 +18,9 @@ extension URL {
     }
 }
 
-/// API  usage of URL component Bike.{id} is string-backed
-public typealias BikeId = String
+/// API usage of URL component Bike.{id} is string-backed
+/// However ``Bike/BikeIdentifier`` is an Int so BikeId will be converted to String
+public typealias BikeId = Int
 
 /// Internal type to signify that POSTs use an Encodable type
 typealias Postable = Encodable & Sendable
