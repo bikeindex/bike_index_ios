@@ -26,6 +26,7 @@ struct Chip: View {
     var body: some View {
         ZStack {
             if let color = color.color {
+                /// ``FrameColor/color`` non-optional values
                 shape
                     .stroke(
                         color.gradient,
@@ -33,12 +34,13 @@ struct Chip: View {
                     )
                     .fill(.background.tertiary)
             } else if color == .bareMetal {
+                /// ``FrameColor/bareMetal`` special case
                 shape
                     .stroke(
                         Self.bareMetalAngularGradient,
                         lineWidth: stroke / 2)
             } else {
-                /// ``FrameColor/covered`` color values
+                /// ``FrameColor/covered`` special case
                 switch style {
                 case .roundedLabel:
                     if #available(iOS 18.0, *) {
@@ -56,6 +58,7 @@ struct Chip: View {
                     if #available(iOS 18.0, *) {
                         Circle()
                             .fill(Self.rainbow18)
+                            .scaleEffect(1.35)
                             .frame(
                                 maxWidth: .infinity,
                                 maxHeight: .infinity)
@@ -177,11 +180,11 @@ extension Chip {
 // MARK:
 
 #Preview {
-    Chip(color: .red)
-        .style(.circle)
-
     Chip(color: .blue)
         .style(.roundedLabel)
+
+    Chip(color: .red)
+        .style(.circle)
 
     // Edge-case
     Chip(color: .covered)
@@ -194,6 +197,7 @@ extension Chip {
             ForEach(FrameColor.allCases) { frame in
                 HStack {
                     Chip(color: frame)
+                    Spacer()
                     Chip(color: frame)
                         .style(.circle)
                 }
