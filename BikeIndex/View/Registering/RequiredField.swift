@@ -14,7 +14,6 @@ struct RequiredField: View {
     var body: some View {
         HStack(spacing: 0) {
             Text(label)
-                .font(.footnote)
                 .baselineOffset(0)
 
             if valid {
@@ -31,26 +30,34 @@ struct RequiredField: View {
     }
 }
 
-struct PrimaryFrameColorRequiredField: View {
-    let valid = true
-    let label = "Primary Frame Color"
+#Preview("RequiredField Design Sheet") {
+    List {
+        Section {
+            Text("System default header")
+        } header: {
+            Text("Control")
+        }
 
-    var body: some View {
-        HStack(spacing: 0) {
-            Text(label)
+        Section {
+            Text("Content")
+        } header: {
+            RequiredField(
+                valid: true,
+                label: "Valid")
+        }
 
-            if valid {
-                Text(" ✔︎")
-                    .bold()
-                    .baselineOffset(2)
-                    .accessibilityLabel("Valid \(label)")
-            } else {
-                Text("*")
-                    .bold()
-                    .baselineOffset(2)
-                    .foregroundColor(.red)
-                    .accessibilityLabel("Required \(label)")
-            }
+        Section {
+            Text("Content")
+        } header: {
+            RequiredField(
+                valid: false,
+                label: "Invalid")
+        }
+
+        Section {
+            RequiredField(valid: true, label: "Primary Frame Color")
+        } header: {
+            Text("In-line usage for PrimaryFrameColor")
         }
     }
 }
