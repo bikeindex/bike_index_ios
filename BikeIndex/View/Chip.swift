@@ -33,10 +33,7 @@ struct Chip: View {
                         Self.bareMetalAngularGradient,
                         lineWidth: stroke / 2)
             case (.circle, .bareMetal):
-                circle
-                    .stroke(
-                        Self.bareMetalAngularGradient,
-                        lineWidth: stroke / 2)
+                circle.fill(Self.bareMetalAngularGradient)
             // Covered
             case (.roundedLabel, .covered):
                 if #available(iOS 18.0, *) {
@@ -180,8 +177,12 @@ extension Chip {
     Chip(color: .red)
         .style(.circle)
 
-    // Edge-case
+    // Special case
     Chip(color: .covered)
+        .style(.circle)
+
+    // Special case
+    Chip(color: .bareMetal)
         .style(.circle)
 }
 
