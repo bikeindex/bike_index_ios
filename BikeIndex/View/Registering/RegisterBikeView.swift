@@ -221,7 +221,11 @@ struct RegisterBikeView: View {
                             Text(option.displayValue)
                         }
                     } label: {
-                        Text("Primary Frame Color")
+                        HStack {
+                            Text("Primary Frame Color")
+                            Chip(color: viewModel.colorPrimary,
+                                 style: .circle)
+                        }
                     }
                     // SwiftUI.Picker does not seem to support FocusState on iOS
                     // .focused($focus, equals: .primaryFrameColor)

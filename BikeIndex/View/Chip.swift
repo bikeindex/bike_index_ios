@@ -25,51 +25,48 @@ struct Chip: View {
 
     var body: some View {
         ZStack {
-            if let color = color.color {
-                /// ``FrameColor/color`` non-optional values
-                shape
-                    .stroke(
-                        color.gradient,
-                        lineWidth: stroke
-                    )
-                    .fill(.background.tertiary)
-            } else if color == .bareMetal {
-                /// ``FrameColor/bareMetal`` special case
-                shape
+            switch (style, color) {
+            // Bare Metal
+            case (.roundedLabel, .bareMetal):
+                roundedLabel
                     .stroke(
                         Self.bareMetalAngularGradient,
                         lineWidth: stroke / 2)
-            } else {
-                /// ``FrameColor/covered`` special case
-                switch style {
-                case .roundedLabel:
-                    if #available(iOS 18.0, *) {
-                        RoundedRectangle(cornerRadius: radius)
-                            .strokeBorder(
-                                Self.rainbow18,
-                                lineWidth: stroke / 2)
-                    } else {
-                        RoundedRectangle(cornerRadius: radius)
-                            .stroke(
-                                Self.rainbow17,
-                                lineWidth: stroke / 2)
-                    }
-                case .circle:
-                    if #available(iOS 18.0, *) {
-                        Circle()
-                            .fill(Self.rainbow18)
-                            .scaleEffect(1.35)
-                            .frame(
-                                maxWidth: .infinity,
-                                maxHeight: .infinity)
-                    } else {
-                        Circle()
-                            .fill(Self.rainbow17)
-                            .frame(
-                                maxWidth: .infinity,
-                                maxHeight: .infinity)
-                    }
+            case (.circle, .bareMetal):
+                circle
+                    .stroke(
+                        Self.bareMetalAngularGradient,
+                        lineWidth: stroke / 2)
+            // Covered
+            case (.roundedLabel, .covered):
+                if #available(iOS 18.0, *) {
+                    RoundedRectangle(cornerRadius: radius)
+                        .strokeBorder(
+                            Self.rainbow18,
+                            lineWidth: stroke / 2)
+                } else {
+                    RoundedRectangle(cornerRadius: radius)
+                        .stroke(
+                            Self.rainbow17,
+                            lineWidth: stroke / 2)
                 }
+            case (.circle, .covered):
+                if #available(iOS 18.0, *) {
+                    circle.fill(Self.rainbow18)
+                } else {
+                    circle.fill(Self.rainbow17)
+                }
+            // Color with value
+            case (.roundedLabel, let value):
+                roundedLabel
+                    .stroke(
+                        value.color!.gradient,
+                        lineWidth: stroke
+                    )
+                    .fill(.background.tertiary)
+            case (.circle, let value):
+                circle
+                    .fill(value.color!)
             }
 
             if style == .roundedLabel {
@@ -83,15 +80,12 @@ struct Chip: View {
         .fixedSize()
     }
 
-    var shape: AnyShape {
-        switch style {
-        case .roundedLabel:
-            AnyShape(RoundedRectangle(cornerRadius: radius))
-        case .circle:
-            AnyShape(
-                Circle()
-            )
-        }
+    var roundedLabel: RoundedRectangle {
+        RoundedRectangle(cornerRadius: radius)
+    }
+
+    var circle: Circle {
+        Circle()
     }
 
     static var bareMetalGradient: LinearGradient {
