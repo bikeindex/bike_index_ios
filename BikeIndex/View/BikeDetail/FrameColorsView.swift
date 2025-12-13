@@ -100,12 +100,12 @@ extension Color {
 #Preview("Rainbow iOS 18 Mesh") {
     if #available(iOS 18.0, *) {
         VStack {
-            Chip.rainbow
+            Chip.rainbow18
             Chip(color: .covered)
         }
     } else {
         VStack {
-            Chip.rainbow2
+            Chip.rainbow17
             Chip(color: .covered)
         }
     }

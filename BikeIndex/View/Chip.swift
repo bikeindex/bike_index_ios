@@ -39,16 +39,33 @@ struct Chip: View {
                         lineWidth: stroke / 2)
             } else {
                 /// ``FrameColor/covered`` color values
-                if #available(iOS 18.0, *) {
-                    RoundedRectangle(cornerRadius: radius)
-                        .strokeBorder(
-                            Self.rainbow,
-                            lineWidth: stroke / 2)
-                } else {
-                    shape
-                        .stroke(
-                            Self.rainbow2,
-                            lineWidth: stroke / 2)
+                switch style {
+                case .roundedLabel:
+                    if #available(iOS 18.0, *) {
+                        RoundedRectangle(cornerRadius: radius)
+                            .strokeBorder(
+                                Self.rainbow18,
+                                lineWidth: stroke / 2)
+                    } else {
+                        RoundedRectangle(cornerRadius: radius)
+                            .stroke(
+                                Self.rainbow17,
+                                lineWidth: stroke / 2)
+                    }
+                case .circle:
+                    if #available(iOS 18.0, *) {
+                        Circle()
+                            .fill(Self.rainbow18)
+                            .frame(
+                                maxWidth: .infinity,
+                                maxHeight: .infinity)
+                    } else {
+                        Circle()
+                            .fill(Self.rainbow17)
+                            .frame(
+                                maxWidth: .infinity,
+                                maxHeight: .infinity)
+                    }
                 }
             }
 
@@ -68,7 +85,9 @@ struct Chip: View {
         case .roundedLabel:
             AnyShape(RoundedRectangle(cornerRadius: radius))
         case .circle:
-            AnyShape(Circle())
+            AnyShape(
+                Circle()
+            )
         }
     }
 
@@ -108,7 +127,7 @@ struct Chip: View {
     }
 
     @available(iOS 18.0, *)
-    static var rainbow: MeshGradient {
+    static var rainbow18: MeshGradient {
         MeshGradient(
             width: 3, height: 3,
             points: [
@@ -123,7 +142,7 @@ struct Chip: View {
             ])
     }
 
-    static var rainbow2: AngularGradient {
+    static var rainbow17: AngularGradient {
         AngularGradient(
             gradient: Gradient(colors: [.red, .yellow, .green, .blue, .purple, .red]),
             center: .center)
@@ -164,15 +183,20 @@ extension Chip {
     Chip(color: .blue)
         .style(.roundedLabel)
 
+    // Edge-case
     Chip(color: .covered)
-        .style(.roundedLabel)
+        .style(.circle)
 }
 
 #Preview("Chip") {
     ZStack {
         VStack {
             ForEach(FrameColor.allCases) { frame in
-                Chip(color: frame)
+                HStack {
+                    Chip(color: frame)
+                    Chip(color: frame)
+                        .style(.circle)
+                }
             }
         }
     }
