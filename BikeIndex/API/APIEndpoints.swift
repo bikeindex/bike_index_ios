@@ -136,13 +136,13 @@ enum Search: APIEndpoint {
 }
 
 enum Bikes: APIEndpoint {
-    /// Add a new bike to the index via `POST v3/bikes`
-    case postBikes(form: BikeRegistration)
     /// Fetch full bike details via `GET v3/bikes/{id}`
     case bikes(identifier: BikeId)
     /// Update a bike (must be owned by this user) via `PUT v3/bikes/{id}`
     case putBikes(identifier: BikeId, form: Postable)
     case check_if_registered
+    /// Add a new bike to the index via `POST v3/bikes`
+    case postBikes(form: BikeRegistration)
     case recover(identifier: BikeId)
     case image(identifier: BikeId, imageData: Data)
     case images(identifier: BikeId, imageIdentifier: String)
@@ -154,10 +154,10 @@ enum Bikes: APIEndpoint {
             [api, v3, "bikes", String(identifier)]
         case .bikes(let identifier):
             [api, v3, "bikes", String(identifier)]
-        case .postBikes:
-            [api, v3, "bikes"]
         case .check_if_registered:
             [api, v3, "bikes", "check_if_registered"]
+        case .postBikes:
+            [api, v3, "bikes"]
         case .recover(let identifier):
             [api, v3, "bikes", String(identifier), "recover"]
         case .image(let identifier, _):
@@ -171,21 +171,19 @@ enum Bikes: APIEndpoint {
 
     var method: HttpMethod {
         switch self {
-        case .bikes(let identifier):
+        case .bikes:
             .get
-        case .putBikes(let identifier, let form):
+        case .putBikes:
             .put
-        case .check_if_registered:
+        case .check_if_registered, .postBikes:
             .post
-        case .postBikes(let form):
-            .post
-        case .recover(let identifier):
+        case .recover:
             .put
-        case .image(let identifier, let imageData):
+        case .image:
             .post
-        case .images(let identifier, let imageIdentifier):
+        case .images:
             .delete
-        case .send_stolen_notification(let identifier):
+        case .send_stolen_notification:
             .post
         }
     }
