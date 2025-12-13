@@ -224,7 +224,7 @@ extension RegisterBikeView {
                         // TODO: Find a way to reduce file size further without reducing quality
                         if let data = image.jpegData(compressionQuality: 0.9) {
                             let endpoint = Bikes.image(
-                                identifier: "\(bikeModel.identifier)", imageData: data)
+                                identifier: bikeModel.identifier, imageData: data)
                             client.postInBackground(endpoint) { error in
                                 Logger.model.debug(
                                     "\(#function) Failed to upload image after bike registration: \(error)"
