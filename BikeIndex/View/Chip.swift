@@ -12,13 +12,15 @@ struct Chip: View {
     /// In the absence of `title`, frameColor will be displayed
     let title: String?
     let color: FrameColor
+    let style: ChipStyle
 
     private let radius = 6.0
     private let stroke = 4.0
 
-    init(title: String? = nil, color: FrameColor) {
+    init(title: String? = nil, color: FrameColor, style: ChipStyle = .roundedLabel) {
         self.title = title
         self.color = color
+        self.style = style
     }
 
     var body: some View {
@@ -115,6 +117,38 @@ struct Chip: View {
             gradient: Gradient(colors: [.red, .yellow, .green, .blue, .purple, .red]),
             center: .center)
     }
+}
+
+// MARK: -
+
+enum ChipStyle {
+    case roundedLabel
+    case circle
+}
+
+// MARK: -
+
+struct ChipStyleModifier: ViewModifier {
+    let title: String?
+    let color: FrameColor
+    let style: ChipStyle
+
+    func body(content: Content) -> some View {
+        Chip(title: title, color: color, style: style)
+    }
+}
+
+extension Chip {
+    func style(_ style: ChipStyle) -> Chip {
+        Chip(title: title, color: color, style: style)
+    }
+}
+
+// MARK:
+
+#Preview {
+    Chip(color: .red)
+        .style(.circle)
 }
 
 #Preview("Chip") {
