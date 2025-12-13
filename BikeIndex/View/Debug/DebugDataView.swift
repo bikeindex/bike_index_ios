@@ -80,6 +80,9 @@ struct DebugDataView: View {
                     Text("Api Url: \(apiUrl))")
                 }
                 Text("Public Images: \(bike.publicImages)")
+                Text("--")
+                Text("Created At: \(bike.createdAt)")
+                Text("Updated At: \(bike.updatedAt)")
             }
 
             // MARK: - AutocompleteManufacturers
