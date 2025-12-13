@@ -170,7 +170,24 @@ enum Bikes: APIEndpoint {
     }
 
     var method: HttpMethod {
-        .post
+        switch self {
+        case .bikes(let identifier):
+            .get
+        case .putBikes(let identifier, let form):
+            .put
+        case .check_if_registered:
+            .post
+        case .postBikes(let form):
+            .post
+        case .recover(let identifier):
+            .put
+        case .image(let identifier, let imageData):
+            .post
+        case .images(let identifier, let imageIdentifier):
+            .delete
+        case .send_stolen_notification(let identifier):
+            .post
+        }
     }
 
     var authorized: Bool { true }

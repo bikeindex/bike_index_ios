@@ -51,6 +51,7 @@ extension APIEndpoint {
 extension Client {
     func get(_ endpoint: APIEndpoint) async -> Result<(any ResponseDecodable), Error> {
         var request = endpoint.request(for: configuration.hostProvider)
+        assert(HttpMethod(rawValue: request.httpMethod ?? "") == HttpMethod.get)
         if endpoint.authorized, let accessToken {
             request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
             )
