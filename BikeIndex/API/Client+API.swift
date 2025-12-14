@@ -49,11 +49,9 @@ extension APIEndpoint {
 /// API client to perform networking operations with only essential state.
 extension Client {
     func get(_ endpoint: APIEndpoint) async -> Result<(any ResponseDecodable), Error> {
-        var request = endpoint.request(for: configuration.hostProvider)
-        if endpoint.authorized, let accessToken {
-            request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
-            )
-        }
+        let request = endpoint.request(for: configuration.hostProvider)
+            .addAppVersion()
+            .add(accessToken: accessToken, for: endpoint)
 
         do {
             let (data, response) = try await session.data(for: request)
@@ -128,10 +126,8 @@ extension Client {
 
     private func preparePOSTRequest(for endpoint: APIEndpoint) throws -> URLRequest {
         var request = endpoint.request(for: configuration.hostProvider)
-        if endpoint.authorized, let accessToken {
-            request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
-            )
-        }
+            .addAppVersion()
+            .add(accessToken: accessToken, for: endpoint)
 
         // Prepare HTTP body contents
         do {
