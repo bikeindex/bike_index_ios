@@ -130,6 +130,7 @@ extension Client {
 
     private func preparePOSTRequest(for endpoint: APIEndpoint) throws -> URLRequest {
         var request = endpoint.request(for: configuration.hostProvider)
+        assert(HttpMethod(rawValue: request.httpMethod ?? "") == HttpMethod.post)
         if endpoint.authorized, let accessToken {
             request.url?.append(queryItems: [URLQueryItem(name: "access_token", value: accessToken)]
             )
@@ -137,12 +138,6 @@ extension Client {
 
         // Prepare HTTP body contents
         do {
-            guard let requestModel = endpoint.requestModel else {
-                Logger.api.error(
-                    "\(#function) Failed to find model for POST body encoding for endpoint \(String(reflecting: endpoint))"
-                )
-                throw APIError.postMissingContents(endpoint: endpoint).error
-            }
             guard let formType = endpoint.formType else {
                 Logger.api.error(
                     "\(#function) Failed to find form type for POST endpoint \(String(reflecting: endpoint))"
@@ -152,9 +147,17 @@ extension Client {
 
             switch formType {
             case .formURLEncoded:
+                guard let requestModel = endpoint.requestModel else {
+                    Logger.api.error(
+                        "\(#function) Failed to find model for POST body encoding for endpoint \(String(reflecting: endpoint))"
+                    )
+                    throw APIError.postMissingContents(endpoint: endpoint).error
+                }
                 request.httpBody = try URLEncodedFormEncoder().encode(requestModel)
             case .multipartFormData:
                 try addMultipartFormBodyToRequest(&request, for: endpoint)
+            case .urlQuery:
+                break
             }
         } catch {
             Logger.api.error("\(#function) Failed to encode POST body with \(error)")
@@ -209,6 +212,7 @@ enum HttpMethod: String {
 enum FormType {
     case formURLEncoded
     case multipartFormData
+    case urlQuery
 }
 
 extension HTTPURLResponse {

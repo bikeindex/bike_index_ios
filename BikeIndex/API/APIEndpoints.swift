@@ -53,6 +53,16 @@ enum OAuth: APIEndpoint {
         nil
     }
 
+    /// OAuth models just use URL components and empty forms
+    var formType: FormType? {
+        switch self {
+        case .authorize, .token, .refresh:
+            .urlQuery
+        case .logout:
+            nil
+        }
+    }
+
     var responseModel: ResponseDecodable.Type {
         switch self {
         case .authorize, .token, .refresh:
