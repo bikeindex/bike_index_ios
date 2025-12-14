@@ -213,9 +213,7 @@ enum Bikes: APIEndpoint {
 
     var responseModel: ResponseDecodable.Type {
         switch self {
-        case .bikes:
-            return BikeResponse.self
-        case .postBikes:
+        case .bikes, .postBikes:
             return SingleBikeResponseContainer.self
         case .image:
             return ImageResponseContainer.self

@@ -22,14 +22,14 @@ extension BikeDetailWebView {
 
             switch fetch_v3_get_bike_id {
             case .success(let success):
-                guard let bikeResponse = success as? BikeResponse else {
+                guard let container = success as? SingleBikeResponseContainer else {
                     Logger.model.debug(
                         "\(type(of: self)).\(#function) failed to parse bike from \(String(reflecting: success), privacy: .public)"
                     )
                     return
                 }
 
-                let fullBike = bikeResponse.modelInstance()
+                let fullBike = container.bike.modelInstance()
                 Logger.model.debug(
                     "\(type(of: self)).#function) found FULL bike from \(String(reflecting: success), privacy: .public) containing created=\(String(describing: fullBike.createdAt?.description)))/updated=\(String(describing: fullBike.updatedAt))"
                 )
