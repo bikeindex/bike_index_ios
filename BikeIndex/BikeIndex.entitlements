@@ -7,9 +7,5 @@
 		<string>webcredentials:bikeindex.org</string>
 		<string>applinks:bikeindex.org</string>
 	</array>
-	<key>com.apple.security.app-sandbox</key>
-	<true/>
-	<key>com.apple.security.files.user-selected.read-only</key>
-	<true/>
 </dict>
 </plist>
