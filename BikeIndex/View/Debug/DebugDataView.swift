@@ -81,10 +81,10 @@ struct DebugDataView: View {
                 }
                 Text("Public Images: \(bike.publicImages.joined())")
                 Text("--")
-                Text("Created At: \(bike.createdAt)")
-                Text("Updated At: \(bike.updatedAt)")
+                Text("Created At: \(String(describing: bike.createdAt))")
+                Text("Updated At: \(String(describing: bike.updatedAt))")
                 Text(
-                    "Full Public Images: \(bike.fullPublicImages.map { $0.full.absoluteString }.joined())"
+                    "Full Public Images: \(bike.fullPublicImages.compactMap { $0.full?.absoluteString }.joined())"
                 )
             }
 

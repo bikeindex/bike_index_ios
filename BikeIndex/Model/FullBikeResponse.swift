@@ -18,10 +18,10 @@ struct FullBikeResponseContainer: ResponseDecodable {
 
 struct PublicImageResponse: ResponseModelInstantiable {
     var name: String
-    var full: URL
-    var large: URL
-    var medium: URL
-    var thumb: URL
+    var full: URL?
+    var large: URL?
+    var medium: URL?
+    var thumb: URL?
     var id: Int
 
     func modelInstance() -> FullPublicImage {
@@ -41,7 +41,7 @@ extension [PublicImageResponse]? {
     }
 
     var simplePublicImages: [String] {
-        self?.map { $0.full.absoluteString } ?? []
+        self?.compactMap { $0.full?.absoluteString } ?? []
     }
 }
 
