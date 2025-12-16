@@ -25,7 +25,13 @@ struct PublicImageResponse: ResponseModelInstantiable {
     var id: Int
 
     func modelInstance() -> FullPublicImage {
-        FullPublicImage()
+        FullPublicImage(
+            name: name,
+            full: full,
+            large: large,
+            medium: medium,
+            thumb: thumb,
+            id: id)
     }
 }
 

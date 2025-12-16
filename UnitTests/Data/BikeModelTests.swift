@@ -44,7 +44,7 @@ final class BikeModelTests: XCTestCase {
         XCTAssertEqual(bike.publicImages, [])
     }
 
-    // TODO: This can be completed when Bike.swift and BikeResponse.swift support **ALL** fields, full parity with the API
+    // TODO: This can be completed when Bike.swift and BikeResponse.swift support **ALL** fields, full parity with the API - relies on https://github.com/bikeindex/bike_index_ios/pull/107
     /// Make sure that parsing JSON into a Bike model and encoding it back to JSON is idempotent.
     func test_reading_writing_json() throws {
         let rawJsonData = try XCTUnwrap(MockData.sampleBikeJson.data(using: .utf8))

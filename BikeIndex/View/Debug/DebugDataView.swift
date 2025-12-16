@@ -83,6 +83,9 @@ struct DebugDataView: View {
                 Text("--")
                 Text("Created At: \(bike.createdAt)")
                 Text("Updated At: \(bike.updatedAt)")
+                Text(
+                    "Full Public Images: \(bike.fullPublicImages.map { $0.full.absoluteString }.joined())"
+                )
             }
 
             // MARK: - AutocompleteManufacturers
