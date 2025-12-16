@@ -82,6 +82,7 @@ import SwiftData
     var url: URL
     var apiUrl: URL?
     var publicImages: [String]
+    var fullPublicImages: [FullPublicImage]
 
     // MARK: - Full Bike fields
 
@@ -122,6 +123,7 @@ import SwiftData
         url: URL,
         apiUrl: URL? = nil,
         publicImages: [String],
+        fullPublicImages: [FullPublicImage] = [],
         createdAt: Date? = nil,
         updatedAt: Date? = nil
     ) {
@@ -148,6 +150,7 @@ import SwiftData
         self.url = url
         self.apiUrl = apiUrl
         self.publicImages = publicImages
+        self.fullPublicImages = fullPublicImages
         self.createdAt = createdAt
         self.updatedAt = updatedAt
     }
@@ -174,6 +177,7 @@ import SwiftData
         url = defaultUrl
         apiUrl = defaultUrl
         publicImages = []
+        fullPublicImages = []
         createdAt = nil
         updatedAt = nil
     }

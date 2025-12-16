@@ -255,7 +255,7 @@ enum Me: APIEndpoint {
     }
 
     var method: HttpMethod {
-        .post
+        .get
     }
 
     var authorized: Bool { true }
