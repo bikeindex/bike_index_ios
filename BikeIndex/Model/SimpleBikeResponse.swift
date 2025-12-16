@@ -21,6 +21,7 @@ struct MultipleBikeResponseContainer: ResponseDecodable {
 
 // MARK: -
 
+/// Compare with ``FullBikeResponse``
 struct SimpleBikeResponse: ResponseModelInstantiable {
 
     /// Rails ID
@@ -47,9 +48,6 @@ struct SimpleBikeResponse: ResponseModelInstantiable {
     let url: URL
     let api_url: URL?
     let public_images: [String]?
-
-    let registration_created_at: TimeInterval?
-    let registration_updated_at: TimeInterval?
 
     // MARK: - ResponseModelInstantiable for BikeResponse
 
@@ -81,9 +79,6 @@ struct SimpleBikeResponse: ResponseModelInstantiable {
             thirdColor = FrameColor(rawValue: frame_colors[2])
         }
 
-        assert(registration_created_at != nil)
-        assert(registration_updated_at != nil)
-
         return Bike(
             identifier: id ?? Int.min,
             bikeDescription: description,
@@ -104,9 +99,7 @@ struct SimpleBikeResponse: ResponseModelInstantiable {
             thumb: thumb,
             url: url,
             apiUrl: api_url,
-            publicImages: public_images ?? [],
-            createdAt: registration_created_at.map { Date(timeIntervalSince1970: $0) },
-            updatedAt: registration_updated_at.map { Date(timeIntervalSince1970: $0) }
+            publicImages: public_images ?? []
         )
     }
 }
