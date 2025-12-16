@@ -51,9 +51,9 @@ extension APIEndpoint {
 extension Client {
     func get(_ endpoint: APIEndpoint) async -> Result<(any ResponseDecodable), Error> {
         let request = endpoint.request(for: configuration.hostProvider)
+            .validateMethodMatch(.get)
             .addAppVersion()
-            .add(accessToken: accessToken, for: endpoint)
-        assert(HttpMethod(rawValue: request.httpMethod ?? "") == HttpMethod.get)
+            .add(accessToken: accessToken, requiresAuthorization: endpoint.authorized)
 
         do {
             let (data, response) = try await session.data(for: request)
@@ -128,9 +128,9 @@ extension Client {
 
     private func preparePOSTRequest(for endpoint: APIEndpoint) throws -> URLRequest {
         var request = endpoint.request(for: configuration.hostProvider)
+            .validateMethodMatch(.post)
             .addAppVersion()
-            .add(accessToken: accessToken, for: endpoint)
-        assert(HttpMethod(rawValue: request.httpMethod ?? "") == HttpMethod.get)
+            .add(accessToken: accessToken, requiresAuthorization: endpoint.authorized)
 
         // Prepare HTTP body contents
         do {
