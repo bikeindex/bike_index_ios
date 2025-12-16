@@ -210,7 +210,7 @@ extension RegisterBikeView {
                 propulsion: propulsion,
                 ownerEmail: ownerEmail)
             let endpoint = Bikes.postBikes(form: bikeRegistration)
-            let response: Result<SingleBikeResponseContainer, any Error> = await client.post(
+            let response: Result<RegisterBikeResponseContainer, any Error> = await client.post(
                 endpoint)
             switch response {
             case .success(let registrationResponseSource):

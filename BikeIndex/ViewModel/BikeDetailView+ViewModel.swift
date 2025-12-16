@@ -22,7 +22,7 @@ extension BikeDetailWebView {
 
             switch fetch_v3_get_bike_id {
             case .success(let success):
-                guard let container = success as? SingleBikeResponseContainer else {
+                guard let container = success as? RegisterBikeResponseContainer else {
                     Logger.model.debug(
                         "\(type(of: self)).\(#function) failed to parse bike from \(String(reflecting: success), privacy: .public)"
                     )

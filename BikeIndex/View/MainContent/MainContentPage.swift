@@ -163,7 +163,7 @@ struct MainContentPage: View {
                 ]
 
                 for (index, status) in statuses.enumerated() {
-                    let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
+                    let output = try JSONDecoder().decode(SimpleBikeResponse.self, from: rawJsonData)
                     let bike = output.modelInstance()
                     // Mock one of each status
                     // but separate the identifiers
@@ -196,7 +196,7 @@ struct MainContentPage: View {
         .onAppear {
             do {
                 let rawJsonData = MockData.sampleBikeJson.data(using: .utf8)!
-                let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
+                let output = try JSONDecoder().decode(SimpleBikeResponse.self, from: rawJsonData)
                 let manufacturers = [
                     "Giant", "Specialized", "Jamis", "Giant", "Specialized", "Jamis",
                 ]

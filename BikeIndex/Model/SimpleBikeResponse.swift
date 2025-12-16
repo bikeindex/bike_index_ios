@@ -1,5 +1,5 @@
 //
-//  BikeResponse.swift
+//  SimpleBikeResponse.swift
 //  BikeIndex
 //
 //  Created by Jack on 12/10/23.
@@ -8,18 +8,20 @@
 import Foundation
 import MapKit
 
-struct SingleBikeResponseContainer: ResponseDecodable {
-    var bike: BikeResponse
+/// Returned by POST /v3/bikes "Add a bike to the index" -- see ``Bikes/postBikes(form:)``
+struct RegisterBikeResponseContainer: ResponseDecodable {
+    var bike: SimpleBikeResponse
     var claim_url: URL?
 }
 
+/// Returned by GET /v3/me/bikes "Current user's bikes*" -- see ``Me/bikes``
 struct MultipleBikeResponseContainer: ResponseDecodable {
-    var bikes: [BikeResponse]
+    var bikes: [SimpleBikeResponse]
 }
 
 // MARK: -
 
-struct BikeResponse: ResponseModelInstantiable {
+struct SimpleBikeResponse: ResponseModelInstantiable {
 
     /// Rails ID
     let id: Int?
@@ -78,6 +80,9 @@ struct BikeResponse: ResponseModelInstantiable {
         if frame_colors.count > 2 {
             thirdColor = FrameColor(rawValue: frame_colors[2])
         }
+
+        assert(registration_created_at != nil)
+        assert(registration_updated_at != nil)
 
         return Bike(
             identifier: id ?? Int.min,

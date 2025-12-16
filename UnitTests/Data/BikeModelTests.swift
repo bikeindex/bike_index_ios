@@ -15,7 +15,7 @@ final class BikeModelTests: XCTestCase {
     /// Make sure that parsing a sample Bike from production works
     func test_parsing_model() throws {
         let rawJsonData = try XCTUnwrap(MockData.sampleBikeJson.data(using: .utf8))
-        let output = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
+        let output = try JSONDecoder().decode(SimpleBikeResponse.self, from: rawJsonData)
         let bike = output.modelInstance()
 
         XCTAssertEqual(bike.identifier, 20348)
@@ -48,7 +48,7 @@ final class BikeModelTests: XCTestCase {
     /// Make sure that parsing JSON into a Bike model and encoding it back to JSON is idempotent.
     func test_reading_writing_json() throws {
         let rawJsonData = try XCTUnwrap(MockData.sampleBikeJson.data(using: .utf8))
-        let parsedModel = try JSONDecoder().decode(BikeResponse.self, from: rawJsonData)
+        let parsedModel = try JSONDecoder().decode(SimpleBikeResponse.self, from: rawJsonData)
 
         let bike = parsedModel.modelInstance()
 
