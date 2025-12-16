@@ -135,7 +135,7 @@ struct DataModelDebugView<Model: PersistentModel, Content: View>: View {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let mockContainer = try ModelContainer(
             for: Bike.self, User.self, AuthenticatedUser.self,
-            AutocompleteManufacturer.self,
+            AutocompleteManufacturer.self, FullPublicImage.self,
             configurations: config
         )
 

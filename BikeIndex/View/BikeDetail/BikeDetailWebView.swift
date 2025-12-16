@@ -92,7 +92,7 @@ struct BikeDetailWebView: View {
 
 #Preview {
     let container = try! ModelContainer(
-        for: Bike.self,
+        for: Bike.self, FullPublicImage.self,
         configurations: ModelConfiguration(isStoredInMemoryOnly: true))
 
     NavigationStack {
