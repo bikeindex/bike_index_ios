@@ -177,7 +177,7 @@ struct ManufacturerEntryView: View {
             Text("Stateful Bike manufacturer is \(previewBike.manufacturerName)")
             Text("Stateful search text is \(searchText)")
             Text("Stateful focus is \(String(describing: focusState))")
-            Text("Stateful validation is \(valid)")
+            Text("Stateful validation is \(valid.wrappedValue.description)")
         }
 
         Divider()

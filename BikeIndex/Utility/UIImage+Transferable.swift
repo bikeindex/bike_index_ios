@@ -12,7 +12,7 @@ enum TransferError: Error {
     case importFailed
 }
 
-extension UIImage: Transferable {
+extension UIImage: @retroactive Transferable {
     public static var transferRepresentation: some TransferRepresentation {
         DataRepresentation(importedContentType: .image) { data in
             guard let uiImage = UIImage(data: data) else {

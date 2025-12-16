@@ -42,24 +42,24 @@ struct DebugDataView: View {
                 Text("Auth Owner [ID]: \(bike.authenticatedOwner?.identifier ?? "Empty")")
                 Text("Description: \(bike.bikeDescription ?? "")")
                 Text("Frame Model: \(String(describing: bike.frameModel))")
-                Text("Color Primary: \(bike.frameColorPrimary))")
+                Text("Color Primary: \(bike.frameColorPrimary.displayValue)")
                 if let frameColorSecondary = bike.frameColorSecondary {
-                    Text("Frame Color Secondary: \(frameColorSecondary))")
+                    Text("Frame Color Secondary: \(frameColorSecondary.displayValue)")
                 }
                 if let frameColorTertiary = bike.frameColorTertiary {
-                    Text("Frame Color Tertiary: \(frameColorTertiary))")
+                    Text("Frame Color Tertiary: \(frameColorTertiary.displayValue)")
                 }
-                Text("Frame Colors: \(bike.frameColors)")
+                Text("Frame Colors: \(bike.frameColors.map { $0.displayValue }.joined())")
                 Text("Manufacturer Name: \(bike.manufacturerName)")
                 if let year = bike.year {
                     Text("Year: \(year))")
                 }
-                Text("Type Of Cycle: \(bike.typeOfCycle)")
-                Text("Type Of Propulsion: \(bike.typeOfPropulsion)")
+                Text("Type Of Cycle: \(bike.typeOfCycle.name)")
+                Text("Type Of Propulsion: \(bike.typeOfPropulsion.name)")
                 if let serial = bike.serial {
                     Text("Serial: \(serial))")
                 }
-                Text("Status: \(bike.status)")
+                Text("Status: \(bike.status.displayName)")
                 if let stolenCoordinates = bike.stolenCoordinates {
                     Text("Stolen Coordinates: \(stolenCoordinates))")
                 }
@@ -79,7 +79,7 @@ struct DebugDataView: View {
                 if let apiUrl = bike.apiUrl {
                     Text("Api Url: \(apiUrl))")
                 }
-                Text("Public Images: \(bike.publicImages)")
+                Text("Public Images: \(bike.publicImages.joined())")
                 Text("--")
                 Text("Created At: \(bike.createdAt)")
                 Text("Updated At: \(bike.updatedAt)")
