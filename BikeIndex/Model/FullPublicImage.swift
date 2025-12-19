@@ -8,7 +8,6 @@
 import Foundation
 import SwiftData
 
-// TODO: https://github.com/bikeindex/bike_index_ios/pull/107 - MOVE TO MODEL DIRECTORY
 @Model final class FullPublicImage {
     @Relationship(inverse: \Bike.fullPublicImages)
     var bike: Bike?

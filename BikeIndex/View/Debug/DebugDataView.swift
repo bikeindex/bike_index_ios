@@ -80,7 +80,7 @@ struct DebugDataView: View {
                     Text("Api Url: \(apiUrl))")
                 }
                 Text("Public Images: \(bike.publicImages.joined())")
-                Text("--")
+                Divider()
                 Text("Created At: \(String(describing: bike.createdAt))")
                 Text("Updated At: \(String(describing: bike.updatedAt))")
                 Text(
