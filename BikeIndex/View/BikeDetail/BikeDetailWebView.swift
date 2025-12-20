@@ -14,13 +14,16 @@ import WebViewKit
 /// Display the details for a bike primarily from the network.
 struct BikeDetailWebView: View {
     @Environment(Client.self) var client
+    @Environment(\.modelContext) private var modelContext
 
     /// Query is only returns arrays and we'll pick the only element.
     @Query private var bikeQuery: [Bike]
 
     @State private var url: URL
-
+    // TODO: Move NetworkStatusChecker to ViewModel
     @State private var checker: NetworkStatusChecker = .shared
+
+    @State private var viewModel = ViewModel()
 
     /// Initialize with a BikeIdentifier and base URL. The base URL must be retrieved before Client is available.
     /// With these inputs the Bike's canonical URL can be constructed and displayed in the NavigableWebView.
@@ -64,6 +67,10 @@ struct BikeDetailWebView: View {
                 }
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
+                .task {
+                    await viewModel.fetchFullBikeDetails(
+                        client: client, modelContext: modelContext, bike.identifier)
+                }
         } else {
             // In practice this view is never displayed because SwiftData will find the Bike
             ProgressView()
@@ -85,7 +92,7 @@ struct BikeDetailWebView: View {
 
 #Preview {
     let container = try! ModelContainer(
-        for: Bike.self,
+        for: Bike.self, FullPublicImage.self,
         configurations: ModelConfiguration(isStoredInMemoryOnly: true))
 
     NavigationStack {

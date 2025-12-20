@@ -53,6 +53,16 @@ enum OAuth: APIEndpoint {
         nil
     }
 
+    /// OAuth models just use URL components and empty forms
+    var formType: FormType? {
+        switch self {
+        case .authorize, .token, .refresh:
+            .urlQuery
+        case .logout:
+            nil
+        }
+    }
+
     var responseModel: ResponseDecodable.Type {
         switch self {
         case .authorize, .token, .refresh:
@@ -136,13 +146,13 @@ enum Search: APIEndpoint {
 }
 
 enum Bikes: APIEndpoint {
-    /// Add a new bike to the index via `POST v3/bikes`
-    case postBikes(form: BikeRegistration)
-    /// Fetch bike details via `GET v3/bikes/{id}`
+    /// Fetch full bike details via `GET v3/bikes/{id}`
     case bikes(identifier: BikeId)
     /// Update a bike (must be owned by this user) via `PUT v3/bikes/{id}`
     case putBikes(identifier: BikeId, form: Postable)
     case check_if_registered
+    /// Add a new bike to the index via `POST v3/bikes`
+    case postBikes(form: BikeRegistration)
     case recover(identifier: BikeId)
     case image(identifier: BikeId, imageData: Data)
     case images(identifier: BikeId, imageIdentifier: String)
@@ -151,26 +161,41 @@ enum Bikes: APIEndpoint {
     var path: [String] {
         switch self {
         case .putBikes(let identifier, _):
-            [api, v3, "bikes", identifier]
+            [api, v3, "bikes", String(identifier)]
         case .bikes(let identifier):
-            [api, v3, "bikes", identifier]
-        case .postBikes:
-            [api, v3, "bikes"]
+            [api, v3, "bikes", String(identifier)]
         case .check_if_registered:
             [api, v3, "bikes", "check_if_registered"]
+        case .postBikes:
+            [api, v3, "bikes"]
         case .recover(let identifier):
-            [api, v3, "bikes", identifier, "recover"]
+            [api, v3, "bikes", String(identifier), "recover"]
         case .image(let identifier, _):
-            [api, v3, "bikes", identifier, "image"]
+            [api, v3, "bikes", String(identifier), "image"]
         case .images(let bikeIdentifier, let imageIdentifier):
-            [api, v3, "bikes", bikeIdentifier, "images", imageIdentifier]
+            [api, v3, "bikes", String(bikeIdentifier), "images", imageIdentifier]
         case .send_stolen_notification(let identifier):
-            [api, v3, "bikes", identifier, "send_stolen_notification"]
+            [api, v3, "bikes", String(identifier), "send_stolen_notification"]
         }
     }
 
     var method: HttpMethod {
-        .post
+        switch self {
+        case .bikes:
+            .get
+        case .putBikes:
+            .put
+        case .check_if_registered, .postBikes:
+            .post
+        case .recover:
+            .put
+        case .image:
+            .post
+        case .images:
+            .delete
+        case .send_stolen_notification:
+            .post
+        }
     }
 
     var authorized: Bool { true }
@@ -188,8 +213,10 @@ enum Bikes: APIEndpoint {
 
     var responseModel: ResponseDecodable.Type {
         switch self {
+        case .bikes:
+            return FullBikeResponseContainer.self
         case .postBikes:
-            return SingleBikeResponseContainer.self
+            return RegisterBikeResponseContainer.self
         case .image:
             return ImageResponseContainer.self
         default:
@@ -230,7 +257,7 @@ enum Me: APIEndpoint {
     }
 
     var method: HttpMethod {
-        .post
+        .get
     }
 
     var authorized: Bool { true }
@@ -301,14 +328,15 @@ enum Autocomplete: APIEndpoint {
 
 enum Manufacturers: APIEndpoint {
     case all
-    case get(identifier: BikeId)  // aka v3/manufacturers/{id}, also available with no parameter
+    // aka v3/manufacturers/{id}, also available with no parameter
+    case get(identifier: BikeId)
 
     var path: [String] {
         switch self {
         case .all:
             [api, v3, "manufacturers"]
         case .get(let identifier):
-            [api, v3, "manufacturers", identifier]
+            [api, v3, "manufacturers", String(identifier)]
         }
     }
 

@@ -8,6 +8,11 @@
 import Foundation
 
 extension URLRequest {
+    func validateMethodMatch(_ method: HttpMethod) -> URLRequest {
+        assert(HttpMethod(rawValue: self.httpMethod ?? "") == method)
+        return self
+    }
+
     func addAppVersion() -> URLRequest {
         var request = self
         if let version = AppVersionInfo().marketingVersion {
@@ -16,9 +21,9 @@ extension URLRequest {
         return request
     }
 
-    func add(accessToken: String?, for endpoint: APIEndpoint) -> URLRequest {
+    func add(accessToken: String?, requiresAuthorization: Bool) -> URLRequest {
         var request = self
-        if endpoint.authorized, let accessToken {
+        if requiresAuthorization, let accessToken {
             let accessTokenQueryItem = URLQueryItem(name: "access_token", value: accessToken)
             request.url?.append(queryItems: [accessTokenQueryItem])
         }

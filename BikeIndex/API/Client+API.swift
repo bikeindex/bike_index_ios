@@ -18,8 +18,9 @@ extension URL {
     }
 }
 
-/// API  usage of URL component Bike.{id} is string-backed
-public typealias BikeId = String
+/// API usage of URL component Bike.{id} is string-backed
+/// However ``Bike/BikeIdentifier`` is an Int so BikeId will be converted to String
+public typealias BikeId = Int
 
 /// Internal type to signify that POSTs use an Encodable type
 typealias Postable = Encodable & Sendable
@@ -50,8 +51,9 @@ extension APIEndpoint {
 extension Client {
     func get(_ endpoint: APIEndpoint) async -> Result<(any ResponseDecodable), Error> {
         let request = endpoint.request(for: configuration.hostProvider)
+            .validateMethodMatch(.get)
             .addAppVersion()
-            .add(accessToken: accessToken, for: endpoint)
+            .add(accessToken: accessToken, requiresAuthorization: endpoint.authorized)
 
         do {
             let (data, response) = try await session.data(for: request)
@@ -126,17 +128,12 @@ extension Client {
 
     private func preparePOSTRequest(for endpoint: APIEndpoint) throws -> URLRequest {
         var request = endpoint.request(for: configuration.hostProvider)
+            .validateMethodMatch(.post)
             .addAppVersion()
-            .add(accessToken: accessToken, for: endpoint)
+            .add(accessToken: accessToken, requiresAuthorization: endpoint.authorized)
 
         // Prepare HTTP body contents
         do {
-            guard let requestModel = endpoint.requestModel else {
-                Logger.api.error(
-                    "\(#function) Failed to find model for POST body encoding for endpoint \(String(reflecting: endpoint))"
-                )
-                throw APIError.postMissingContents(endpoint: endpoint).error
-            }
             guard let formType = endpoint.formType else {
                 Logger.api.error(
                     "\(#function) Failed to find form type for POST endpoint \(String(reflecting: endpoint))"
@@ -146,9 +143,17 @@ extension Client {
 
             switch formType {
             case .formURLEncoded:
+                guard let requestModel = endpoint.requestModel else {
+                    Logger.api.error(
+                        "\(#function) Failed to find model for POST body encoding for endpoint \(String(reflecting: endpoint))"
+                    )
+                    throw APIError.postMissingContents(endpoint: endpoint).error
+                }
                 request.httpBody = try URLEncodedFormEncoder().encode(requestModel)
             case .multipartFormData:
                 try addMultipartFormBodyToRequest(&request, for: endpoint)
+            case .urlQuery:
+                break
             }
         } catch {
             Logger.api.error("\(#function) Failed to encode POST body with \(error)")
@@ -203,6 +208,7 @@ enum HttpMethod: String {
 enum FormType {
     case formURLEncoded
     case multipartFormData
+    case urlQuery
 }
 
 extension HTTPURLResponse {

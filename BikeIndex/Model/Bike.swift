@@ -82,6 +82,14 @@ import SwiftData
     var url: URL
     var apiUrl: URL?
     var publicImages: [String]
+    var fullPublicImages: [FullPublicImage]
+
+    // MARK: - Full Bike fields
+
+    /// Date the bike was first created. Note that this is read-only from the API.
+    var createdAt: Date?
+    /// Date the bike was most-recently updated. Note that this is read-only from the API.
+    var updatedAt: Date?
 
     struct Constants {
         /// The range of supported years for Bike models
@@ -114,7 +122,10 @@ import SwiftData
         thumb: URL? = nil,
         url: URL,
         apiUrl: URL? = nil,
-        publicImages: [String]
+        publicImages: [String],
+        fullPublicImages: [FullPublicImage] = [],
+        createdAt: Date? = nil,
+        updatedAt: Date? = nil
     ) {
         self.identifier = identifier
         self.bikeDescription = bikeDescription
@@ -139,6 +150,9 @@ import SwiftData
         self.url = url
         self.apiUrl = apiUrl
         self.publicImages = publicImages
+        self.fullPublicImages = fullPublicImages
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
     }
 
     init() {
@@ -163,6 +177,9 @@ import SwiftData
         url = defaultUrl
         apiUrl = defaultUrl
         publicImages = []
+        fullPublicImages = []
+        createdAt = nil
+        updatedAt = nil
     }
 
     // https://www.hackingwithswift.com/quick-start/swiftdata/how-to-create-derived-attributes-with-swiftdata

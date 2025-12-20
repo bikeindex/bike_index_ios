@@ -80,6 +80,12 @@ struct DebugDataView: View {
                     Text("Api Url: \(apiUrl))")
                 }
                 Text("Public Images: \(bike.publicImages.joined())")
+                Divider()
+                Text("Created At: \(String(describing: bike.createdAt))")
+                Text("Updated At: \(String(describing: bike.updatedAt))")
+                Text(
+                    "Full Public Images: \(bike.fullPublicImages.compactMap { $0.full?.absoluteString }.joined())"
+                )
             }
 
             // MARK: - AutocompleteManufacturers
@@ -129,7 +135,7 @@ struct DataModelDebugView<Model: PersistentModel, Content: View>: View {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let mockContainer = try ModelContainer(
             for: Bike.self, User.self, AuthenticatedUser.self,
-            AutocompleteManufacturer.self,
+            AutocompleteManufacturer.self, FullPublicImage.self,
             configurations: config
         )
 

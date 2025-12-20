@@ -1,25 +1,51 @@
 //
-//  BikeResponse.swift
+//  GetBikeIdResponse.swift
 //  BikeIndex
 //
-//  Created by Jack on 12/10/23.
+//  Created by Jack on 12/15/25.
 //
 
 import Foundation
 import MapKit
+import SwiftData
 
-struct SingleBikeResponseContainer: ResponseDecodable {
-    var bike: BikeResponse
-    var claim_url: URL?
-}
-
-struct MultipleBikeResponseContainer: ResponseDecodable {
-    var bikes: [BikeResponse]
+/// Returned by GET /v3/bikes/{id} "View bike with a given ID" -- see ``Bikes/bikes(identifier:)``
+struct FullBikeResponseContainer: ResponseDecodable {
+    var bike: FullBikeResponse
 }
 
 // MARK: -
 
-struct BikeResponse: ResponseModelInstantiable {
+struct PublicImageResponse: ResponseModelInstantiable {
+    var name: String
+    var full: URL?
+    var large: URL?
+    var medium: URL?
+    var thumb: URL?
+    var id: Int
+
+    func modelInstance() -> FullPublicImage {
+        FullPublicImage(
+            name: name,
+            full: full,
+            large: large,
+            medium: medium,
+            thumb: thumb,
+            id: id)
+    }
+}
+
+extension [PublicImageResponse]? {
+    func modelInstances() -> [FullPublicImage] {
+        self?.map { $0.modelInstance() } ?? []
+    }
+
+    var simplePublicImages: [String] {
+        self?.compactMap { $0.full?.absoluteString } ?? []
+    }
+}
+
+struct FullBikeResponse: ResponseModelInstantiable {
 
     /// Rails ID
     let id: Int?
@@ -44,11 +70,12 @@ struct BikeResponse: ResponseModelInstantiable {
     let thumb: URL?
     let url: URL
     let api_url: URL?
-    let public_images: [String]?
+    let public_images: [PublicImageResponse]?
+
+    let registration_created_at: TimeInterval?
+    let registration_updated_at: TimeInterval?
 
     // MARK: - ResponseModelInstantiable for BikeResponse
-
-    typealias ModelInstance = Bike
 
     func modelInstance() -> Bike {
         let stolenCoordinateLatitude: CLLocationDegrees
@@ -98,6 +125,10 @@ struct BikeResponse: ResponseModelInstantiable {
             thumb: thumb,
             url: url,
             apiUrl: api_url,
-            publicImages: public_images ?? [])
+            publicImages: public_images.simplePublicImages,
+            fullPublicImages: public_images.modelInstances(),
+            createdAt: registration_created_at.map { Date(timeIntervalSince1970: $0) },
+            updatedAt: registration_updated_at.map { Date(timeIntervalSince1970: $0) }
+        )
     }
 }
