@@ -24,3 +24,7 @@ force_quit_simulator(true)
 include_simulator_logs(false)
 
 # Retries are configured in AllTests.xctestplan
+
+# Output Fastlane build prodcuts in a local directory
+# for GitHub Actions to cache and re-use
+derived_data_path("build/")
