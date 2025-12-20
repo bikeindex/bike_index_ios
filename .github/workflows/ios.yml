@@ -41,9 +41,7 @@ jobs:
         id: cache-build-save
         uses: actions/cache/save@v4
         with:
-          path: |
-            build
-            # fastlane/test_output/build_products.zip
+          path: build
           key: cache-build-${{ github.sha }}
 
   tests_iphone16:
