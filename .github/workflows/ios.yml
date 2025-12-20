@@ -11,8 +11,8 @@ on:
   pull_request:
 
 jobs:
-  tests_iphone16:
-    name: Run iPhone 16 test suite with fastlane
+  build-tests:
+    name: Build project and cache build products
     runs-on: macos-26
     steps:
       - name: Checkout
@@ -35,6 +35,32 @@ jobs:
           echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
       - name: List available simulators
         run: xcodebuild -scheme BikeIndex -project BikeIndex.xcodeproj -showdestinations
+      - name: Build
+        run: fastlane scan --build_for_testing=true
+      - name: Save build products directory
+        id: cache-build-save
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            build
+            # fastlane/test_output/build_products.zip
+          key: cache-build-${{ github.sha }}
+
+  tests_iphone16:
+    needs: build-tests
+    name: Run iPhone 16 test suite with fastlane
+    runs-on: macos-26
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - name: Restore cached build products
+        id: cache-build-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: build
+          key: cache-build-${{ github.sha }}
       - name: Run tests
         id: fastlane-ios-tests
         run: fastlane ios tests_iphone16
@@ -46,6 +72,7 @@ jobs:
           compression-level: 9 # maximum compression
 
   tests_iphone16plus:
+    needs: build-tests
     name: Run iPhone 16 Plus test suite with fastlane
     runs-on: macos-26
     steps:
@@ -53,22 +80,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
-      - name: Set Xcode 26.1
-        run: sudo xcode-select -s /Applications/Xcode_26.1.app
-      - name: Install tools
-        run: brew bundle install
-      - name: Set up xcconfig secrets (see README.md#quick-start)
-        env:
-          BIKE_INDEX_DEVELOPMENT_XCCONFIG: ${{ secrets.BIKE_INDEX_DEVELOPMENT_XCCONFIG }}
-        run: |
-          echo "$BIKE_INDEX_DEVELOPMENT_XCCONFIG" >> BikeIndex-development.xcconfig
-      - name: Set up xcconfig UI test credentials (see README.md#UI-Test-configuration)
-        env:
-          BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
-        run: |
-          echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
-      - name: List available simulators
-        run: xcodebuild -scheme BikeIndex -project BikeIndex.xcodeproj -showdestinations
+      - name: Restore cached build products
+        id: cache-build-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: build
+          key: cache-build-${{ github.sha }}
       - name: Run tests
         id: fastlane-ios-tests
         run: fastlane ios tests_iphone16plus
@@ -80,6 +97,7 @@ jobs:
           compression-level: 9 # maximum compression
 
   tests_ipad:
+    needs: build-tests
     name: Run iPad (10th generation) test suite with fastlane
     runs-on: macos-26
     steps:
@@ -87,22 +105,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
-      - name: Set Xcode 26.1
-        run: sudo xcode-select -s /Applications/Xcode_26.1.app
-      - name: Install tools
-        run: brew bundle install
-      - name: Set up xcconfig secrets (see README.md#quick-start)
-        env:
-          BIKE_INDEX_DEVELOPMENT_XCCONFIG: ${{ secrets.BIKE_INDEX_DEVELOPMENT_XCCONFIG }}
-        run: |
-          echo "$BIKE_INDEX_DEVELOPMENT_XCCONFIG" >> BikeIndex-development.xcconfig
-      - name: Set up xcconfig UI test credentials (see README.md#UI-Test-configuration)
-        env:
-          BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
-        run: |
-          echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
-      - name: List available simulators
-        run: xcodebuild -scheme BikeIndex -project BikeIndex.xcodeproj -showdestinations
+      - name: Restore cached build products
+        id: cache-build-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: build
+          key: cache-build-${{ github.sha }}
       - name: Run tests
         id: fastlane-ios-tests
         run: fastlane ios tests_ipad
