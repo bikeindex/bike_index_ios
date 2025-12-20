@@ -16,30 +16,30 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "Run test suite on iPhone 16"
-  lane :tests_iphone16 do
+  desc "Run test suite on iPhone 17"
+  lane :tests_iphone17 do
     # See Scanfile for default configuration
     scan(
-      devices: ["iPhone 16"],
-      deployment_target_version: "26.1"
+      devices: ["iPhone 17"],
+      deployment_target_version: "26.2"
     )
   end
 
-  desc "Run test suite on iPhone 16 Plus"
-  lane :tests_iphone16plus do
+  desc "Run test suite on iPhone 17 Pro"
+  lane :tests_iphone17pro do
     # See Scanfile for default configuration
     scan(
-      devices: ["iPhone 16 Plus"],
-      deployment_target_version: "26.1"
+      devices: ["iPhone 17 Pro"],
+      deployment_target_version: "26.2"
     )
   end
 
-  desc "Run test suite on iPad (10th generation)"
+  desc "Run test suite on iPad (A16)"
   lane :tests_ipad do
     # See Scanfile for default configuration
     scan(
-      devices: ["iPad (10th generation)"],
-      deployment_target_version: "26.1"
+      devices: ["iPad (A16)"],
+      deployment_target_version: "26.2"
     )
   end
 
