@@ -80,7 +80,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: test_output_iphone17
+          name: test_output_${{ matrix.device }}
           path: "fastlane/test_output/*"
           compression-level: 9 # maximum compression
 
