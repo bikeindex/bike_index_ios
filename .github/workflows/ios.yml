@@ -47,11 +47,12 @@ jobs:
   test-suite:
     needs: build-tests
     runs-on: macos-26
-    name: Test ${{ matrix.device }} - ${{ matrix.deployment_target_version }}
+    name: ${{ matrix.device }} ${{ matrix.only-testing }} ${{ matrix.deployment_target_version }}
     strategy:
       matrix:
         device: ["iPhone 17", "iPhone 17 Pro", "iPad (A16)"]
         deployment_target_version: ["26.2"]
+        only-testing: ["UnitTests", "UITests"]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -75,12 +76,12 @@ jobs:
           BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
         run: |
           echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
-      - name: Test ${{ matrix.devic }}
-        run: fastlane scan --device="${{ matrix.device }}" --deployment-target-version="${{ matrix.deployment_target_version }}" --test_without_building=true
+      - name: ${{ matrix.only-testing}} on ${{ matrix.device }} ${{ matrix.deployment_target_version }}
+        run: fastlane scan --only-testing="${{ matrix.only-testing }}" --device="${{ matrix.device }}" --deployment-target-version="${{ matrix.deployment_target_version }}" --test_without_building=true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: test_output_${{ matrix.device }}
+          name: test_output_${{ matrix.device }}_${{ matrix.only-testing }}
           path: "fastlane/test_output/*"
           compression-level: 9 # maximum compression
 
