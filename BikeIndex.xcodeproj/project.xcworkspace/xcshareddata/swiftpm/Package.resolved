@@ -2,15 +2,6 @@
   "originHash" : "9259fcf422692f5f3faa294a4fcee9f5ad053185cbd9f25442d308349c207968",
   "pins" : [
     {
-      "identity" : "accessibilitysnapshot",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/EmergeTools/AccessibilitySnapshot.git",
-      "state" : {
-        "revision" : "54046d8fa44b9fa9f0e2229526f6ed89cb5e0ec2",
-        "version" : "1.0.2"
-      }
-    },
-    {
       "identity" : "flyingfox",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swhitty/FlyingFox.git",
@@ -42,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/EmergeTools/SnapshotPreviews",
       "state" : {
-        "revision" : "0d1c6c282a83e5350899046efd3493558dc2d3c8",
-        "version" : "0.10.24"
+        "revision" : "6dfb281493e48e7c09ae9717593ae0b8eb47b15c",
+        "version" : "0.11.0"
       }
     },
     {
