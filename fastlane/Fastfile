@@ -10,41 +10,14 @@
 #     https://docs.fastlane.tools/plugins/available-plugins
 #
 
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
-
 default_platform(:ios)
 
 platform :ios do
-  desc "Run test suite on iPhone 17"
-  lane :tests_iphone17 do
-    # See Scanfile for default configuration
-    scan(
-      devices: ["iPhone 17"],
-      deployment_target_version: "26.2"
-    )
-  end
-
-  desc "Run test suite on iPhone 17 Pro"
-  lane :tests_iphone17pro do
-    # See Scanfile for default configuration
-    scan(
-      devices: ["iPhone 17 Pro"],
-      deployment_target_version: "26.2"
-    )
-  end
-
-  desc "Run test suite on iPad (A16)"
-  lane :tests_ipad do
-    # See Scanfile for default configuration
-    scan(
-      devices: ["iPad (A16)"],
-      deployment_target_version: "26.2"
-    )
-  end
-
   desc "Run test suite (all default simulators)"
   lane :tests do
-    scan()
+    scan(
+      devices: ["iPhone 17", "iPhone 17 Pro", "iPad (A16)"],
+      deployment_target_version: "26.2"
+    )
   end
 end

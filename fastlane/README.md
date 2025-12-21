@@ -15,30 +15,6 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## iOS
 
-### ios tests_iphone17
-
-```sh
-[bundle exec] fastlane ios tests_iphone17
-```
-
-Run test suite on iPhone 17
-
-### ios tests_iphone17pro
-
-```sh
-[bundle exec] fastlane ios tests_iphone17pro
-```
-
-Run test suite on iPhone 17 Pro
-
-### ios tests_ipad
-
-```sh
-[bundle exec] fastlane ios tests_ipad
-```
-
-Run test suite on iPad (A16)
-
 ### ios tests
 
 ```sh
