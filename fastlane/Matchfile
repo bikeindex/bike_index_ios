@@ -1,4 +1,3 @@
-
 ## USAGE NOTES
 # Started using this
 # with command
@@ -12,11 +11,11 @@ storage_mode("git")
 type("development") # The default type, can be: appstore, adhoc, enterprise or development
 
 git_branch("main")
-git_full_name("Bot")
-git_user_email("bot@bikeindex.org")
+git_full_name("Robot")
+git_user_email("robot@bikeindex.org")
 
 app_identifier(["org.bikeindex.app"])
-# username("user@fastlane.toolss") # Your Apple Developer Portal username
+username("robot@bikeindex.org")
 
 # For all available options run `fastlane match --help`
 # Remove the # in the beginning of the line to enable the other options
