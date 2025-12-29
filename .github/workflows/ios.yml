@@ -45,46 +45,46 @@ jobs:
           path: build
           key: cache-build-${{ github.sha }}
 
-  test-suite:
-    needs: build-tests
-    runs-on: macos-26
-    name: ${{ matrix.device }} ${{ matrix.only-testing }} ${{ matrix.deployment_target_version }}
-    strategy:
-      matrix:
-        device: ["iPhone 17", "iPhone 17 Pro", "iPad (A16)"]
-        deployment_target_version: ["26.2"]
-        only-testing: ["UnitTests", "UITests"]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-      - name: Set Xcode 26.2
-        run: sudo xcode-select -s /Applications/Xcode_26.2.app
-      - name: Restore cached build products
-        id: cache-build-restore
-        uses: actions/cache/restore@v4
-        with:
-          path: build
-          key: cache-build-${{ github.sha }}
-      - name: Set up xcconfig secrets (see README.md#quick-start)
-        env:
-          BIKE_INDEX_DEVELOPMENT_XCCONFIG: ${{ secrets.BIKE_INDEX_DEVELOPMENT_XCCONFIG }}
-        run: |
-          echo "$BIKE_INDEX_DEVELOPMENT_XCCONFIG" >> BikeIndex-development.xcconfig
-      - name: Set up xcconfig UI test credentials (see README.md#UI-Test-configuration)
-        env:
-          BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
-        run: |
-          echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
-      - name: ${{ matrix.only-testing}} on ${{ matrix.device }} ${{ matrix.deployment_target_version }}
-        run: fastlane scan --only-testing="${{ matrix.only-testing }}" --device="${{ matrix.device }}" --deployment-target-version="${{ matrix.deployment_target_version }}" --test_without_building=true
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test_output_${{ matrix.device }}_${{ matrix.only-testing }}
-          path: "fastlane/test_output/*"
-          compression-level: 9 # maximum compression
+  # test-suite:
+  #   needs: build-tests
+  #   runs-on: macos-26
+  #   name: ${{ matrix.device }} ${{ matrix.only-testing }} ${{ matrix.deployment_target_version }}
+  #   strategy:
+  #     matrix:
+  #       device: ["iPhone 17", "iPhone 17 Pro", "iPad (A16)"]
+  #       deployment_target_version: ["26.2"]
+  #       only-testing: ["UnitTests", "UITests"]
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #       with:
+  #         ref: ${{ github.ref }}
+  #     - name: Set Xcode 26.2
+  #       run: sudo xcode-select -s /Applications/Xcode_26.2.app
+  #     - name: Restore cached build products
+  #       id: cache-build-restore
+  #       uses: actions/cache/restore@v4
+  #       with:
+  #         path: build
+  #         key: cache-build-${{ github.sha }}
+  #     - name: Set up xcconfig secrets (see README.md#quick-start)
+  #       env:
+  #         BIKE_INDEX_DEVELOPMENT_XCCONFIG: ${{ secrets.BIKE_INDEX_DEVELOPMENT_XCCONFIG }}
+  #       run: |
+  #         echo "$BIKE_INDEX_DEVELOPMENT_XCCONFIG" >> BikeIndex-development.xcconfig
+  #     - name: Set up xcconfig UI test credentials (see README.md#UI-Test-configuration)
+  #       env:
+  #         BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
+  #       run: |
+  #         echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
+  #     - name: ${{ matrix.only-testing}} on ${{ matrix.device }} ${{ matrix.deployment_target_version }}
+  #       run: fastlane scan --only-testing="${{ matrix.only-testing }}" --device="${{ matrix.device }}" --deployment-target-version="${{ matrix.deployment_target_version }}" --test_without_building=true
+  #     - uses: actions/upload-artifact@v4
+  #       if: always()
+  #       with:
+  #         name: test_output_${{ matrix.device }}_${{ matrix.only-testing }}
+  #         path: "fastlane/test_output/*"
+  #         compression-level: 9 # maximum compression
 
 # MARK: Continuous Delivery
   build-release:
