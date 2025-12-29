@@ -11,6 +11,7 @@ on:
   pull_request:
 
 jobs:
+# MARK: Continuous Integration
   build-tests:
     name: Build project and cache build products
     runs-on: macos-26
@@ -84,4 +85,23 @@ jobs:
           name: test_output_${{ matrix.device }}_${{ matrix.only-testing }}
           path: "fastlane/test_output/*"
           compression-level: 9 # maximum compression
+
+# MARK: Continuous Delivery
+  build-release:
+    needs: build-tests
+    name: Build release archive for distribution
+    runs-on: macos-26
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - name: Load API key
+        env:
+          MATCH_API_KEY_JSON_CONTENT: ${{ secrets.MATCH_API_KEY_JSON_CONTENT }}
+        run: echo "$MATCH_API_KEY_JSON_CONTENT" > ./fastlane/api-key.json
+      - name: Load codesigning
+        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        run: fastlane match appstore --readonly
+      - 
 
