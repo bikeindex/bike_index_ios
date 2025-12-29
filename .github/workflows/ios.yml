@@ -88,7 +88,7 @@ jobs:
 
 # MARK: Continuous Delivery
   build-release:
-    if: startsWith(github.head_ref, 'release/v')
+    # if: startsWith(github.head_ref, 'release/v')
     needs: build-tests
     name: Build release archive for distribution
     runs-on: macos-26
