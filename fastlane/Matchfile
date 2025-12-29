@@ -1,14 +1,12 @@
-## USAGE NOTES
-# Started using this
-# with command
-# `fastlane match development`
+##
+# Usage: `fastlane match development` or `fastlane match appstore`
 ##
 
 git_url("git@github.com:bikeindex/codesigning_ios.git")
 
 storage_mode("git")
 
-type("development") # The default type, can be: appstore, adhoc, enterprise or development
+type("development") # appstore, adhoc, enterprise or development
 
 git_branch("main")
 git_full_name("Robot")
@@ -17,7 +15,4 @@ git_user_email("robot@bikeindex.org")
 app_identifier(["org.bikeindex.app"])
 username("robot@bikeindex.org")
 
-# For all available options run `fastlane match --help`
-# Remove the # in the beginning of the line to enable the other options
-
-# The docs are available on https://docs.fastlane.tools/actions/match
+api_key_path("./fastlane/api-key.json")
