@@ -104,7 +104,11 @@ jobs:
       - name: Load codesigning
         # env:
         #   MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-        run: fastlane match appstore --readonly
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          sed "s/git_url.*/git_url\(\"${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com\/bikeindex\/codesigning_ios.git\"\)/g" fastlane/Matchfile
+          fastlane match appstore --readonly
       - name: Build release archive
         run: fastlane gym
 
