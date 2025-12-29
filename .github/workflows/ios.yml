@@ -103,5 +103,6 @@ jobs:
       - name: Load codesigning
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         run: fastlane match appstore --readonly
-      - 
+      - name: Build release archive
+        run: fastlane gym
 
