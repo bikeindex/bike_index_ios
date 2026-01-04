@@ -114,9 +114,8 @@ jobs:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           MATCH_READONLY: "true"
         run: |
-          fastlane CD_setup_keychain
           sed -i.bak "s/git_url.*/git_url\(\"https:\/\/${GITHUB_ACTOR}:${CODESIGNING_IOS_READ_TOKEN}@github.com\/bikeindex\/codesigning_ios.git\"\)/g" fastlane/Matchfile
-          fastlane match appstore
+          fastlane CD_setup_keychain_and_codesigning
       - name: Build release archive
         run: fastlane BI_build_release_archive
       - uses: actions/upload-artifact@v4

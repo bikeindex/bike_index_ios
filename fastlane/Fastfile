@@ -52,17 +52,26 @@ platform :ios do
 
   # ------ Continuous Delivery ------
 
-  desc "Set up keychain access for Match usage"
-  lane :CD_setup_keychain do
+  desc "Set up keychain access and codesigning"
+  lane :CD_setup_keychain_and_codesigning do
+    keychain = "bikeindex_keychain"
+    keychain_password = "bikeindex_keychain_password_2026"
+
     if is_ci
       # Caution: take care with the default_keychain parameter
       create_keychain(
         default_keychain: "true",
-        name: "bikeindex_keychain",
-        password: "bikeindex_keychain_password_2026",
+        name: keychain,
+        password: keychain_password,
         unlock: true,
         timeout: "3600",
         lock_when_sleeps: false
+      )
+
+      match(
+        type: "appstore",
+        keychain_name: keychain,
+        keychain_password: keychain_password,
       )
     else
       puts "Failed to run CD_setup_keychain, is_ci value is false. Please set up keychain with fastlane run create_keychain"

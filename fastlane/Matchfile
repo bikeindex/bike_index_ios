@@ -15,8 +15,3 @@ app_identifier(["org.bikeindex.app"])
 username("robot@bikeindex.org")
 
 api_key_path("./fastlane/api-key.json")
-
-# Pre-requisite step:
-# `fastlane run create_keychain name:"bikeindex_keychain" password:"bikeindex_keychain_password_2026" unlock:"true" timeout:"3600" lock_when_sleeps:"false"`
-keychain_name("bikeindex_keychain")
-keychain_password("bikeindex_keychain_password_2026")

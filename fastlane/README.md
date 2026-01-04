@@ -47,10 +47,10 @@ Run test suite on iPad (A16)
 
 Run test suite (all default simulators)
 
-### ios CD_setup_keychain
+### ios CD_setup_keychain_and_codesigning
 
 ```sh
-[bundle exec] fastlane ios CD_setup_keychain
+[bundle exec] fastlane ios CD_setup_keychain_and_codesigning
 ```
 
 Set up keychain access for Match usage
