@@ -118,3 +118,9 @@ jobs:
           fastlane match appstore
       - name: Build release archive
         run: fastlane BI_build_release_archive
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: BikeIndex.app.dSYM.zip
+          path: BikeIndex.app.dSYM.zip
+          compression-level: 9
