@@ -109,13 +109,11 @@ jobs:
         run: |
           echo "$BIKE_INDEX_PRODUCTION_XCCONFIG" >> BikeIndex-production.xcconfig
       - name: Create keychain
-        run: fastlane run create_keychain name:"temporary_keychain" password:"temporary_keychain_password_2026" default_keychain:"true" unlock:"true" timeout:"3600" lock_when_sleeps:"false"
+        run: fastlane run create_keychain name:"bikeindex_keychain" password:"bikeindex_keychain_password_2026" unlock:"true" timeout:"3600" lock_when_sleeps:"false"
       - name: Load codesigning, build release archive
         env:
           CODESIGNING_IOS_READ_TOKEN: ${{ secrets.CODESIGNING_IOS_READ_TOKEN }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          KEYCHAIN_NAME: "temporary_keychain"
-          KEYCHAIN_PASSWORD: "temporary_keychain_password_2026"
           MATCH_READONLY: "true"
         run: |
           sed -i.bak "s/git_url.*/git_url\(\"https:\/\/${GITHUB_ACTOR}:${CODESIGNING_IOS_READ_TOKEN}@github.com\/bikeindex\/codesigning_ios.git\"\)/g" fastlane/Matchfile
