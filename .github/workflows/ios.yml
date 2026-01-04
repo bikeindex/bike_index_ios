@@ -119,6 +119,7 @@ jobs:
           MATCH_READONLY: "true"
         run: |
           sed -i.bak "s/git_url.*/git_url\(\"https:\/\/${GITHUB_ACTOR}:${CODESIGNING_IOS_READ_TOKEN}@github.com\/bikeindex\/codesigning_ios.git\"\)/g" fastlane/Matchfile
+          fastlane match development
           fastlane match appstore
           fastlane gym
 
