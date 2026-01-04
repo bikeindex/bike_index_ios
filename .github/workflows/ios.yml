@@ -108,6 +108,11 @@ jobs:
         run: |
           sed -i.bak "s/git_url.*/git_url\(\"https:\/\/${GITHUB_ACTOR}:${CODESIGNING_IOS_READ_TOKEN}@github.com\/bikeindex\/codesigning_ios.git\"\)/g" fastlane/Matchfile
           fastlane match appstore --readonly
+      - name: Set up xcconfig secrets (see README.md#quick-start)
+        env:
+          BIKE_INDEX_PRODUCTION_XCCONFIG: ${{ secrets.BIKE_INDEX_PRODUCTION_XCCONFIG }}
+        run: |
+          echo "$BIKE_INDEX_PRODUCTION_XCCONFIG" >> BikeIndex-production.xcconfig
       - name: Build release archive
         run: fastlane gym
 
