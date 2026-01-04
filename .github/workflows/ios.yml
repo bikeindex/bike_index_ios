@@ -109,7 +109,8 @@ jobs:
         run: |
           echo "$BIKE_INDEX_PRODUCTION_XCCONFIG" >> BikeIndex-production.xcconfig
       - name: Create keychain
-        run: fastlane run create_keychain name:"bikeindex_keychain" password:"bikeindex_keychain_password_2026" unlock:"true" timeout:"3600" lock_when_sleeps:"false"
+        # Caution: take care with the default_keychain parameter
+        run: fastlane run create_keychain default_keychain:"true" name:"bikeindex_keychain" password:"bikeindex_keychain_password_2026" unlock:"true" timeout:"3600" lock_when_sleeps:"false"
       - name: Load codesigning
         env:
           CODESIGNING_IOS_READ_TOKEN: ${{ secrets.CODESIGNING_IOS_READ_TOKEN }}
