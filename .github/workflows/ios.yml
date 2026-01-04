@@ -97,6 +97,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
+      - name: Set Xcode 26.2
+        run: sudo xcode-select -s /Applications/Xcode_26.2.app
       - name: Load API key
         env:
           MATCH_API_KEY_JSON_CONTENT: ${{ secrets.MATCH_API_KEY_JSON_CONTENT }}
