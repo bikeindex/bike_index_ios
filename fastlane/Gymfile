@@ -8,3 +8,13 @@ project("BikeIndex.xcodeproj")
 scheme("BikeIndex")
 
 output_directory("./")
+
+# Experimental
+configuration("Release")
+codesigning_identity("Apple Distribution: Bike Index")
+
+export_options({
+  provisioningProfiles: {
+    "org.bikeindex.app" => "match AppStore org.bikeindex.app",
+  }
+})
