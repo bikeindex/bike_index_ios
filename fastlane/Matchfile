@@ -6,8 +6,6 @@ git_url("git@github.com:bikeindex/codesigning_ios.git")
 
 storage_mode("git")
 
-type("development") # appstore, adhoc, enterprise or development
-
 git_branch("main")
 git_full_name("Robot")
 git_user_email("robot@bikeindex.org")
