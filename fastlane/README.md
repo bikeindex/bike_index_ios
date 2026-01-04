@@ -47,6 +47,14 @@ Run test suite on iPad (A16)
 
 Run test suite (all default simulators)
 
+### ios CD_setup_keychain
+
+```sh
+[bundle exec] fastlane ios CD_setup_keychain
+```
+
+Set up keychain access for Match usage
+
 ### ios BI_build_release_archive
 
 ```sh

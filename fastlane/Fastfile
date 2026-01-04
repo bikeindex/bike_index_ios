@@ -16,6 +16,8 @@
 default_platform(:ios)
 
 platform :ios do
+  # ------ Continuous Integration ------
+
   desc "Run test suite on iPhone 17"
   lane :tests_iphone17 do
     # See Scanfile for default configuration
@@ -48,7 +50,24 @@ platform :ios do
     scan()
   end
 
-  # ----
+  # ------ Continuous Delivery ------
+
+  desc "Set up keychain access for Match usage"
+  lane :CD_setup_keychain do
+    if is_ci
+      # Caution: take care with the default_keychain parameter
+      create_keychain(
+        default_keychain: "true",
+        name: "bikeindex_keychain",
+        password: "bikeindex_keychain_password_2026",
+        unlock: true,
+        timeout: "3600",
+        lock_when_sleeps: false
+      )
+    else
+      puts "Failed to run CD_setup_keychain, is_ci value is false. Please set up keychain with fastlane run create_keychain"
+    end
+  end
 
   desc "Perform all tasks to make a new release: increment build, archive, upload"
   lane :BI_build_release_archive do
