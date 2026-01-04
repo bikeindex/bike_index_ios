@@ -107,7 +107,7 @@ jobs:
         env:
           CODESIGNING_IOS_READ_TOKEN: ${{ secrets.CODESIGNING_IOS_READ_TOKEN }}
         run: |
-          sed -i.bak "s/git_url.*/git_url\(\"${GITHUB_ACTOR}:${CODESIGNING_IOS_READ_TOKEN}@github.com\/bikeindex\/codesigning_ios.git\"\)/g" fastlane/Matchfile
+          sed -i.bak "s/git_url.*/git_url\(\"https:\/\/${GITHUB_ACTOR}:${CODESIGNING_IOS_READ_TOKEN}@github.com\/bikeindex\/codesigning_ios.git\"\)/g" fastlane/Matchfile
           fastlane match appstore --readonly
       - name: Build release archive
         run: fastlane gym
