@@ -63,6 +63,12 @@ platform :ios do
 
     gym()
 
-    # deliver() # TODO
+    deliver(
+      # Only available for CI/CD after "Load API key" step
+      api_key_path: "./fastlane/api-key.json",
+      skip_screenshots: true,
+      skip_metadata: true,
+      precheck_include_in_app_purchases: false
+    )
   end
 end
