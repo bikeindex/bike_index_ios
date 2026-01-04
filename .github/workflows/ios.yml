@@ -106,13 +106,15 @@ jobs:
           BIKE_INDEX_PRODUCTION_XCCONFIG: ${{ secrets.BIKE_INDEX_PRODUCTION_XCCONFIG }}
         run: |
           echo "$BIKE_INDEX_PRODUCTION_XCCONFIG" >> BikeIndex-production.xcconfig
+      - name: Create keychain
+        run: fastlane run create_keychain name:"temporary_keychain" password:"temporary_keychain_password_2026" default_keychain:"true" unlock:"true" timeout:"3600" lock_when_sleeps:"false"
       - name: Load codesigning
         env:
           CODESIGNING_IOS_READ_TOKEN: ${{ secrets.CODESIGNING_IOS_READ_TOKEN }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         run: |
           sed -i.bak "s/git_url.*/git_url\(\"https:\/\/${GITHUB_ACTOR}:${CODESIGNING_IOS_READ_TOKEN}@github.com\/bikeindex\/codesigning_ios.git\"\)/g" fastlane/Matchfile
-          fastlane match appstore --readonly
+          fastlane match appstore --readonly keychain_name:"temporary_keychain" keychain_password:"temporary_keychain_password_2026"
       - name: Build release archive
         run: fastlane gym
 
