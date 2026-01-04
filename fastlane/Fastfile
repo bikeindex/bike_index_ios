@@ -47,4 +47,22 @@ platform :ios do
   lane :tests do
     scan()
   end
+
+  # ----
+
+  desc "Perform all tasks to make a new release: increment build, archive, upload"
+  lane :BI_build_release_archive do
+    current_build_number = latest_testflight_build_number(
+      # Only available for CI/CD after "Load API key" step
+      api_key_path: "./fastlane/api-key.json"
+    )
+
+    increment_build_number({
+      build_number: current_build_number + 1,
+    })
+
+    gym()
+
+    # deliver() # TODO
+  end
 end

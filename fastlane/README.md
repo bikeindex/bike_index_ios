@@ -47,6 +47,14 @@ Run test suite on iPad (A16)
 
 Run test suite (all default simulators)
 
+### ios BI_build_release_archive
+
+```sh
+[bundle exec] fastlane ios BI_build_release_archive
+```
+
+Perform all tasks to make a new release: increment build, archive, upload
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

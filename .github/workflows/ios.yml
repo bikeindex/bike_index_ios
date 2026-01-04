@@ -116,6 +116,5 @@ jobs:
         run: |
           sed -i.bak "s/git_url.*/git_url\(\"https:\/\/${GITHUB_ACTOR}:${CODESIGNING_IOS_READ_TOKEN}@github.com\/bikeindex\/codesigning_ios.git\"\)/g" fastlane/Matchfile
           fastlane match appstore
-      - name: build release archive
-        run: fastlane gym
-
+      - name: Build release archive
+        run: fastlane BI_build_release_archive
