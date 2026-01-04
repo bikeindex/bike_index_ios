@@ -112,9 +112,11 @@ jobs:
         env:
           CODESIGNING_IOS_READ_TOKEN: ${{ secrets.CODESIGNING_IOS_READ_TOKEN }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          KEYCHAIN_NAME: "temporary_keychain"
+          KEYCHAIN_PASSWORD: "temporary_keychain_password_2026"
         run: |
           sed -i.bak "s/git_url.*/git_url\(\"https:\/\/${GITHUB_ACTOR}:${CODESIGNING_IOS_READ_TOKEN}@github.com\/bikeindex\/codesigning_ios.git\"\)/g" fastlane/Matchfile
-          fastlane match appstore --readonly keychain_name:"temporary_keychain" keychain_password:"temporary_keychain_password_2026"
+          fastlane match appstore --readonly
       - name: Build release archive
         run: fastlane gym
 
