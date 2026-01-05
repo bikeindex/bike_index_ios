@@ -70,6 +70,7 @@ platform :ios do
 
       match(
         type: "appstore",
+        readonly: true,
         keychain_name: keychain,
         keychain_password: keychain_password,
       )
