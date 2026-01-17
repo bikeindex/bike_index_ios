@@ -57,7 +57,7 @@ struct ContentBikeButtonView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 24))
 
                     HStack {
-                        Text(bike.title)
+                        Text(bike.displayTitle)
                     }
                 }
             }

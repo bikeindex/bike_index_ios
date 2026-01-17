@@ -125,7 +125,7 @@ struct BikeDetailOfflineView: View {
             }
             .formStyle(.columns)
             .headerProminence(.increased)
-            .navigationTitle(bike.title)
+            .navigationTitle(bike.displayTitle)
         } else {
             ContentUnavailableView(
                 "Bike not found",
