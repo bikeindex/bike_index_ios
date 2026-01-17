@@ -60,7 +60,7 @@ platform :ios do
     if is_ci
       # Caution: take care with the default_keychain parameter
       create_keychain(
-        default_keychain: "true",
+        default_keychain: true,
         name: keychain,
         password: keychain_password,
         unlock: true,
