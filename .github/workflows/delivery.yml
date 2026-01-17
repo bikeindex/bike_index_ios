@@ -1,0 +1,47 @@
+name: Continuous Delivery
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branch: ["release/v*"]
+
+jobs:
+# MARK: Continuous Delivery
+  build-release:
+    if: startsWith(github.head_ref, 'release/v')
+    needs: build-tests
+    name: Build release archive for distribution
+    runs-on: macos-26
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - name: Set Xcode 26.2
+        run: sudo xcode-select -s /Applications/Xcode_26.2.app
+      - name: Load API key
+        env:
+          MATCH_API_KEY_JSON_CONTENT: ${{ secrets.MATCH_API_KEY_JSON_CONTENT }}
+        run: echo "$MATCH_API_KEY_JSON_CONTENT" > ./fastlane/api-key.json
+      - name: Set up xcconfig (see README.md#quick-start)
+        env:
+          BIKE_INDEX_PRODUCTION_XCCONFIG: ${{ secrets.BIKE_INDEX_PRODUCTION_XCCONFIG }}
+        run: |
+          echo "$BIKE_INDEX_PRODUCTION_XCCONFIG" >> BikeIndex-production.xcconfig
+      - name: Load codesigning
+        env:
+          CODESIGNING_IOS_READ_TOKEN: ${{ secrets.CODESIGNING_IOS_READ_TOKEN }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_READONLY: "true"
+        run: |
+          sed -i.bak "s/git_url.*/git_url\(\"https:\/\/${GITHUB_ACTOR}:${CODESIGNING_IOS_READ_TOKEN}@github.com\/bikeindex\/codesigning_ios.git\"\)/g" fastlane/Matchfile
+          fastlane CD_setup_keychain_and_codesigning
+      - name: Build release archive
+        run: fastlane BI_build_release_archive
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: BikeIndex.app.dSYM.zip
+          path: BikeIndex.app.dSYM.zip
+          compression-level: 9
