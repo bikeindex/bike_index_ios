@@ -53,12 +53,12 @@ Run test suite (all default simulators)
 [bundle exec] fastlane ios CD_setup_keychain_and_codesigning
 ```
 
-Set up keychain access for Match usage
+Set up keychain access and codesigning
 
-### ios BI_build_release_archive
+### ios CD_build_release_archive
 
 ```sh
-[bundle exec] fastlane ios BI_build_release_archive
+[bundle exec] fastlane ios CD_build_release_archive
 ```
 
 Perform all tasks to make a new release: increment build, archive, upload
