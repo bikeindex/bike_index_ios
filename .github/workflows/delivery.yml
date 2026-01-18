@@ -10,7 +10,7 @@ jobs:
 # MARK: Continuous Delivery
   build-release:
     if: startsWith(github.head_ref, 'release/v')
-    needs: build-tests
+    uses: bikeindex/bike_index_ios/.github/workflows/integration.yml@main
     name: Build release archive for distribution
     runs-on: macos-26
     steps:
