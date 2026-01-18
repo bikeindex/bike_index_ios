@@ -20,10 +20,10 @@ import SwiftData
 
     var title: String?
     var bikeDescription: String?
-    
+
     var registryName: String?
     var registryURL: URL?
-    
+
     var frameModel: String?
 
     var frameColorPrimary: FrameColor
@@ -33,13 +33,13 @@ import SwiftData
     @Transient var frameColors: [FrameColor] {
         [frameColorPrimary, frameColorSecondary, frameColorTertiary].compactMap { $0 }
     }
-    
+
     var paintDescription: String?
 
     /// Also accepts manufacturer identifier Int
     var manufacturerName: String
     var manufacturerID: Int?
-    
+
     var year: Int?
     /// SwiftData KeyPaths are used with SectionedQuery to display section titles and mixing
     /// the types of key paths is very difficult to work-around so we make it queryable
@@ -102,7 +102,7 @@ import SwiftData
     var createdAt: Date?
     /// Date the bike was most-recently updated. Note that this is read-only from the API.
     var updatedAt: Date?
-    
+
     var extraRegistrationNumber: Int?
     var rearTireNarrow: Bool?
     var testBike: Bool?
