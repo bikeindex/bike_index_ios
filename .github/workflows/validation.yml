@@ -8,7 +8,7 @@ on:
 
 jobs:
   requires-integration-tests:
-    uses: bikeindex/bike_index_ios/.github/workflows/ios.yml@main
+    uses: bikeindex/bike_index_ios/.github/workflows/integrationf.yml@265fab12ef8e32c7bfbd6ae7b34b433d2efd16b8
 
   build-release:
     name: Workflow Validation
