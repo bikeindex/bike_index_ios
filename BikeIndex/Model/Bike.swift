@@ -18,7 +18,12 @@ import SwiftData
     @Relationship var owner: User?
     @Relationship var authenticatedOwner: AuthenticatedUser?
 
+    var title: String?
     var bikeDescription: String?
+    
+    var registryName: String?
+    var registryURL: URL?
+    
     var frameModel: String?
 
     var frameColorPrimary: FrameColor
@@ -28,9 +33,13 @@ import SwiftData
     @Transient var frameColors: [FrameColor] {
         [frameColorPrimary, frameColorSecondary, frameColorTertiary].compactMap { $0 }
     }
+    
+    var paintDescription: String?
 
     /// Also accepts manufacturer identifier Int
     var manufacturerName: String
+    var manufacturerID: Int?
+    
     var year: Int?
     /// SwiftData KeyPaths are used with SectionedQuery to display section titles and mixing
     /// the types of key paths is very difficult to work-around so we make it queryable
@@ -53,6 +62,7 @@ import SwiftData
     /// SwiftData predicates are incompatible with Enums (like ``BikeStatus``) so we duplicate it :/ to make it queryable
     /// Add a default value of empty string, to be over-written by 1) ``Bike/init`` and 2) ``Bike/status/willSet``.
     var statusString: String = ""
+    var stolen: Bool = false
 
     // 2D coordinate is a struct
     // Persistent model requires a class/object
@@ -74,6 +84,7 @@ import SwiftData
     private var stolenCoordinateLongitude: CLLocationDegrees
     var stolenLocation: String?
     var dateStolen: Date?
+    var locationFound: Bool?
 
     /// Full resolution main image
     var largeImage: URL?
@@ -83,6 +94,7 @@ import SwiftData
     var apiUrl: URL?
     var publicImages: [String]
     var fullPublicImages: [FullPublicImage]
+    var isStockImage: Bool = false
 
     // MARK: - Full Bike fields
 
@@ -90,6 +102,18 @@ import SwiftData
     var createdAt: Date?
     /// Date the bike was most-recently updated. Note that this is read-only from the API.
     var updatedAt: Date?
+    
+    var extraRegistrationNumber: Int?
+    var rearTireNarrow: Bool?
+    var testBike: Bool?
+    var rearWheelSizeISOBSD: Bool?
+    var frontWheelSizeISOBSD: Bool?
+    var handlebarTypeSlug: String?
+    var frameMaterialSlug: String?
+    var frontGearTypeSlug: String?
+    var rearGearTypeSlug: String?
+    var additionalRegistration: String?
+    var components: [String] = []
 
     struct Constants {
         /// The range of supported years for Bike models
@@ -103,56 +127,94 @@ import SwiftData
 
     init(
         identifier: BikeIdentifier,
+        title: String? = nil,
         bikeDescription: String? = nil,
+        registryName: String? = nil,
+        registryURL: URL? = nil,
         frameModel: String? = nil,
         primaryColor: FrameColor,
         secondaryColor: FrameColor? = nil,
         tertiaryColor: FrameColor? = nil,
+        paintDescription: String? = nil,
         manufacturerName: String,
+        manufacturerID: Int? = nil,
         year: Int? = nil,
         typeOfCycle: BicycleType,
         typeOfPropulsion: PropulsionType,
         serial: String? = nil,
         status: BikeStatus,
+        stolen: Bool = false,
         stolenCoordinateLatitude: CLLocationDegrees,
         stolenCoordinateLongitude: CLLocationDegrees,
         stolenLocation: String? = nil,
         dateStolen: Date? = nil,
+        locationFound: Bool? = nil,
         largeImage: URL? = nil,
         thumb: URL? = nil,
         url: URL,
         apiUrl: URL? = nil,
         publicImages: [String],
         fullPublicImages: [FullPublicImage] = [],
+        isStockImage: Bool = false,
         createdAt: Date? = nil,
-        updatedAt: Date? = nil
+        updatedAt: Date? = nil,
+        extraRegistrationNumber: Int? = nil,
+        rearTireNarrow: Bool? = nil,
+        testBike: Bool? = nil,
+        rearWheelSizeISOBSD: Bool? = nil,
+        frontWheelSizeISOBSD: Bool? = nil,
+        handlebarTypeSlug: String? = nil,
+        frameMaterialSlug: String? = nil,
+        frontGearTypeSlug: String? = nil,
+        rearGearTypeSlug: String? = nil,
+        additionalRegistration: String? = nil,
+        components: [String] = []
     ) {
         self.identifier = identifier
+        self.title = title
         self.bikeDescription = bikeDescription
+        self.registryName = registryName
+        self.registryURL = registryURL
         self.frameModel = frameModel
         self.frameColorPrimary = primaryColor
         self.frameColorSecondary = secondaryColor
         self.frameColorTertiary = tertiaryColor
+        self.paintDescription = paintDescription
         self.manufacturerName = manufacturerName
+        self.manufacturerID = manufacturerID
         self.year = year
         self.yearString = year.map(String.init) ?? Constants.unknownYear
         self.typeOfCycle = typeOfCycle
         self.typeOfPropulsion = typeOfPropulsion
         self.serial = serial
         self.status = status
+        self.stolen = stolen
         self.statusString = status.displayName
         self.stolenCoordinateLatitude = stolenCoordinateLatitude
         self.stolenCoordinateLongitude = stolenCoordinateLongitude
         self.stolenLocation = stolenLocation
         self.dateStolen = dateStolen
+        self.locationFound = locationFound
         self.largeImage = largeImage
         self.thumb = thumb
         self.url = url
         self.apiUrl = apiUrl
         self.publicImages = publicImages
         self.fullPublicImages = fullPublicImages
+        self.isStockImage = isStockImage
         self.createdAt = createdAt
         self.updatedAt = updatedAt
+        self.extraRegistrationNumber = extraRegistrationNumber
+        self.rearTireNarrow = rearTireNarrow
+        self.testBike = testBike
+        self.rearWheelSizeISOBSD = rearWheelSizeISOBSD
+        self.frontWheelSizeISOBSD = frontWheelSizeISOBSD
+        self.handlebarTypeSlug = handlebarTypeSlug
+        self.frameMaterialSlug = frameMaterialSlug
+        self.frontGearTypeSlug = frontGearTypeSlug
+        self.rearGearTypeSlug = rearGearTypeSlug
+        self.additionalRegistration = additionalRegistration
+        self.components = components
     }
 
     init() {
@@ -197,7 +259,7 @@ import SwiftData
 extension Bike {
     // MARK: - Accessors for UI display
 
-    @Transient var title: String {
+    @Transient var displayTitle: String {
         if let year {
             String(year) + " " + manufacturerName
         } else if let serial {

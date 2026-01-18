@@ -1,5 +1,5 @@
 //
-//  DebugDataView.swift
+//  DatabaseGalleryView.swift
 //  BikeIndex
 //
 //  Created by Jack on 1/1/25.
@@ -9,7 +9,7 @@ import SwiftData
 import SwiftUI
 
 #if DEBUG
-struct DebugDataView: View {
+struct DatabaseGalleryView: View {
     @Query var authenticatedUsers: [AuthenticatedUser]
     @Query var users: [User]
     @Query var bikes: [Bike]
@@ -139,7 +139,7 @@ struct DataModelDebugView<Model: PersistentModel, Content: View>: View {
             configurations: config
         )
 
-        return DebugDataView()
+        return DatabaseGalleryView()
             .modelContainer(mockContainer)
     } catch {
         return Text(error.localizedDescription)

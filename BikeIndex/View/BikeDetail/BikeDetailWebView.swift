@@ -57,7 +57,7 @@ struct BikeDetailWebView: View {
                         }
                     }
                 })
-                .navigationTitle(bike.title)
+                .navigationTitle(bike.displayTitle)
                 .sheet(isPresented: $checker.presentOfflineMode) {
                     NavigationStack {
                         BikeDetailOfflineView(bikeIdentifier: bike.identifier)
