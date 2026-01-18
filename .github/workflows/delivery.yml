@@ -16,8 +16,6 @@ jobs:
     runs-on: macos-26
     needs: requires-integration-tests
     steps:
-      - name: Integration Tests
-        uses: bikeindex/bike_index_ios/.github/workflows/integration.yml@main
       - name: Checkout
         uses: actions/checkout@v4
         with:
