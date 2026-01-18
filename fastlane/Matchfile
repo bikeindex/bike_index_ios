@@ -1,0 +1,17 @@
+##
+# Usage: `fastlane match development` or `fastlane match appstore`
+##
+
+# Access token injected by CI/CD
+git_url("git@github.com:bikeindex/codesigning_ios.git")
+
+storage_mode("git")
+
+git_branch("main")
+git_full_name("Robot")
+git_user_email("robot@bikeindex.org")
+
+app_identifier(["org.bikeindex.app"])
+username("robot@bikeindex.org")
+
+api_key_path("./fastlane/api-key.json")

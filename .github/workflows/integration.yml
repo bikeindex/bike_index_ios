@@ -1,7 +1,4 @@
-##
-# Image details: https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md
-##
-name: iOS Test Suite
+name: Continuous Integration
 permissions:
   contents: read
 
@@ -9,6 +6,7 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
+  workflow_call:
 
 jobs:
   build-tests:
@@ -23,7 +21,7 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_26.2.app
       - name: Install tools
         run: brew bundle install
-      - name: Set up xcconfig secrets (see README.md#quick-start)
+      - name: Set up xcconfig (see README.md#quick-start)
         env:
           BIKE_INDEX_DEVELOPMENT_XCCONFIG: ${{ secrets.BIKE_INDEX_DEVELOPMENT_XCCONFIG }}
         run: |
@@ -66,7 +64,7 @@ jobs:
         with:
           path: build
           key: cache-build-${{ github.sha }}
-      - name: Set up xcconfig secrets (see README.md#quick-start)
+      - name: Set up xcconfig (see README.md#quick-start)
         env:
           BIKE_INDEX_DEVELOPMENT_XCCONFIG: ${{ secrets.BIKE_INDEX_DEVELOPMENT_XCCONFIG }}
         run: |
@@ -84,4 +82,3 @@ jobs:
           name: test_output_${{ matrix.device }}_${{ matrix.only-testing }}
           path: "fastlane/test_output/*"
           compression-level: 9 # maximum compression
-

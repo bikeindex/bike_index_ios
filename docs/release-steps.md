@@ -1,5 +1,8 @@
 # Release Steps
 
+> [!TIP]
+> As of [PR #128](https://github.com/bikeindex/bike_index_ios/pull/128) steps 6. (create archive build) and 7. (upload to App Store Connect) are automated for branches matching the release format in step 1.
+
 1. Create a release branch in the format `release/v1.5`
 2. Open the project and run the test suite
 3. Increment the BikeIndex Target Version and Build numbers in the project settings
@@ -12,8 +15,8 @@
 	2. Set the simulator date/time with `xcrun simctl status_bar booted override --time "2007-01-09T14:41:00.000Z" --dataNetwork wifi --wifiMode active --wifiBars 3 --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100`
 	3. Capture each screenshot as needed
 	4. When opening "Register a bike" page, clear the "Owner Email" field
-6. Create an Archive build
-7. Upload the build to App Store connect and submit it to TestFlight
+6. ~~Create an Archive build~~ _automated in PR #128!_
+7. ~~Upload the build to App Store connect and submit it to TestFlight~~ _automated in PR #128!_
 8. Update the screenshots
 9. Update the "What's New" text
 10. Submit the build to App Store Review

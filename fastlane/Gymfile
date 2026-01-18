@@ -1,0 +1,20 @@
+# For more information about this configuration visit
+# https://docs.fastlane.tools/actions/gym/#gymfile
+
+# In general, you can use the options available
+# fastlane gym --help
+
+project("BikeIndex.xcodeproj")
+scheme("BikeIndex")
+
+output_directory("./")
+
+# Experimental
+configuration("Release")
+codesigning_identity("Apple Distribution: Bike Index")
+
+export_options({
+  provisioningProfiles: {
+    "org.bikeindex.app" => "match AppStore org.bikeindex.app",
+  }
+})
