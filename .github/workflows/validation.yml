@@ -1,0 +1,23 @@
+# Validation to help advance PR-#128, will be removed
+name: Validation
+permissions:
+  contents: read
+
+on:
+  pull_request:
+
+jobs:
+# MARK: Validation
+  build-release:
+    # if: startsWith(github.head_ref, 'release/v')
+    name: Workflow Validation
+    runs-on: macos-26
+    steps:
+      - name: Integration Tests
+        uses: bikeindex/bike_index_ios/.github/workflows/integration.yml@main
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - name: Ready
+        run: echo "Ready!"
