@@ -1,6 +1,7 @@
 # Release Steps
 
-As of [PR #128](https://github.com/bikeindex/bike_index_ios/pull/128) steps 6. (create archive build) and 7. (upload to App Store Connect) are automated for branches matching the release format in step 1.
+> [!TIP]
+> As of [PR #128](https://github.com/bikeindex/bike_index_ios/pull/128) steps 6. (create archive build) and 7. (upload to App Store Connect) are automated for branches matching the release format in step 1.
 
 1. Create a release branch in the format `release/v1.5`
 2. Open the project and run the test suite
