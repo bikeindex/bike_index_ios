@@ -12,7 +12,7 @@ jobs:
 
   build-release:
     if: startsWith(github.head_ref, 'release/v')
-    name: Build release archive for distribution
+    name: Build release archive and distribute
     runs-on: macos-26
     needs: requires-integration-tests
     steps:
