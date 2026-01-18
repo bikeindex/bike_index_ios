@@ -7,14 +7,14 @@ on:
   pull_request:
 
 jobs:
-# MARK: Validation
+  requires-integration-tests:
+    uses: bikeindex/bike_index_ios/.github/workflows/ios.yml@main
+
   build-release:
-    # if: startsWith(github.head_ref, 'release/v')
     name: Workflow Validation
     runs-on: macos-26
+    needs: requires-integration-tests
     steps:
-      - name: Integration Tests
-        uses: bikeindex/bike_index_ios/.github/workflows/integration.yml@main
       - name: Checkout
         uses: actions/checkout@v4
         with:

@@ -7,11 +7,14 @@ on:
     branch: ["release/v*"]
 
 jobs:
-# MARK: Continuous Delivery
+  requires-integration-tests:
+    uses: bikeindex/bike_index_ios/.github/workflows/integration.yml@main
+
   build-release:
     if: startsWith(github.head_ref, 'release/v')
     name: Build release archive for distribution
     runs-on: macos-26
+    needs: requires-integration-tests
     steps:
       - name: Integration Tests
         uses: bikeindex/bike_index_ios/.github/workflows/integration.yml@main

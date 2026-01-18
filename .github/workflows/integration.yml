@@ -9,7 +9,6 @@ on:
   workflow_call:
 
 jobs:
-# MARK: Continuous Integration
   build-tests:
     name: Build project and cache build products
     runs-on: macos-26
