@@ -157,7 +157,7 @@ struct SettingsPage: View {
             case .previewGallery:
                 PreviewGallery()
             case .databaseGallery:
-                DebugDataView()
+                DatabaseGalleryView()
             #endif
             case .acknowledgements:
                 AcknowledgementsListView()
