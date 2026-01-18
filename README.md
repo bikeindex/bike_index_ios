@@ -1,4 +1,4 @@
-# [![BIKE INDEX][bike-index-logo]][bike-index] ![GitHub License](https://img.shields.io/github/license/bikeindex/bike_index_ios) [![iOS Test Suite](https://github.com/bikeindex/bike_index_ios/actions/workflows/ios.yml/badge.svg)](https://github.com/bikeindex/bike_index_ios/actions/workflows/ios.yml) ![iTunes App Store](https://img.shields.io/itunes/v/6477746994?label=Latest%20App%20Store%20release)
+# [![BIKE INDEX][bike-index-logo]][bike-index] ![GitHub License](https://img.shields.io/github/license/bikeindex/bike_index_ios) [![iOS Test Suite](https://github.com/bikeindex/bike_index_ios/actions/workflows/integration.yml/badge.svg)](https://github.com/bikeindex/bike_index_ios/actions/workflows/ios.yml) ![iTunes App Store](https://img.shields.io/itunes/v/6477746994?label=Latest%20App%20Store%20release)
 
 [bike-index-logo]: https://github.com/bikeindex/bike_index/blob/main/public/icon-dark.svg?raw=true
 [bike-index]: https://www.bikeindex.org
