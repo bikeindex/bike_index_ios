@@ -31,7 +31,7 @@ To get started:
 
 ### Development
 
-- Requirements: Xcode 26.1
+- Requirements: Xcode 26.2
 - Target deployment: iOS 17.2
 
 This project uses SwiftUI and SwiftData. At this time iPhone and iPad are the primary targets with a goal to include Mac support.
@@ -51,9 +51,13 @@ Git hooks are in the local [.githooks](.githooks) directory and can be connected
 
 Formatting is done with [swiftlang/swift-format](https://github.com/swiftlang/swift-format/)
 
-Lint with: `swift format lint --recursive  BikeIndex/ UnitTests/ UITests/`
+Lint with:
+- `./scripts/lint.sh` _or_
+- `swift format lint --recursive  BikeIndex/ UnitTests/ UITests/`
 
-Format with: `swift format --in-place --recursive  BikeIndex/ UnitTests/ UITests/`
+Format with:
+- `./scripts/format.sh` _or_
+- `swift format --in-place --recursive  BikeIndex/ UnitTests/ UITests/`
 
 The configuration will be loaded by default from [.swift-format](.swift-format)
 
