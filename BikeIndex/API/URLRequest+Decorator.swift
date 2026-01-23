@@ -15,9 +15,7 @@ extension URLRequest {
 
     func addAppVersion() -> URLRequest {
         var request = self
-        if let version = AppVersionInfo().marketingVersion {
-            request.addValue(version, forHTTPHeaderField: "X-IOS-VERSION")
-        }
+        request.addValue(AppVersionInfo().referralSource, forHTTPHeaderField: "X-REQUESTED-WITH")
         return request
     }
 
