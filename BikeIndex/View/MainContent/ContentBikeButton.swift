@@ -21,6 +21,8 @@ struct ContentBikeButtonView: View {
             })
     }
 
+    private let stroke = 4.0
+
     var body: some View {
         if let bike = bikeQuery.first, bikeQuery.count == 1 {
             NavigationLink(value: bike.identifier) {
@@ -41,9 +43,42 @@ struct ContentBikeButtonView: View {
                                     minHeight: 100,
                                     maxHeight: .infinity
                                 )
-                                .tint(Color.white)
-                                .background(
-                                    Color.accentColor, in: RoundedRectangle(cornerRadius: 24))
+                                .tint(Color.secondary)
+//                                .background(
+//                                    bike.frameColorPrimary.color ?? .accent,
+//                                    in: RoundedRectangle(cornerRadius: 24))
+                                .background {
+                                    switch bike.frameColorPrimary {
+                                    // Bare Metal
+                                    case .bareMetal:
+                                        RoundedRectangle(cornerRadius: 24)
+                                            .stroke(
+                                                Chip.bareMetalAngularGradient,
+                                                lineWidth: stroke / 2)
+                                    // Covered
+                                    case .covered:
+                                        if #available(iOS 18.0, *) {
+                                            RoundedRectangle(cornerRadius: 24)
+                                                .fill(Chip.rainbow18)
+//                                                .strokeBorder(
+//                                                    Chip.rainbow18,
+//                                                    lineWidth: stroke / 2)
+                                        } else {
+                                            RoundedRectangle(cornerRadius: 24)
+                                                .stroke(
+                                                    Chip.rainbow17,
+                                                    lineWidth: stroke / 2)
+                                        }
+                                    // Color with value
+                                    case let value:
+                                        RoundedRectangle(cornerRadius: 24)
+                                            .stroke(
+                                                value.color!.gradient,
+                                                lineWidth: stroke
+                                            )
+                                            .fill(.background.tertiary)
+                                    }
+                                }
 
                         }
                     }
@@ -72,7 +107,7 @@ struct ContentBikeButtonView: View {
 
     let sampleBike1 = Bike(
         identifier: 1,
-        primaryColor: FrameColor.bareMetal,
+        primaryColor: FrameColor.black,
         manufacturerName: "Jamis",
         typeOfCycle: .bike,
         typeOfPropulsion: .footPedal,
@@ -88,7 +123,7 @@ struct ContentBikeButtonView: View {
 
     let sampleBike2 = Bike(
         identifier: 2,
-        primaryColor: FrameColor.bareMetal,
+        primaryColor: FrameColor.white,
         manufacturerName: "Wide",
         typeOfCycle: .bike,
         typeOfPropulsion: .footPedal,
@@ -120,7 +155,7 @@ struct ContentBikeButtonView: View {
 
     let sampleBike4 = Bike(
         identifier: 4,
-        primaryColor: FrameColor.bareMetal,
+        primaryColor: FrameColor.blue,
         manufacturerName: "Empty",
         typeOfCycle: BicycleType.bike,
         typeOfPropulsion: .footPedal,
