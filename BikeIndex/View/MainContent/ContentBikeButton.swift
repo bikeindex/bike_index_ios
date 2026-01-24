@@ -33,53 +33,7 @@ struct ContentBikeButtonView: View {
                                 .resizable()
                                 .scaledToFill()
                         } placeholder: {
-                            Image(systemName: "bicycle")
-                                .resizable()
-                                .scaledToFit()
-                                .padding()
-                                .frame(
-                                    minWidth: 100,
-                                    maxWidth: .infinity,
-                                    minHeight: 100,
-                                    maxHeight: .infinity
-                                )
-                                .tint(Color.secondary)
-//                                .background(
-//                                    bike.frameColorPrimary.color ?? .accent,
-//                                    in: RoundedRectangle(cornerRadius: 24))
-                                .background {
-                                    switch bike.frameColorPrimary {
-                                    // Bare Metal
-                                    case .bareMetal:
-                                        RoundedRectangle(cornerRadius: 24)
-                                            .stroke(
-                                                Chip.bareMetalAngularGradient,
-                                                lineWidth: stroke / 2)
-                                    // Covered
-                                    case .covered:
-                                        if #available(iOS 18.0, *) {
-                                            RoundedRectangle(cornerRadius: 24)
-                                                .fill(Chip.rainbow18)
-//                                                .strokeBorder(
-//                                                    Chip.rainbow18,
-//                                                    lineWidth: stroke / 2)
-                                        } else {
-                                            RoundedRectangle(cornerRadius: 24)
-                                                .stroke(
-                                                    Chip.rainbow17,
-                                                    lineWidth: stroke / 2)
-                                        }
-                                    // Color with value
-                                    case let value:
-                                        RoundedRectangle(cornerRadius: 24)
-                                            .stroke(
-                                                value.color!.gradient,
-                                                lineWidth: stroke
-                                            )
-                                            .fill(.background.tertiary)
-                                    }
-                                }
-
+                            ContentButtonBorder(frameColors: bike.frameColors)
                         }
                     }
                     .frame(
@@ -124,6 +78,7 @@ struct ContentBikeButtonView: View {
     let sampleBike2 = Bike(
         identifier: 2,
         primaryColor: FrameColor.white,
+        secondaryColor: .blue,
         manufacturerName: "Wide",
         typeOfCycle: .bike,
         typeOfPropulsion: .footPedal,
