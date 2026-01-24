@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+@available(*, deprecated, message: "TODO: Rename, this is the wrong name.")
+// TODO: Use vertical stripes for simplicity and clarity
 struct ContentButtonBorder: View {
     var frameColors: [FrameColor]
 
