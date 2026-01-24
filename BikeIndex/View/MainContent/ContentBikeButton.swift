@@ -28,6 +28,8 @@ struct ContentBikeButtonView: View {
             NavigationLink(value: bike.identifier) {
                 VStack {
                     ZStack {
+                        // TODO: Current: CachedAsyncImage { success=image | placeholder}
+                        // TODO: Make: ButtonBackground { CachedAsyncImage | ContentUnavailable }
                         CachedAsyncImage(url: bike.largeImage) { image in
                             image
                                 .resizable()
@@ -43,7 +45,7 @@ struct ContentBikeButtonView: View {
                         maxHeight: .infinity
                     )
                     .aspectRatio(1.0, contentMode: .fit)
-//                    .clipShape(RoundedRectangle(cornerRadius: 24))
+                    .clipShape(RoundedRectangle(cornerRadius: 24))
 
                     HStack {
                         Text(bike.displayTitle)

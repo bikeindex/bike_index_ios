@@ -12,12 +12,6 @@ struct ContentButtonBorder: View {
 
     var body: some View {
         borderGradient
-            .frame(
-                minWidth: 100,
-                maxWidth: .infinity,
-                minHeight: 100,
-                maxHeight: .infinity
-            )
             .cornerRadius(24)
             .overlay {
                 Image(systemName: "bicycle")
@@ -27,11 +21,31 @@ struct ContentButtonBorder: View {
                     .tint(.secondary)
                     .foregroundStyle(.primary)
                     .shadow(color: .accent, radius: 1)
+
+//                    .aspectRatio(1.0, contentMode: .fit)
+//                    .background {
+//                        RoundedRectangle(cornerRadius: 24)
+//                    }
             }
+            .frame(
+                minWidth: 100,
+                maxWidth: .infinity,
+                minHeight: 100,
+                maxHeight: .infinity
+            )
+            .aspectRatio(1.0, contentMode: .fit)
     }
 
-    var borderGradient: LinearGradient {
-        LinearGradient(colors: frameColors.compactMap(\.color), startPoint: .topLeading, endPoint: .bottomTrailing)
+    var borderGradient: AngularGradient {
+//        LinearGradient(colors: frameColors.compactMap(\.color), startPoint: .topLeading, endPoint: .bottomTrailing)
+
+        let colors = frameColors.compactMap(\.color)
+        let count = colors.count
+        let stops = colors.enumerated().map { (offset, color) in
+            Gradient.Stop(color: color, location: CGFloat(offset / count))
+        }
+        return AngularGradient(stops: stops, center: .center, angle: .zero)
+//        return AngularGradient(colors: colors, center: .center, startAngle: .zero, endAngle: .degrees(180))
     }
 }
 
@@ -41,7 +55,7 @@ struct ContentButtonBorder: View {
             ContentButtonBorder(frameColors: [.bareMetal, .blue, .red])
             ContentButtonBorder(frameColors: [.red, .orange, .yellow])
             ContentButtonBorder(frameColors: [.covered, .white, .black])
-            ContentButtonBorder(frameColors: [.red, .pink, .white])
+            ContentButtonBorder(frameColors: [.white])
             ContentButtonBorder(frameColors: [.green, .blue, .purple])
         }
     }
