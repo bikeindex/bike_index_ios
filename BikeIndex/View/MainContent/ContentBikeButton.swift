@@ -43,7 +43,7 @@ struct ContentBikeButtonView: View {
                         maxHeight: .infinity
                     )
                     .aspectRatio(1.0, contentMode: .fit)
-                    .clipShape(RoundedRectangle(cornerRadius: 24))
+//                    .clipShape(RoundedRectangle(cornerRadius: 24))
 
                     HStack {
                         Text(bike.displayTitle)
