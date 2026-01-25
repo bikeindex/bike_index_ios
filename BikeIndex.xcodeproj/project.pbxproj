@@ -26,13 +26,6 @@
 			remoteGlobalIDString = 04F4B8F62B098ADB009442B5;
 			remoteInfo = BikeIndex;
 		};
-		04F4B9152B098ADE009442B5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 04F4B8EF2B098ADB009442B5 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 04F4B8F62B098ADB009442B5;
-			remoteInfo = BikeIndex;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -292,7 +285,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				04F4B9162B098ADE009442B5 /* PBXTargetDependency */,
+				04F4B90C2B098ADE009442B5 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				04CDF1632D3C344800F90515 /* UITests */,
@@ -396,11 +389,6 @@
 			isa = PBXTargetDependency;
 			target = 04F4B8F62B098ADB009442B5 /* BikeIndex */;
 			targetProxy = 04F4B90B2B098ADE009442B5 /* PBXContainerItemProxy */;
-		};
-		04F4B9162B098ADE009442B5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 04F4B8F62B098ADB009442B5 /* BikeIndex */;
-			targetProxy = 04F4B9152B098ADE009442B5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
