@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -70,7 +70,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		04CDF1442D3C344100F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		04CDF1442D3C344100F90515 /* Exceptions for "BikeIndex" folder in "BikeIndex" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -78,21 +78,21 @@
 			);
 			target = 04F4B8F62B098ADB009442B5 /* BikeIndex */;
 		};
-		04CDF16A2D3C344800F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		04CDF16A2D3C344800F90515 /* Exceptions for "UITests" folder in "UITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
 			target = 04F4B9132B098ADE009442B5 /* UITests */;
 		};
-		04CDF1722D3C344C00F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		04CDF1722D3C344C00F90515 /* Exceptions for "SharedTests" folder in "UnitTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"Logger+Tests.swift",
 			);
 			target = 04F4B9092B098ADE009442B5 /* UnitTests */;
 		};
-		04CDF1732D3C344C00F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		04CDF1732D3C344C00F90515 /* Exceptions for "SharedTests" folder in "UITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"Logger+Tests.swift",
@@ -102,10 +102,36 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		04CDF1012D3C344100F90515 /* BikeIndex */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF1442D3C344100F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = BikeIndex; sourceTree = "<group>"; };
-		04CDF1502D3C344500F90515 /* UnitTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = UnitTests; sourceTree = "<group>"; };
-		04CDF1632D3C344800F90515 /* UITests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF16A2D3C344800F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = UITests; sourceTree = "<group>"; };
-		04CDF16F2D3C344C00F90515 /* SharedTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF1722D3C344C00F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 04CDF1732D3C344C00F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = SharedTests; sourceTree = "<group>"; };
+		04CDF1012D3C344100F90515 /* BikeIndex */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				04CDF1442D3C344100F90515 /* Exceptions for "BikeIndex" folder in "BikeIndex" target */,
+			);
+			path = BikeIndex;
+			sourceTree = "<group>";
+		};
+		04CDF1502D3C344500F90515 /* UnitTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = UnitTests;
+			sourceTree = "<group>";
+		};
+		04CDF1632D3C344800F90515 /* UITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				04CDF16A2D3C344800F90515 /* Exceptions for "UITests" folder in "UITests" target */,
+			);
+			path = UITests;
+			sourceTree = "<group>";
+		};
+		04CDF16F2D3C344C00F90515 /* SharedTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				04CDF1722D3C344C00F90515 /* Exceptions for "SharedTests" folder in "UnitTests" target */,
+				04CDF1732D3C344C00F90515 /* Exceptions for "SharedTests" folder in "UITests" target */,
+			);
+			path = SharedTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -310,7 +336,6 @@
 				};
 			};
 			buildConfigurationList = 04F4B8F22B098ADB009442B5 /* Build configuration list for PBXProject "BikeIndex" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -327,6 +352,7 @@
 				0444412E2DC6A1DC004B19AE /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
 				0429276F2E03D33F009D0609 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */,
 			);
+			preferredProjectObjectVersion = 77;
 			productRefGroup = 04F4B8F82B098ADB009442B5 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
