@@ -52,17 +52,29 @@ for projects in xcodeproj.pbxproj.projects {
 }
 
 // MARK: - REMOVE FRAMEWORKS
+let developmentOnlyDependencies = [
+    "PreviewGallery", "SnapshotPreferences", // Bike Index
+    "SnapshottingTests" // Unit Tests
+]
 fputs("----------- Build configs \n", stdout)
 for project in xcodeproj.pbxproj.projects {
     for target in project.targets { // PBXTarget
         fputs("\tTARGET A) package deps \(target.name), \(target.packageProductDependencies?.map { $0.productName }) \n", stdout)
         // target.packageProductDependencies?.forEach { printProperties($0) }
-        fputs("\tTARGET B) build config \(target.name), \(target.buildConfigurationList.map(\.buildConfigurations))\n", stdout)
-        fputs("\tTARGET C) deps \(target.name), \(target.dependencies.map(\.target?.name)), \(target.dependencies.map(\.product?.productName))\n", stdout)
+        // fputs("\tTARGET B) build config \(target.name), \(target.buildConfigurationList.map(\.buildConfigurations))\n", stdout)
+        // fputs("\tTARGET C) deps \(target.name), \(target.dependencies.map(\.target?.name)), \(target.dependencies.map(\.product?.productName))\n", stdout)
         // TODO: Remove SnapshotPreviews package from Bike Index target (solvable)
         // TODO: Remove SnapshotPreviews package from unit tests target -- BLOCKED because packageProductDependencies does not contain SnapshottingTests, I think XcodeProj is not detecting the Unit Test "Frameworks and Libraries" contents correctly.
         printProperties(target)
         fputs("\n", stdout)
+
+        // 
+        if var packageProductDependencies = target.packageProductDependencies {
+            fputs("\(type(of: packageProductDependencies))", stdout)
+            target.packageProductDependencies = packageProductDependencies.filter { 
+                !developmentOnlyDependencies.contains($0.productName) 
+            }
+        }
     }
 }
 
