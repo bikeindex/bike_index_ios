@@ -10,9 +10,9 @@
 		0428F4812D75156300BDD2A5 /* SectionedQuery in Frameworks */ = {isa = PBXBuildFile; productRef = 0428F4802D75156300BDD2A5 /* SectionedQuery */; };
 		042927712E03D33F009D0609 /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = 042927702E03D33F009D0609 /* Flow */; };
 		044441302DC6A1DC004B19AE /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = 0444412F2DC6A1DC004B19AE /* CachedAsyncImage */; };
-		044BD3512F26ABBC00E0049E /* PreviewGallery in Frameworks */ = {isa = PBXBuildFile; productRef = 044BD3502F26ABBC00E0049E /* PreviewGallery */; };
-		044BD3532F26ABBC00E0049E /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 044BD3522F26ABBC00E0049E /* SnapshotPreferences */; };
-		044BD3552F26ABBC00E0049E /* Snapshotting in Frameworks */ = {isa = PBXBuildFile; productRef = 044BD3542F26ABBC00E0049E /* Snapshotting */; };
+		044BDBC82F26AEA500E0049E /* PreviewGallery in Frameworks */ = {isa = PBXBuildFile; productRef = 044BDBC72F26AEA500E0049E /* PreviewGallery */; };
+		044BDBCA2F26AEA500E0049E /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 044BDBC92F26AEA500E0049E /* SnapshotPreferences */; };
+		044BDBCC2F26AEA500E0049E /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 044BDBCB2F26AEA500E0049E /* SnapshottingTests */; };
 		04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 04E1343D2B4B718200CE88DD /* WebViewKit */; };
 		04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */ = {isa = PBXBuildFile; productRef = 04EA11212B2504340024CDDD /* URLEncodedForm */; };
 		04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04F4B95D2B0990CE009442B5 /* KeychainSwift */; };
@@ -135,9 +135,9 @@
 				0428F4812D75156300BDD2A5 /* SectionedQuery in Frameworks */,
 				04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */,
 				042927712E03D33F009D0609 /* Flow in Frameworks */,
-				044BD3512F26ABBC00E0049E /* PreviewGallery in Frameworks */,
+				044BDBC82F26AEA500E0049E /* PreviewGallery in Frameworks */,
 				044441302DC6A1DC004B19AE /* CachedAsyncImage in Frameworks */,
-				044BD3532F26ABBC00E0049E /* SnapshotPreferences in Frameworks */,
+				044BDBCA2F26AEA500E0049E /* SnapshotPreferences in Frameworks */,
 				04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */,
 				04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */,
 			);
@@ -147,7 +147,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				044BD3552F26ABBC00E0049E /* Snapshotting in Frameworks */,
+				044BDBCC2F26AEA500E0049E /* SnapshottingTests in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,8 +255,8 @@
 				0428F4802D75156300BDD2A5 /* SectionedQuery */,
 				0444412F2DC6A1DC004B19AE /* CachedAsyncImage */,
 				042927702E03D33F009D0609 /* Flow */,
-				044BD3502F26ABBC00E0049E /* PreviewGallery */,
-				044BD3522F26ABBC00E0049E /* SnapshotPreferences */,
+				044BDBC72F26AEA500E0049E /* PreviewGallery */,
+				044BDBC92F26AEA500E0049E /* SnapshotPreferences */,
 			);
 			productName = BikeIndex;
 			productReference = 04F4B8F72B098ADB009442B5 /* BikeIndex.app */;
@@ -280,7 +280,7 @@
 			);
 			name = UnitTests;
 			packageProductDependencies = (
-				044BD3542F26ABBC00E0049E /* Snapshotting */,
+				044BDBCB2F26AEA500E0049E /* SnapshottingTests */,
 			);
 			productName = UnitTests;
 			productReference = 04F4B90A2B098ADE009442B5 /* UnitTests.xctest */;
@@ -349,7 +349,7 @@
 				0428F47F2D75156300BDD2A5 /* XCRemoteSwiftPackageReference "swiftdata-sectionedquery" */,
 				0444412E2DC6A1DC004B19AE /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
 				0429276F2E03D33F009D0609 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */,
-				044BD34F2F26ABBC00E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */,
+				044BDBC62F26AEA500E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 04F4B8F82B098ADB009442B5 /* Products */;
@@ -779,11 +779,11 @@
 				minimumVersion = 2.1.1;
 			};
 		};
-		044BD34F2F26ABBC00E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */ = {
+		044BDBC62F26AEA500E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/EmergeTools/SnapshotPreviews";
 			requirement = {
-				kind = upToNextMinorVersion;
+				kind = upToNextMajorVersion;
 				minimumVersion = 0.11.0;
 			};
 		};
@@ -829,20 +829,20 @@
 			package = 0444412E2DC6A1DC004B19AE /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */;
 			productName = CachedAsyncImage;
 		};
-		044BD3502F26ABBC00E0049E /* PreviewGallery */ = {
+		044BDBC72F26AEA500E0049E /* PreviewGallery */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 044BD34F2F26ABBC00E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			package = 044BDBC62F26AEA500E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
 			productName = PreviewGallery;
 		};
-		044BD3522F26ABBC00E0049E /* SnapshotPreferences */ = {
+		044BDBC92F26AEA500E0049E /* SnapshotPreferences */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 044BD34F2F26ABBC00E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			package = 044BDBC62F26AEA500E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
 			productName = SnapshotPreferences;
 		};
-		044BD3542F26ABBC00E0049E /* Snapshotting */ = {
+		044BDBCB2F26AEA500E0049E /* SnapshottingTests */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 044BD34F2F26ABBC00E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
-			productName = Snapshotting;
+			package = 044BDBC62F26AEA500E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			productName = SnapshottingTests;
 		};
 		04E1343D2B4B718200CE88DD /* WebViewKit */ = {
 			isa = XCSwiftPackageProductDependency;
