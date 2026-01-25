@@ -123,7 +123,7 @@ struct MockData {
          "components": []
         }
         """
-    
+
     static let sampleFullBikeJson = """
         {
          "date_stolen": 1376719200,
@@ -193,7 +193,6 @@ struct MockData {
          "components": ["MOCK_COMPONENT_1", "MOCK_COMPONENT_2"]
         }
         """
-
 
 }
 #endif

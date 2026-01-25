@@ -1,4 +1,4 @@
-# [![BIKE INDEX][bike-index-logo]][bike-index] ![GitHub License](https://img.shields.io/github/license/bikeindex/bike_index_ios) [![iOS Test Suite](https://github.com/bikeindex/bike_index_ios/actions/workflows/ios.yml/badge.svg)](https://github.com/bikeindex/bike_index_ios/actions/workflows/ios.yml) ![iTunes App Store](https://img.shields.io/itunes/v/6477746994?label=Latest%20App%20Store%20release)
+# [![BIKE INDEX][bike-index-logo]][bike-index] ![GitHub License](https://img.shields.io/github/license/bikeindex/bike_index_ios) [![iOS Test Suite](https://github.com/bikeindex/bike_index_ios/actions/workflows/integration.yml/badge.svg)](https://github.com/bikeindex/bike_index_ios/actions/workflows/ios.yml) ![iTunes App Store](https://img.shields.io/itunes/v/6477746994?label=Latest%20App%20Store%20release)
 
 [bike-index-logo]: https://github.com/bikeindex/bike_index/blob/main/public/icon-dark.svg?raw=true
 [bike-index]: https://www.bikeindex.org
@@ -31,7 +31,7 @@ To get started:
 
 ### Development
 
-- Requirements: Xcode 26.1
+- Requirements: Xcode 26.2
 - Target deployment: iOS 17.2
 
 This project uses SwiftUI and SwiftData. At this time iPhone and iPad are the primary targets with a goal to include Mac support.
@@ -51,9 +51,13 @@ Git hooks are in the local [.githooks](.githooks) directory and can be connected
 
 Formatting is done with [swiftlang/swift-format](https://github.com/swiftlang/swift-format/)
 
-Lint with: `swift format lint --recursive  BikeIndex/ UnitTests/ UITests/`
+Lint with:
+- `./scripts/lint.sh` _or_
+- `swift format lint --recursive  BikeIndex/ UnitTests/ UITests/`
 
-Format with: `swift format --in-place --recursive  BikeIndex/ UnitTests/ UITests/`
+Format with:
+- `./scripts/format.sh` _or_
+- `swift format --in-place --recursive  BikeIndex/ UnitTests/ UITests/`
 
 The configuration will be loaded by default from [.swift-format](.swift-format)
 
