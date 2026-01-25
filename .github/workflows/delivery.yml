@@ -8,6 +8,7 @@ on:
 
 jobs:
   requires-integration-tests:
+    if: startsWith(github.head_ref, 'release/v')
     uses: bikeindex/bike_index_ios/.github/workflows/integration.yml@main
 
   build-release:
