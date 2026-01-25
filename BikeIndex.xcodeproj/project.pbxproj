@@ -10,9 +10,9 @@
 		0428F4812D75156300BDD2A5 /* SectionedQuery in Frameworks */ = {isa = PBXBuildFile; productRef = 0428F4802D75156300BDD2A5 /* SectionedQuery */; };
 		042927712E03D33F009D0609 /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = 042927702E03D33F009D0609 /* Flow */; };
 		044441302DC6A1DC004B19AE /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = 0444412F2DC6A1DC004B19AE /* CachedAsyncImage */; };
-		04ABEBB92D1F35B400E30577 /* PreviewGallery in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBB82D1F35B400E30577 /* PreviewGallery */; };
-		04ABEBBB2D1F35B400E30577 /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */; };
-		04ABEBBD2D1F35B400E30577 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBC2D1F35B400E30577 /* SnapshottingTests */; };
+		044BD3512F26ABBC00E0049E /* PreviewGallery in Frameworks */ = {isa = PBXBuildFile; productRef = 044BD3502F26ABBC00E0049E /* PreviewGallery */; };
+		044BD3532F26ABBC00E0049E /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 044BD3522F26ABBC00E0049E /* SnapshotPreferences */; };
+		044BD3552F26ABBC00E0049E /* Snapshotting in Frameworks */ = {isa = PBXBuildFile; productRef = 044BD3542F26ABBC00E0049E /* Snapshotting */; };
 		04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 04E1343D2B4B718200CE88DD /* WebViewKit */; };
 		04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */ = {isa = PBXBuildFile; productRef = 04EA11212B2504340024CDDD /* URLEncodedForm */; };
 		04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04F4B95D2B0990CE009442B5 /* KeychainSwift */; };
@@ -32,7 +32,7 @@
 		04ABEBC92D1F399E00E30577 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			dstPath = "";
-			dstSubfolder = Frameworks;
+			dstSubfolder = None;
 			files = (
 			);
 			name = "Embed Frameworks";
@@ -129,12 +129,12 @@
 		04F4B8F42B098ADB009442B5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
-				04ABEBB92D1F35B400E30577 /* PreviewGallery in Frameworks */,
-				04ABEBBB2D1F35B400E30577 /* SnapshotPreferences in Frameworks */,
 				0428F4812D75156300BDD2A5 /* SectionedQuery in Frameworks */,
 				04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */,
 				042927712E03D33F009D0609 /* Flow in Frameworks */,
+				044BD3512F26ABBC00E0049E /* PreviewGallery in Frameworks */,
 				044441302DC6A1DC004B19AE /* CachedAsyncImage in Frameworks */,
+				044BD3532F26ABBC00E0049E /* SnapshotPreferences in Frameworks */,
 				04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */,
 				04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */,
 			);
@@ -142,7 +142,7 @@
 		04F4B9072B098ADE009442B5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
-				04ABEBBD2D1F35B400E30577 /* SnapshottingTests in Frameworks */,
+				044BD3552F26ABBC00E0049E /* Snapshotting in Frameworks */,
 			);
 		};
 		04F4B9112B098ADE009442B5 /* Frameworks */ = {
@@ -242,11 +242,11 @@
 				04F4B95D2B0990CE009442B5 /* KeychainSwift */,
 				04EA11212B2504340024CDDD /* URLEncodedForm */,
 				04E1343D2B4B718200CE88DD /* WebViewKit */,
-				04ABEBB82D1F35B400E30577 /* PreviewGallery */,
-				04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */,
 				0428F4802D75156300BDD2A5 /* SectionedQuery */,
 				0444412F2DC6A1DC004B19AE /* CachedAsyncImage */,
 				042927702E03D33F009D0609 /* Flow */,
+				044BD3502F26ABBC00E0049E /* PreviewGallery */,
+				044BD3522F26ABBC00E0049E /* SnapshotPreferences */,
 			);
 			productName = BikeIndex;
 			productReference = 04F4B8F72B098ADB009442B5 /* BikeIndex.app */;
@@ -269,6 +269,9 @@
 				04CDF1502D3C344500F90515 /* UnitTests */,
 			);
 			name = UnitTests;
+			packageProductDependencies = (
+				044BD3542F26ABBC00E0049E /* Snapshotting */,
+			);
 			productName = UnitTests;
 			productReference = 04F4B90A2B098ADE009442B5 /* UnitTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -331,10 +334,10 @@
 				04F4B95C2B0990CE009442B5 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				04EA11202B2504340024CDDD /* XCRemoteSwiftPackageReference "URLEncodedForm" */,
 				04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */,
-				04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */,
 				0428F47F2D75156300BDD2A5 /* XCRemoteSwiftPackageReference "swiftdata-sectionedquery" */,
 				0444412E2DC6A1DC004B19AE /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
 				0429276F2E03D33F009D0609 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */,
+				044BD34F2F26ABBC00E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */,
 			);
 			preferredProjectObjectVersion = 90;
 			productRefGroup = 04F4B8F82B098ADB009442B5 /* Products */;
@@ -748,11 +751,11 @@
 				minimumVersion = 2.1.1;
 			};
 		};
-		04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */ = {
+		044BD34F2F26ABBC00E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/EmergeTools/SnapshotPreviews";
 			requirement = {
-				kind = upToNextMajorVersion;
+				kind = upToNextMinorVersion;
 				minimumVersion = 0.11.0;
 			};
 		};
@@ -798,20 +801,20 @@
 			package = 0444412E2DC6A1DC004B19AE /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */;
 			productName = CachedAsyncImage;
 		};
-		04ABEBB82D1F35B400E30577 /* PreviewGallery */ = {
+		044BD3502F26ABBC00E0049E /* PreviewGallery */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			package = 044BD34F2F26ABBC00E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
 			productName = PreviewGallery;
 		};
-		04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */ = {
+		044BD3522F26ABBC00E0049E /* SnapshotPreferences */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			package = 044BD34F2F26ABBC00E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
 			productName = SnapshotPreferences;
 		};
-		04ABEBBC2D1F35B400E30577 /* SnapshottingTests */ = {
+		044BD3542F26ABBC00E0049E /* Snapshotting */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
-			productName = SnapshottingTests;
+			package = 044BD34F2F26ABBC00E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			productName = Snapshotting;
 		};
 		04E1343D2B4B718200CE88DD /* WebViewKit */ = {
 			isa = XCSwiftPackageProductDependency;
