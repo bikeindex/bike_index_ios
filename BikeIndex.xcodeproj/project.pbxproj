@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 90;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -31,11 +31,13 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		04ABEBC92D1F399E00E30577 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolder = None;
+			dstSubfolderSpec = 0;
 			files = (
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -128,6 +130,7 @@
 /* Begin PBXFrameworksBuildPhase section */
 		04F4B8F42B098ADB009442B5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
 			files = (
 				0428F4812D75156300BDD2A5 /* SectionedQuery in Frameworks */,
 				04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */,
@@ -138,17 +141,22 @@
 				04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */,
 				04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */,
 			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		04F4B9072B098ADE009442B5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
 			files = (
 				044BD3552F26ABBC00E0049E /* Snapshotting in Frameworks */,
 			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		04F4B9112B098ADE009442B5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
 			files = (
 			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
@@ -234,6 +242,8 @@
 			);
 			buildRules = (
 			);
+			dependencies = (
+			);
 			fileSystemSynchronizedGroups = (
 				04CDF1012D3C344100F90515 /* BikeIndex */,
 			);
@@ -294,6 +304,8 @@
 				04CDF1632D3C344800F90515 /* UITests */,
 			);
 			name = UITests;
+			packageProductDependencies = (
+			);
 			productName = UITests;
 			productReference = 04F4B9142B098ADE009442B5 /* UITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -339,7 +351,7 @@
 				0429276F2E03D33F009D0609 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */,
 				044BD34F2F26ABBC00E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */,
 			);
-			preferredProjectObjectVersion = 90;
+			preferredProjectObjectVersion = 77;
 			productRefGroup = 04F4B8F82B098ADB009442B5 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -354,36 +366,48 @@
 /* Begin PBXResourcesBuildPhase section */
 		04F4B8F52B098ADB009442B5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
 			files = (
 			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		04F4B9082B098ADE009442B5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
 			files = (
 			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		04F4B9122B098ADE009442B5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
 			files = (
 			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		04F4B8F32B098ADB009442B5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
 			files = (
 			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		04F4B9062B098ADE009442B5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
 			files = (
 			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		04F4B9102B098ADE009442B5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
 			files = (
 			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
@@ -396,7 +420,7 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		04EA11232B25135D0024CDDD /* Debug configuration for PBXProject "BikeIndex" */ = {
+		04EA11232B25135D0024CDDD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -461,7 +485,7 @@
 			};
 			name = Debug;
 		};
-		04EA11242B25135D0024CDDD /* Debug configuration for PBXNativeTarget "BikeIndex" */ = {
+		04EA11242B25135D0024CDDD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F4B9292B098B44009442B5 /* BikeIndex-development.xcconfig */;
 			buildSettings = {
@@ -507,7 +531,7 @@
 			};
 			name = Debug;
 		};
-		04EA11252B25135D0024CDDD /* Debug configuration for PBXNativeTarget "UnitTests" */ = {
+		04EA11252B25135D0024CDDD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -526,7 +550,7 @@
 			};
 			name = Debug;
 		};
-		04EA11262B25135D0024CDDD /* Debug configuration for PBXNativeTarget "UITests" */ = {
+		04EA11262B25135D0024CDDD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */;
 			buildSettings = {
@@ -546,7 +570,7 @@
 			};
 			name = Debug;
 		};
-		04F4B91D2B098ADE009442B5 /* Release configuration for PBXProject "BikeIndex" */ = {
+		04F4B91D2B098ADE009442B5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -603,7 +627,7 @@
 			};
 			name = Release;
 		};
-		04F4B9202B098ADE009442B5 /* Release configuration for PBXNativeTarget "BikeIndex" */ = {
+		04F4B9202B098ADE009442B5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F4B9272B098B44009442B5 /* BikeIndex-production.xcconfig */;
 			buildSettings = {
@@ -650,7 +674,7 @@
 			};
 			name = Release;
 		};
-		04F4B9232B098ADE009442B5 /* Release configuration for PBXNativeTarget "UnitTests" */ = {
+		04F4B9232B098ADE009442B5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -669,7 +693,7 @@
 			};
 			name = Release;
 		};
-		04F4B9262B098ADE009442B5 /* Release configuration for PBXNativeTarget "UITests" */ = {
+		04F4B9262B098ADE009442B5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */;
 			buildSettings = {
@@ -695,33 +719,37 @@
 		04F4B8F22B098ADB009442B5 /* Build configuration list for PBXProject "BikeIndex" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				04EA11232B25135D0024CDDD /* Debug configuration for PBXProject "BikeIndex" */,
-				04F4B91D2B098ADE009442B5 /* Release configuration for PBXProject "BikeIndex" */,
+				04EA11232B25135D0024CDDD /* Debug */,
+				04F4B91D2B098ADE009442B5 /* Release */,
 			);
+			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		04F4B91E2B098ADE009442B5 /* Build configuration list for PBXNativeTarget "BikeIndex" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				04EA11242B25135D0024CDDD /* Debug configuration for PBXNativeTarget "BikeIndex" */,
-				04F4B9202B098ADE009442B5 /* Release configuration for PBXNativeTarget "BikeIndex" */,
+				04EA11242B25135D0024CDDD /* Debug */,
+				04F4B9202B098ADE009442B5 /* Release */,
 			);
+			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		04F4B9212B098ADE009442B5 /* Build configuration list for PBXNativeTarget "UnitTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				04EA11252B25135D0024CDDD /* Debug configuration for PBXNativeTarget "UnitTests" */,
-				04F4B9232B098ADE009442B5 /* Release configuration for PBXNativeTarget "UnitTests" */,
+				04EA11252B25135D0024CDDD /* Debug */,
+				04F4B9232B098ADE009442B5 /* Release */,
 			);
+			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		04F4B9242B098ADE009442B5 /* Build configuration list for PBXNativeTarget "UITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				04EA11262B25135D0024CDDD /* Debug configuration for PBXNativeTarget "UITests" */,
-				04F4B9262B098ADE009442B5 /* Release configuration for PBXNativeTarget "UITests" */,
+				04EA11262B25135D0024CDDD /* Debug */,
+				04F4B9262B098ADE009442B5 /* Release */,
 			);
+			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
