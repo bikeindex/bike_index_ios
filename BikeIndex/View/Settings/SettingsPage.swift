@@ -8,7 +8,7 @@
 import OSLog
 import SwiftUI
 
-#if DEBUG
+#if canImport(PreviewGallery) && DEBUG
 import PreviewGallery
 #endif
 

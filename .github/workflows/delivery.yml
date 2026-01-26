@@ -23,6 +23,11 @@ jobs:
           ref: ${{ github.ref }}
       - name: Set Xcode 26.2
         run: sudo xcode-select -s /Applications/Xcode_26.2.app
+      - name: Strip SnapshotPreviews package
+        run: |
+          brew install swift-sh
+          ./scripts/release/strip-SnapshotPreviews.swift BikeIndex.xcodeproj
+          xcodebuild -resolvePackageDependencies
       - name: Load API key
         env:
           MATCH_API_KEY_JSON_CONTENT: ${{ secrets.MATCH_API_KEY_JSON_CONTENT }}
@@ -42,9 +47,15 @@ jobs:
           fastlane CD_setup_keychain_and_codesigning
       - name: Build release archive
         run: fastlane CD_build_release_archive
+      - name: Calculate delivery changes
+        run: git diff > delivery-changes.patch
       - uses: actions/upload-artifact@v4
         if: success()
         with:
-          name: BikeIndex.app.dSYM.zip
-          path: BikeIndex.app.dSYM.zip
+          name: ${{ github.sha }}-artifact
+          path: |
+            BikeIndex.app.dSYM.zip
+            BikeIndex.ipa
+            ~/Library/Developer/Xcode/Archives/*
+            delivery-changes.patch
           compression-level: 9
