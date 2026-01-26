@@ -18,17 +18,17 @@ struct ContentButtonBorder: View {
             ForEach(.constant(frameColors), id: \.id) { frame in
 
                 switch frame.wrappedValue {
-                    // Bare Metal
+                // Bare Metal
                 case .bareMetal:
                     Chip.bareMetalAngularGradient
-                    // Covered
+                // Covered
                 case .covered:
                     if #available(iOS 18.0, *) {
                         Chip.rainbow18
                     } else {
                         Chip.rainbow17
                     }
-                    // Color with value
+                // Color with value
                 case (let value):
                     if let color = value.color {
                         // Cannot convert value of type 'Color?' to expected element type 'Array<Color>.ArrayLiteralElement' (aka 'Color')
