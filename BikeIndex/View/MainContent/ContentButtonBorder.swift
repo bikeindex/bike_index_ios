@@ -8,7 +8,8 @@
 import SwiftUI
 
 @available(*, deprecated, message: "TODO: Rename, this is the wrong name.")
-// TODO: Use vertical stripes for simplicity and clarity
+// ✅ DONE: Use vertical stripes for simplicity and clarity
+// TODO: Add public bike image to the Preview and check with images too
 struct ContentButtonBorder: View {
     var frameColors: [FrameColor]
 
