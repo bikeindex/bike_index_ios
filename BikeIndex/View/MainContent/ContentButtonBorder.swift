@@ -13,41 +13,54 @@ struct ContentButtonBorder: View {
     var frameColors: [FrameColor]
 
     var body: some View {
-        borderGradient
-            .cornerRadius(24)
-            .overlay {
-                Image(systemName: "bicycle")
-                    .resizable()
-                    .scaledToFit()
-                    .padding()
-                    .tint(.secondary)
-                    .foregroundStyle(.primary)
-                    .shadow(color: .accent, radius: 1)
+        HStack {
+            ForEach(.constant(frameColors), id: \.id) { frame in
 
-//                    .aspectRatio(1.0, contentMode: .fit)
-//                    .background {
-//                        RoundedRectangle(cornerRadius: 24)
-//                    }
+                switch frame.wrappedValue {
+                    // Bare Metal
+                case .bareMetal:
+                    Chip.bareMetalAngularGradient
+                    // Covered
+                case .covered:
+                    if #available(iOS 18.0, *) {
+                        Chip.rainbow18
+                    } else {
+                        Chip.rainbow17
+                    }
+                    // Color with value
+                case (let value):
+                    if let color = value.color {
+                        // Cannot convert value of type 'Color?' to expected element type 'Array<Color>.ArrayLiteralElement' (aka 'Color')
+                        LinearGradient(colors: [color], startPoint: .leading, endPoint: .trailing)
+                    } else {
+                        Text("Inconsident FrameColor usage")
+                    }
+                }
             }
-            .frame(
-                minWidth: 100,
-                maxWidth: .infinity,
-                minHeight: 100,
-                maxHeight: .infinity
-            )
-            .aspectRatio(1.0, contentMode: .fit)
-    }
-
-    var borderGradient: AngularGradient {
-//        LinearGradient(colors: frameColors.compactMap(\.color), startPoint: .topLeading, endPoint: .bottomTrailing)
-
-        let colors = frameColors.compactMap(\.color)
-        let count = colors.count
-        let stops = colors.enumerated().map { (offset, color) in
-            Gradient.Stop(color: color, location: CGFloat(offset / count))
         }
-        return AngularGradient(stops: stops, center: .center, angle: .zero)
-//        return AngularGradient(colors: colors, center: .center, startAngle: .zero, endAngle: .degrees(180))
+
+        .cornerRadius(24)
+        .overlay {
+            Image(systemName: "bicycle")
+                .resizable()
+                .scaledToFit()
+                .padding()
+                .tint(.secondary)
+                .foregroundStyle(.primary)
+                .shadow(color: Color(uiColor: .systemBackground), radius: 5)
+
+            //                    .aspectRatio(1.0, contentMode: .fit)
+            //                    .background {
+            //                        RoundedRectangle(cornerRadius: 24)
+            //                    }
+        }
+        .frame(
+            minWidth: 100,
+            maxWidth: .infinity,
+            minHeight: 100,
+            maxHeight: .infinity
+        )
+        .aspectRatio(1.0, contentMode: .fit)
     }
 }
 
