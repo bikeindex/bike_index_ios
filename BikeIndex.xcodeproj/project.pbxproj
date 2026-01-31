@@ -3,16 +3,16 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		0428F4812D75156300BDD2A5 /* SectionedQuery in Frameworks */ = {isa = PBXBuildFile; productRef = 0428F4802D75156300BDD2A5 /* SectionedQuery */; };
 		042927712E03D33F009D0609 /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = 042927702E03D33F009D0609 /* Flow */; };
 		044441302DC6A1DC004B19AE /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = 0444412F2DC6A1DC004B19AE /* CachedAsyncImage */; };
-		04ABEBB92D1F35B400E30577 /* PreviewGallery in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBB82D1F35B400E30577 /* PreviewGallery */; };
-		04ABEBBB2D1F35B400E30577 /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */; };
-		04ABEBBD2D1F35B400E30577 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 04ABEBBC2D1F35B400E30577 /* SnapshottingTests */; };
+		044BDBC82F26AEA500E0049E /* PreviewGallery in Frameworks */ = {isa = PBXBuildFile; productRef = 044BDBC72F26AEA500E0049E /* PreviewGallery */; };
+		044BDBCA2F26AEA500E0049E /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 044BDBC92F26AEA500E0049E /* SnapshotPreferences */; };
+		044BDBCC2F26AEA500E0049E /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 044BDBCB2F26AEA500E0049E /* SnapshottingTests */; };
 		04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 04E1343D2B4B718200CE88DD /* WebViewKit */; };
 		04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */ = {isa = PBXBuildFile; productRef = 04EA11212B2504340024CDDD /* URLEncodedForm */; };
 		04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04F4B95D2B0990CE009442B5 /* KeychainSwift */; };
@@ -26,13 +26,6 @@
 			remoteGlobalIDString = 04F4B8F62B098ADB009442B5;
 			remoteInfo = BikeIndex;
 		};
-		04F4B9152B098ADE009442B5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 04F4B8EF2B098ADB009442B5 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 04F4B8F62B098ADB009442B5;
-			remoteInfo = BikeIndex;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -40,7 +33,7 @@
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 10;
+			dstSubfolderSpec = 0;
 			files = (
 			);
 			name = "Embed Frameworks";
@@ -70,7 +63,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		04CDF1442D3C344100F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		04CDF1442D3C344100F90515 /* Exceptions for "BikeIndex" folder in "BikeIndex" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -78,21 +71,21 @@
 			);
 			target = 04F4B8F62B098ADB009442B5 /* BikeIndex */;
 		};
-		04CDF16A2D3C344800F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		04CDF16A2D3C344800F90515 /* Exceptions for "UITests" folder in "UITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
 			target = 04F4B9132B098ADE009442B5 /* UITests */;
 		};
-		04CDF1722D3C344C00F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		04CDF1722D3C344C00F90515 /* Exceptions for "SharedTests" folder in "UnitTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"Logger+Tests.swift",
 			);
 			target = 04F4B9092B098ADE009442B5 /* UnitTests */;
 		};
-		04CDF1732D3C344C00F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		04CDF1732D3C344C00F90515 /* Exceptions for "SharedTests" folder in "UITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"Logger+Tests.swift",
@@ -102,10 +95,36 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		04CDF1012D3C344100F90515 /* BikeIndex */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF1442D3C344100F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = BikeIndex; sourceTree = "<group>"; };
-		04CDF1502D3C344500F90515 /* UnitTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = UnitTests; sourceTree = "<group>"; };
-		04CDF1632D3C344800F90515 /* UITests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF16A2D3C344800F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = UITests; sourceTree = "<group>"; };
-		04CDF16F2D3C344C00F90515 /* SharedTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (04CDF1722D3C344C00F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 04CDF1732D3C344C00F90515 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = SharedTests; sourceTree = "<group>"; };
+		04CDF1012D3C344100F90515 /* BikeIndex */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				04CDF1442D3C344100F90515 /* Exceptions for "BikeIndex" folder in "BikeIndex" target */,
+			);
+			path = BikeIndex;
+			sourceTree = "<group>";
+		};
+		04CDF1502D3C344500F90515 /* UnitTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = UnitTests;
+			sourceTree = "<group>";
+		};
+		04CDF1632D3C344800F90515 /* UITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				04CDF16A2D3C344800F90515 /* Exceptions for "UITests" folder in "UITests" target */,
+			);
+			path = UITests;
+			sourceTree = "<group>";
+		};
+		04CDF16F2D3C344C00F90515 /* SharedTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				04CDF1722D3C344C00F90515 /* Exceptions for "SharedTests" folder in "UnitTests" target */,
+				04CDF1732D3C344C00F90515 /* Exceptions for "SharedTests" folder in "UITests" target */,
+			);
+			path = SharedTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,12 +132,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04ABEBB92D1F35B400E30577 /* PreviewGallery in Frameworks */,
-				04ABEBBB2D1F35B400E30577 /* SnapshotPreferences in Frameworks */,
 				0428F4812D75156300BDD2A5 /* SectionedQuery in Frameworks */,
 				04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */,
 				042927712E03D33F009D0609 /* Flow in Frameworks */,
+				044BDBC82F26AEA500E0049E /* PreviewGallery in Frameworks */,
 				044441302DC6A1DC004B19AE /* CachedAsyncImage in Frameworks */,
+				044BDBCA2F26AEA500E0049E /* SnapshotPreferences in Frameworks */,
 				04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */,
 				04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */,
 			);
@@ -128,7 +147,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04ABEBBD2D1F35B400E30577 /* SnapshottingTests in Frameworks */,
+				044BDBCC2F26AEA500E0049E /* SnapshottingTests in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,11 +252,11 @@
 				04F4B95D2B0990CE009442B5 /* KeychainSwift */,
 				04EA11212B2504340024CDDD /* URLEncodedForm */,
 				04E1343D2B4B718200CE88DD /* WebViewKit */,
-				04ABEBB82D1F35B400E30577 /* PreviewGallery */,
-				04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */,
 				0428F4802D75156300BDD2A5 /* SectionedQuery */,
 				0444412F2DC6A1DC004B19AE /* CachedAsyncImage */,
 				042927702E03D33F009D0609 /* Flow */,
+				044BDBC72F26AEA500E0049E /* PreviewGallery */,
+				044BDBC92F26AEA500E0049E /* SnapshotPreferences */,
 			);
 			productName = BikeIndex;
 			productReference = 04F4B8F72B098ADB009442B5 /* BikeIndex.app */;
@@ -260,6 +279,9 @@
 				04CDF1502D3C344500F90515 /* UnitTests */,
 			);
 			name = UnitTests;
+			packageProductDependencies = (
+				044BDBCB2F26AEA500E0049E /* SnapshottingTests */,
+			);
 			productName = UnitTests;
 			productReference = 04F4B90A2B098ADE009442B5 /* UnitTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -276,12 +298,14 @@
 			buildRules = (
 			);
 			dependencies = (
-				04F4B9162B098ADE009442B5 /* PBXTargetDependency */,
+				04F4B90C2B098ADE009442B5 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				04CDF1632D3C344800F90515 /* UITests */,
 			);
 			name = UITests;
+			packageProductDependencies = (
+			);
 			productName = UITests;
 			productReference = 04F4B9142B098ADE009442B5 /* UITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -310,7 +334,6 @@
 				};
 			};
 			buildConfigurationList = 04F4B8F22B098ADB009442B5 /* Build configuration list for PBXProject "BikeIndex" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -318,15 +341,17 @@
 				Base,
 			);
 			mainGroup = 04F4B8EE2B098ADB009442B5;
+			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				04F4B95C2B0990CE009442B5 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				04EA11202B2504340024CDDD /* XCRemoteSwiftPackageReference "URLEncodedForm" */,
 				04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */,
-				04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */,
 				0428F47F2D75156300BDD2A5 /* XCRemoteSwiftPackageReference "swiftdata-sectionedquery" */,
 				0444412E2DC6A1DC004B19AE /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
 				0429276F2E03D33F009D0609 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */,
+				044BDBC62F26AEA500E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */,
 			);
+			preferredProjectObjectVersion = 77;
 			productRefGroup = 04F4B8F82B098ADB009442B5 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -391,11 +416,6 @@
 			isa = PBXTargetDependency;
 			target = 04F4B8F62B098ADB009442B5 /* BikeIndex */;
 			targetProxy = 04F4B90B2B098ADE009442B5 /* PBXContainerItemProxy */;
-		};
-		04F4B9162B098ADE009442B5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 04F4B8F62B098ADB009442B5 /* BikeIndex */;
-			targetProxy = 04F4B9152B098ADE009442B5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -759,7 +779,7 @@
 				minimumVersion = 2.1.1;
 			};
 		};
-		04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */ = {
+		044BDBC62F26AEA500E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/EmergeTools/SnapshotPreviews";
 			requirement = {
@@ -809,19 +829,19 @@
 			package = 0444412E2DC6A1DC004B19AE /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */;
 			productName = CachedAsyncImage;
 		};
-		04ABEBB82D1F35B400E30577 /* PreviewGallery */ = {
+		044BDBC72F26AEA500E0049E /* PreviewGallery */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			package = 044BDBC62F26AEA500E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
 			productName = PreviewGallery;
 		};
-		04ABEBBA2D1F35B400E30577 /* SnapshotPreferences */ = {
+		044BDBC92F26AEA500E0049E /* SnapshotPreferences */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			package = 044BDBC62F26AEA500E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
 			productName = SnapshotPreferences;
 		};
-		04ABEBBC2D1F35B400E30577 /* SnapshottingTests */ = {
+		044BDBCB2F26AEA500E0049E /* SnapshottingTests */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 04ABEBB72D1F35B400E30577 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			package = 044BDBC62F26AEA500E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
 			productName = SnapshottingTests;
 		};
 		04E1343D2B4B718200CE88DD /* WebViewKit */ = {
