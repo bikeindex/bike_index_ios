@@ -59,7 +59,8 @@ struct FrameColorBackground: View {
                             if let color = value.color, let secondColor = value.prettyColor {
                                 // TODO: Fix color.gradient here
                                 LinearGradient(
-                                    colors: [color, secondColor], startPoint: .top, endPoint: .bottom
+                                    colors: [color, secondColor], startPoint: .top,
+                                    endPoint: .bottom
                                 )
                                 .zIndex(100)
                                 .frame(width: geo.size.width / count)

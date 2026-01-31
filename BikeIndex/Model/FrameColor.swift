@@ -92,32 +92,32 @@ extension FrameColor {
     var prettyColor: Color? {
         switch self {
         case .black:
-            Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)) // #000
+            Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  // #000
         case .blue:
-            Color(#colorLiteral(red: 0.22, green: 0.431, blue: 0.824, alpha: 1)) // #386ed2
+            Color(#colorLiteral(red: 0.22, green: 0.431, blue: 0.824, alpha: 1))  // #386ed2
         case .brown:
-            Color(#colorLiteral(red: 0.451, green: 0.29, blue: 0.133, alpha: 1)) // #734a22
+            Color(#colorLiteral(red: 0.451, green: 0.29, blue: 0.133, alpha: 1))  // #734a22
         case .green:
-            Color(#colorLiteral(red: 0.106, green: 0.631, blue: 0, alpha: 1)) // #1ba100<#code#>
+            Color(#colorLiteral(red: 0.106, green: 0.631, blue: 0, alpha: 1))  // #1ba100<#code#>
         case .orange:
-            Color(#colorLiteral(red: 1, green: 0.553, blue: 0.114, alpha: 1)) // #ff8d1d
+            Color(#colorLiteral(red: 1, green: 0.553, blue: 0.114, alpha: 1))  // #ff8d1d
         case .pink:
-            Color(#colorLiteral(red: 1, green: 0.49, blue: 0.992, alpha: 1)) // #ff7dfd
+            Color(#colorLiteral(red: 1, green: 0.49, blue: 0.992, alpha: 1))  // #ff7dfd
         case .purple:
-            Color(#colorLiteral(red: 0.655, green: 0.271, blue: 0.753, alpha: 1)) // #a745c0
+            Color(#colorLiteral(red: 0.655, green: 0.271, blue: 0.753, alpha: 1))  // #a745c0
         case .red:
-            Color(#colorLiteral(red: 0.925, green: 0.075, blue: 0.075, alpha: 1)) // #ec1313
+            Color(#colorLiteral(red: 0.925, green: 0.075, blue: 0.075, alpha: 1))  // #ec1313
         case .bareMetal:
             // NOTE: normally nil!
-            Color(#colorLiteral(red: 0.69, green: 0.69, blue: 0.69, alpha: 1)) // #b0b0b0
+            Color(#colorLiteral(red: 0.69, green: 0.69, blue: 0.69, alpha: 1))  // #b0b0b0
         case .covered:
             nil
         case .teal:
-            Color(#colorLiteral(red: 0.231, green: 0.929, blue: 0.906, alpha: 1)) // #3bede7
+            Color(#colorLiteral(red: 0.231, green: 0.929, blue: 0.906, alpha: 1))  // #3bede7
         case .white:
-            Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)) // #fff
+            Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))  // #fff
         case .yellow:
-            Color(#colorLiteral(red: 1, green: 0.957, blue: 0.294, alpha: 1)) // #fff44b
+            Color(#colorLiteral(red: 1, green: 0.957, blue: 0.294, alpha: 1))  // #fff44b
         }
     }
 }
