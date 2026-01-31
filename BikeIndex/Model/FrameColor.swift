@@ -5,7 +5,7 @@
 //  Created by Jack on 11/18/23.
 //
 
-import Foundation
+import SwiftUI
 
 /// NOTE: **Reading** FrameColor from the API is in title-case.
 /// **Writing** FrameColor to the API must be in lower-case.
@@ -42,4 +42,48 @@ enum FrameColor: String, Codable, CaseIterable, Identifiable, Equatable {
         .red, .pink, .orange, .yellow, .green, .teal, .blue, .purple, .brown, .black, .white,
         .bareMetal, .covered,
     ]
+
+    /// A `true` value Indicates that this color is displayed with a special View (such as a gradient)
+    /// or a `false` value indicates that this color can be converted to a ``SwiftUICore/Color``
+    var textured: Bool {
+        switch self {
+        case .bareMetal, .covered:
+            true
+        default:
+            false
+        }
+    }
+}
+
+extension FrameColor {
+    var color: Color? {
+        switch self {
+        case .bareMetal, .covered:
+            nil
+        case .black:
+            // slightly lighter than pure black for display
+            Color(white: 0.1)
+        case .blue:
+            .blue
+        case .brown:
+            .brown
+        case .green:
+            .green
+        case .orange:
+            .orange
+        case .pink:
+            .pink
+        case .purple:
+            .purple
+        case .red:
+            .red
+        case .teal:
+            .teal
+        case .white:
+            // Slightly darker than pure white for display
+            Color(white: 0.9)
+        case .yellow:
+            .yellow
+        }
+    }
 }
