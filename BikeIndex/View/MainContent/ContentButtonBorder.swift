@@ -31,10 +31,12 @@ struct ContentButtonBorder: View {
                             if #available(iOS 18.0, *) {
                                 Chip.rainbow18
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    .clipShape(ColumnRectangle(column: offset, totalCount: totalCount))
+                                    .clipShape(
+                                        ColumnRectangle(column: offset, totalCount: totalCount))
                             } else {
                                 Chip.rainbow17
-                                    .clipShape(ColumnRectangle(column: offset, totalCount: totalCount))
+                                    .clipShape(
+                                        ColumnRectangle(column: offset, totalCount: totalCount))
                             }
                         default:
                             EmptyView()
@@ -59,9 +61,11 @@ struct ContentButtonBorder: View {
                             // Color with value
                             if let color = value.color {
                                 // TODO: Fix color.gradient here
-                                LinearGradient(colors: [color], startPoint: .leading, endPoint: .trailing)
-                                    .zIndex(100)
-                                    .frame(width: geo.size.width / count)
+                                LinearGradient(
+                                    colors: [color], startPoint: .leading, endPoint: .trailing
+                                )
+                                .zIndex(100)
+                                .frame(width: geo.size.width / count)
                             } else {
                                 Text("Inconsident FrameColor usage")
                             }
@@ -123,10 +127,11 @@ struct ColumnRectangle: Shape {
 
         let colWidth = rect.width / CGFloat(totalCount)
         for layoutColumn in 0..<totalCount where layoutColumn != column {
-            let clipRect = CGRect(x: colWidth * CGFloat(layoutColumn),
-                                  y: rect.origin.y,
-                                  width: colWidth,
-                                  height: rect.height)
+            let clipRect = CGRect(
+                x: colWidth * CGFloat(layoutColumn),
+                y: rect.origin.y,
+                width: colWidth,
+                height: rect.height)
             var clipPath = Path()
             clipPath.addRect(clipRect)
             path = path.subtracting(clipPath)
