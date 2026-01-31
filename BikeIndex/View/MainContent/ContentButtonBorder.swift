@@ -15,45 +15,67 @@ struct ContentButtonBorder: View {
     var frameColors: [FrameColor]
 
     var body: some View {
-        GeometryReader { geo in
+        ZStack {
+            // Textured FrameColor background IF applicable
             HStack(spacing: 0) {
                 ForEach(.constant(frameColors), id: \.id) { frame in
                     switch frame.wrappedValue {
                     case .bareMetal:
-                        // Bare Metal
-                        Rectangle()
-                            .overlay {
-                                Chip.bareMetalAngularGradient
-                                    .frame(width: geo.size.width, height: geo.size.height)
-                                    .clipped()
-                                    .zIndex(-100)
-                            }
+                        Rectangle().overlay {
+                            Chip.bareMetalAngularGradient
+                        }
                     case .covered:
                         // Covered
                         if #available(iOS 18.0, *) {
-                            Rectangle()
-                                .overlay {
-                                    Chip.rainbow18
-                                        .frame(width: geo.size.width, height: geo.size.height)
-                                        .onAppear { print("@@", geo.size) }
-                                }
-                                .clipped()
+                            Rectangle().overlay {
+                                Chip.rainbow18
+                            }
                         } else {
                             Chip.rainbow17
                         }
-                    case (let value):
-                        // Color with value
-                        if let color = value.color {
-                            // TODO: Fix color.gradient here
-                            LinearGradient(colors: [color], startPoint: .leading, endPoint: .trailing)
-                                .zIndex(100)
-                        } else {
-                            Text("Inconsident FrameColor usage")
+                    default:
+                        EmptyView()
+                    }
+                }
+                
+            }
+            .aspectRatio(1.0, contentMode: .fit)
+            .clipped()
+
+            // Foreground stripes of solid frame colors, with cutouts for textured background
+            GeometryReader { geo in
+                HStack(spacing: 0) {
+                    let count = CGFloat(frameColors.count)
+                    ForEach(.constant(frameColors), id: \.id) { frame in
+                        switch frame.wrappedValue {
+                        case .bareMetal:
+                            Spacer()
+                                .frame(width: geo.size.width / count)
+                        case .covered:
+                            Spacer()
+                                .frame(width: geo.size.width / count)
+                        case (let value):
+                            // Color with value
+                            if let color = value.color {
+                                // TODO: Fix color.gradient here
+                                LinearGradient(colors: [color], startPoint: .leading, endPoint: .trailing)
+                                    .zIndex(100)
+                                    .frame(width: geo.size.width / count)
+                            } else {
+                                Text("Inconsident FrameColor usage")
+                            }
                         }
                     }
                 }
             }
+            .aspectRatio(1.0, contentMode: .fit)
+
         }
+        .frame(
+            minWidth: 100,
+            minHeight: 100
+        )
+        .aspectRatio(1.0, contentMode: .fit)
         .cornerRadius(24)
         .overlay {
             Image(systemName: "bicycle")
@@ -63,19 +85,7 @@ struct ContentButtonBorder: View {
                 .tint(.secondary)
                 .foregroundStyle(.primary)
                 .shadow(color: Color(uiColor: .systemBackground), radius: 5)
-
-            //                    .aspectRatio(1.0, contentMode: .fit)
-            //                    .background {
-            //                        RoundedRectangle(cornerRadius: 24)
-            //                    }
         }
-        .frame(
-            minWidth: 100,
-            maxWidth: .infinity,
-            minHeight: 100,
-            maxHeight: .infinity
-        )
-        .aspectRatio(1.0, contentMode: .fit)
     }
 }
 
@@ -85,13 +95,19 @@ struct ContentButtonBorder: View {
             ContentButtonBorder(frameColors: [.blue, .red, .bareMetal])
             ContentButtonBorder(frameColors: [.red, .orange, .yellow])
             ContentButtonBorder(frameColors: [.white, .black, .covered])
-            ContentButtonBorder(frameColors: [.white])
+            ContentButtonBorder(frameColors: [.bareMetal, .white, .covered])
             if #available(iOS 18, *) {
                 Chip.rainbow18
             } else {
                 Chip.rainbow17
             }
             ContentButtonBorder(frameColors: [.green, .blue, .purple])
+            Chip.bareMetalAngularGradient
+                .frame(
+                    minWidth: 100,
+                    minHeight: 100,
+                )
+                .aspectRatio(1.0, contentMode: .fit)
         }
     }
 }
