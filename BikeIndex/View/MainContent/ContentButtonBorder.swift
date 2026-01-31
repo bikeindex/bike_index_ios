@@ -16,34 +16,43 @@ struct ContentButtonBorder: View {
 
     var body: some View {
         ZStack {
-            // Textured FrameColor background IF applicable
-            HStack(spacing: 0) {
-                ForEach(.constant(frameColors), id: \.id) { frame in
-                    switch frame.wrappedValue {
-                    case .bareMetal:
-                        Rectangle().overlay {
+            GeometryReader { geo in
+                // Textured FrameColor background IF applicable
+                ZStack {
+                    let texturedColors = frameColors.filter { $0.textured }
+                    let totalCount = frameColors.count
+                    ForEach(texturedColors, id: \.id) { frame in
+                        switch frame {
+                        case .bareMetal:
+//                            Rectangle()
                             Chip.bareMetalAngularGradient
-                        }
-                    case .covered:
-                        // Covered
-                        if #available(iOS 18.0, *) {
-                            Rectangle().overlay {
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                                .overlay {
+//                                    Chip.bareMetalAngularGradient
+//                                }
+                                .clipShape(ColumnRectangle(column: 2, totalCount: totalCount))
+
+//                                .containerRelativeFrame(.horizontal, count: frameColors.count, spacing: 0)
+                        case .covered:
+                            // Covered
+                            if #available(iOS 18.0, *) {
                                 Chip.rainbow18
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                                    .clipShape(BifurcatedRectangle(totalCount: totalCount))
+                            } else {
+                                Chip.rainbow17
                             }
-                        } else {
-                            Chip.rainbow17
+                        default:
+                            EmptyView()
                         }
-                    default:
-                        EmptyView()
                     }
                 }
-                
-            }
-            .aspectRatio(1.0, contentMode: .fit)
-            .clipped()
+                .aspectRatio(1.0, contentMode: .fit)
+                .clipped()
 
+            /*
             // Foreground stripes of solid frame colors, with cutouts for textured background
-            GeometryReader { geo in
+
                 HStack(spacing: 0) {
                     let count = CGFloat(frameColors.count)
                     ForEach(.constant(frameColors), id: \.id) { frame in
@@ -67,9 +76,9 @@ struct ContentButtonBorder: View {
                         }
                     }
                 }
+             */
             }
             .aspectRatio(1.0, contentMode: .fit)
-
         }
         .frame(
             minWidth: 100,
@@ -93,8 +102,8 @@ struct ContentButtonBorder: View {
     ScrollView {
         ProportionalLazyVGrid {
             ContentButtonBorder(frameColors: [.blue, .red, .bareMetal])
-            ContentButtonBorder(frameColors: [.red, .orange, .yellow])
-            ContentButtonBorder(frameColors: [.white, .black, .covered])
+//            ContentButtonBorder(frameColors: [.red, .orange, .yellow])
+//            ContentButtonBorder(frameColors: [.white, .black, .covered])
             ContentButtonBorder(frameColors: [.bareMetal, .white, .covered])
             if #available(iOS 18, *) {
                 Chip.rainbow18
@@ -110,4 +119,44 @@ struct ContentButtonBorder: View {
                 .aspectRatio(1.0, contentMode: .fit)
         }
     }
+}
+
+struct ColumnRectangle: Shape {
+    /// The "position index" that the Shape receiving this `.clippedShape(BifurcatedRectangle())` **should** display within
+    var column: Int
+    var totalCount: Int
+
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.addRect(rect)
+
+        let colWidth = rect.width / CGFloat(totalCount)
+        for layoutColumn in 0..<totalCount where layoutColumn != column {
+            let clipRect = CGRect(x: colWidth * CGFloat(layoutColumn),
+                                  y: rect.origin.y,
+                                  width: colWidth,
+                                  height: rect.height)
+            var clipPath = Path()
+            clipPath.addRect(clipRect)
+            path = path.subtracting(clipPath)
+            print("Evaluating layout column", layoutColumn, clipRect)
+        }
+
+        return path
+    }
+}
+
+#Preview {
+    VStack(spacing: 0) {
+        Rectangle()
+            .foregroundStyle(.red)
+            .clipShape(ColumnRectangle(column: 0, totalCount: 3))
+        Rectangle()
+            .foregroundStyle(.red)
+            .clipShape(ColumnRectangle(column: 1, totalCount: 3))
+        Rectangle()
+            .foregroundStyle(.red)
+            .clipShape(ColumnRectangle(column: 2, totalCount: 3))
+    }
+    .background(.yellow)
 }
