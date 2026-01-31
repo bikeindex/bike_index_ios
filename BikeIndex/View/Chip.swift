@@ -60,6 +60,7 @@ struct Chip: View {
                 }
             // Color with value
             case (.roundedLabel, let value):
+                // TODO: Update with new FrameColor.prettyColor gradient/value
                 roundedLabel
                     .stroke(
                         value.color!.gradient,
@@ -89,24 +90,6 @@ struct Chip: View {
 
     private var circle: Circle {
         Circle()
-    }
-
-    static var bareMetalGradient: LinearGradient {
-        let base: [Color] = [
-            .darkGray,
-            .almostBlack,
-            .gray,
-            .almostBlack,
-            .darkGray,
-            .gray,
-            .almostBlack,
-        ]
-        let colors = Array(repeating: base, count: 3)
-            .flatMap { $0 }
-        return LinearGradient(
-            colors: colors,
-            startPoint: .bottomLeading,
-            endPoint: .topTrailing)
     }
 
     static var bareMetalAngularGradient: AngularGradient {
