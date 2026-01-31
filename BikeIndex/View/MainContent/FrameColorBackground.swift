@@ -1,5 +1,5 @@
 //
-//  ContentButtonBorder.swift
+//  FrameColorBackground.swift
 //  BikeIndex
 //
 //  Created by Jack on 1/22/26.
@@ -7,11 +7,9 @@
 
 import SwiftUI
 
-@available(*, deprecated, message: "TODO: Rename, this is the wrong name.")
 // ✅ DONE: Use vertical stripes for simplicity and clarity
-// TODO: Add public bike image to the Preview and check with images too
 // TODO: Rely on https://bikeindex.org/api/v3/selections/colors
-struct ContentButtonBorder: View {
+struct FrameColorBackground: View {
     var frameColors: [FrameColor]
 
     var body: some View {
@@ -86,8 +84,6 @@ struct ContentButtonBorder: View {
                 .resizable()
                 .scaledToFit()
                 .padding()
-                .tint(.secondary)
-                .foregroundStyle(.primary)
                 .shadow(color: Color(uiColor: .systemBackground), radius: 5)
         }
     }
@@ -96,16 +92,16 @@ struct ContentButtonBorder: View {
 #Preview {
     ScrollView {
         ProportionalLazyVGrid {
-            ContentButtonBorder(frameColors: [.blue, .red, .bareMetal])
-            ContentButtonBorder(frameColors: [.red, .orange, .yellow])
-            ContentButtonBorder(frameColors: [.covered, .brown, .black])
-            ContentButtonBorder(frameColors: [.bareMetal, .covered])
+            FrameColorBackground(frameColors: [.blue, .red, .bareMetal])
+            FrameColorBackground(frameColors: [.red, .orange, .yellow])
+            FrameColorBackground(frameColors: [.covered, .brown, .black])
+            FrameColorBackground(frameColors: [.bareMetal, .covered])
             if #available(iOS 18, *) {
                 Chip.rainbow18
             } else {
                 Chip.rainbow17
             }
-            ContentButtonBorder(frameColors: [.green, .blue, .purple])
+            FrameColorBackground(frameColors: [.green, .blue, .purple])
             Chip.bareMetalAngularGradient
                 .frame(
                     minWidth: 100,
@@ -114,45 +110,4 @@ struct ContentButtonBorder: View {
                 .aspectRatio(1.0, contentMode: .fit)
         }
     }
-}
-
-struct ColumnRectangle: Shape {
-    /// The "position index" that the Shape receiving this `.clippedShape(BifurcatedRectangle())` **should** display within
-    var column: Int
-    var totalCount: Int
-
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        path.addRect(rect)
-
-        let colWidth = rect.width / CGFloat(totalCount)
-        for layoutColumn in 0..<totalCount where layoutColumn != column {
-            let clipRect = CGRect(
-                x: colWidth * CGFloat(layoutColumn),
-                y: rect.origin.y,
-                width: colWidth,
-                height: rect.height)
-            var clipPath = Path()
-            clipPath.addRect(clipRect)
-            path = path.subtracting(clipPath)
-            print("Evaluating layout column", layoutColumn, clipRect)
-        }
-
-        return path
-    }
-}
-
-#Preview {
-    VStack(spacing: 0) {
-        Rectangle()
-            .foregroundStyle(.red)
-            .clipShape(ColumnRectangle(column: 0, totalCount: 3))
-        Rectangle()
-            .foregroundStyle(.red)
-            .clipShape(ColumnRectangle(column: 1, totalCount: 3))
-        Rectangle()
-            .foregroundStyle(.red)
-            .clipShape(ColumnRectangle(column: 2, totalCount: 3))
-    }
-    .background(.yellow)
 }
