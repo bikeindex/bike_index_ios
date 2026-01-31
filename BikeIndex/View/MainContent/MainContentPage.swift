@@ -205,6 +205,7 @@ struct MainContentPage: View {
                 ]
                 let years: [Int?] = [2025, 2024, 2020, 2015, 2014, nil]
                 let colors: [FrameColor] = [.bareMetal, .covered, .white, .red, .black, .yellow]
+                let secondColors: [FrameColor] = [.green, .purple, .orange, .brown, .pink, .teal]
 
                 for (index, status) in BikeStatus.allCases.enumerated() {
                     let bike = output.modelInstance()
@@ -216,6 +217,7 @@ struct MainContentPage: View {
                     bike.update(keyPath: \.year, to: years[index])
                     bike.update(keyPath: \.manufacturerName, to: manufacturers[index])
                     bike.update(keyPath: \.frameColorPrimary, to: colors[index])
+                    bike.update(keyPath: \.frameColorSecondary, to: secondColors[index])
                     print(
                         "Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)"
                     )

@@ -27,17 +27,15 @@ struct ContentBikeButtonView: View {
         if let bike = bikeQuery.first, bikeQuery.count == 1 {
             NavigationLink(value: bike.identifier) {
                 VStack {
-                    ZStack {
-                        // TODO: Current: CachedAsyncImage { success=image | placeholder}
-                        // TODO: Make: ButtonBackground { CachedAsyncImage | ContentUnavailable }
-                        CachedAsyncImage(url: bike.largeImage) { image in
-                            image
-                                .resizable()
-                                .scaledToFill()
-                        } placeholder: {
-                            ContentButtonBorder(frameColors: bike.frameColors)
-                        }
+                    CachedAsyncImage(url: bike.largeImage) { image in
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    } placeholder: {
+                        FrameColorBackground(frameColors: bike.frameColors)
                     }
+                    .tint(.primary)
+                    .foregroundStyle(.primary)
                     .frame(
                         minWidth: 100,
                         maxWidth: .infinity,

@@ -59,8 +59,7 @@ struct MockData {
          "date_stolen": 1376719200,
          "description": "26 Giant Trance X  ",
          "frame_colors": [
-           "Green",
-           "Blue"
+           "Green"
          ],
          "frame_model": "Trance X",
          "id": 20348,
