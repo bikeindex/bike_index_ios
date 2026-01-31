@@ -30,7 +30,7 @@ enum FrameColor: String, Codable, CaseIterable, Identifiable, Equatable {
 
     // MARK: -
 
-    var id: Self { self }
+    var id: String { rawValue }
 
     var displayValue: String { rawValue }
 

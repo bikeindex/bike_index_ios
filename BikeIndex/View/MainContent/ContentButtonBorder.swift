@@ -19,28 +19,22 @@ struct ContentButtonBorder: View {
             GeometryReader { geo in
                 // Textured FrameColor background IF applicable
                 ZStack {
-                    let texturedColors = frameColors.filter { $0.textured }
                     let totalCount = frameColors.count
-                    ForEach(texturedColors, id: \.id) { frame in
+                    ForEach(Array(frameColors.enumerated()), id: \.element.id) { (offset, frame) in
                         switch frame {
                         case .bareMetal:
-//                            Rectangle()
                             Chip.bareMetalAngularGradient
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                                .overlay {
-//                                    Chip.bareMetalAngularGradient
-//                                }
-                                .clipShape(ColumnRectangle(column: 2, totalCount: totalCount))
-
-//                                .containerRelativeFrame(.horizontal, count: frameColors.count, spacing: 0)
+                                .clipShape(ColumnRectangle(column: offset, totalCount: totalCount))
                         case .covered:
                             // Covered
                             if #available(iOS 18.0, *) {
                                 Chip.rainbow18
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                                    .clipShape(BifurcatedRectangle(totalCount: totalCount))
+                                    .clipShape(ColumnRectangle(column: offset, totalCount: totalCount))
                             } else {
                                 Chip.rainbow17
+                                    .clipShape(ColumnRectangle(column: offset, totalCount: totalCount))
                             }
                         default:
                             EmptyView()
@@ -50,9 +44,7 @@ struct ContentButtonBorder: View {
                 .aspectRatio(1.0, contentMode: .fit)
                 .clipped()
 
-            /*
-            // Foreground stripes of solid frame colors, with cutouts for textured background
-
+                // Foreground stripes of solid frame colors, with cutouts for textured background
                 HStack(spacing: 0) {
                     let count = CGFloat(frameColors.count)
                     ForEach(.constant(frameColors), id: \.id) { frame in
@@ -76,7 +68,6 @@ struct ContentButtonBorder: View {
                         }
                     }
                 }
-             */
             }
             .aspectRatio(1.0, contentMode: .fit)
         }
@@ -102,9 +93,9 @@ struct ContentButtonBorder: View {
     ScrollView {
         ProportionalLazyVGrid {
             ContentButtonBorder(frameColors: [.blue, .red, .bareMetal])
-//            ContentButtonBorder(frameColors: [.red, .orange, .yellow])
-//            ContentButtonBorder(frameColors: [.white, .black, .covered])
-            ContentButtonBorder(frameColors: [.bareMetal, .white, .covered])
+            ContentButtonBorder(frameColors: [.red, .orange, .yellow])
+            ContentButtonBorder(frameColors: [.covered, .brown, .black])
+            ContentButtonBorder(frameColors: [.bareMetal, .covered])
             if #available(iOS 18, *) {
                 Chip.rainbow18
             } else {
