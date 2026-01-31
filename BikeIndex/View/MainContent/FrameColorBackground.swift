@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-// ✅ DONE: Use vertical stripes for simplicity and clarity
 // TODO: Rely on https://bikeindex.org/api/v3/selections/colors
 struct FrameColorBackground: View {
     var frameColors: [FrameColor]

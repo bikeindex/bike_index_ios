@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Special thanks to https://www.fivestars.blog/articles/swiftui-clipping/ for inspiration
 struct ColumnRectangle: Shape {
     /// The "position index" that the Shape receiving this `.clippedShape(BifurcatedRectangle())` **should** display within
     var column: Int
