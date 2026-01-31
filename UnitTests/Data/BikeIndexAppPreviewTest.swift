@@ -5,6 +5,7 @@
 //  Created by Jack on 12/27/24.
 //
 
+#if canImport(PreviewGallery)
 import SnapshottingTests
 import XCTest
 
@@ -20,3 +21,4 @@ final class BikeIndexAppPreviewTest: SnapshotTest {
         return nil
     }
 }
+#endif
