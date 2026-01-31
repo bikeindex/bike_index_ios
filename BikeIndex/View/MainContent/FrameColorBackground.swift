@@ -56,10 +56,10 @@ struct FrameColorBackground: View {
                                 .frame(width: geo.size.width / count)
                         case (let value):
                             // Color with value
-                            if let color = value.color {
+                            if let color = value.color, let secondColor = value.prettyColor {
                                 // TODO: Fix color.gradient here
                                 LinearGradient(
-                                    colors: [color], startPoint: .leading, endPoint: .trailing
+                                    colors: [color, secondColor], startPoint: .top, endPoint: .bottom
                                 )
                                 .zIndex(100)
                                 .frame(width: geo.size.width / count)
@@ -91,10 +91,10 @@ struct FrameColorBackground: View {
 #Preview {
     ScrollView {
         ProportionalLazyVGrid {
-            FrameColorBackground(frameColors: [.blue, .red, .bareMetal])
+            FrameColorBackground(frameColors: [.teal, .red, .bareMetal])
             FrameColorBackground(frameColors: [.red, .orange, .yellow])
             FrameColorBackground(frameColors: [.covered, .brown, .black])
-            FrameColorBackground(frameColors: [.bareMetal, .covered])
+            FrameColorBackground(frameColors: [.bareMetal, .white, .covered])
             if #available(iOS 18, *) {
                 Chip.rainbow18
             } else {
