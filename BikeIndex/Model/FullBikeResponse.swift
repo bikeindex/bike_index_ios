@@ -51,18 +51,18 @@ struct FullBikeResponse: ResponseModelInstantiable {
     let id: Int?
     let title: String?
     let description: String?
-    
+
     let registry_name: String?
     let registry_url: URL?
-    
+
     let frame_model: String?
     let frame_colors: [String]
     let paint_description: String?
-    
+
     /// Also accepts manufacturer identifier Int
     let manufacturer_name: String
     let manufacturer_id: Int?
-    
+
     let year: Int?
     let cycle_type_slug: BicycleType
     let propulsion_type_slug: PropulsionType
@@ -86,7 +86,7 @@ struct FullBikeResponse: ResponseModelInstantiable {
 
     let registration_created_at: TimeInterval?
     let registration_updated_at: TimeInterval?
-    
+
     let extra_registration_number: Int?
     let rear_tire_narrow: Bool?
     let test_bike: Bool?
