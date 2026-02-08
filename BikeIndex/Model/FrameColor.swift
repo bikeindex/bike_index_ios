@@ -30,7 +30,7 @@ enum FrameColor: String, Codable, CaseIterable, Identifiable, Equatable {
 
     // MARK: -
 
-    var id: String { rawValue }
+    var id: Self { self }
 
     var displayValue: String { rawValue }
 
@@ -56,6 +56,8 @@ enum FrameColor: String, Codable, CaseIterable, Identifiable, Equatable {
 }
 
 extension FrameColor {
+    /// SwiftUI provided colors for frame display.
+    /// Combine with BikeIndex-specific ``prettyColor`` values to create custom gradients.
     var color: Color? {
         switch self {
         case .bareMetal, .covered:
@@ -89,6 +91,9 @@ extension FrameColor {
 }
 
 extension FrameColor {
+    /// Display colors provided by ``Selections/colors`` (not fetched from API)
+    /// and hard-coded for convenience.
+    /// Combine with SwiftUI-default ``color`` values to create custom gradients.
     var prettyColor: Color? {
         switch self {
         case .black:
@@ -98,7 +103,7 @@ extension FrameColor {
         case .brown:
             Color(#colorLiteral(red: 0.451, green: 0.29, blue: 0.133, alpha: 1))  // #734a22
         case .green:
-            Color(#colorLiteral(red: 0.106, green: 0.631, blue: 0, alpha: 1))  // #1ba100<#code#>
+            Color(#colorLiteral(red: 0.106, green: 0.631, blue: 0, alpha: 1))  // #1ba100
         case .orange:
             Color(#colorLiteral(red: 1, green: 0.553, blue: 0.114, alpha: 1))  // #ff8d1d
         case .pink:
@@ -108,7 +113,7 @@ extension FrameColor {
         case .red:
             Color(#colorLiteral(red: 0.925, green: 0.075, blue: 0.075, alpha: 1))  // #ec1313
         case .bareMetal:
-            // NOTE: normally nil!
+            /// NOTE: typically nil from ``FrameColor/color``
             Color(#colorLiteral(red: 0.69, green: 0.69, blue: 0.69, alpha: 1))  // #b0b0b0
         case .covered:
             nil
@@ -119,5 +124,13 @@ extension FrameColor {
         case .yellow:
             Color(#colorLiteral(red: 1, green: 0.957, blue: 0.294, alpha: 1))  // #fff44b
         }
+    }
+}
+
+extension FrameColor {
+    /// Will evaluate to empty array for ``bareMetal`` and ``covered`` cases.
+    @MainActor
+    var gradientColors: [Color] {
+        [color, prettyColor].compactMap { $0 }
     }
 }

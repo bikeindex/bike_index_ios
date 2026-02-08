@@ -60,16 +60,12 @@ struct Chip: View {
                 }
             // Color with value
             case (.roundedLabel, let value):
-                // TODO: Update with new FrameColor.prettyColor gradient/value
                 roundedLabel
-                    .stroke(
-                        value.color!.gradient,
-                        lineWidth: stroke
-                    )
+                    .stroke(Gradient(colors: value.gradientColors), lineWidth: stroke)
                     .fill(.background.tertiary)
             case (.circle, let value):
                 circle
-                    .fill(value.color!)
+                    .fill(Gradient(colors: value.gradientColors))
             }
 
             if style == .roundedLabel {

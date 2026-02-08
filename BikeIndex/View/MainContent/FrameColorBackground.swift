@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-// TODO: Rely on https://bikeindex.org/api/v3/selections/colors
 struct FrameColorBackground: View {
     var frameColors: [FrameColor]
 
@@ -45,28 +44,22 @@ struct FrameColorBackground: View {
 
                 // Foreground stripes of solid frame colors, with cutouts for textured background
                 HStack(spacing: 0) {
-                    let count = CGFloat(frameColors.count)
+                    let columnWidth = geo.size.width / CGFloat(frameColors.count)
                     ForEach(.constant(frameColors), id: \.id) { frame in
                         switch frame.wrappedValue {
                         case .bareMetal:
                             Spacer()
-                                .frame(width: geo.size.width / count)
+                                .frame(width: columnWidth)
                         case .covered:
                             Spacer()
-                                .frame(width: geo.size.width / count)
+                                .frame(width: columnWidth)
                         case (let value):
-                            // Color with value
-                            if let color = value.color, let secondColor = value.prettyColor {
-                                // TODO: Fix color.gradient here
-                                LinearGradient(
-                                    colors: [color, secondColor], startPoint: .top,
-                                    endPoint: .bottom
-                                )
-                                .zIndex(100)
-                                .frame(width: geo.size.width / count)
-                            } else {
-                                Text("Inconsident FrameColor usage")
-                            }
+                            LinearGradient(
+                                colors: value.gradientColors, startPoint: .top,
+                                endPoint: .bottom
+                            )
+                            .zIndex(100)
+                            .frame(width: columnWidth)
                         }
                     }
                 }
