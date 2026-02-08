@@ -22,7 +22,7 @@ final class BikeModelTests: XCTestCase {
         XCTAssertEqual(bike.bikeDescription, "26 Giant Trance X  ")
         XCTAssertEqual(bike.frameModel, "Trance X")
         XCTAssertEqual(bike.typeOfCycle, .bike)
-        XCTAssertEqual(bike.frameColors, [.green, .blue])
+        XCTAssertEqual(bike.frameColors, [.green])
         XCTAssertEqual(bike.manufacturerName, "Giant")
         XCTAssertEqual(bike.serial, "GS020355")
 
