@@ -42,17 +42,6 @@ enum FrameColor: String, Codable, CaseIterable, Identifiable, Equatable {
         .red, .pink, .orange, .yellow, .green, .teal, .blue, .purple, .brown, .black, .white,
         .bareMetal, .covered,
     ]
-
-    /// A `true` value Indicates that this color is displayed with a special View (such as a gradient)
-    /// or a `false` value indicates that this color can be converted to a ``SwiftUICore/Color``
-    var textured: Bool {
-        switch self {
-        case .bareMetal, .covered:
-            true
-        default:
-            false
-        }
-    }
 }
 
 extension FrameColor {
