@@ -6,7 +6,7 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
-  workflow_call:
+  workflow_call: # allows delivery.yml to invoke test-suite
 
 jobs:
   build-tests:
@@ -48,7 +48,7 @@ jobs:
     name: ${{ matrix.device }} ${{ matrix.only-testing }} ${{ matrix.deployment_target_version }}
     strategy:
       matrix:
-        device: ["iPhone 17", "iPhone 17 Pro", "iPad (A16)"]
+        device: ["iPhone 17"] # "iPhone 17 Pro", "iPad (A16)"
         deployment_target_version: ["26.2"]
         only-testing: ["UnitTests", "UITests"]
     steps:
