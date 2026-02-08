@@ -27,7 +27,7 @@ struct BikeRegistrationModelTests {
             ownerEmail: "")
 
         #expect(registrationModel.primary_frame_color == "green")
-        #expect(registrationModel.secondary_frame_color == "blue")
+        #expect(registrationModel.secondary_frame_color == nil)
         #expect(registrationModel.tertiary_frame_color == "stickers tape or other cover-up")
 
         #expect(registrationModel.cycle_type_name == .bike)
