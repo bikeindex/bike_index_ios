@@ -91,9 +91,12 @@ extension FrameColor {
 }
 
 extension FrameColor {
+    // swift-format-ignore: NoPlaygroundLiterals
     /// Display colors provided by ``Selections/colors`` (not fetched from API)
     /// and hard-coded for convenience.
     /// Combine with SwiftUI-default ``color`` values to create custom gradients.
+    /// swiftlang/swift-format playground literals warnings are ignored because
+    /// these selections/colors values are only available in 1 theme at this time.
     var prettyColor: Color? {
         switch self {
         case .black:
