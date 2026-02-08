@@ -36,39 +36,6 @@ struct FrameColorsView: View {
     }
 }
 
-extension FrameColor {
-    var color: Color? {
-        switch self {
-        case .bareMetal, .covered:
-            nil
-        case .black:
-            // slightly lighter than pure black for display
-            Color(white: 0.1)
-        case .blue:
-            .blue
-        case .brown:
-            .brown
-        case .green:
-            .green
-        case .orange:
-            .orange
-        case .pink:
-            .pink
-        case .purple:
-            .purple
-        case .red:
-            .red
-        case .teal:
-            .teal
-        case .white:
-            // Slightly darker than pure white for display
-            Color(white: 0.9)
-        case .yellow:
-            .yellow
-        }
-    }
-}
-
 extension Color {
     static let dimWhite = Color(white: 0.75)
     static let darkGray = Color(white: 0.25)

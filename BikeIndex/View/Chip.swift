@@ -61,14 +61,11 @@ struct Chip: View {
             // Color with value
             case (.roundedLabel, let value):
                 roundedLabel
-                    .stroke(
-                        value.color!.gradient,
-                        lineWidth: stroke
-                    )
+                    .stroke(Gradient(colors: value.gradientColors), lineWidth: stroke)
                     .fill(.background.tertiary)
             case (.circle, let value):
                 circle
-                    .fill(value.color!)
+                    .fill(Gradient(colors: value.gradientColors))
             }
 
             if style == .roundedLabel {
@@ -89,24 +86,6 @@ struct Chip: View {
 
     private var circle: Circle {
         Circle()
-    }
-
-    static var bareMetalGradient: LinearGradient {
-        let base: [Color] = [
-            .darkGray,
-            .almostBlack,
-            .gray,
-            .almostBlack,
-            .darkGray,
-            .gray,
-            .almostBlack,
-        ]
-        let colors = Array(repeating: base, count: 3)
-            .flatMap { $0 }
-        return LinearGradient(
-            colors: colors,
-            startPoint: .bottomLeading,
-            endPoint: .topTrailing)
     }
 
     static var bareMetalAngularGradient: AngularGradient {
