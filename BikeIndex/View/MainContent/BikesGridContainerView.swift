@@ -44,8 +44,14 @@ struct BikesGridContainerView: View {
             ContentUnavailableView("Fetching bikes…", systemImage: "bicycle.circle")
                 .padding()
         } else if sections.isEmpty {
-            ContentUnavailableView("No bikes registered", systemImage: "bicycle.circle.fill")
-                .padding()
+            ContentUnavailableView {
+                Label("No bikes registered", systemImage: "bicycle.circle")
+            } actions: {
+                Button("Register your first bike today") {
+                    path.append(MainContent.registerBike)
+                }
+            }
+            .padding()
         } else {
             ProportionalLazyVGrid(pinnedViews: [.sectionHeaders]) {
                 ForEach(sections) { section in
