@@ -161,6 +161,7 @@ struct MainContentPage: View {
                 let manufacturers = [
                     "Giant", "Specialized", "Jamis", "Giant", "Specialized", "Jamis",
                 ]
+                let colors: [FrameColor] = [.bareMetal, .covered, .white, .red, .black, .yellow]
 
                 for (index, status) in statuses.enumerated() {
                     let output = try JSONDecoder().decode(
@@ -172,6 +173,7 @@ struct MainContentPage: View {
                     bike.update(keyPath: \.status, to: status)
                     bike.update(keyPath: \.year, to: years[index])
                     bike.update(keyPath: \.manufacturerName, to: manufacturers[index])
+                    bike.update(keyPath: \.frameColorPrimary, to: colors[index])
                     print(
                         "Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)"
                     )
@@ -202,6 +204,8 @@ struct MainContentPage: View {
                     "Giant", "Specialized", "Jamis", "Giant", "Specialized", "Jamis",
                 ]
                 let years: [Int?] = [2025, 2024, 2020, 2015, 2014, nil]
+                let colors: [FrameColor] = [.bareMetal, .covered, .white, .red, .black, .yellow]
+                let secondColors: [FrameColor] = [.green, .purple, .orange, .brown, .pink, .teal]
 
                 for (index, status) in BikeStatus.allCases.enumerated() {
                     let bike = output.modelInstance()
@@ -212,6 +216,8 @@ struct MainContentPage: View {
                     bike.update(keyPath: \.status, to: status)
                     bike.update(keyPath: \.year, to: years[index])
                     bike.update(keyPath: \.manufacturerName, to: manufacturers[index])
+                    bike.update(keyPath: \.frameColorPrimary, to: colors[index])
+                    bike.update(keyPath: \.frameColorSecondary, to: secondColors[index])
                     print(
                         "Pre-insert bike \(bike.identifier) with \(bike.status.rawValue) / status string = \(bike.statusString)"
                     )

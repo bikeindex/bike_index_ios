@@ -21,32 +21,21 @@ struct ContentBikeButtonView: View {
             })
     }
 
+    private let stroke = 4.0
+
     var body: some View {
         if let bike = bikeQuery.first, bikeQuery.count == 1 {
             NavigationLink(value: bike.identifier) {
                 VStack {
-                    ZStack {
-                        CachedAsyncImage(url: bike.largeImage) { image in
-                            image
-                                .resizable()
-                                .scaledToFill()
-                        } placeholder: {
-                            Image(systemName: "bicycle")
-                                .resizable()
-                                .scaledToFit()
-                                .padding()
-                                .frame(
-                                    minWidth: 100,
-                                    maxWidth: .infinity,
-                                    minHeight: 100,
-                                    maxHeight: .infinity
-                                )
-                                .tint(Color.white)
-                                .background(
-                                    Color.accentColor, in: RoundedRectangle(cornerRadius: 24))
-
-                        }
+                    CachedAsyncImage(url: bike.largeImage) { image in
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    } placeholder: {
+                        FrameColorBackground(frameColors: bike.frameColors)
                     }
+                    .tint(.primary)
+                    .foregroundStyle(.primary)
                     .frame(
                         minWidth: 100,
                         maxWidth: .infinity,
@@ -72,7 +61,7 @@ struct ContentBikeButtonView: View {
 
     let sampleBike1 = Bike(
         identifier: 1,
-        primaryColor: FrameColor.bareMetal,
+        primaryColor: FrameColor.black,
         manufacturerName: "Jamis",
         typeOfCycle: .bike,
         typeOfPropulsion: .footPedal,
@@ -88,7 +77,8 @@ struct ContentBikeButtonView: View {
 
     let sampleBike2 = Bike(
         identifier: 2,
-        primaryColor: FrameColor.bareMetal,
+        primaryColor: FrameColor.white,
+        secondaryColor: .blue,
         manufacturerName: "Wide",
         typeOfCycle: .bike,
         typeOfPropulsion: .footPedal,
@@ -120,7 +110,7 @@ struct ContentBikeButtonView: View {
 
     let sampleBike4 = Bike(
         identifier: 4,
-        primaryColor: FrameColor.bareMetal,
+        primaryColor: FrameColor.blue,
         manufacturerName: "Empty",
         typeOfCycle: BicycleType.bike,
         typeOfPropulsion: .footPedal,
