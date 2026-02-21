@@ -18,7 +18,7 @@ extension RegisterBikeView {
         init(
             mode: RegisterMode, bike: Bike = Bike(),
             propulsion: BikeRegistration.Propulsion = BikeRegistration.Propulsion(),
-            stolenRecord: StolenRecord = StolenRecord(phone: "", city: ""),
+            stolenRecord: RegisterBikeStolenRecord = RegisterBikeStolenRecord(phone: "", city: ""),
             output: AddBikeOutput = AddBikeOutput()
         ) {
             self.mode = mode
@@ -36,7 +36,7 @@ extension RegisterBikeView {
         /// Sub-model for electric/throttle/pedal-assist behavior. Will be combined with BikeRegistration inside ``registerBike()`` function.
         var propulsion = BikeRegistration.Propulsion()
         /// Sub-model for stolen bikes.
-        var stolenRecord = StolenRecord(phone: "", city: "")
+        var stolenRecord = RegisterBikeStolenRecord(phone: "", city: "")
         /// Track if any errors occurred when submitting this bike
         /// and report them back up to the UI
         var output = AddBikeOutput()

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct StolenRecordEntryView: View {
-    @Binding var record: StolenRecord
+    @Binding var record: RegisterBikeStolenRecord
     @FocusState.Binding var focus: RegisterBikeView.Field?
 
     var body: some View {
@@ -83,7 +83,7 @@ struct StolenRecordEntryView: View {
 }
 
 #Preview {
-    @Previewable @State var record = StolenRecord(phone: "", city: "")
+    @Previewable @State var record = RegisterBikeStolenRecord(phone: "", city: "")
     @Previewable @FocusState var focus: RegisterBikeView.Field?
 
     Form {
