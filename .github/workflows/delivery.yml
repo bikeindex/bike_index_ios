@@ -18,11 +18,11 @@ jobs:
     needs: requires-integration-tests
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.ref }}
-      - name: Set Xcode 26.2
-        run: sudo xcode-select -s /Applications/Xcode_26.2.app
+      - name: Set Xcode 26.4
+        run: sudo xcode-select -s /Applications/Xcode_26.4.app
       - name: Strip SnapshotPreviews package
         run: |
           brew install swift-sh
