@@ -5,9 +5,10 @@
 //  Created by Jack on 5/2/26.
 //
 
-import Testing
-@testable import BikeIndex
 import Foundation
+import Testing
+
+@testable import BikeIndex
 
 struct BikeModelTests_WheelSizeBSD {
 
