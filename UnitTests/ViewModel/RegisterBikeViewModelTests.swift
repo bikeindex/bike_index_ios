@@ -16,7 +16,7 @@ struct RegisterBikeViewModelTests {
     @Test func test_inputs() async throws {
         let testBike = Bike()
         let testPropulsion = BikeRegistration.Propulsion()
-        let testStolenRecord = StolenRecord(phone: "", city: "")
+        let testStolenRecord = RegisterBikeStolenRecord(phone: "", city: "")
         let testOutput = AddBikeOutput()
 
         let system = ViewModel(
