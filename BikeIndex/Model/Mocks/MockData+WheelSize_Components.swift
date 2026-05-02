@@ -6,7 +6,7 @@
 //
 
 extension MockData {
-    static let fullContainerWheelSize = """
+    static let fullContainerWheelSize_Components = """
         {
           "bike": {
             "date_stolen": 1376719200,
@@ -72,7 +72,20 @@ extension MockData {
               "id": 16690
             },
             "public_images": [],
-            "components": []
+            "components": [
+              {
+                "id": 208858,
+                "description": "Ultra thin Black Rear Pannier rack,. Axiom Streamliner Road DLX ",
+                "serial_number": "N/A",
+                "component_type": "unknown",
+                "component_group": "Additional parts",
+                "rear": null,
+                "front": null,
+                "manufacturer_name": null,
+                "model_name": "Streamliner Road DLX ",
+                "year": 2014
+              }
+            ]
           }
         }
         """
