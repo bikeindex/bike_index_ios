@@ -245,6 +245,8 @@ import SwiftData
         fullPublicImages = []
         createdAt = nil
         updatedAt = nil
+
+        components = []
     }
 
     // https://www.hackingwithswift.com/quick-start/swiftdata/how-to-create-derived-attributes-with-swiftdata

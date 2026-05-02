@@ -99,7 +99,7 @@ struct FullBikeResponse: ResponseModelInstantiable {
     let additional_registration: String?
 
     let stolen_record: FetchedBikeStolenRecord?
-    let components: [String]
+    let components: [ComponentsResponse]
 
     // MARK: - ResponseModelInstantiable for BikeResponse
 
@@ -174,7 +174,7 @@ struct FullBikeResponse: ResponseModelInstantiable {
             rearGearTypeSlug: rear_gear_type_slug,
             additionalRegistration: additional_registration,
             stolenRecord: stolen_record,
-            components: components
+            components: []  // TODO: Fix response -> Bike
         )
     }
 }
