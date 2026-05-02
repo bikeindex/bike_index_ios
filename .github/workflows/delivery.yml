@@ -18,7 +18,7 @@ jobs:
     needs: requires-integration-tests
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.ref }}
       - name: Set Xcode 26.4
