@@ -54,7 +54,7 @@ struct BikeRegistration: Encodable {
     /// Struct type with special encoding logic
     var propulsion: Propulsion?
     var stolen_record: RegisterBikeStolenRecord?
-    var components: [Component]?
+    var components: [RegistrationComponent]?
 
     init(
         bike: Bike,
@@ -204,7 +204,8 @@ struct BikeRegistration: Encodable {
     }
 }
 
-struct Component: Encodable {
+/// Presently unused, model for detailed registration, safe to modify
+struct RegistrationComponent: Encodable {
     let manufacturer: String
     let component_type: String  // replace with component-type / ctype enum
     let model: String
