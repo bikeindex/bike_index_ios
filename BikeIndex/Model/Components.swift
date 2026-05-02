@@ -17,21 +17,17 @@ import SwiftData
     /// Maps to 'description'
     var componentDescription: String
     var serial_number: String
-    var component_type: String  // TODO: check type
+    var component_type: String
     var component_group: String
-    var rear: Int?  // TODO: check type
-    var front: Int?  // TODO: check type
-    var manufacturer_name: String?  // TODO: check type
+    var rear: Bool?
+    var front: Bool?
+    var manufacturer_name: String?
     var model_name: String
-    var year: Int
+    var year: Int?
 
-    init(
-        id: Int, description: String, serial_number: String, component_type: String,
-        component_group: String, rear: Int? = nil, front: Int? = nil,
-        manufacturer_name: String? = nil, model_name: String, year: Int
-    ) {
+    init(id: Int, componentDescription: String, serial_number: String, component_type: String, component_group: String, rear: Bool? = nil, front: Bool? = nil, manufacturer_name: String? = nil, model_name: String, year: Int? = nil) {
         self.id = id
-        self.componentDescription = description
+        self.componentDescription = componentDescription
         self.serial_number = serial_number
         self.component_type = component_type
         self.component_group = component_group
