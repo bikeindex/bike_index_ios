@@ -13,7 +13,7 @@ enum BikeStatus: String, Codable, CaseIterable {
     case stolen
     case abandoned
     case impounded
-    case unregisteredParkingNotification = "unregistered parking notification"
+    case unregisteredParkingNotification = "unregistered"
 
     var displayName: String {
         rawValue.capitalized
