@@ -1,5 +1,5 @@
 //
-//  StolenRecord.swift
+//  RegisterBikeStolenRecord.swift
 //  BikeIndex
 //
 //  Created by Jack on 1/13/24.
@@ -10,7 +10,7 @@ import Foundation
 /// Data model to represent a stolen bike when creating a new registration.
 /// Required fields are phone and city.
 /// See https://bikeindex.org/documentation/api_v3#!/bikes/POST_version_bikes_format_post_3
-struct StolenRecord: Encodable {
+struct RegisterBikeStolenRecord: Codable {
     var phone: String
     var city: String
     var country: Countries.ISO? = Locale.current.region?.identifier

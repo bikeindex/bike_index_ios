@@ -113,6 +113,7 @@ import SwiftData
     var frontGearTypeSlug: String?
     var rearGearTypeSlug: String?
     var additionalRegistration: String?
+    var stolenRecord: FetchedBikeStolenRecord?
     var components: [String] = []
 
     struct Constants {
@@ -168,6 +169,7 @@ import SwiftData
         frontGearTypeSlug: String? = nil,
         rearGearTypeSlug: String? = nil,
         additionalRegistration: String? = nil,
+        stolenRecord: FetchedBikeStolenRecord? = nil,
         components: [String] = []
     ) {
         self.identifier = identifier
@@ -214,6 +216,7 @@ import SwiftData
         self.frontGearTypeSlug = frontGearTypeSlug
         self.rearGearTypeSlug = rearGearTypeSlug
         self.additionalRegistration = additionalRegistration
+        self.stolenRecord = stolenRecord
         self.components = components
     }
 

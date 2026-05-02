@@ -53,13 +53,13 @@ struct BikeRegistration: Encodable {
 
     /// Struct type with special encoding logic
     var propulsion: Propulsion?
-    var stolen_record: StolenRecord?
+    var stolen_record: RegisterBikeStolenRecord?
     var components: [Component]?
 
     init(
         bike: Bike,
         mode: RegisterMode,
-        stolen: StolenRecord?,
+        stolen: RegisterBikeStolenRecord?,
         propulsion: Propulsion?,
         ownerEmail: String
     ) {
