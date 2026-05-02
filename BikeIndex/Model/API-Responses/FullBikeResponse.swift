@@ -94,8 +94,8 @@ struct FullBikeResponse: ResponseModelInstantiable {
     let front_wheel_size_iso_bsd: Int?
     let handlebar_type_slug: String?
     let frame_material_slug: String?
-    let front_gear_type_slug: String?  //valid
-    let rear_gear_type_slug: String?  // valid
+    let front_gear_type_slug: String?
+    let rear_gear_type_slug: String?
     let additional_registration: String?
 
     let stolen_record: FetchedBikeStolenRecord?
