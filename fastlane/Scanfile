@@ -10,7 +10,7 @@ testplan("AllTests")
 
 # Scanfile contains defaults and these can be overridden by Fastfile
 # or CLI arguments
-deployment_target_version = "26.4.1"
+deployment_target_version = "26.4"
 
 disable_concurrent_testing(true)
 result_bundle(true)
