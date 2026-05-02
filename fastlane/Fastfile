@@ -23,7 +23,7 @@ platform :ios do
     # See Scanfile for default configuration
     scan(
       devices: ["iPhone 17"],
-      deployment_target_version: "26.2"
+      deployment_target_version: "26.4.1"
     )
   end
 
@@ -32,7 +32,7 @@ platform :ios do
     # See Scanfile for default configuration
     scan(
       devices: ["iPhone 17 Pro"],
-      deployment_target_version: "26.2"
+      deployment_target_version: "26.4.1"
     )
   end
 
@@ -41,7 +41,7 @@ platform :ios do
     # See Scanfile for default configuration
     scan(
       devices: ["iPad (A16)"],
-      deployment_target_version: "26.2"
+      deployment_target_version: "26.4.1"
     )
   end
 

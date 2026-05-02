@@ -49,7 +49,7 @@ jobs:
     strategy:
       matrix:
         device: ["iPhone 17"] # "iPhone 17 Pro", "iPad (A16)"
-        deployment_target_version: ["26.4"]
+        deployment_target_version: ["26.4.1"]
         only-testing: ["UnitTests", "UITests"]
     steps:
       - name: Checkout
