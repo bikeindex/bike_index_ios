@@ -106,8 +106,8 @@ import SwiftData
     var extraRegistrationNumber: Int?
     var rearTireNarrow: Bool?
     var testBike: Bool?
-    var rearWheelSizeISOBSD: Bool?
-    var frontWheelSizeISOBSD: Bool?
+    var rearWheelSizeISOBSD: Int?
+    var frontWheelSizeISOBSD: Int?
     var handlebarTypeSlug: String?
     var frameMaterialSlug: String?
     var frontGearTypeSlug: String?
@@ -162,8 +162,8 @@ import SwiftData
         extraRegistrationNumber: Int? = nil,
         rearTireNarrow: Bool? = nil,
         testBike: Bool? = nil,
-        rearWheelSizeISOBSD: Bool? = nil,
-        frontWheelSizeISOBSD: Bool? = nil,
+        rearWheelSizeISOBSD: Int? = nil,
+        frontWheelSizeISOBSD: Int? = nil,
         handlebarTypeSlug: String? = nil,
         frameMaterialSlug: String? = nil,
         frontGearTypeSlug: String? = nil,

@@ -52,16 +52,16 @@ struct FullBikeResponseTests {
         #expect(bike.extraRegistrationNumber == 12345)
         #expect(bike.rearTireNarrow == true)
         #expect(bike.testBike == false)
-        #expect(bike.rearWheelSizeISOBSD == false)
-        #expect(bike.frontWheelSizeISOBSD == false)
+        #expect(bike.rearWheelSizeISOBSD == nil)
+        #expect(bike.frontWheelSizeISOBSD == nil)
         #expect(bike.handlebarTypeSlug == "MOCK_HANDLEBAR_TYPE")
         #expect(bike.frameMaterialSlug == "MOCK_FRAME_MATERIAL")
         #expect(bike.frontGearTypeSlug == "MOCK_FRONT_GEAR_TYPE")
         #expect(bike.rearGearTypeSlug == "MOCK_REAR_GEAR_TYPE")
         #expect(bike.additionalRegistration == "MOCK_ADDITIONAL_REGISTRATION")
-        
+
         let stolenRecord = try #require(bike.stolenRecord)
-        #expect(stolenRecord.date_stolen == 1376719200)
+        #expect(stolenRecord.date_stolen == 1_376_719_200)
         #expect(stolenRecord.location == "Portland, OR 97209, US")
         #expect(stolenRecord.latitude == 45.53)
         #expect(stolenRecord.longitude == -122.69)
@@ -70,10 +70,10 @@ struct FullBikeResponseTests {
         #expect(stolenRecord.lock_defeat_description == nil)
         #expect(stolenRecord.police_report_number == "1368801")
         #expect(stolenRecord.police_report_department == "Portland")
-        #expect(stolenRecord.created_at == 1402778082)
+        #expect(stolenRecord.created_at == 1_402_778_082)
         #expect(stolenRecord.create_open311 == false)
         #expect(stolenRecord.id == 16690)
-        
+
         #expect(bike.components == ["MOCK_COMPONENT_1", "MOCK_COMPONENT_2"])
     }
 
