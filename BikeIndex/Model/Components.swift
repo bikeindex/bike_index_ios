@@ -24,7 +24,11 @@ import SwiftData
     var model_name: String?
     var year: Int?
 
-    init(id: Int, componentDescription: String, serial_number: String? = nil, component_type: String, component_group: String, rear: Bool? = nil, front: Bool? = nil, manufacturer_name: String? = nil, model_name: String? = nil, year: Int? = nil) {
+    init(
+        id: Int, componentDescription: String, serial_number: String? = nil, component_type: String,
+        component_group: String, rear: Bool? = nil, front: Bool? = nil,
+        manufacturer_name: String? = nil, model_name: String? = nil, year: Int? = nil
+    ) {
         self.id = id
         self.componentDescription = componentDescription
         self.serial_number = serial_number

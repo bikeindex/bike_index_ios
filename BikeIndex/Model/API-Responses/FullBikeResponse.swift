@@ -36,7 +36,7 @@ struct PublicImageResponse: ResponseModelInstantiable {
 }
 
 extension [PublicImageResponse]? {
-    func modelInstances() -> [FullPublicImage] {
+    func modelInstances() -> [PublicImageResponse.ModelInstance] {
         self?.map { $0.modelInstance() } ?? []
     }
 
@@ -174,7 +174,7 @@ struct FullBikeResponse: ResponseModelInstantiable {
             rearGearTypeSlug: rear_gear_type_slug,
             additionalRegistration: additional_registration,
             stolenRecord: stolen_record,
-            components: []  // TODO: Fix response -> Bike
+            components: components.modelInstances()
         )
     }
 }

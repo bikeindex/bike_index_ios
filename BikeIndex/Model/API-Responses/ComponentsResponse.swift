@@ -33,3 +33,9 @@ struct ComponentsResponse: ResponseModelInstantiable {
             year: year)
     }
 }
+
+extension [ComponentsResponse] {
+    func modelInstances() -> [ComponentsResponse.ModelInstance] {
+        self.map { $0.modelInstance() }
+    }
+}
