@@ -49,7 +49,7 @@ struct FullBikeResponseTests {
         #expect(bike.createdAt == Date(timeIntervalSince1970: 1_377_151_200))
         #expect(bike.updatedAt == Date(timeIntervalSince1970: 1_585_269_739))
 
-        #expect(bike.extraRegistrationNumber == 12345)
+        #expect(bike.extraRegistrationNumber == "12345")
         #expect(bike.rearTireNarrow == true)
         #expect(bike.testBike == false)
         #expect(bike.rearWheelSizeISOBSD == nil)
