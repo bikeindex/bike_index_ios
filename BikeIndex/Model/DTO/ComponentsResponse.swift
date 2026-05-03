@@ -7,7 +7,6 @@
 
 import Foundation
 
-// TODO: Rename API-Responses to DTO
 /// Component Types and Groups should be a string to match API dynamism
 /// https://github.com/bikeindex/bike_index/blob/main/db/seeds/seed_components.rb#L11
 struct ComponentsResponse: ResponseModelInstantiable {
