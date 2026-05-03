@@ -114,7 +114,7 @@ import SwiftData
     var rearGearTypeSlug: String?
     var additionalRegistration: String?
     var stolenRecord: FetchedBikeStolenRecord?
-    var components: [String] = []
+    var components: [Component]
 
     struct Constants {
         /// The range of supported years for Bike models
@@ -170,7 +170,7 @@ import SwiftData
         rearGearTypeSlug: String? = nil,
         additionalRegistration: String? = nil,
         stolenRecord: FetchedBikeStolenRecord? = nil,
-        components: [String] = []
+        components: [Component] = []
     ) {
         self.identifier = identifier
         self.title = title

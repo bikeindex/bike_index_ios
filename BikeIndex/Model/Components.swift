@@ -8,24 +8,23 @@
 import Foundation
 import SwiftData
 
-// TODO: CHECK ALL TYPES
 @Model final class Component {
-//    @Relationship(inverse: \Bike.components)
-//    var bike: Bike?
+    @Relationship(inverse: \Bike.components)
+    var bike: Bike?
 
     var id: Int
     /// Maps to 'description'
     var componentDescription: String
-    var serial_number: String
+    var serial_number: String?
     var component_type: String
     var component_group: String
     var rear: Bool?
     var front: Bool?
     var manufacturer_name: String?
-    var model_name: String
+    var model_name: String?
     var year: Int?
 
-    init(id: Int, componentDescription: String, serial_number: String, component_type: String, component_group: String, rear: Bool? = nil, front: Bool? = nil, manufacturer_name: String? = nil, model_name: String, year: Int? = nil) {
+    init(id: Int, componentDescription: String, serial_number: String? = nil, component_type: String, component_group: String, rear: Bool? = nil, front: Bool? = nil, manufacturer_name: String? = nil, model_name: String? = nil, year: Int? = nil) {
         self.id = id
         self.componentDescription = componentDescription
         self.serial_number = serial_number

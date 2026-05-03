@@ -13,15 +13,13 @@ import Foundation
 struct ComponentsResponse: ResponseModelInstantiable {
     let id: Int
     let description: String
-    // TODO: Confirm serial number, seems to be "N/A" or Empty String,
-    let serial_number: String
+    let serial_number: String?
     let component_type: String
     let component_group: String
     let rear: Bool?
     let front: Bool?
     let manufacturer_name: String?
-    // TODO: Confirm model_name, seems to be empty string
-    let model_name: String
+    let model_name: String?
     let year: Int?
 
     func modelInstance() -> Component {
