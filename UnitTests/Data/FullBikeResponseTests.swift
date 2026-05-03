@@ -76,29 +76,29 @@ struct FullBikeResponseTests {
 
         #expect(bike.components.count == 2)
 
-        let component1 = bike.components[0]
-        #expect(component1.id == 208877)
-        #expect(component1.componentDescription == "Tektro V w/Shimano EF50 levers")
-        #expect(component1.serialNumber == "")
-        #expect(component1.componentType == "brake")
-        #expect(component1.componentGroup == "Drivetrain and brakes")
-        #expect(component1.rear == true)
-        #expect(component1.front == nil)
-        #expect(component1.manufacturerName == nil)
-        #expect(component1.modelName == "")
-        #expect(component1.year == nil)
+        let rearBrakeComponent = bike.components[0]
+        #expect(rearBrakeComponent.id == 208877)
+        #expect(rearBrakeComponent.componentDescription == "Tektro V w/Shimano EF50 levers")
+        #expect(rearBrakeComponent.serialNumber == "")
+        #expect(rearBrakeComponent.componentType == "brake")
+        #expect(rearBrakeComponent.componentGroup == "Drivetrain and brakes")
+        #expect(rearBrakeComponent.rear == true)
+        #expect(rearBrakeComponent.front == nil)
+        #expect(rearBrakeComponent.manufacturerName == nil)
+        #expect(rearBrakeComponent.modelName == "")
+        #expect(rearBrakeComponent.year == nil)
 
-        let component2 = bike.components[1]
-        #expect(component2.id == 208876)
-        #expect(component2.componentDescription == "Tektro V w/Shimano EF50 levers")
-        #expect(component2.serialNumber == "")
-        #expect(component2.componentType == "brake")
-        #expect(component2.componentGroup == "Drivetrain and brakes")
-        #expect(component2.rear == nil)
-        #expect(component2.front == true)
-        #expect(component2.manufacturerName == nil)
-        #expect(component2.modelName == "")
-        #expect(component2.year == nil)
+        let frontBrakeComponent = bike.components[1]
+        #expect(frontBrakeComponent.id == 208876)
+        #expect(frontBrakeComponent.componentDescription == "Tektro V w/Shimano EF50 levers")
+        #expect(frontBrakeComponent.serialNumber == "")
+        #expect(frontBrakeComponent.componentType == "brake")
+        #expect(frontBrakeComponent.componentGroup == "Drivetrain and brakes")
+        #expect(frontBrakeComponent.rear == nil)
+        #expect(frontBrakeComponent.front == true)
+        #expect(frontBrakeComponent.manufacturerName == nil)
+        #expect(frontBrakeComponent.modelName == "")
+        #expect(frontBrakeComponent.year == nil)
     }
 
 }
