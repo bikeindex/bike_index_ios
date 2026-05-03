@@ -172,7 +172,7 @@ struct MockData {
          "frame_material_slug": "MOCK_FRAME_MATERIAL",
          "front_gear_type_slug": "MOCK_FRONT_GEAR_TYPE",
          "rear_gear_type_slug": "MOCK_REAR_GEAR_TYPE",
-         "extra_registration_number": 12345,
+         "extra_registration_number": "1234",
          "additional_registration": "MOCK_ADDITIONAL_REGISTRATION",
          "stolen_record": {
            "date_stolen": 1376719200,

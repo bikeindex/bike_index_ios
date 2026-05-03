@@ -87,7 +87,7 @@ struct FullBikeResponse: ResponseModelInstantiable {
     let registration_created_at: TimeInterval?
     let registration_updated_at: TimeInterval?
 
-    let extra_registration_number: Int?
+    let extra_registration_number: String?
     let rear_tire_narrow: Bool?
     let test_bike: Bool?
     let rear_wheel_size_iso_bsd: Int?
