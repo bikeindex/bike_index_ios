@@ -97,6 +97,9 @@ platform :ios do
       api_key_path: "./fastlane/api-key.json",
       skip_screenshots: true,
       skip_metadata: true,
+      release_notes: {
+        default: changelog_from_git_commits()
+      },
       precheck_include_in_app_purchases: false,
       copyright: "2025 © Bike Index, a 501(c)(3) nonprofit - EIN 81-4296194"
     )
