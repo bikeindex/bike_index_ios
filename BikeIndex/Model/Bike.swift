@@ -103,7 +103,7 @@ import SwiftData
     /// Date the bike was most-recently updated. Note that this is read-only from the API.
     var updatedAt: Date?
 
-    var extraRegistrationNumber: Int?
+    var extraRegistrationNumber: String?
     var rearTireNarrow: Bool?
     var testBike: Bool?
     var rearWheelSizeISOBSD: Int?
@@ -114,7 +114,7 @@ import SwiftData
     var rearGearTypeSlug: String?
     var additionalRegistration: String?
     var stolenRecord: FetchedBikeStolenRecord?
-    var components: [String] = []
+    var components: [Component]
 
     struct Constants {
         /// The range of supported years for Bike models
@@ -159,7 +159,7 @@ import SwiftData
         isStockImage: Bool = false,
         createdAt: Date? = nil,
         updatedAt: Date? = nil,
-        extraRegistrationNumber: Int? = nil,
+        extraRegistrationNumber: String? = nil,
         rearTireNarrow: Bool? = nil,
         testBike: Bool? = nil,
         rearWheelSizeISOBSD: Int? = nil,
@@ -170,7 +170,7 @@ import SwiftData
         rearGearTypeSlug: String? = nil,
         additionalRegistration: String? = nil,
         stolenRecord: FetchedBikeStolenRecord? = nil,
-        components: [String] = []
+        components: [Component] = []
     ) {
         self.identifier = identifier
         self.title = title
@@ -245,6 +245,8 @@ import SwiftData
         fullPublicImages = []
         createdAt = nil
         updatedAt = nil
+
+        components = []
     }
 
     // https://www.hackingwithswift.com/quick-start/swiftdata/how-to-create-derived-attributes-with-swiftdata

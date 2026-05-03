@@ -49,7 +49,7 @@ struct FullBikeResponseTests {
         #expect(bike.createdAt == Date(timeIntervalSince1970: 1_377_151_200))
         #expect(bike.updatedAt == Date(timeIntervalSince1970: 1_585_269_739))
 
-        #expect(bike.extraRegistrationNumber == 12345)
+        #expect(bike.extraRegistrationNumber == "1234")
         #expect(bike.rearTireNarrow == true)
         #expect(bike.testBike == false)
         #expect(bike.rearWheelSizeISOBSD == nil)
@@ -74,7 +74,31 @@ struct FullBikeResponseTests {
         #expect(stolenRecord.create_open311 == false)
         #expect(stolenRecord.id == 16690)
 
-        #expect(bike.components == ["MOCK_COMPONENT_1", "MOCK_COMPONENT_2"])
+        #expect(bike.components.count == 2)
+
+        let rearBrakeComponent = bike.components[0]
+        #expect(rearBrakeComponent.id == 208877)
+        #expect(rearBrakeComponent.componentDescription == "Tektro V w/Shimano EF50 levers")
+        #expect(rearBrakeComponent.serialNumber == "")
+        #expect(rearBrakeComponent.componentType == "brake")
+        #expect(rearBrakeComponent.componentGroup == "Drivetrain and brakes")
+        #expect(rearBrakeComponent.rear == true)
+        #expect(rearBrakeComponent.front == nil)
+        #expect(rearBrakeComponent.manufacturerName == nil)
+        #expect(rearBrakeComponent.modelName == "")
+        #expect(rearBrakeComponent.year == nil)
+
+        let frontBrakeComponent = bike.components[1]
+        #expect(frontBrakeComponent.id == 208876)
+        #expect(frontBrakeComponent.componentDescription == "Tektro V w/Shimano EF50 levers")
+        #expect(frontBrakeComponent.serialNumber == "")
+        #expect(frontBrakeComponent.componentType == "brake")
+        #expect(frontBrakeComponent.componentGroup == "Drivetrain and brakes")
+        #expect(frontBrakeComponent.rear == nil)
+        #expect(frontBrakeComponent.front == true)
+        #expect(frontBrakeComponent.manufacturerName == nil)
+        #expect(frontBrakeComponent.modelName == "")
+        #expect(frontBrakeComponent.year == nil)
     }
 
 }
