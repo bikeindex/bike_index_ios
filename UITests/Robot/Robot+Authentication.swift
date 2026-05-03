@@ -28,6 +28,9 @@ extension Robot {
 
         signIn.tap()
 
+        // Catch any interruptions atop the OAuth authorization
+        attemptAppOAuthSecurity()
+
         // Try to tap Authorize __if it exists__, continue if it is absent.
         attemptOAuthAuthorize()
 
@@ -57,10 +60,26 @@ extension Robot {
         _ = loginButton.waitForExistence(timeout: timeout)
         loginButton.tap()
 
-        // Step 3: Make sure that this OAuth Application is authorized.
+        // Step 3: Resolve the "insecure authorization" prompt if present
+        attemptAppOAuthSecurity()
+
+        // Step 4: Make sure that this OAuth Application is authorized.
         authorizeOAuthApplication()
 
         return self
+    }
+
+    /// If OAuth Authorization is required, there _may also_ be a security
+    /// warning overlay for authorizations that are new to this user + OAuth app
+    private func attemptAppOAuthSecurity() {
+        let timeout: TimeInterval = 10
+        let appOAuthSecurityRequired = app.otherElements["New authorization"]
+        let close = appOAuthSecurityRequired.buttons["Close"]
+        if appOAuthSecurityRequired.waitForExistence(timeout: timeout),
+            appOAuthSecurityRequired.elementType == .other, close.waitForExistence(timeout: timeout)
+        {
+            close.tap()
+        }
     }
 
     private func attemptOAuthAuthorize() {

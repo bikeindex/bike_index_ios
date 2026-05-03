@@ -495,7 +495,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BikeIndex/BikeIndex.entitlements;
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 67;
+				CURRENT_PROJECT_VERSION = 69;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "BikeIndex/Preview\\ Content/MultipleBikeResponse_mock.json BikeIndex/Preview\\ Content";
 				DEVELOPMENT_TEAM = 8ZM5ZL6ABT;
@@ -639,7 +639,7 @@
 				CODE_SIGN_ENTITLEMENTS = BikeIndex/BikeIndex.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 67;
+				CURRENT_PROJECT_VERSION = 69;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "BikeIndex/Preview\\ Content/MultipleBikeResponse_mock.json BikeIndex/Preview\\ Content";
 				DEVELOPMENT_TEAM = 8ZM5ZL6ABT;
@@ -786,7 +786,7 @@
 			repositoryURL = "https://github.com/EmergeTools/SnapshotPreviews";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.11.0;
+				minimumVersion = 0.14.0;
 			};
 		};
 		04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */ = {

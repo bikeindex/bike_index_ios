@@ -36,7 +36,7 @@ struct PublicImageResponse: ResponseModelInstantiable {
 }
 
 extension [PublicImageResponse]? {
-    func modelInstances() -> [FullPublicImage] {
+    func modelInstances() -> [PublicImageResponse.ModelInstance] {
         self?.map { $0.modelInstance() } ?? []
     }
 
@@ -87,11 +87,11 @@ struct FullBikeResponse: ResponseModelInstantiable {
     let registration_created_at: TimeInterval?
     let registration_updated_at: TimeInterval?
 
-    let extra_registration_number: Int?
+    let extra_registration_number: String?
     let rear_tire_narrow: Bool?
     let test_bike: Bool?
-    let rear_wheel_size_iso_bsd: Bool?
-    let front_wheel_size_iso_bsd: Bool?
+    let rear_wheel_size_iso_bsd: Int?
+    let front_wheel_size_iso_bsd: Int?
     let handlebar_type_slug: String?
     let frame_material_slug: String?
     let front_gear_type_slug: String?
@@ -99,7 +99,7 @@ struct FullBikeResponse: ResponseModelInstantiable {
     let additional_registration: String?
 
     let stolen_record: FetchedBikeStolenRecord?
-    let components: [String]
+    let components: [ComponentsResponse]
 
     // MARK: - ResponseModelInstantiable for BikeResponse
 
@@ -174,7 +174,7 @@ struct FullBikeResponse: ResponseModelInstantiable {
             rearGearTypeSlug: rear_gear_type_slug,
             additionalRegistration: additional_registration,
             stolenRecord: stolen_record,
-            components: components
+            components: components.modelInstances()
         )
     }
 }

@@ -49,19 +49,19 @@ struct FullBikeResponseTests {
         #expect(bike.createdAt == Date(timeIntervalSince1970: 1_377_151_200))
         #expect(bike.updatedAt == Date(timeIntervalSince1970: 1_585_269_739))
 
-        #expect(bike.extraRegistrationNumber == 12345)
+        #expect(bike.extraRegistrationNumber == "1234")
         #expect(bike.rearTireNarrow == true)
         #expect(bike.testBike == false)
-        #expect(bike.rearWheelSizeISOBSD == false)
-        #expect(bike.frontWheelSizeISOBSD == false)
+        #expect(bike.rearWheelSizeISOBSD == nil)
+        #expect(bike.frontWheelSizeISOBSD == nil)
         #expect(bike.handlebarTypeSlug == "MOCK_HANDLEBAR_TYPE")
         #expect(bike.frameMaterialSlug == "MOCK_FRAME_MATERIAL")
         #expect(bike.frontGearTypeSlug == "MOCK_FRONT_GEAR_TYPE")
         #expect(bike.rearGearTypeSlug == "MOCK_REAR_GEAR_TYPE")
         #expect(bike.additionalRegistration == "MOCK_ADDITIONAL_REGISTRATION")
-        
+
         let stolenRecord = try #require(bike.stolenRecord)
-        #expect(stolenRecord.date_stolen == 1376719200)
+        #expect(stolenRecord.date_stolen == 1_376_719_200)
         #expect(stolenRecord.location == "Portland, OR 97209, US")
         #expect(stolenRecord.latitude == 45.53)
         #expect(stolenRecord.longitude == -122.69)
@@ -70,11 +70,35 @@ struct FullBikeResponseTests {
         #expect(stolenRecord.lock_defeat_description == nil)
         #expect(stolenRecord.police_report_number == "1368801")
         #expect(stolenRecord.police_report_department == "Portland")
-        #expect(stolenRecord.created_at == 1402778082)
+        #expect(stolenRecord.created_at == 1_402_778_082)
         #expect(stolenRecord.create_open311 == false)
         #expect(stolenRecord.id == 16690)
-        
-        #expect(bike.components == ["MOCK_COMPONENT_1", "MOCK_COMPONENT_2"])
+
+        #expect(bike.components.count == 2)
+
+        let rearBrakeComponent = bike.components[0]
+        #expect(rearBrakeComponent.id == 208877)
+        #expect(rearBrakeComponent.componentDescription == "Tektro V w/Shimano EF50 levers")
+        #expect(rearBrakeComponent.serialNumber == "")
+        #expect(rearBrakeComponent.componentType == "brake")
+        #expect(rearBrakeComponent.componentGroup == "Drivetrain and brakes")
+        #expect(rearBrakeComponent.rear == true)
+        #expect(rearBrakeComponent.front == nil)
+        #expect(rearBrakeComponent.manufacturerName == nil)
+        #expect(rearBrakeComponent.modelName == "")
+        #expect(rearBrakeComponent.year == nil)
+
+        let frontBrakeComponent = bike.components[1]
+        #expect(frontBrakeComponent.id == 208876)
+        #expect(frontBrakeComponent.componentDescription == "Tektro V w/Shimano EF50 levers")
+        #expect(frontBrakeComponent.serialNumber == "")
+        #expect(frontBrakeComponent.componentType == "brake")
+        #expect(frontBrakeComponent.componentGroup == "Drivetrain and brakes")
+        #expect(frontBrakeComponent.rear == nil)
+        #expect(frontBrakeComponent.front == true)
+        #expect(frontBrakeComponent.manufacturerName == nil)
+        #expect(frontBrakeComponent.modelName == "")
+        #expect(frontBrakeComponent.year == nil)
     }
 
 }

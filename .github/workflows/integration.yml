@@ -14,11 +14,11 @@ jobs:
     runs-on: macos-26
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.ref }}
-      - name: Set Xcode 26.2
-        run: sudo xcode-select -s /Applications/Xcode_26.2.app
+      - name: Set Xcode 26.4
+        run: sudo xcode-select -s /Applications/Xcode_26.4.app
       - name: Install tools
         run: brew bundle install
       - name: Set up xcconfig (see README.md#quick-start)
@@ -37,7 +37,7 @@ jobs:
         run: fastlane scan --build_for_testing=true
       - name: Save build products directory
         id: cache-build-save
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: build
           key: cache-build-${{ github.sha }}
@@ -49,18 +49,18 @@ jobs:
     strategy:
       matrix:
         device: ["iPhone 17"] # "iPhone 17 Pro", "iPad (A16)"
-        deployment_target_version: ["26.2"]
+        deployment_target_version: ["26.4"]
         only-testing: ["UnitTests", "UITests"]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.ref }}
-      - name: Set Xcode 26.2
-        run: sudo xcode-select -s /Applications/Xcode_26.2.app
+      - name: Set Xcode 26.4
+        run: sudo xcode-select -s /Applications/Xcode_26.4.app
       - name: Restore cached build products
         id: cache-build-restore
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: build
           key: cache-build-${{ github.sha }}
@@ -76,7 +76,7 @@ jobs:
           echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
       - name: ${{ matrix.only-testing}} on ${{ matrix.device }} ${{ matrix.deployment_target_version }}
         run: fastlane scan --only-testing="${{ matrix.only-testing }}" --device="${{ matrix.device }}" --deployment-target-version="${{ matrix.deployment_target_version }}" --test_without_building=true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: always()
         with:
           name: test_output_${{ matrix.device }}_${{ matrix.only-testing }}

@@ -23,7 +23,7 @@ platform :ios do
     # See Scanfile for default configuration
     scan(
       devices: ["iPhone 17"],
-      deployment_target_version: "26.2"
+      deployment_target_version: "26.4"
     )
   end
 
@@ -32,7 +32,7 @@ platform :ios do
     # See Scanfile for default configuration
     scan(
       devices: ["iPhone 17 Pro"],
-      deployment_target_version: "26.2"
+      deployment_target_version: "26.4"
     )
   end
 
@@ -41,7 +41,7 @@ platform :ios do
     # See Scanfile for default configuration
     scan(
       devices: ["iPad (A16)"],
-      deployment_target_version: "26.2"
+      deployment_target_version: "26.4"
     )
   end
 
@@ -97,6 +97,9 @@ platform :ios do
       api_key_path: "./fastlane/api-key.json",
       skip_screenshots: true,
       skip_metadata: true,
+      release_notes: {
+        default: changelog_from_git_commits()
+      },
       precheck_include_in_app_purchases: false,
       copyright: "2025 © Bike Index, a 501(c)(3) nonprofit - EIN 81-4296194"
     )
