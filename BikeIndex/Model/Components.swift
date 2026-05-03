@@ -15,13 +15,13 @@ import SwiftData
     var id: Int
     /// Maps to 'description'
     var componentDescription: String
-    var serial_number: String?
-    var component_type: String
-    var component_group: String
+    var serialNumber: String?
+    var componentType: String
+    var componentGroup: String
     var rear: Bool?
     var front: Bool?
-    var manufacturer_name: String?
-    var model_name: String?
+    var manufacturerName: String?
+    var modelName: String?
     var year: Int?
 
     init(
@@ -31,13 +31,13 @@ import SwiftData
     ) {
         self.id = id
         self.componentDescription = componentDescription
-        self.serial_number = serial_number
-        self.component_type = component_type
-        self.component_group = component_group
+        self.serialNumber = serial_number
+        self.componentType = component_type
+        self.componentGroup = component_group
         self.rear = rear
         self.front = front
-        self.manufacturer_name = manufacturer_name
-        self.model_name = model_name
+        self.manufacturerName = manufacturer_name
+        self.modelName = model_name
         self.year = year
     }
 }
