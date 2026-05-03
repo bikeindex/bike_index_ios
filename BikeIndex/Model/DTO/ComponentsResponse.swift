@@ -28,6 +28,9 @@ struct ComponentsResponse: ResponseModelInstantiable {
             serial_number: serial_number,
             component_type: component_type,
             component_group: component_group,
+            rear: rear,
+            front: front,
+            manufacturer_name: manufacturer_name,
             model_name: model_name,
             year: year)
     }

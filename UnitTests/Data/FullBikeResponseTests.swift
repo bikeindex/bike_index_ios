@@ -74,7 +74,31 @@ struct FullBikeResponseTests {
         #expect(stolenRecord.create_open311 == false)
         #expect(stolenRecord.id == 16690)
 
-        #expect(bike.components == ["MOCK_COMPONENT_1", "MOCK_COMPONENT_2"])
+        #expect(bike.components.count == 2)
+
+        let component1 = bike.components[0]
+        #expect(component1.id == 208877)
+        #expect(component1.componentDescription == "Tektro V w/Shimano EF50 levers")
+        #expect(component1.serial_number == "")
+        #expect(component1.component_type == "brake")
+        #expect(component1.component_group == "Drivetrain and brakes")
+        #expect(component1.rear == nil)
+        #expect(component1.front == nil)
+        #expect(component1.manufacturer_name == nil)
+        #expect(component1.model_name == "")
+        #expect(component1.year == nil)
+
+        let component2 = bike.components[1]
+        #expect(component2.id == 208876)
+        #expect(component2.componentDescription == "Tektro V w/Shimano EF50 levers")
+        #expect(component2.serial_number == "")
+        #expect(component2.component_type == "brake")
+        #expect(component2.component_group == "Drivetrain and brakes")
+        #expect(component2.rear == nil)
+        #expect(component2.front == nil)
+        #expect(component2.manufacturer_name == nil)
+        #expect(component2.model_name == "")
+        #expect(component2.year == nil)
     }
 
 }

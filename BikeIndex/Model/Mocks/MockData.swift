@@ -189,7 +189,32 @@ struct MockData {
            "id": 16690
          },
          "public_images": [],
-         "components": ["MOCK_COMPONENT_1", "MOCK_COMPONENT_2"]
+         "components": [
+            {
+              "id": 208877,
+              "description": "Tektro V w/Shimano EF50 levers",
+              "serial_number": "",
+              "component_type": "brake",
+              "component_group": "Drivetrain and brakes",
+              "rear": true,
+              "front": null,
+              "manufacturer_name": null,
+              "model_name": "",
+              "year": null
+            },
+            {
+              "id": 208876,
+              "description": "Tektro V w/Shimano EF50 levers",
+              "serial_number": "",
+              "component_type": "brake",
+              "component_group": "Drivetrain and brakes",
+              "rear": null,
+              "front": true,
+              "manufacturer_name": null,
+              "model_name": "",
+              "year": null
+            }
+        ]
         }
         """
 
