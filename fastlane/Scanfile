@@ -10,7 +10,8 @@ testplan("AllTests")
 
 # Scanfile contains defaults and these can be overridden by Fastfile
 # or CLI arguments
-deployment_target_version = "26.4"
+devices(["iPhone 17 (26.4)", "iPhone 17 Pro (26.4)", "iPad (A16) (26.4)"])
+deployment_target_version("26.4")
 
 disable_concurrent_testing(true)
 result_bundle(true)
