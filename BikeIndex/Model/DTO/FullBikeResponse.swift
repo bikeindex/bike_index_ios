@@ -173,7 +173,7 @@ struct FullBikeResponse: ResponseModelInstantiable {
             frontGearTypeSlug: front_gear_type_slug,
             rearGearTypeSlug: rear_gear_type_slug,
             additionalRegistration: additional_registration,
-            stolenRecord: stolen_record,
+            stolenRecord: stolen_record?.modelInstance(),
             components: components.modelInstances()
         )
     }
