@@ -60,18 +60,33 @@ struct FullBikeResponseTests {
         #expect(bike.rearGearTypeSlug == "MOCK_REAR_GEAR_TYPE")
         #expect(bike.additionalRegistration == "MOCK_ADDITIONAL_REGISTRATION")
 
+        // Interlude: check DTO too
+        let dtoStolenRecord = try #require(output.stolen_record)
+        #expect(dtoStolenRecord.date_stolen == 1_376_719_200)
+        #expect(dtoStolenRecord.location == "Portland, OR 97209, US")
+        #expect(dtoStolenRecord.latitude == 45.53)
+        #expect(dtoStolenRecord.longitude == -122.69)
+        #expect(dtoStolenRecord.theft_description == "Bike rack Reward: Tbd")
+        #expect(dtoStolenRecord.locking_description == nil)
+        #expect(dtoStolenRecord.lock_defeat_description == nil)
+        #expect(dtoStolenRecord.police_report_number == "1368801")
+        #expect(dtoStolenRecord.police_report_department == "Portland")
+        #expect(dtoStolenRecord.created_at == 1_402_778_082)
+        #expect(dtoStolenRecord.create_open311 == false)
+        #expect(dtoStolenRecord.id == 16690)
+
         let stolenRecord = try #require(bike.stolenRecord)
-        #expect(stolenRecord.date_stolen == 1_376_719_200)
+        #expect(stolenRecord.dateStolen == Date(timeIntervalSince1970: 1_376_719_200))
         #expect(stolenRecord.location == "Portland, OR 97209, US")
         #expect(stolenRecord.latitude == 45.53)
         #expect(stolenRecord.longitude == -122.69)
-        #expect(stolenRecord.theft_description == "Bike rack Reward: Tbd")
-        #expect(stolenRecord.locking_description == nil)
-        #expect(stolenRecord.lock_defeat_description == nil)
-        #expect(stolenRecord.police_report_number == "1368801")
-        #expect(stolenRecord.police_report_department == "Portland")
-        #expect(stolenRecord.created_at == 1_402_778_082)
-        #expect(stolenRecord.create_open311 == false)
+        #expect(stolenRecord.theftDescription == "Bike rack Reward: Tbd")
+        #expect(stolenRecord.lockingDescription == nil)
+        #expect(stolenRecord.lockDefeatDescription == nil)
+        #expect(stolenRecord.policeReportNumber == "1368801")
+        #expect(stolenRecord.policeReportDepartment == "Portland")
+        #expect(stolenRecord.createdAt == Date(timeIntervalSince1970: 1_402_778_082))
+        #expect(stolenRecord.createOpen311 == false)
         #expect(stolenRecord.id == 16690)
 
         #expect(bike.components.count == 2)
@@ -100,5 +115,4 @@ struct FullBikeResponseTests {
         #expect(frontBrakeComponent.modelName == "")
         #expect(frontBrakeComponent.year == nil)
     }
-
 }
