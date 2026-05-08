@@ -2,32 +2,16 @@ name: Continuous Integration
 permissions:
   contents: read
 
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: false
-
 on:
   push:
     branches: [ "main" ]
   pull_request:
-    branches-ignore: ["release/v*"]
-  workflow_call:
-    inputs:
-      device:
-        type: string
-        default: "iPhone 17"
-      deployment_target_version:
-        type: string
-        default: "26.4"
+  workflow_call: # allows delivery.yml to invoke test-suite
 
 jobs:
   build-tests:
     name: Build project and cache build products
     runs-on: macos-26
-    strategy:
-      matrix:
-        device: ["${{ inputs.device || 'iPhone 17' }}"]
-        deployment_target_version: ["${{ inputs.deployment_target_version || '26.4' }}"]
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -54,23 +38,22 @@ jobs:
       - name: List available simulators
         run: xcodebuild -scheme BikeIndex -project BikeIndex.xcodeproj -showdestinations
       - name: Build
-        run: fastlane scan --build_for_testing=true --device="${{ matrix.device }}" --deployment-target-version="${{ matrix.deployment_target_version }}"
+        run: fastlane scan --build_for_testing=true
       - name: Save build products directory
         id: cache-build-save
         uses: actions/cache/save@v5
         with:
           path: build
-          key: cache-build-${{ github.sha }}-${{ matrix.device }}-${{ matrix.deployment_target_version }}
+          key: cache-build-${{ github.sha }}
 
   test-suite:
     needs: build-tests
-    if: needs.build-tests.result == 'success'
     runs-on: macos-26
     name: ${{ matrix.device }} ${{ matrix.only-testing }} ${{ matrix.deployment_target_version }}
     strategy:
       matrix:
-        device: ["${{ inputs.device || 'iPhone 17' }}"]
-        deployment_target_version: ["${{ inputs.deployment_target_version || '26.4' }}"]
+        device: ["iPhone 17"] # "iPhone 17 Pro", "iPad (A16)"
+        deployment_target_version: ["26.4"]
         only-testing: ["UnitTests", "UITests"]
     steps:
       - name: Checkout
@@ -84,7 +67,7 @@ jobs:
         uses: actions/cache/restore@v5
         with:
           path: build
-          key: cache-build-${{ github.sha }}-${{ matrix.device }}-${{ matrix.deployment_target_version }}
+          key: cache-build-${{ github.sha }}
       - name: Set up xcconfig (see README.md#quick-start)
         env:
           BIKE_INDEX_DEVELOPMENT_XCCONFIG: ${{ secrets.BIKE_INDEX_DEVELOPMENT_XCCONFIG }}
@@ -101,7 +84,7 @@ jobs:
         run: ./scripts/validate-xcconfig.sh Test-credentials.xcconfig TEST_USERNAME TEST_PASSWORD
       - name: ${{ matrix.only-testing}} on ${{ matrix.device }} ${{ matrix.deployment_target_version }}
         run: fastlane scan --only-testing="${{ matrix.only-testing }}" --device="${{ matrix.device }}" --deployment-target-version="${{ matrix.deployment_target_version }}" --test_without_building=true
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v5
         if: always()
         with:
           name: test_output_${{ matrix.device }}_${{ matrix.only-testing }}

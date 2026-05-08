@@ -2,16 +2,12 @@ name: Continuous Delivery
 permissions:
   contents: read
 
-concurrency:
-  group: cd-${{ github.ref }}
-  cancel-in-progress: false
-
 on:
   pull_request:
     branch: ["release/v*"]
 
 jobs:
-  integration-tests:
+  requires-integration-tests:
     if: startsWith(github.head_ref, 'release/v')
     uses: bikeindex/bike_index_ios/.github/workflows/integration.yml@main
 
@@ -19,7 +15,7 @@ jobs:
     if: startsWith(github.head_ref, 'release/v')
     name: Build release archive and distribute
     runs-on: macos-26
-    needs: integration-tests
+    needs: requires-integration-tests
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -55,7 +51,7 @@ jobs:
         run: fastlane CD_build_release_archive
       - name: Calculate delivery changes
         run: git diff > delivery-changes.patch
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v5
         if: success()
         with:
           name: ${{ github.sha }}-artifact
