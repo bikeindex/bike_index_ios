@@ -51,6 +51,9 @@
 		04566C7D2E67475E00E3EC6E /* Scanfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Scanfile; sourceTree = "<group>"; };
 		04566C7F2E67475E00E3EC6E /* update-icons.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "update-icons.sh"; sourceTree = "<group>"; };
 		0496C6702CB36BED00B88D1B /* Brewfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Brewfile; sourceTree = "<group>"; };
+		04D641902FAE35B4000B5546 /* format.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = format.sh; sourceTree = "<group>"; };
+		04D641912FAE35B4000B5546 /* lint.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = lint.sh; sourceTree = "<group>"; };
+		04D641922FAE35B4000B5546 /* validate-xcconfig.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "validate-xcconfig.sh"; sourceTree = "<group>"; };
 		04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Test-credentials.xcconfig"; sourceTree = "<group>"; };
 		04D80BB72D8673F200E29577 /* Test-credentials-template.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Test-credentials-template.xcconfig"; sourceTree = "<group>"; };
 		04F4B8F72B098ADB009442B5 /* BikeIndex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BikeIndex.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -184,6 +187,9 @@
 		04566C802E67475E00E3EC6E /* scripts */ = {
 			isa = PBXGroup;
 			children = (
+				04D641902FAE35B4000B5546 /* format.sh */,
+				04D641912FAE35B4000B5546 /* lint.sh */,
+				04D641922FAE35B4000B5546 /* validate-xcconfig.sh */,
 				04566C7F2E67475E00E3EC6E /* update-icons.sh */,
 			);
 			path = scripts;
