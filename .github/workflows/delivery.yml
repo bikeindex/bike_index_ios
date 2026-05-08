@@ -1,7 +1,6 @@
 name: Continuous Delivery
 permissions:
   contents: read
-  actions: read
 
 concurrency:
   group: cd-${{ github.ref }}
@@ -12,127 +11,15 @@ on:
     branch: ["release/v*"]
 
 jobs:
-  check-integration-tests:
+  integration-tests:
     if: startsWith(github.head_ref, 'release/v')
-    runs-on: ubuntu-latest
-    outputs:
-      exists: ${{ steps.check-run.outputs.exists }}
-      run_id: ${{ steps.check-run.outputs.run_id }}
-      status: ${{ steps.check-run.outputs.status }}
-      conclusion: ${{ steps.check-run.outputs.conclusion }}
-    steps:
-      - name: Check for existing integration workflow run (with retry)
-        uses: actions/github-script@v7
-        id: check-run
-        with:
-          script: |
-            async function sleep(ms) {
-              await new Promise(resolve => setTimeout(resolve, ms));
-            }
-
-            async function queryRuns(status) {
-              const { data: runs } = await github.rest.actions.listWorkflowRuns({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: 'integration.yml',
-                head_sha: context.sha,
-                status,
-              });
-              return runs.workflow_runs;
-            }
-
-            // Retry loop for ~5min to handle race condition when both workflows fire simultaneously
-            let found = false;
-            for (let attempt = 0; attempt < 5; attempt++) {
-              if (attempt > 0) {
-                console.log(`Attempt ${attempt + 1}/5: no run found, waiting 60s before retry...`);
-                await sleep(60000);
-              }
-
-              // Check for in-progress runs first
-              let runs = await queryRuns('in_progress');
-              if (runs.length > 0) {
-                const run = runs[0];
-                core.setOutput('exists', 'true');
-                core.setOutput('run_id', run.id);
-                core.setOutput('status', 'in_progress');
-                console.log(`Found existing integration run: ${run.html_url}`);
-                found = true;
-                break;
-              }
-
-              // Check for completed runs (from earlier PR events on same SHA)
-              runs = await queryRuns('completed');
-              if (runs.length > 0) {
-                const run = runs[0];
-                core.setOutput('exists', 'true');
-                core.setOutput('run_id', run.id);
-                core.setOutput('status', 'completed');
-                core.setOutput('conclusion', run.conclusion);
-                console.log(`Found completed integration run: ${run.html_url}, conclusion: ${run.conclusion}`);
-
-                if (run.conclusion !== 'success') {
-                  core.setFailed(`Integration tests failed with conclusion: ${run.conclusion}`);
-                }
-                found = true;
-                break;
-              }
-            }
-
-            if (!found) {
-              // One final check before failing, in case a run completed during retries
-              const runs = await queryRuns('completed');
-              if (runs.length > 0) {
-                const run = runs[0];
-                core.setOutput('exists', 'true');
-                core.setOutput('run_id', run.id);
-                core.setOutput('status', 'completed');
-                core.setOutput('conclusion', run.conclusion);
-                console.log(`Found completed integration run on final check: ${run.html_url}, conclusion: ${run.conclusion}`);
-
-                if (run.conclusion !== 'success') {
-                  core.setFailed(`Integration tests failed with conclusion: ${run.conclusion}`);
-                }
-              } else {
-                core.setFailed('No existing integration run found for this commit SHA. Run integration.yml first.');
-              }
-            }
-
-  wait-for-integration:
-    needs: check-integration-tests
-    if: needs.check-integration-tests.outputs.status == 'in_progress'
-    runs-on: ubuntu-latest
-    timeout-minutes: 90
-    steps:
-      - uses: actions/github-script@v7
-        with:
-          script: |
-            const runId = ${{ needs.check-integration-tests.outputs.run_id }};
-            let completed = false;
-            let interval = 30;
-            while (!completed) {
-              await new Promise(resolve => setTimeout(resolve, interval * 1000));
-              const { data: run } = await github.rest.actions.getWorkflowRun({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                run_id: runId,
-              });
-              if (run.status === 'completed') {
-                console.log(`Integration run concluded: ${run.conclusion}`);
-                if (run.conclusion !== 'success') {
-                  core.setFailed(`Integration tests did not succeed: ${run.conclusion}`);
-                }
-                completed = true;
-              } else {
-                interval = Math.min(interval * 2, 120);
-                console.log(`Run still ${run.status}, next check in ${interval}s...`);
-              }
-            }
+    uses: bikeindex/bike_index_ios/.github/workflows/integration.yml@main
 
   build-release:
+    if: startsWith(github.head_ref, 'release/v')
     name: Build release archive and distribute
     runs-on: macos-26
-    needs: [check-integration-tests, wait-for-integration]
+    needs: integration-tests
     steps:
       - name: Checkout
         uses: actions/checkout@v6
