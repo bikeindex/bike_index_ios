@@ -34,9 +34,11 @@ jobs:
         run: ./scripts/validate-xcconfig.sh BikeIndex-development.xcconfig API_CLIENT_ID API_SECRET DEVELOPMENT_TEAM
       - name: Set up xcconfig UI test credentials (see README.md#UI-Test-configuration)
         env:
-          BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
+          TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
         run: |
-          echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
+          echo "$TEST_USERNAME" >> Test-credentials.xcconfig
+          echo "$TEST_PASSWORD" >> Test-credentials.xcconfig
       - name: Validate test credentials xcconfig
         run: ./scripts/validate-xcconfig.sh Test-credentials.xcconfig TEST_USERNAME TEST_PASSWORD
       - name: List available simulators
@@ -85,9 +87,11 @@ jobs:
         run: ./scripts/validate-xcconfig.sh BikeIndex-development.xcconfig API_CLIENT_ID API_SECRET DEVELOPMENT_TEAM
       - name: Set up xcconfig UI test credentials (see README.md#UI-Test-configuration)
         env:
-          BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
+          TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
         run: |
-          echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
+          echo "$TEST_USERNAME" >> Test-credentials.xcconfig
+          echo "$TEST_PASSWORD" >> Test-credentials.xcconfig
       - name: Validate test credentials xcconfig
         run: ./scripts/validate-xcconfig.sh Test-credentials.xcconfig TEST_USERNAME TEST_PASSWORD
       - name: ${{ matrix.only-testing}} on ${{ matrix.device }} ${{ matrix.deployment_target_version }}
