@@ -12,6 +12,10 @@ jobs:
   build-tests:
     name: Build project and cache build products
     runs-on: macos-26
+    strategy:
+      matrix:
+        device: ["iPhone 17"] # "iPhone 17 Pro", "iPad (A16)"
+        deployment_target_version: ["26.4"]
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -34,13 +38,13 @@ jobs:
       - name: List available simulators
         run: xcodebuild -scheme BikeIndex -project BikeIndex.xcodeproj -showdestinations
       - name: Build
-        run: fastlane scan --build_for_testing=true
+        run: fastlane scan --build_for_testing=true --device="${{ matrix.device }}" --deployment-target-version="${{ matrix.deployment_target_version }}"
       - name: Save build products directory
         id: cache-build-save
         uses: actions/cache/save@v5
         with:
           path: build
-          key: cache-build-${{ github.sha }}
+          key: cache-build-${{ github.sha }}-${{ matrix.device }}-${{ matrix.deployment_target_version }}
 
   test-suite:
     needs: build-tests
@@ -63,7 +67,7 @@ jobs:
         uses: actions/cache/restore@v5
         with:
           path: build
-          key: cache-build-${{ github.sha }}
+          key: cache-build-${{ github.sha }}-${{ matrix.device }}-${{ matrix.deployment_target_version }}
       - name: Set up xcconfig (see README.md#quick-start)
         env:
           BIKE_INDEX_DEVELOPMENT_XCCONFIG: ${{ secrets.BIKE_INDEX_DEVELOPMENT_XCCONFIG }}
