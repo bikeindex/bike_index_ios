@@ -77,7 +77,5 @@ for project in xcodeproj.pbxproj.projects {
     }
 }
 
-
-
 try xcodeproj.write(path: projectPath)
 

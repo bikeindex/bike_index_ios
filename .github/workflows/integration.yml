@@ -2,11 +2,23 @@ name: Continuous Integration
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: false
+
 on:
   push:
     branches: [ "main" ]
   pull_request:
-  workflow_call: # allows delivery.yml to invoke test-suite
+    branches-ignore: ["release/v*"]
+  workflow_call:
+    inputs:
+      device:
+        type: string
+        default: "iPhone 17"
+      deployment_target_version:
+        type: string
+        default: "26.4"
 
 jobs:
   build-tests:
@@ -14,8 +26,8 @@ jobs:
     runs-on: macos-26
     strategy:
       matrix:
-        device: ["iPhone 17"] # "iPhone 17 Pro", "iPad (A16)"
-        deployment_target_version: ["26.4"]
+        device: ["${{ inputs.device }}"]
+        deployment_target_version: ["${{ inputs.deployment_target_version }}"]
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -52,12 +64,13 @@ jobs:
 
   test-suite:
     needs: build-tests
+    if: needs.build-tests.result == 'success'
     runs-on: macos-26
     name: ${{ matrix.device }} ${{ matrix.only-testing }} ${{ matrix.deployment_target_version }}
     strategy:
       matrix:
-        device: ["iPhone 17"] # "iPhone 17 Pro", "iPad (A16)"
-        deployment_target_version: ["26.4"]
+        device: ["${{ inputs.device }}"]
+        deployment_target_version: ["${{ inputs.deployment_target_version }}"]
         only-testing: ["UnitTests", "UITests"]
     steps:
       - name: Checkout

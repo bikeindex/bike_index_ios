@@ -3,6 +3,10 @@ permissions:
   contents: read
   actions: read
 
+concurrency:
+  group: cd-${{ github.ref }}
+  cancel-in-progress: false
+
 on:
   pull_request:
     branch: ["release/v*"]
@@ -52,6 +56,10 @@ jobs:
                 core.setOutput('status', 'completed');
                 core.setOutput('conclusion', run.conclusion);
                 console.log(`Found completed integration run: ${run.html_url}, conclusion: ${run.conclusion}`);
+
+                if (run.conclusion !== 'success') {
+                  core.setFailed(`Integration tests failed with conclusion: ${run.conclusion}`);
+                }
               } else {
                 core.setFailed('No existing integration run found for this commit SHA. Run integration.yml first.');
               }
@@ -68,8 +76,9 @@ jobs:
           script: |
             const runId = ${{ needs.check-integration-tests.outputs.run_id }};
             let completed = false;
+            let interval = 30;
             while (!completed) {
-              await new Promise(resolve => setTimeout(resolve, 30000));
+              await new Promise(resolve => setTimeout(resolve, interval * 1000));
               const { data: run } = await github.rest.actions.getWorkflowRun({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -82,22 +91,15 @@ jobs:
                 }
                 completed = true;
               } else {
-                console.log(`Run still ${run.status}...`);
+                interval = Math.min(interval * 2, 120);
+                console.log(`Run still ${run.status}, next check in ${interval}s...`);
               }
             }
 
-  validate-integration-result:
-    needs: check-integration-tests
-    if: always() && needs.check-integration-tests.outputs.status == 'completed' && needs.check-integration-tests.outputs.conclusion != 'success'
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Integration tests failed with conclusion: ${{ needs.check-integration-tests.outputs.conclusion }}" && exit 1
-
   build-release:
-    if: startsWith(github.head_ref, 'release/v')
     name: Build release archive and distribute
     runs-on: macos-26
-    needs: [check-integration-tests, wait-for-integration, validate-integration-result]
+    needs: [check-integration-tests, wait-for-integration]
     steps:
       - name: Checkout
         uses: actions/checkout@v6
