@@ -76,7 +76,7 @@ jobs:
           echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
       - name: ${{ matrix.only-testing}} on ${{ matrix.device }} ${{ matrix.deployment_target_version }}
         run: fastlane scan --only-testing="${{ matrix.only-testing }}" --device="${{ matrix.device }}" --deployment-target-version="${{ matrix.deployment_target_version }}" --test_without_building=true
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: test_output_${{ matrix.device }}_${{ matrix.only-testing }}
