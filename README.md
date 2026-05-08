@@ -29,9 +29,26 @@ To get started:
 3. If building for a device you will need to provide a bundle identifier and your development team
 4. Build and run!
 
+#### Config Validation
+
+To validate that your xcconfig files have all required keys with non-empty values:
+
+```bash
+# Required
+./scripts/validate-xcconfig.sh BikeIndex-development.xcconfig API_CLIENT_ID API_SECRET API_HOST API_PORT API_REDIRECT_URI DEVELOPMENT_TEAM PRODUCT_BUNDLE_IDENTIFIER
+
+# Optional for Release builds
+./scripts/validate-xcconfig.sh BikeIndex-production.xcconfig API_CLIENT_ID API_SECRET API_HOST API_PORT API_REDIRECT_URI DEVELOPMENT_TEAM PRODUCT_BUNDLE_IDENTIFIER
+
+# Recommended optional for UI Tests
+./scripts/validate-xcconfig.sh Test-credentials.xcconfig TEST_USERNAME TEST_PASSWORD
+```
+
+This same script is used in CI to catch missing configuration before builds. Run it locally after setting up your xcconfig files from the templates to verify everything is configured correctly.
+
 ### Development
 
-- Requirements: Xcode 26.2
+- Requirements: Xcode 26.4.1
 - Target deployment: iOS 17.2
 
 This project uses SwiftUI and SwiftData. At this time iPhone and iPad are the primary targets with a goal to include Mac support.

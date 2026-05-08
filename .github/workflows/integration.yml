@@ -30,11 +30,15 @@ jobs:
           BIKE_INDEX_DEVELOPMENT_XCCONFIG: ${{ secrets.BIKE_INDEX_DEVELOPMENT_XCCONFIG }}
         run: |
           echo "$BIKE_INDEX_DEVELOPMENT_XCCONFIG" >> BikeIndex-development.xcconfig
+      - name: Validate development xcconfig
+        run: ./scripts/validate-xcconfig.sh BikeIndex-development.xcconfig API_CLIENT_ID API_SECRET API_HOST API_PORT API_REDIRECT_URI DEVELOPMENT_TEAM PRODUCT_BUNDLE_IDENTIFIER
       - name: Set up xcconfig UI test credentials (see README.md#UI-Test-configuration)
         env:
           BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
         run: |
           echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
+      - name: Validate test credentials xcconfig
+        run: ./scripts/validate-xcconfig.sh Test-credentials.xcconfig TEST_USERNAME TEST_PASSWORD
       - name: List available simulators
         run: xcodebuild -scheme BikeIndex -project BikeIndex.xcodeproj -showdestinations
       - name: Build
@@ -73,11 +77,15 @@ jobs:
           BIKE_INDEX_DEVELOPMENT_XCCONFIG: ${{ secrets.BIKE_INDEX_DEVELOPMENT_XCCONFIG }}
         run: |
           echo "$BIKE_INDEX_DEVELOPMENT_XCCONFIG" >> BikeIndex-development.xcconfig
+      - name: Validate development xcconfig
+        run: ./scripts/validate-xcconfig.sh BikeIndex-development.xcconfig API_CLIENT_ID API_SECRET API_HOST API_PORT API_REDIRECT_URI DEVELOPMENT_TEAM PRODUCT_BUNDLE_IDENTIFIER
       - name: Set up xcconfig UI test credentials (see README.md#UI-Test-configuration)
         env:
           BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
         run: |
           echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
+      - name: Validate test credentials xcconfig
+        run: ./scripts/validate-xcconfig.sh Test-credentials.xcconfig TEST_USERNAME TEST_PASSWORD
       - name: ${{ matrix.only-testing}} on ${{ matrix.device }} ${{ matrix.deployment_target_version }}
         run: fastlane scan --only-testing="${{ matrix.only-testing }}" --device="${{ matrix.device }}" --deployment-target-version="${{ matrix.deployment_target_version }}" --test_without_building=true
       - uses: actions/upload-artifact@v6
