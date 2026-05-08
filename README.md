@@ -20,6 +20,7 @@ To get started:
 1. Copy the BikeIndex-template.xcconfig file into BikeIndex-development.xcconfig and BikeIndex-production.xcconfig files.
 	- BikeIndex-development is used for the Debug Project Configuration in Run, Test, and Analyze builds.
 	- BikeIndex-production is used for the Release Project Configuration and for Profile and Archive builds.
+    - Both config files should include Default.xcconfig.
 2. Follow the [instructions in BikeIndex-template.xcconfig](BikeIndex-template.xcconfig#L11-L18) and these steps to register your own OAuth application with bikeindex.org/oauth
 	- Sign in to the OAuth admin page at https://bikeindex.org/oauth/applications and create an new application
 	- (or sign in to your localhost instance and create an API key)

@@ -32,13 +32,16 @@ jobs:
         env:
           MATCH_API_KEY_JSON_CONTENT: ${{ secrets.MATCH_API_KEY_JSON_CONTENT }}
         run: echo "$MATCH_API_KEY_JSON_CONTENT" > ./fastlane/api-key.json
-      - name: Set up xcconfig (see README.md#quick-start)
         env:
-          BIKE_INDEX_PRODUCTION_XCCONFIG: ${{ secrets.BIKE_INDEX_PRODUCTION_XCCONFIG }}
+          API_SECRET: ${{ secrets.API_SECRET }}
+          API_CLIENT_ID: ${{ secrets.API_CLIENT_ID }}
+          DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
         run: |
-          echo "$BIKE_INDEX_PRODUCTION_XCCONFIG" >> BikeIndex-production.xcconfig
+          echo "$API_SECRET" >> BikeIndex-production.xcconfig
+          echo "$API_CLIENT_ID" >> BikeIndex-production.xcconfig
+          echo "$DEVELOPMENT_TEAM" >> BikeIndex-production.xcconfig
       - name: Validate production xcconfig
-        run: ./scripts/validate-xcconfig.sh BikeIndex-production.xcconfig API_CLIENT_ID API_SECRET API_HOST API_PORT API_REDIRECT_URI DEVELOPMENT_TEAM PRODUCT_BUNDLE_IDENTIFIER
+        run: ./scripts/validate-xcconfig.sh BikeIndex-production.xcconfig API_CLIENT_ID API_SECRET DEVELOPMENT_TEAM
       - name: Load codesigning
         env:
           CODESIGNING_IOS_READ_TOKEN: ${{ secrets.CODESIGNING_IOS_READ_TOKEN }}

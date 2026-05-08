@@ -1,0 +1,20 @@
+//
+//  Default.xcconfig
+//  BikeIndex
+//
+//  Created by Jack on 5/8/26.
+//
+
+CURRENT_PROJECT_VERSION = 69
+MARKETING_VERSION = 1.6.2
+
+API_HOST = https:\/\/bikeindex.org
+API_PORT = 443
+API_REDIRECT_URI = bikeindex:\/\/
+
+// Recommended to provide your own bundle identifier, please see `BikeIndex-template.xcconfig`.
+PRODUCT_BUNDLE_IDENTIFIER = org.bikeindex.app
+
+// Deactivated for compatibility with GitHub Actions
+// TODO: Figure out how to re-enable in continuous delivery builds
+APP_SHORTCUTS_ENABLE_FLEXIBLE_MATCHING = NO
