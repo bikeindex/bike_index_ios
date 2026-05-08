@@ -18,15 +18,16 @@ The public beta for pre-release builds is available at https://testflight.apple.
 To get started:
 
 1. Copy the BikeIndex-template.xcconfig file into BikeIndex-development.xcconfig and BikeIndex-production.xcconfig files.
-	- BikeIndex-development is used for the Debug Project Configuration in Run, Test, and Analyze builds.
-	- BikeIndex-production is used for the Release Project Configuration and for Profile and Archive builds.
-    - Both config files should include Default.xcconfig.
+	1. BikeIndex-development is used for the Debug Project Configuration in Run, Test, and Analyze builds.
+	2. BikeIndex-production is used for the Release Project Configuration and for Profile and Archive builds.
+	3. Both config files should include Default.xcconfig.
 2. Follow the [instructions in BikeIndex-template.xcconfig](BikeIndex-template.xcconfig#L11-L18) and these steps to register your own OAuth application with bikeindex.org/oauth
-	- Sign in to the OAuth admin page at https://bikeindex.org/oauth/applications and create an new application
-	- (or sign in to your localhost instance and create an API key)
-	- Add a Redirect URI / callback URL with value `bikeindex://` to the application on the oauth admin page. Paste this value into your .xcconfig file `API_REDIRECT_URI=bikeindex:\/\/` — the slashes must be escaped.
-	- Copy the application ID from the OAuth admin page and paste it into your .xcconfig file `API_CLIENT_ID` value.
-	- Copy the secret from the OAuth admin page and paste it into your .xcconfig file `API_SECRET` value.
+	1. Sign in to the OAuth admin page at https://bikeindex.org/oauth/applications and create an new application
+	2. (or sign in to your localhost instance and create an API key)
+	3. Add a Redirect URI / callback URL with value `bikeindex://` to the application on the oauth admin page.
+	4. (You could customize the redirect URI and you'll need to escape the forward-slashes the same way that the URI in Default.xcconfig does.)
+	5. Copy the application ID from the OAuth admin page and paste it into your .xcconfig file `API_CLIENT_ID` value.
+	6. Copy the secret from the OAuth admin page and paste it into your .xcconfig file `API_SECRET` value.
 3. If building for a device you will need to provide a bundle identifier and your development team
 4. Build and run!
 
@@ -36,10 +37,10 @@ To validate that your xcconfig files have all required keys with non-empty value
 
 ```bash
 # Required
-./scripts/validate-xcconfig.sh BikeIndex-development.xcconfig API_CLIENT_ID API_SECRET API_HOST API_PORT API_REDIRECT_URI DEVELOPMENT_TEAM PRODUCT_BUNDLE_IDENTIFIER
+./scripts/validate-xcconfig.sh BikeIndex-development.xcconfig API_CLIENT_ID API_SECRET DEVELOPMENT_TEAM
 
 # Optional for Release builds
-./scripts/validate-xcconfig.sh BikeIndex-production.xcconfig API_CLIENT_ID API_SECRET API_HOST API_PORT API_REDIRECT_URI DEVELOPMENT_TEAM PRODUCT_BUNDLE_IDENTIFIER
+./scripts/validate-xcconfig.sh BikeIndex-production.xcconfig API_CLIENT_ID API_SECRET DEVELOPMENT_TEAM
 
 # Recommended optional for UI Tests
 ./scripts/validate-xcconfig.sh Test-credentials.xcconfig TEST_USERNAME TEST_PASSWORD
