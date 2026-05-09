@@ -6,64 +6,66 @@
 //
 
 import SwiftData
-import XCTest
+import Testing
+import Foundation
 
 @testable import BikeIndex
 
-final class MigrationPlan1_2Tests: XCTestCase {
+@MainActor
+struct MigrationPlan1_2Tests {
 
-    func test_modelContainer_with_migration_plan_initializes() throws {
+    @Test func modelContainer_with_migration_plan_initializes() throws {
         let container = try ModelContainer(
             for:
                 Schema1.Bike.self,
-            Schema2.Bike.self,
-            User.self,
-            AuthenticatedUser.self,
-            ScannedBike.self,
-            AutocompleteManufacturer.self,
-            FullPublicImage.self,
-            Component.self,
-            StolenBikeRecord.self,
-            migrationPlan: MigrationPlan_1_2.self,
-            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+                Schema2.Bike.self,
+                User.self,
+                AuthenticatedUser.self,
+                ScannedBike.self,
+                AutocompleteManufacturer.self,
+                FullPublicImage.self,
+                Component.self,
+                StolenBikeRecord.self,
+                migrationPlan: MigrationPlan_1_2.self,
+                configurations: ModelConfiguration(isStoredInMemoryOnly: true)
         )
 
         let context = ModelContext(container)
-        XCTAssertNoThrow(try context.fetch(FetchDescriptor<Schema2.Bike>()))
+        #expect(throws: Never.self) { try context.fetch(FetchDescriptor<Schema2.Bike>()) }
     }
 
-    func test_migration_transforms_extraRegistrationNumber_from_Int_to_String() {
-        XCTAssertEqual(intToOptionalString(42), "42")
+    @Test func migration_transforms_extraRegistrationNumber_from_Int_to_String() {
+        #expect(intToOptionalString(42) == "42")
     }
 
-    func test_migration_handles_nil_extraRegistrationNumber() {
-        XCTAssertNil(intToOptionalString(nil))
+    @Test func migration_handles_nil_extraRegistrationNumber() {
+        #expect(intToOptionalString(nil) == nil)
     }
 
-    func test_migration_handles_large_int_value() {
-        XCTAssertEqual(intToOptionalString(2_147_483_647), "2147483647")
+    @Test func migration_handles_large_int_value() {
+        #expect(intToOptionalString(2_147_483_647) == "2147483647")
     }
 
-    func test_migration_handles_zero_value() {
-        XCTAssertEqual(intToOptionalString(0), "0")
+    @Test func migration_handles_zero_value() {
+        #expect(intToOptionalString(0) == "0")
     }
 
-    func test_migration_handles_negative_int_value() {
-        XCTAssertEqual(intToOptionalString(-1), "-1")
+    @Test func migration_handles_negative_int_value() {
+        #expect(intToOptionalString(-1) == "-1")
     }
 
-    func test_schema2_bike_creation_with_string_extraRegistrationNumber() throws {
+    @Test func schema2_bike_creation_with_string_extraRegistrationNumber() throws {
         let container = try ModelContainer(
             for:
                 Schema2.Bike.self,
-            User.self,
-            AuthenticatedUser.self,
-            ScannedBike.self,
-            AutocompleteManufacturer.self,
-            FullPublicImage.self,
-            Component.self,
-            StolenBikeRecord.self,
-            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+                User.self,
+                AuthenticatedUser.self,
+                ScannedBike.self,
+                AutocompleteManufacturer.self,
+                FullPublicImage.self,
+                Component.self,
+                StolenBikeRecord.self,
+                configurations: ModelConfiguration(isStoredInMemoryOnly: true)
         )
 
         let context = ModelContext(container)
@@ -89,24 +91,24 @@ final class MigrationPlan1_2Tests: XCTestCase {
             predicate: #Predicate { $0.identifier == 99999 }
         )
         let results = try context.fetch(descriptor)
-        XCTAssertEqual(results.count, 1)
-        XCTAssertEqual(results.first?.extraRegistrationNumber, "REG-12345")
+        #expect(results.count == 1)
+        #expect(results.first?.extraRegistrationNumber == "REG-12345")
     }
 
-    func test_schema2_bike_full_migration_roundtrip() throws {
+    @Test func schema2_bike_full_migration_roundtrip() throws {
         let container = try ModelContainer(
             for:
                 Schema1.Bike.self,
-            Schema2.Bike.self,
-            User.self,
-            AuthenticatedUser.self,
-            ScannedBike.self,
-            AutocompleteManufacturer.self,
-            FullPublicImage.self,
-            Component.self,
-            StolenBikeRecord.self,
-            migrationPlan: MigrationPlan_1_2.self,
-            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+                Schema2.Bike.self,
+                User.self,
+                AuthenticatedUser.self,
+                ScannedBike.self,
+                AutocompleteManufacturer.self,
+                FullPublicImage.self,
+                Component.self,
+                StolenBikeRecord.self,
+                migrationPlan: MigrationPlan_1_2.self,
+                configurations: ModelConfiguration(isStoredInMemoryOnly: true)
         )
 
         let context = ModelContext(container)
@@ -181,17 +183,17 @@ final class MigrationPlan1_2Tests: XCTestCase {
             predicate: #Predicate { $0.identifier == 54321 }
         )
         let results = try context.fetch(descriptor)
-        XCTAssertEqual(results.count, 1)
-        let migrated = try XCTUnwrap(results.first)
+        #expect(results.count == 1)
+        guard let migrated = results.first else { Issue.record("No migrated bike found"); return }
 
         // Core migration assertion: Int? → String?
-        XCTAssertEqual(migrated.extraRegistrationNumber, "7777")
+        #expect(migrated.extraRegistrationNumber == "7777")
 
         // Verify other fields were preserved correctly
-        XCTAssertEqual(migrated.manufacturerName, "Giant")
-        XCTAssertEqual(migrated.title, "Old Schema Bike")
-        XCTAssertEqual(migrated.typeOfCycle, .bike)
-        XCTAssertEqual(migrated.status, .stolen)
+        #expect(migrated.manufacturerName == "Giant")
+        #expect(migrated.title == "Old Schema Bike")
+        #expect(migrated.typeOfCycle == .bike)
+        #expect(migrated.status == .stolen)
     }
 }
 
