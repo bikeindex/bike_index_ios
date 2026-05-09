@@ -5,9 +5,9 @@
 //  Created by Jack on 5/9/26.
 //
 
+import Foundation
 import SwiftData
 import Testing
-import Foundation
 
 @testable import BikeIndex
 
@@ -18,16 +18,16 @@ struct MigrationPlan1_2Tests {
         let container = try ModelContainer(
             for:
                 Schema1.Bike.self,
-                Schema2.Bike.self,
-                User.self,
-                AuthenticatedUser.self,
-                ScannedBike.self,
-                AutocompleteManufacturer.self,
-                FullPublicImage.self,
-                Component.self,
-                StolenBikeRecord.self,
-                migrationPlan: MigrationPlan_1_2.self,
-                configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+            Schema2.Bike.self,
+            User.self,
+            AuthenticatedUser.self,
+            ScannedBike.self,
+            AutocompleteManufacturer.self,
+            FullPublicImage.self,
+            Component.self,
+            StolenBikeRecord.self,
+            migrationPlan: MigrationPlan_1_2.self,
+            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
         )
 
         let context = ModelContext(container)
@@ -58,14 +58,14 @@ struct MigrationPlan1_2Tests {
         let container = try ModelContainer(
             for:
                 Schema2.Bike.self,
-                User.self,
-                AuthenticatedUser.self,
-                ScannedBike.self,
-                AutocompleteManufacturer.self,
-                FullPublicImage.self,
-                Component.self,
-                StolenBikeRecord.self,
-                configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+            User.self,
+            AuthenticatedUser.self,
+            ScannedBike.self,
+            AutocompleteManufacturer.self,
+            FullPublicImage.self,
+            Component.self,
+            StolenBikeRecord.self,
+            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
         )
 
         let context = ModelContext(container)
@@ -99,16 +99,16 @@ struct MigrationPlan1_2Tests {
         let container = try ModelContainer(
             for:
                 Schema1.Bike.self,
-                Schema2.Bike.self,
-                User.self,
-                AuthenticatedUser.self,
-                ScannedBike.self,
-                AutocompleteManufacturer.self,
-                FullPublicImage.self,
-                Component.self,
-                StolenBikeRecord.self,
-                migrationPlan: MigrationPlan_1_2.self,
-                configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+            Schema2.Bike.self,
+            User.self,
+            AuthenticatedUser.self,
+            ScannedBike.self,
+            AutocompleteManufacturer.self,
+            FullPublicImage.self,
+            Component.self,
+            StolenBikeRecord.self,
+            migrationPlan: MigrationPlan_1_2.self,
+            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
         )
 
         let context = ModelContext(container)
@@ -184,7 +184,10 @@ struct MigrationPlan1_2Tests {
         )
         let results = try context.fetch(descriptor)
         #expect(results.count == 1)
-        guard let migrated = results.first else { Issue.record("No migrated bike found"); return }
+        guard let migrated = results.first else {
+            Issue.record("No migrated bike found")
+            return
+        }
 
         // Core migration assertion: Int? → String?
         #expect(migrated.extraRegistrationNumber == "7777")

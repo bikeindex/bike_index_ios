@@ -43,8 +43,10 @@ enum MigrationPlan_1_2: SchemaMigrationPlan {
                     serial: schema1Bike.serial,
                     status: schema1Bike.status,
                     stolen: schema1Bike.stolen,
-                    stolenCoordinateLatitude: schema1Bike.stolenCoordinates?.coordinate.latitude ?? .nan,
-                    stolenCoordinateLongitude: schema1Bike.stolenCoordinates?.coordinate.longitude ?? .nan,
+                    stolenCoordinateLatitude: schema1Bike.stolenCoordinates?.coordinate.latitude
+                        ?? .nan,
+                    stolenCoordinateLongitude: schema1Bike.stolenCoordinates?.coordinate.longitude
+                        ?? .nan,
                     stolenLocation: schema1Bike.stolenLocation,
                     dateStolen: schema1Bike.dateStolen,
                     locationFound: schema1Bike.locationFound,
