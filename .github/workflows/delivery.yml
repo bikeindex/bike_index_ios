@@ -28,15 +28,14 @@ jobs:
           brew install swift-sh
           ./scripts/release/strip-SnapshotPreviews.swift BikeIndex.xcodeproj
           xcodebuild -resolvePackageDependencies
-      - name: Load API key
+      - name: Load API key and xcconfig
         env:
           MATCH_API_KEY_JSON_CONTENT: ${{ secrets.MATCH_API_KEY_JSON_CONTENT }}
-        run: echo "$MATCH_API_KEY_JSON_CONTENT" > ./fastlane/api-key.json
-        env:
           API_SECRET: ${{ secrets.API_SECRET }}
           API_CLIENT_ID: ${{ secrets.API_CLIENT_ID }}
           DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
         run: |
+          echo "$MATCH_API_KEY_JSON_CONTENT" > ./fastlane/api-key.json
           echo "$API_SECRET" >> BikeIndex-production.xcconfig
           echo "$API_CLIENT_ID" >> BikeIndex-production.xcconfig
           echo "$DEVELOPMENT_TEAM" >> BikeIndex-production.xcconfig
