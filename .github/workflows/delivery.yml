@@ -31,14 +31,14 @@ jobs:
       - name: Load API key and xcconfig
         env:
           MATCH_API_KEY_JSON_CONTENT: ${{ secrets.MATCH_API_KEY_JSON_CONTENT }}
-          API_SECRET: ${{ secrets.PRODUCTION__API_SECRET }}
-          API_CLIENT_ID: ${{ secrets.PRODUCTION__API_CLIENT_ID }}
+          API_SECRET: ${{ secrets.PRODUCTION_API_SECRET }}
+          API_CLIENT_ID: ${{ secrets.PRODUCTION_API_CLIENT_ID }}
           DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
         run: |
           echo "$MATCH_API_KEY_JSON_CONTENT" > ./fastlane/api-key.json
-          echo "$API_SECRET" >> BikeIndex-production.xcconfig
-          echo "$API_CLIENT_ID" >> BikeIndex-production.xcconfig
-          echo "$DEVELOPMENT_TEAM" >> BikeIndex-production.xcconfig
+          echo "API_SECRET = $API_SECRET" >> BikeIndex-production.xcconfig
+          echo "API_CLIENT_ID = $API_CLIENT_ID" >> BikeIndex-production.xcconfig
+          echo "DEVELOPMENT_TEAM = $DEVELOPMENT_TEAM" >> BikeIndex-production.xcconfig
       - name: Validate production xcconfig
         run: ./scripts/validate-xcconfig.sh production
       - name: Load codesigning
