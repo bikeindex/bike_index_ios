@@ -23,14 +23,23 @@ jobs:
         run: brew bundle install
       - name: Set up xcconfig (see README.md#quick-start)
         env:
-          BIKE_INDEX_DEVELOPMENT_XCCONFIG: ${{ secrets.BIKE_INDEX_DEVELOPMENT_XCCONFIG }}
+          API_SECRET: ${{ secrets.DEVELOPMENT__API_SECRET }}
+          API_CLIENT_ID: ${{ secrets.DEVELOPMENT__API_CLIENT_ID }}
+          DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
         run: |
-          echo "$BIKE_INDEX_DEVELOPMENT_XCCONFIG" >> BikeIndex-development.xcconfig
+          echo '#include "Default"' >> BikeIndex-development.xcconfig
+          echo "API_SECRET = $API_SECRET" >> BikeIndex-development.xcconfig
+          echo "API_CLIENT_ID = $API_CLIENT_ID" >> BikeIndex-development.xcconfig
+          echo "DEVELOPMENT_TEAM = $DEVELOPMENT_TEAM" >> BikeIndex-development.xcconfig
       - name: Set up xcconfig UI test credentials (see README.md#UI-Test-configuration)
         env:
-          BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
+          TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
         run: |
-          echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
+          echo "TEST_USERNAME = $TEST_USERNAME" >> Test-credentials.xcconfig
+          echo "TEST_PASSWORD = $TEST_PASSWORD" >> Test-credentials.xcconfig
+      - name: Validate xcconfigs
+        run: ./scripts/validate-xcconfig.sh development && ./scripts/validate-xcconfig.sh test
       - name: List available simulators
         run: xcodebuild -scheme BikeIndex -project BikeIndex.xcodeproj -showdestinations
       - name: Build
@@ -66,14 +75,23 @@ jobs:
           key: cache-build-${{ github.sha }}
       - name: Set up xcconfig (see README.md#quick-start)
         env:
-          BIKE_INDEX_DEVELOPMENT_XCCONFIG: ${{ secrets.BIKE_INDEX_DEVELOPMENT_XCCONFIG }}
+          API_SECRET: ${{ secrets.DEVELOPMENT__API_SECRET }}
+          API_CLIENT_ID: ${{ secrets.DEVELOPMENT__API_CLIENT_ID }}
+          DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
         run: |
-          echo "$BIKE_INDEX_DEVELOPMENT_XCCONFIG" >> BikeIndex-development.xcconfig
+          echo '#include "Default"' >> BikeIndex-development.xcconfig
+          echo "API_SECRET = $API_SECRET" >> BikeIndex-development.xcconfig
+          echo "API_CLIENT_ID = $API_CLIENT_ID" >> BikeIndex-development.xcconfig
+          echo "DEVELOPMENT_TEAM = $DEVELOPMENT_TEAM" >> BikeIndex-development.xcconfig
       - name: Set up xcconfig UI test credentials (see README.md#UI-Test-configuration)
         env:
-          BIKE_INDEX_TEST_CREDENTIALS: ${{ secrets.BIKE_INDEX_TEST_CREDENTIALS }}
+          TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
         run: |
-          echo "$BIKE_INDEX_TEST_CREDENTIALS" >> Test-credentials.xcconfig
+          echo "TEST_USERNAME = $TEST_USERNAME" >> Test-credentials.xcconfig
+          echo "TEST_PASSWORD = $TEST_PASSWORD" >> Test-credentials.xcconfig
+      - name: Validate xcconfigs
+        run: ./scripts/validate-xcconfig.sh development && ./scripts/validate-xcconfig.sh test
       - name: ${{ matrix.only-testing}} on ${{ matrix.device }} ${{ matrix.deployment_target_version }}
         run: fastlane scan --only-testing="${{ matrix.only-testing }}" --device="${{ matrix.device }}" --deployment-target-version="${{ matrix.deployment_target_version }}" --test_without_building=true
       - uses: actions/upload-artifact@v5

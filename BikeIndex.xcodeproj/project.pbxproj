@@ -42,6 +42,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		041B73652FAE697E00057A7A /* BikeIndex-template.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "BikeIndex-template.xcconfig"; sourceTree = "<group>"; };
 		0423F2632E6CA34F00199160 /* .swift-format */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".swift-format"; sourceTree = "<group>"; };
 		04566C772E67475E00E3EC6E /* app-icons.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "app-icons.md"; sourceTree = "<group>"; };
 		04566C782E67475E00E3EC6E /* release-steps.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "release-steps.md"; sourceTree = "<group>"; };
@@ -51,13 +52,16 @@
 		04566C7D2E67475E00E3EC6E /* Scanfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Scanfile; sourceTree = "<group>"; };
 		04566C7F2E67475E00E3EC6E /* update-icons.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "update-icons.sh"; sourceTree = "<group>"; };
 		0496C6702CB36BED00B88D1B /* Brewfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Brewfile; sourceTree = "<group>"; };
+		04D641902FAE35B4000B5546 /* format.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = format.sh; sourceTree = "<group>"; };
+		04D641912FAE35B4000B5546 /* lint.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = lint.sh; sourceTree = "<group>"; };
+		04D641922FAE35B4000B5546 /* validate-xcconfig.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "validate-xcconfig.sh"; sourceTree = "<group>"; };
+		04D641932FAE6675000B5546 /* Default.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Default.xcconfig; sourceTree = "<group>"; };
 		04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Test-credentials.xcconfig"; sourceTree = "<group>"; };
 		04D80BB72D8673F200E29577 /* Test-credentials-template.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Test-credentials-template.xcconfig"; sourceTree = "<group>"; };
 		04F4B8F72B098ADB009442B5 /* BikeIndex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BikeIndex.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04F4B90A2B098ADE009442B5 /* UnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		04F4B9142B098ADE009442B5 /* UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		04F4B9272B098B44009442B5 /* BikeIndex-production.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "BikeIndex-production.xcconfig"; sourceTree = "<group>"; };
-		04F4B9282B098B44009442B5 /* BikeIndex-template.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "BikeIndex-template.xcconfig"; sourceTree = "<group>"; };
 		04F4B9292B098B44009442B5 /* BikeIndex-development.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "BikeIndex-development.xcconfig"; sourceTree = "<group>"; };
 		04F4B9312B098B5A009442B5 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -184,6 +188,9 @@
 		04566C802E67475E00E3EC6E /* scripts */ = {
 			isa = PBXGroup;
 			children = (
+				04D641902FAE35B4000B5546 /* format.sh */,
+				04D641912FAE35B4000B5546 /* lint.sh */,
+				04D641922FAE35B4000B5546 /* validate-xcconfig.sh */,
 				04566C7F2E67475E00E3EC6E /* update-icons.sh */,
 			);
 			path = scripts;
@@ -202,7 +209,8 @@
 				04F4B9312B098B5A009442B5 /* README.md */,
 				04F4B9292B098B44009442B5 /* BikeIndex-development.xcconfig */,
 				04F4B9272B098B44009442B5 /* BikeIndex-production.xcconfig */,
-				04F4B9282B098B44009442B5 /* BikeIndex-template.xcconfig */,
+				041B73652FAE697E00057A7A /* BikeIndex-template.xcconfig */,
+				04D641932FAE6675000B5546 /* Default.xcconfig */,
 				04D80BB72D8673F200E29577 /* Test-credentials-template.xcconfig */,
 				04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */,
 				04CDF1012D3C344100F90515 /* BikeIndex */,
@@ -495,7 +503,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BikeIndex/BikeIndex.entitlements;
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 69;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "BikeIndex/Preview\\ Content/MultipleBikeResponse_mock.json BikeIndex/Preview\\ Content";
 				DEVELOPMENT_TEAM = 8ZM5ZL6ABT;
@@ -520,7 +527,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.4;
-				MARKETING_VERSION = 1.6.2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development org.bikeindex.app";
 				SDKROOT = auto;
@@ -639,7 +645,6 @@
 				CODE_SIGN_ENTITLEMENTS = BikeIndex/BikeIndex.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 69;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "BikeIndex/Preview\\ Content/MultipleBikeResponse_mock.json BikeIndex/Preview\\ Content";
 				DEVELOPMENT_TEAM = 8ZM5ZL6ABT;
@@ -664,7 +669,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.4;
-				MARKETING_VERSION = 1.6.2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore org.bikeindex.app";
 				SDKROOT = auto;
