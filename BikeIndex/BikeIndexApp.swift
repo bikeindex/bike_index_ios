@@ -62,20 +62,26 @@ struct BikeIndexApp: App {
         let client = try! Client()
         self.client = client
 
-        let schema = Schema([
-            Bike.self,
-            User.self,
-            AuthenticatedUser.self,
-            AutocompleteManufacturer.self,
-            ScannedBike.self,  // QR sticker history
-            FullPublicImage.self,
-            StolenBikeRecord.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        let config = ModelConfiguration()
+        do {
+            let modelContainer = try ModelContainer(
+                for:
+                    Bike.self,
+                User.self,
+                AuthenticatedUser.self,
+                AutocompleteManufacturer.self,
+                ScannedBike.self,  // QR sticker history
+                FullPublicImage.self,
+                Component.self,
+                StolenBikeRecord.self,
+                migrationPlan: MigrationPlan_1_2.self,
+                configurations: config)
 
-        let sharedModelContainer = try! ModelContainer(
-            for: schema, configurations: [modelConfiguration])
-        self.sharedModelContainer = sharedModelContainer
+            self.sharedModelContainer = modelContainer
+        } catch {
+            print("@@ error! \(error)")
+            fatalError()
+        }
 
         // Give AppDelegate access to client's background session delegate
         appDelegate.backgroundSessionDelegate = client.backgroundSessionDelegate

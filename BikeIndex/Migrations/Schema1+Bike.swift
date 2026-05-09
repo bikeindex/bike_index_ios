@@ -1,8 +1,8 @@
 //
-//  Bike.swift
+//  Schema1+Bike.swift
 //  BikeIndex
 //
-//  Created by Jack on 5/4/26.
+//  Created by Jack on 11/18/23.
 //
 
 import Foundation
@@ -10,9 +10,8 @@ import MapKit
 import OSLog
 import SwiftData
 
-typealias Bike = Schema2.Bike
-
-extension Schema2 {
+/// First edition
+extension Schema1 {
     @Model final class Bike {
         /// Rails-specific Bike identifier.
         typealias BikeIdentifier = Int
@@ -96,7 +95,7 @@ extension Schema2 {
         var url: URL
         var apiUrl: URL?
         var publicImages: [String]
-        @Relationship var fullPublicImages: [FullPublicImage]
+        var fullPublicImages: [FullPublicImage]
         var isStockImage: Bool = false
 
         // MARK: - Full Bike fields
@@ -106,18 +105,17 @@ extension Schema2 {
         /// Date the bike was most-recently updated. Note that this is read-only from the API.
         var updatedAt: Date?
 
-        var extraRegistrationNumber: String?
+        var extraRegistrationNumber: Int?
         var rearTireNarrow: Bool?
         var testBike: Bool?
-        var rearWheelSizeISOBSD: Int?
-        var frontWheelSizeISOBSD: Int?
+        var rearWheelSizeISOBSD: Bool?
+        var frontWheelSizeISOBSD: Bool?
         var handlebarTypeSlug: String?
         var frameMaterialSlug: String?
         var frontGearTypeSlug: String?
         var rearGearTypeSlug: String?
         var additionalRegistration: String?
-        @Relationship var stolenRecord: StolenBikeRecord?
-        @Relationship var components: [Component]
+        var components: [String] = []
 
         struct Constants {
             /// The range of supported years for Bike models
@@ -162,18 +160,17 @@ extension Schema2 {
             isStockImage: Bool = false,
             createdAt: Date? = nil,
             updatedAt: Date? = nil,
-            extraRegistrationNumber: String? = nil,
+            extraRegistrationNumber: Int? = nil,
             rearTireNarrow: Bool? = nil,
             testBike: Bool? = nil,
-            rearWheelSizeISOBSD: Int? = nil,
-            frontWheelSizeISOBSD: Int? = nil,
+            rearWheelSizeISOBSD: Bool? = nil,
+            frontWheelSizeISOBSD: Bool? = nil,
             handlebarTypeSlug: String? = nil,
             frameMaterialSlug: String? = nil,
             frontGearTypeSlug: String? = nil,
             rearGearTypeSlug: String? = nil,
             additionalRegistration: String? = nil,
-            stolenRecord: StolenBikeRecord? = nil,
-            components: [Component] = []
+            components: [String] = []
         ) {
             self.identifier = identifier
             self.title = title
@@ -219,7 +216,6 @@ extension Schema2 {
             self.frontGearTypeSlug = frontGearTypeSlug
             self.rearGearTypeSlug = rearGearTypeSlug
             self.additionalRegistration = additionalRegistration
-            self.stolenRecord = stolenRecord
             self.components = components
         }
 
@@ -248,8 +244,6 @@ extension Schema2 {
             fullPublicImages = []
             createdAt = nil
             updatedAt = nil
-
-            components = []
         }
 
         // https://www.hackingwithswift.com/quick-start/swiftdata/how-to-create-derived-attributes-with-swiftdata
@@ -261,20 +255,6 @@ extension Schema2 {
             } else if keyPath == \.year {
                 yearString = year.map(String.init) ?? Constants.unknownYear
             }
-        }
-    }
-}
-
-extension Bike {
-    // MARK: - Accessors for UI display
-
-    @Transient var displayTitle: String {
-        if let year {
-            String(year) + " " + manufacturerName
-        } else if let serial {
-            manufacturerName + " " + serial
-        } else {
-            manufacturerName
         }
     }
 }
