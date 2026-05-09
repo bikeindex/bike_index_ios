@@ -23,8 +23,8 @@ jobs:
         run: brew bundle install
       - name: Set up xcconfig (see README.md#quick-start)
         env:
-          API_SECRET: ${{ secrets.API_SECRET }}
-          API_CLIENT_ID: ${{ secrets.API_CLIENT_ID }}
+          API_SECRET: ${{ secrets.DEVELOPMENT__API_SECRET }}
+          API_CLIENT_ID: ${{ secrets.DEVELOPMENT__API_CLIENT_ID }}
           DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
         run: |
           echo "$API_SECRET" >> BikeIndex-development.xcconfig
@@ -74,8 +74,8 @@ jobs:
           key: cache-build-${{ github.sha }}
       - name: Set up xcconfig (see README.md#quick-start)
         env:
-          API_SECRET: ${{ secrets.API_SECRET }}
-          API_CLIENT_ID: ${{ secrets.API_CLIENT_ID }}
+          API_SECRET: ${{ secrets.DEVELOPMENT__API_SECRET }}
+          API_CLIENT_ID: ${{ secrets.DEVELOPMENT__API_CLIENT_ID }}
           DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
         run: |
           echo "$API_SECRET" >> BikeIndex-development.xcconfig

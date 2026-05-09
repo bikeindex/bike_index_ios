@@ -31,8 +31,8 @@ jobs:
       - name: Load API key and xcconfig
         env:
           MATCH_API_KEY_JSON_CONTENT: ${{ secrets.MATCH_API_KEY_JSON_CONTENT }}
-          API_SECRET: ${{ secrets.API_SECRET }}
-          API_CLIENT_ID: ${{ secrets.API_CLIENT_ID }}
+          API_SECRET: ${{ secrets.PRODUCTION__API_SECRET }}
+          API_CLIENT_ID: ${{ secrets.PRODUCTION__API_CLIENT_ID }}
           DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
         run: |
           echo "$MATCH_API_KEY_JSON_CONTENT" > ./fastlane/api-key.json
