@@ -5,6 +5,7 @@
 //  Created by Jack on 5/4/26.
 //
 
+import Foundation
 import SwiftData
 
 enum MigrationPlan_1_2: SchemaMigrationPlan {
@@ -42,8 +43,8 @@ enum MigrationPlan_1_2: SchemaMigrationPlan {
                     serial: schema1Bike.serial,
                     status: schema1Bike.status,
                     stolen: schema1Bike.stolen,
-                    stolenCoordinateLatitude: schema1Bike.stolenCoordinateLatitude,
-                    stolenCoordinateLongitude: schema1Bike.stolenCoordinateLongitude,
+                    stolenCoordinateLatitude: schema1Bike.stolenCoordinates?.coordinate.latitude ?? .nan,
+                    stolenCoordinateLongitude: schema1Bike.stolenCoordinates?.coordinate.longitude ?? .nan,
                     stolenLocation: schema1Bike.stolenLocation,
                     dateStolen: schema1Bike.dateStolen,
                     locationFound: schema1Bike.locationFound,
@@ -52,7 +53,7 @@ enum MigrationPlan_1_2: SchemaMigrationPlan {
                     url: schema1Bike.url,
                     apiUrl: schema1Bike.apiUrl,
                     publicImages: schema1Bike.publicImages,
-                    fullPublicImages: migrateFullPublicImages(from: schema1Bike.fullPublicImages),
+                    fullPublicImages: schema1Bike.fullPublicImages,
                     createdAt: schema1Bike.createdAt,
                     updatedAt: schema1Bike.updatedAt,
                     extraRegistrationNumber: schema1Bike.extraRegistrationNumber.map(String.init),
@@ -74,11 +75,4 @@ enum MigrationPlan_1_2: SchemaMigrationPlan {
         didMigrate: { context in
             print("@@, did migrate", context)
         })
-
-    private static func migrateFullPublicImages(from oldImages: [String]) -> [FullPublicImage] {
-        oldImages.compactMap { urlString in
-            guard let url = URL(string: urlString) else { return nil }
-            return FullPublicImage(name: "", full: url, large: url, medium: nil, thumb: nil, id: 0)
-        }
-    }
 }
