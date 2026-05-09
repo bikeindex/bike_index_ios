@@ -36,17 +36,16 @@ To get started:
 To validate that your xcconfig files have all required keys with non-empty values:
 
 ```bash
-# Required
-./scripts/validate-xcconfig.sh BikeIndex-development.xcconfig API_CLIENT_ID API_SECRET DEVELOPMENT_TEAM
+./scripts/validate-xcconfig.sh development
 
-# Optional for Release builds
-./scripts/validate-xcconfig.sh BikeIndex-production.xcconfig API_CLIENT_ID API_SECRET DEVELOPMENT_TEAM
+# Optional for local development
+./scripts/validate-xcconfig.sh production
 
-# Recommended optional for UI Tests
-./scripts/validate-xcconfig.sh Test-credentials.xcconfig TEST_USERNAME TEST_PASSWORD
+# Optional, recommended for running test suite
+./scripts/validate-xcconfig.sh test
 ```
 
-This same script is used in CI to catch missing configuration before builds. Run it locally after setting up your xcconfig files from the templates to verify everything is configured correctly.
+Run it locally after setting up your xcconfig files to verify required keys/values are present. This script is used in CI/CD as well.
 
 ### Development
 

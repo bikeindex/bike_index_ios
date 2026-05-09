@@ -41,7 +41,7 @@ jobs:
           echo "$API_CLIENT_ID" >> BikeIndex-production.xcconfig
           echo "$DEVELOPMENT_TEAM" >> BikeIndex-production.xcconfig
       - name: Validate production xcconfig
-        run: ./scripts/validate-xcconfig.sh BikeIndex-production.xcconfig API_CLIENT_ID API_SECRET DEVELOPMENT_TEAM
+        run: ./scripts/validate-xcconfig.sh production
       - name: Load codesigning
         env:
           CODESIGNING_IOS_READ_TOKEN: ${{ secrets.CODESIGNING_IOS_READ_TOKEN }}

@@ -1,37 +1,56 @@
 #!/usr/bin/env bash
 # Validate that an XCConfig file contains all required keys with non-empty values.
-# Required keys are documented in:
-# - BikeIndex-template.xcconfig
-# - Test-credentials-template.xcconfig
 #
-# Usage: ./scripts/validate-xcconfig.sh <xcconfig-file> <key1> [key2] ...
+# Usage: ./scripts/validate-xcconfig.sh <environment>
+#   environment: "test", "development", or "production"
 #
-# Example:
-#   ./scripts/validate-xcconfig.sh Test-credentials.xcconfig \
-#     TEST_USERNAME TEST_PASSWORD
+# Validates the following files and keys:
+#   test          -> Test-credentials.xcconfig (TEST_USERNAME, TEST_PASSWORD)
+#   development   -> BikeIndex-development.xcconfig (API_SECRET, API_CLIENT_ID, DEVELOPMENT_TEAM)
+#   production    -> BikeIndex-production.xcconfig (API_SECRET, API_CLIENT_ID, DEVELOPMENT_TEAM)
 
 set -euo pipefail
 
-if [[ $# -lt 2 ]]; then
-  echo "Usage: $0 <xcconfig-file> <key1> [key2] ..."
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+if [[ $# -ne 1 ]]; then
+  echo "Usage: $0 <test|development|production>"
   exit 1
 fi
 
-FILE="$1"
-shift
+ENV="$1"
 
-if [[ ! -f "$FILE" ]]; then
-  echo "ERROR: File not found: $FILE"
+case "$ENV" in
+  test)
+    FILE="Test-credentials.xcconfig"
+    KEYS=(TEST_USERNAME TEST_PASSWORD)
+    ;;
+  development)
+    FILE="BikeIndex-development.xcconfig"
+    KEYS=(API_SECRET API_CLIENT_ID DEVELOPMENT_TEAM)
+    ;;
+  production)
+    FILE="BikeIndex-production.xcconfig"
+    KEYS=(API_SECRET API_CLIENT_ID DEVELOPMENT_TEAM)
+    ;;
+  *)
+    echo "ERROR: Invalid environment '$ENV'. Must be one of: test, development, production"
+    exit 1
+    ;;
+esac
+
+FILE_PATH="$PROJECT_ROOT/$FILE"
+
+if [[ ! -f "$FILE_PATH" ]]; then
+  echo "ERROR: File not found: $FILE_PATH"
   exit 1
 fi
 
 MISSING=()
 
-for key in "$@"; do
-  # Match lines like "KEY = value" where value is non-empty and does not start with "//".
-  # The regex requires at least one character after "=" (plus optional whitespace),
-  # and that first character is NOT "/" (to exclude commented-out keys).
-  if ! grep -qE "^${key}[[:space:]]*=[[:space:]]+[^/]" "$FILE"; then
+for key in "${KEYS[@]}"; do
+  if ! grep -qE "^${key}[[:space:]]*=[[:space:]]+[^/]" "$FILE_PATH"; then
     MISSING+=("$key")
   fi
 done
@@ -44,4 +63,4 @@ if [[ ${#MISSING[@]} -gt 0 ]]; then
   exit 1
 fi
 
-echo "OK: All required keys present in $FILE"
+echo "OK: All required keys present in $FILE ($ENV)"
