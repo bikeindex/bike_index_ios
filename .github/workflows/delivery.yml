@@ -36,6 +36,7 @@ jobs:
           DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
         run: |
           echo "$MATCH_API_KEY_JSON_CONTENT" > ./fastlane/api-key.json
+          echo '#include "Default"' >> BikeIndex-production.xcconfig
           echo "API_SECRET = $API_SECRET" >> BikeIndex-production.xcconfig
           echo "API_CLIENT_ID = $API_CLIENT_ID" >> BikeIndex-production.xcconfig
           echo "DEVELOPMENT_TEAM = $DEVELOPMENT_TEAM" >> BikeIndex-production.xcconfig

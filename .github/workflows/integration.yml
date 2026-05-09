@@ -27,6 +27,7 @@ jobs:
           API_CLIENT_ID: ${{ secrets.DEVELOPMENT__API_CLIENT_ID }}
           DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
         run: |
+          echo '#include "Default"' >> BikeIndex-development.xcconfig
           echo "API_SECRET = $API_SECRET" >> BikeIndex-development.xcconfig
           echo "API_CLIENT_ID = $API_CLIENT_ID" >> BikeIndex-development.xcconfig
           echo "DEVELOPMENT_TEAM = $DEVELOPMENT_TEAM" >> BikeIndex-development.xcconfig
@@ -78,6 +79,7 @@ jobs:
           API_CLIENT_ID: ${{ secrets.DEVELOPMENT__API_CLIENT_ID }}
           DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
         run: |
+          echo '#include "Default"' >> BikeIndex-development.xcconfig
           echo "API_SECRET = $API_SECRET" >> BikeIndex-development.xcconfig
           echo "API_CLIENT_ID = $API_CLIENT_ID" >> BikeIndex-development.xcconfig
           echo "DEVELOPMENT_TEAM = $DEVELOPMENT_TEAM" >> BikeIndex-development.xcconfig
