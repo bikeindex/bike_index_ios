@@ -73,9 +73,14 @@ struct BikeIndexApp: App {
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
-        let sharedModelContainer = try! ModelContainer(
-            for: schema, configurations: [modelConfiguration])
-        self.sharedModelContainer = sharedModelContainer
+        do {
+            let sharedModelContainer = try ModelContainer(
+                for: schema, configurations: [modelConfiguration])
+            self.sharedModelContainer = sharedModelContainer
+        } catch {
+            print(error)
+            fatalError(error.localizedDescription)
+        }
 
         // Give AppDelegate access to client's background session delegate
         appDelegate.backgroundSessionDelegate = client.backgroundSessionDelegate
