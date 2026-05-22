@@ -101,6 +101,32 @@ struct DatabaseGalleryView: View {
                 Text(
                     "Full Public Images: \(bike.fullPublicImages.compactMap { $0.full?.absoluteString }.joined())"
                 )
+                Divider()
+                Text("Ignore Extra Registration Number: \(String(describing: bike.ignore_extraRegistrationNumber))")
+                if let extraRegistration = bike.extraRegistration {
+                    Text("Extra Registration: \(extraRegistration)")
+                }
+                if let rearTireNarrow = bike.rearTireNarrow {
+                    Text("Rear Tire Narrow: \(rearTireNarrow)")
+                }
+                if let testBike = bike.testBike {
+                    Text("Test Bike: \(testBike)")
+                }
+                if let rearWheelSizeISOBSD = bike.rearWheelSizeISOBSD {
+                    Text("Rear Wheel Size ISO/BSD: \(rearWheelSizeISOBSD)")
+                }
+                if let frontWheelSizeISOBSD = bike.frontWheelSizeISOBSD {
+                    Text("Front Wheel Size ISO/BSD: \(frontWheelSizeISOBSD)")
+                }
+                Text("Handlebar Type Slug: \(bike.handlebarTypeSlug ?? "")")
+                Text("Frame Material Slug: \(bike.frameMaterialSlug ?? "")")
+                Text("Front Gear Type Slug: \(bike.frontGearTypeSlug ?? "")")
+                Text("Rear Gear Type Slug: \(bike.rearGearTypeSlug ?? "")")
+                Text("Additional Registration: \(bike.additionalRegistration ?? "")")
+                if let stolenRecord = bike.stolenRecord {
+                    Text("Stolen Record: \(String(describing: stolenRecord))")
+                }
+                Text("Components: \(bike.components.map { String(describing: $0) }.joined(separator: ", "))")
             }
 
             // MARK: - AutocompleteManufacturers
