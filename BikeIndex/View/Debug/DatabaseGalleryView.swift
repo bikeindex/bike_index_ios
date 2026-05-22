@@ -102,7 +102,9 @@ struct DatabaseGalleryView: View {
                     "Full Public Images: \(bike.fullPublicImages.compactMap { $0.full?.absoluteString }.joined())"
                 )
                 Divider()
-                Text("Ignore Extra Registration Number: \(String(describing: bike.ignore_extraRegistrationNumber))")
+                Text(
+                    "Ignore Extra Registration Number: \(String(describing: bike.ignore_extraRegistrationNumber))"
+                )
                 if let extraRegistration = bike.extraRegistration {
                     Text("Extra Registration: \(extraRegistration)")
                 }
@@ -126,7 +128,9 @@ struct DatabaseGalleryView: View {
                 if let stolenRecord = bike.stolenRecord {
                     Text("Stolen Record: \(String(describing: stolenRecord))")
                 }
-                Text("Components: \(bike.components.map { String(describing: $0) }.joined(separator: ", "))")
+                Text(
+                    "Components: \(bike.components.map { String(describing: $0) }.joined(separator: ", "))"
+                )
             }
 
             // MARK: - AutocompleteManufacturers
