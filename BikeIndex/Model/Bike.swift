@@ -103,7 +103,10 @@ import SwiftData
     /// Date the bike was most-recently updated. Note that this is read-only from the API.
     var updatedAt: Date?
 
-    var extraRegistrationNumber: String?
+    @Attribute(originalName: "extraRegistrationNumber")
+    var ignore_extraRegistrationNumber: Int? = nil
+    /// API name: "extraRegistrationNumber".
+    var extraRegistration: String?
     var rearTireNarrow: Bool?
     var testBike: Bool?
     var rearWheelSizeISOBSD: Int?
@@ -206,7 +209,7 @@ import SwiftData
         self.isStockImage = isStockImage
         self.createdAt = createdAt
         self.updatedAt = updatedAt
-        self.extraRegistrationNumber = extraRegistrationNumber
+        self.extraRegistration = extraRegistrationNumber
         self.rearTireNarrow = rearTireNarrow
         self.testBike = testBike
         self.rearWheelSizeISOBSD = rearWheelSizeISOBSD

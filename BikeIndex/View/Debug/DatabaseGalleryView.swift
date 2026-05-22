@@ -38,9 +38,14 @@ struct DatabaseGalleryView: View {
             // MARK: - Bikes
             DataModelDebugView(models: bikes) { bike in
                 Text("ID: \(bike.identifier, format: .number.grouping(.never))")
+                Text("Registry Name: \(bike.registryName ?? "")")
+                if let registryURL = bike.registryURL {
+                    Text("Registry URL: \(registryURL)")
+                }
                 Text("Owner [UUID]: \(bike.owner?.persistentModelID.storeIdentifier ?? "Empty")")
                 Text("Auth Owner [ID]: \(bike.authenticatedOwner?.identifier ?? "Empty")")
                 Text("Description: \(bike.bikeDescription ?? "")")
+                Text("Paint Description: \(bike.paintDescription ?? "")")
                 Text("Frame Model: \(String(describing: bike.frameModel))")
                 Text("Color Primary: \(bike.frameColorPrimary.displayValue)")
                 if let frameColorSecondary = bike.frameColorSecondary {
@@ -51,23 +56,32 @@ struct DatabaseGalleryView: View {
                 }
                 Text("Frame Colors: \(bike.frameColors.map { $0.displayValue }.joined())")
                 Text("Manufacturer Name: \(bike.manufacturerName)")
-                if let year = bike.year {
-                    Text("Year: \(year))")
+                if let manufacturerID = bike.manufacturerID {
+                    Text("Manufacturer ID: \(manufacturerID)")
                 }
+                if let year = bike.year {
+                    Text(verbatim: "Year: \(year)")
+                }
+                Text("Year String: \(bike.yearString)")
                 Text("Type Of Cycle: \(bike.typeOfCycle.name)")
                 Text("Type Of Propulsion: \(bike.typeOfPropulsion.name)")
                 if let serial = bike.serial {
                     Text("Serial: \(serial))")
                 }
                 Text("Status: \(bike.status.displayName)")
+                Text("Status String: \(bike.statusString)")
                 if let stolenCoordinates = bike.stolenCoordinates {
                     Text("Stolen Coordinates: \(stolenCoordinates))")
                 }
+                Text("Stolen: \(String(bike.stolen))")
                 if let stolenLocation = bike.stolenLocation {
                     Text("Stolen Location: \(stolenLocation))")
                 }
                 if let dateStolen = bike.dateStolen {
                     Text("Date Stolen: \(dateStolen))")
+                }
+                if let locationFound = bike.locationFound {
+                    Text("Location Found: \(String(locationFound))")
                 }
                 if let largeImage = bike.largeImage {
                     Text("Large Image: \(largeImage))")
@@ -75,6 +89,7 @@ struct DatabaseGalleryView: View {
                 if let thumb = bike.thumb {
                     Text("Thumb: \(thumb))")
                 }
+                Text("Is Stock Image: \(String(bike.isStockImage))")
                 Text("Url: \(bike.url)")
                 if let apiUrl = bike.apiUrl {
                     Text("Api Url: \(apiUrl))")
@@ -85,6 +100,46 @@ struct DatabaseGalleryView: View {
                 Text("Updated At: \(String(describing: bike.updatedAt))")
                 Text(
                     "Full Public Images: \(bike.fullPublicImages.compactMap { $0.full?.absoluteString }.joined())"
+                )
+                Divider()
+                Text(
+                    "Ignore Extra Registration Number: \(String(describing: bike.ignore_extraRegistrationNumber))"
+                )
+                if let extraRegistration = bike.extraRegistration {
+                    Text("Extra Registration: \(extraRegistration)")
+                }
+                if let rearTireNarrow = bike.rearTireNarrow {
+                    Text("Rear Tire Narrow: \(String(rearTireNarrow))")
+                }
+                if let testBike = bike.testBike {
+                    Text("Test Bike: \(String(testBike))")
+                }
+                if let rearWheelSizeISOBSD = bike.rearWheelSizeISOBSD {
+                    Text("Rear Wheel Size ISO/BSD: \(rearWheelSizeISOBSD)")
+                }
+                if let frontWheelSizeISOBSD = bike.frontWheelSizeISOBSD {
+                    Text("Front Wheel Size ISO/BSD: \(frontWheelSizeISOBSD)")
+                }
+                if let handlebarTypeSlug = bike.handlebarTypeSlug {
+                    Text("Handlebar Type Slug: \(handlebarTypeSlug)")
+                }
+                if let frameMaterialSlug = bike.frameMaterialSlug {
+                    Text("Frame Material Slug: \(frameMaterialSlug)")
+                }
+                if let frontGearTypeSlug = bike.frontGearTypeSlug {
+                    Text("Front Gear Type Slug: \(frontGearTypeSlug)")
+                }
+                if let rearGearTypeSlug = bike.rearGearTypeSlug {
+                    Text("Rear Gear Type Slug: \(rearGearTypeSlug)")
+                }
+                if let additionalRegistration = bike.additionalRegistration {
+                    Text("Additional Registration: \(additionalRegistration)")
+                }
+                if let stolenRecord = bike.stolenRecord {
+                    Text("Stolen Record: \(String(describing: stolenRecord))")
+                }
+                Text(
+                    "Components: \(bike.components.map { String(describing: $0) }.joined(separator: ", "))"
                 )
             }
 
