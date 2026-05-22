@@ -120,11 +120,21 @@ struct DatabaseGalleryView: View {
                 if let frontWheelSizeISOBSD = bike.frontWheelSizeISOBSD {
                     Text("Front Wheel Size ISO/BSD: \(frontWheelSizeISOBSD)")
                 }
-                Text("Handlebar Type Slug: \(bike.handlebarTypeSlug ?? "")")
-                Text("Frame Material Slug: \(bike.frameMaterialSlug ?? "")")
-                Text("Front Gear Type Slug: \(bike.frontGearTypeSlug ?? "")")
-                Text("Rear Gear Type Slug: \(bike.rearGearTypeSlug ?? "")")
-                Text("Additional Registration: \(bike.additionalRegistration ?? "")")
+                if let handlebarTypeSlug = bike.handlebarTypeSlug {
+                    Text("Handlebar Type Slug: \(handlebarTypeSlug)")
+                }
+                if let frameMaterialSlug = bike.frameMaterialSlug {
+                    Text("Frame Material Slug: \(frameMaterialSlug)")
+                }
+                if let frontGearTypeSlug = bike.frontGearTypeSlug {
+                    Text("Front Gear Type Slug: \(frontGearTypeSlug)")
+                }
+                if let rearGearTypeSlug = bike.rearGearTypeSlug {
+                    Text("Rear Gear Type Slug: \(rearGearTypeSlug)")
+                }
+                if let additionalRegistration = bike.additionalRegistration {
+                    Text("Additional Registration: \(additionalRegistration)")
+                }
                 if let stolenRecord = bike.stolenRecord {
                     Text("Stolen Record: \(String(describing: stolenRecord))")
                 }
