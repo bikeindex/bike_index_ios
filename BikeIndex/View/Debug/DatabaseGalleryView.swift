@@ -73,7 +73,7 @@ struct DatabaseGalleryView: View {
                 if let stolenCoordinates = bike.stolenCoordinates {
                     Text("Stolen Coordinates: \(stolenCoordinates))")
                 }
-                Text("Stolen: \(bike.stolen)")
+                Text("Stolen: \(String(bike.stolen))")
                 if let stolenLocation = bike.stolenLocation {
                     Text("Stolen Location: \(stolenLocation))")
                 }
@@ -81,7 +81,7 @@ struct DatabaseGalleryView: View {
                     Text("Date Stolen: \(dateStolen))")
                 }
                 if let locationFound = bike.locationFound {
-                    Text("Location Found: \(locationFound)")
+                    Text("Location Found: \(String(locationFound))")
                 }
                 if let largeImage = bike.largeImage {
                     Text("Large Image: \(largeImage))")
@@ -89,7 +89,7 @@ struct DatabaseGalleryView: View {
                 if let thumb = bike.thumb {
                     Text("Thumb: \(thumb))")
                 }
-                Text("Is Stock Image: \(bike.isStockImage)")
+                Text("Is Stock Image: \(String(bike.isStockImage))")
                 Text("Url: \(bike.url)")
                 if let apiUrl = bike.apiUrl {
                     Text("Api Url: \(apiUrl))")
@@ -107,10 +107,10 @@ struct DatabaseGalleryView: View {
                     Text("Extra Registration: \(extraRegistration)")
                 }
                 if let rearTireNarrow = bike.rearTireNarrow {
-                    Text("Rear Tire Narrow: \(rearTireNarrow)")
+                    Text("Rear Tire Narrow: \(String(rearTireNarrow))")
                 }
                 if let testBike = bike.testBike {
-                    Text("Test Bike: \(testBike)")
+                    Text("Test Bike: \(String(testBike))")
                 }
                 if let rearWheelSizeISOBSD = bike.rearWheelSizeISOBSD {
                     Text("Rear Wheel Size ISO/BSD: \(rearWheelSizeISOBSD)")
