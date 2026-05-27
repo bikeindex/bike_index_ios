@@ -15,7 +15,7 @@ final class ClientRefreshTests {
     var client: TestableClient!
 
     @Test func token_renewal_via_setupRefreshTimer() async throws {
-        let expirationInterval: TimeInterval = 10
+        let expirationInterval: TimeInterval = 15
         let responseToken = OAuthToken.newToken(expiresIn: expirationInterval)
 
         client = try TestableClient()
@@ -29,7 +29,7 @@ final class ClientRefreshTests {
         try await confirmation { didRefresh in
             Logger.tests.debug("\(#function) start timer")
             client.setupRefreshTimer()
-            try await Task.sleep(for: .milliseconds(1))
+            try await Task.sleep(for: .seconds(expirationInterval + 1))
 
             let newToken = try #require(client.accessToken)
             Logger.tests.debug("\(#function) comparing tokens")
