@@ -58,9 +58,12 @@ extension OAuthToken {
         try container.encode(refreshToken, forKey: .refreshToken)
         try container.encode(createdAt.timeIntervalSince1970, forKey: .createdAt)
 
-        let scopeString = scope.reduce(into: "") { partial, value in
-            partial += "\(scope) "
-        }
+        let scopeString =
+            if scope.isEmpty {
+                ""
+            } else {
+                scope.map { $0.rawValue }.joined(separator: " ")
+            }
         try container.encode(scopeString, forKey: .scope)
     }
 }

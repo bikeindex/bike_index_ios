@@ -57,7 +57,13 @@ extension Client {
 
         do {
             let (data, response) = try await session.data(for: request)
-            try (response as? HTTPURLResponse)?.validate(with: data)
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode == 401 {
+                    self.invalidateAuth()
+                    return .failure(APIError.unauthorized as Error)
+                }
+                try httpResponse.validate(with: data)
+            }
 
             Logger.api.debug(
                 "\(type(of: self)).\(#function) fetched \(String(reflecting: request.url?.absoluteString ?? "nil url"))"
@@ -83,9 +89,14 @@ extension Client {
         do {
             let request = try preparePOSTRequest(for: endpoint)
 
-            // Send POST request
             let (data, response) = try await session.data(for: request)
-            try (response as? HTTPURLResponse)?.validate(with: data)
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode == 401 {
+                    self.invalidateAuth()
+                    return .failure(APIError.unauthorized as Error)
+                }
+                try httpResponse.validate(with: data)
+            }
 
             Logger.api.debug("\(#function) posted data \(data)")
             Logger.api.debug("\(#function) posted data with response \(response)")

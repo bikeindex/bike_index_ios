@@ -16,6 +16,7 @@ enum APIError: Error, LocalizedError {
     case clientError(code: Int, data: Data?)
     case postMissingContents(endpoint: APIEndpoint)
     case failedToDecodedExpectedModelType(URLResponse)
+    case unauthorized
 
     var errorDescription: String? {
         switch self {
@@ -32,6 +33,8 @@ enum APIError: Error, LocalizedError {
             "Could not POST, missing contents for \(endpoint)"
         case .failedToDecodedExpectedModelType(let response):
             "Failed to decode expected model type from response: \(response)"
+        case .unauthorized:
+            "Unauthorized - session expired"
         }
     }
 

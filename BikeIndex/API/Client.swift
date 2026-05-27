@@ -101,7 +101,7 @@ typealias QueryItemTuple = (name: String, value: String)
 
     /// Load any persisted OAuth Token and attempt to use it to continue the last session.
     private func loadLastToken() {
-        if let lastKnownToken = KeychainSwift().get(Keychain.oauthToken),
+        if let lastKnownToken = self.keychain.get(Keychain.oauthToken),
             let rawData = lastKnownToken.data(using: .utf8)
         {
             do {
@@ -144,10 +144,7 @@ typealias QueryItemTuple = (name: String, value: String)
             Logger.client.warning("Failed to find and destroy auth cookie")
         }
 
-        // Clear app state
-        KeychainSwift().delete(Keychain.oauthToken)
-        accessToken = nil
-        auth = nil
+        invalidateAuth()
     }
 
     var userCanRegisterBikes: Bool {
@@ -214,6 +211,15 @@ typealias QueryItemTuple = (name: String, value: String)
         return true
     }
 
+    func invalidateAuth() {
+        Logger.client.warning("Auth invalidated, clearing session")
+        self.refreshTimer?.invalidate()
+        self.refreshTimer = nil
+        self.auth = nil
+        self.accessToken = nil
+        self.keychain.delete(Keychain.oauthToken)
+    }
+
     /// Inform any `@State` watchers if the authentication is valid or has become void.
     var authenticated: Bool {
         if let auth {
@@ -223,12 +229,19 @@ typealias QueryItemTuple = (name: String, value: String)
         }
     }
 
-    // Renew the session token 3 minutes before expiration
+    /// Renew the session token 3 minutes before expiration
+    /// Expiration local var will be a negative time interval
     func setupRefreshTimer() {
         guard let auth else {
-            fatalError()
+            return
         }
-        let bufferedExpirationInterval = (auth.expiration - 60 * 3).timeIntervalSinceNow
+        self.refreshTimer?.invalidate()
+        self.refreshTimer = nil
+        let expiration = (auth.expiration - 15).timeIntervalSinceNow
+        let bufferedExpirationInterval = max(expiration, 15)
+        Logger.client.debug(
+            "\(#function), refresh timer will run in \(bufferedExpirationInterval) interval. Original expiration was: \(expiration)"
+        )
         let timer = Timer(
             timeInterval: bufferedExpirationInterval,
             target: self,
@@ -241,17 +254,23 @@ typealias QueryItemTuple = (name: String, value: String)
 
     func forceRefreshToken() {
         guard let refreshTimer else {
-            fatalError()
+            Logger.client.warning("No active refresh timer available, skipping force refresh")
+            return
         }
         refreshToken(timer: refreshTimer)
     }
 
     @objc func refreshToken(timer: Timer) {
-        let refreshToken = self.auth?.refreshToken ?? ""
+        guard let tokenInfo = timer.userInfo as? [String: OAuthToken],
+            let tokenPayload = tokenInfo["token"]
+        else {
+            Logger.client.error("refreshToken(timer:) timer userInfo is missing 'token'")
+            return
+        }
 
         let tokenQuery = [
             ("client_id", configuration.clientId),
-            ("refresh_token", refreshToken),
+            ("refresh_token", tokenPayload.refreshToken),
             ("grant_type", "refresh_token"),
         ].map { (item: QueryItemTuple) in
             URLQueryItem(name: item.name, value: item.value)
@@ -276,6 +295,11 @@ typealias QueryItemTuple = (name: String, value: String)
                 Logger.client.info("Refreshed oauth token to keychain")
             case .failure(let failure):
                 Logger.client.error("Failed to fetch /oauth/token \(failure)")
+                self.auth = nil
+                self.accessToken = nil
+                self.refreshTimer?.invalidate()
+                self.refreshTimer = nil
+                self.keychain.delete(Keychain.oauthToken)
             }
         }
     }

@@ -31,12 +31,5 @@
 	<string>$(API_PORT)</string>
 	<key>API_REDIRECT_URI</key>
 	<string>$(API_REDIRECT_URI)</string>
-	<!--
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsLocalNetworking</key>
-		<true/>
-	</dict>
-	-->
 </dict>
 </plist>

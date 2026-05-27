@@ -103,7 +103,7 @@ class MockClient: Client {
             )
             return false
         }
-        accessToken = newToken
+        self.accessToken = newToken
         return true
     }
 }
