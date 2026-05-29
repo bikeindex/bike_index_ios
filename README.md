@@ -5,13 +5,35 @@
 
 iOS client for [bikeindex.org](https://bikeindex.org)
 
-<a href="https://apps.apple.com/us/app/bike-index/id6477746994?itscg=30200&itsct=apps_box_badge&mttnsubad=6477746994" style="display: inline-block;">
-<img src="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/black/en-us?releaseDate=1716336000" alt="Download on the App Store" style="width: 246px; height: 82px; vertical-align: middle; object-fit: contain;" />
-</a>
+## Download
 
-### TestFlight
-
-The public beta for pre-release builds is available at https://testflight.apple.com/join/TVaDioGl. Pre-release builds may not always be available.
+<table>
+	<thead>
+	<tr>
+		<th>App Store</th>
+		<th>TestFlight</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+	<td>
+		<a href="https://apps.apple.com/us/app/bike-index/id6477746994?itscg=30200&itsct=apps_box_badge&mttnsubad=6477746994" style="display: inline-block;">
+			<img src="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/black/en-us?releaseDate=1716336000" alt="Download on the App Store" style="width: 246px; height: 82px; vertical-align: middle; object-fit: contain;" />
+		</a>
+	</td>
+	<td>
+		<a href="https://testflight.apple.com/join/TVaDioGl" style="display: inline-block;">
+			<img src="docs/testflight.svg" style="width: 246px; height: 82px; vertical-align: middle; object-fit: contain;" />
+		</a>
+	</td>
+	</tr>
+	<tr>
+		<td>Bike Index is <a href="https://apps.apple.com/us/app/bike-index/id6477746994?itscg=30200&itsct=apps_box_badge&mttnsubad=6477746994">available on the iOS App Store</a>.
+		</td>
+		<td>The public beta for pre-release builds is available at https://testflight.apple.com/join/TVaDioGl. Pre-release builds may not always be available.</td>
+	</tr>
+	</tbody>
+</table>
 
 ## Quick Start
 
