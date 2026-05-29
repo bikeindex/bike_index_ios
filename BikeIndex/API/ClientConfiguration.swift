@@ -32,6 +32,9 @@ struct ClientConfiguration {
     /// Defaults to all
     let oauthScopes: [Scope] = Scope.allCases
 
+    // MARK: Services
+    let honeybadgerApiKey: String
+
     // MARK: -
 
     /// Load the API network service information and OAuth configuration from BikeIndex-\*.xcconfig project files.
@@ -46,7 +49,8 @@ struct ClientConfiguration {
             let portString = info["API_PORT"] as? String,
             let port = UInt16(portString),
             let redirectUri = (info["API_REDIRECT_URI"] as? String)?
-                .replacing("\\/\\/", with: "//")
+                .replacing("\\/\\/", with: "//"),
+            let honeybadgerApiKey = (info["HONEYBADGER_API_KEY"] as? String)
         else {
             throw ClientConfigurationError.failedToLoadBundle
         }
@@ -65,7 +69,8 @@ struct ClientConfiguration {
             port: port,
             clientId: clientId,
             secret: secret,
-            redirectUri: redirectUri)
+            redirectUri: redirectUri,
+            honeybadgerApiKey: honeybadgerApiKey)
     }
 
     // MARK: General Access

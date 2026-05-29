@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import HoneybadgerSwift
 import OSLog
 import SwiftData
 
@@ -39,6 +40,7 @@ extension BikeDetailWebView {
                         modelContext.insert(fullBike)
                     }
                 } catch {
+                    Honeybadger.notify(error: error)
                     Logger.model.error(
                         "\(type(of: self)).\(#function) - Writing Bike failed with \(error) - \(String(reflecting: success))"
                     )

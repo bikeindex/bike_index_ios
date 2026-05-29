@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import HoneybadgerSwift
 import OSLog
 import RegexBuilder
 import SwiftData
@@ -46,6 +47,7 @@ class ScannedBike: Equatable, Identifiable {
                 return sticker
             }
         } catch {
+            Honeybadger.notify(error: error)
             Logger.model.error("Failed to parse sticker \(self.sticker, privacy: .public)")
             return sticker
         }

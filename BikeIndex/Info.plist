@@ -2,8 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
+	<key>API_CLIENT_ID</key>
+	<string>$(API_CLIENT_ID)</string>
+	<key>API_HOST</key>
+	<string>$(API_HOST)</string>
+	<key>API_PORT</key>
+	<string>$(API_PORT)</string>
+	<key>API_REDIRECT_URI</key>
+	<string>$(API_REDIRECT_URI)</string>
+	<key>API_SECRET</key>
+	<string>$(API_SECRET)</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -15,21 +23,11 @@
 			</array>
 		</dict>
 	</array>
+	<key>HONEYBADGER_API_KEY</key>
+	<string>$(HONEYBADGER_API_KEY)</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
 	</array>
-	<key>NSSiriUsageDescription</key>
-	<string>Siri interacts with the app to complete your shortcuts.</string>
-	<key>API_SECRET</key>
-	<string>$(API_SECRET)</string>
-	<key>API_CLIENT_ID</key>
-	<string>$(API_CLIENT_ID)</string>
-	<key>API_HOST</key>
-	<string>$(API_HOST)</string>
-	<key>API_PORT</key>
-	<string>$(API_PORT)</string>
-	<key>API_REDIRECT_URI</key>
-	<string>$(API_REDIRECT_URI)</string>
 </dict>
 </plist>

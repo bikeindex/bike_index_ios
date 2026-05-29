@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import HoneybadgerSwift
 import OSLog
 
 private let api = "api"
@@ -137,7 +138,8 @@ enum Search: APIEndpoint {
     }
 
     var responseModel: ResponseDecodable.Type {
-        OAuthToken.self
+        Honeybadger.notify(errorString: "Failed to provide responseModel for Search.\(self)")
+        fatalError()
     }
 
     func request(for config: HostProvider) -> URLRequest {
@@ -351,6 +353,7 @@ enum Manufacturers: APIEndpoint {
     }
 
     var responseModel: ResponseDecodable.Type {
+        Honeybadger.notify(errorString: "Failed to provide responseModel Manufacturers.\(self)")
         fatalError()
     }
 
@@ -404,6 +407,7 @@ enum Selections: APIEndpoint {
     var authorized: Bool { true }
 
     var responseModel: ResponseDecodable.Type {
+        Honeybadger.notify(errorString: "Failed to provide responseModel for Selections.\(self)")
         fatalError()
     }
 

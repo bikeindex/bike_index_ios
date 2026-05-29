@@ -73,6 +73,11 @@ extension AcknowledgementPackage {
             license: .mit,
             copyright: "Copyright © 2023 Laszlo Teveli",
             repository: URL("https://github.com/tevelee/SwiftUI-Flow")),
+        AcknowledgementPackage(
+            title: "Honeybadger.io",
+            license: .mit,
+            copyright: "Copyright © 2025 Honeybadger Industries, Inc.",
+            repository: URL("https://github.com/honeybadger-io/honeybadger-cocoa")),
     ]
 
     static var gnuAfferoGPLv3Packages: [AcknowledgementPackage] {

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import HoneybadgerSwift
 import OSLog
 import SwiftData
 
@@ -65,6 +66,7 @@ final class BackgroundSessionDelegate: NSObject {
                 )
             }
         } catch {
+            Honeybadger.notify(error: error)
             Logger.api.error("\(#function) Error: \(error)")
         }
     }
@@ -105,6 +107,7 @@ extension BackgroundSessionDelegate: URLSessionTaskDelegate {
             do {
                 try (task.response as? HTTPURLResponse)?.validate(with: data)
             } catch {
+                Honeybadger.notify(error: error)
                 Logger.api.error("\(#function) Task response is invalid: \(task.response)")
                 imageUploadCompletion(.failure(error))
                 return

@@ -5,6 +5,7 @@
 //  Created by Jack on 12/22/24.
 //
 
+import HoneybadgerSwift
 import OSLog
 import SectionedQuery
 import SwiftData
@@ -72,6 +73,7 @@ extension MainContentPage {
 
                 fetching = false
             } catch {
+                Honeybadger.notify(error: error)
                 Logger.model.error("Failed to user info: \(error)")
                 lastError = error
                 showError = true
@@ -144,6 +146,7 @@ extension MainContentPage {
                         myProfile.bikes = bikes
                     }
                 } catch (let swiftError) {
+                    Honeybadger.notify(error: swiftError)
                     throw Error.swiftError(swiftError)
                 }
             case .failure(let failure):
@@ -196,6 +199,7 @@ extension MainContentPage {
                         }
                     }
                 } catch (let swiftError) {
+                    Honeybadger.notify(error: swiftError)
                     throw Error.swiftError(swiftError)
                 }
 

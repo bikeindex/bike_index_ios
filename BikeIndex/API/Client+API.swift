@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import HoneybadgerSwift
 import OSLog
 import URLEncodedForm
 
@@ -78,6 +79,7 @@ extension Client {
                 try JSONDecoder().decode(endpoint.responseModel, from: data)
             }
         } catch {
+            Honeybadger.notify(error: error)
             Logger.api.error(
                 "\(#function) failed to fetch \(String(describing: request.url)) with error \(error)"
             )
@@ -109,6 +111,7 @@ extension Client {
                 }
             }
         } catch {
+            Honeybadger.notify(error: error)
             return .failure(error)
         }
     }
@@ -133,6 +136,7 @@ extension Client {
             let uploadTask = backgroundSession.uploadTask(with: request, fromFile: tempFileURL)
             uploadTask.resume()
         } catch {
+            Honeybadger.notify(error: error)
             onFailure(error)
         }
     }
@@ -167,6 +171,7 @@ extension Client {
                 break
             }
         } catch {
+            Honeybadger.notify(error: error)
             Logger.api.error("\(#function) Failed to encode POST body with \(error)")
             throw error
         }

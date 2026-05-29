@@ -6,6 +6,7 @@
 //
 
 import AppIntents
+import HoneybadgerSwift
 import OSLog
 import SwiftData
 import SwiftUI
@@ -55,12 +56,15 @@ struct BikeIndexApp: App {
             }
         } catch {
             Logger.model.error("Failed to handle deeplink: \(error)")
+            Honeybadger.notify(error: error)
         }
     }
 
     init() {
         let client = try! Client()
         self.client = client
+
+        Honeybadger.configure(apiKey: client.configuration.honeybadgerApiKey)
 
         let schema = Schema([
             Bike.self,
@@ -78,6 +82,7 @@ struct BikeIndexApp: App {
                 for: schema, configurations: [modelConfiguration])
             self.sharedModelContainer = sharedModelContainer
         } catch {
+            Honeybadger.notify(error: error)
             print(error)
             fatalError(error.localizedDescription)
         }

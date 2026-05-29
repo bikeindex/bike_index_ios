@@ -5,6 +5,7 @@
 //  Created by Jack on 11/19/23.
 //
 
+import HoneybadgerSwift
 import OSLog
 import Observation
 import UIKit
@@ -40,6 +41,7 @@ final class AlternateIconsModel {
             do {
                 try await UIApplication.shared.setAlternateIconName(icon.iconName)
             } catch {
+                Honeybadger.notify(error: error)
                 // We're only logging the error here and not actively handling the app icon failure
                 // since it's very unlikely to fail.
                 Logger.views.error(

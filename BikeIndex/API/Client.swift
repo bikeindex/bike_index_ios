@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import HoneybadgerSwift
 import KeychainSwift
 import OSLog
 import StoreKit
@@ -116,6 +117,7 @@ typealias QueryItemTuple = (name: String, value: String)
                     "Client.\(#function) found existing valid token \(String(describing: lastKnownAuth), privacy: .private)"
                 )
             } catch {
+                Honeybadger.notify(error: error)
                 Logger.api.debug("Failed to find existing auth")
             }
         } else {
@@ -199,6 +201,7 @@ typealias QueryItemTuple = (name: String, value: String)
                 let data = try JSONEncoder().encode(fullTokenAuth)
                 self.keychain.set(data, forKey: Keychain.oauthToken)
             } catch {
+                Honeybadger.notify(error: error)
                 Logger.client.error(
                     "Failed to persist /oauth/token to keychain after fetching successfully, continuing"
                 )
@@ -288,6 +291,7 @@ typealias QueryItemTuple = (name: String, value: String)
                     let data = try JSONEncoder().encode(refreshedToken)
                     self.keychain.set(data, forKey: Keychain.oauthToken)
                 } catch {
+                    Honeybadger.notify(error: error)
                     Logger.client.error(
                         "Failed to persist /oauth/token to keychain after fetching successfully, continuing"
                     )

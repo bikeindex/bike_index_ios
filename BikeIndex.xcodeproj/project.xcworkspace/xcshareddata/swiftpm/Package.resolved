@@ -1,5 +1,5 @@
 {
-  "originHash" : "9259fcf422692f5f3faa294a4fcee9f5ad053185cbd9f25442d308349c207968",
+  "originHash" : "30c5054ec96043f7611058738063cf09fb0219a72b4086413cca66266004c22c",
   "pins" : [
     {
       "identity" : "flyingfox",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "f7829d4aca8cbfecb410a1cce872b1b045224aa1",
         "version" : "0.16.0"
+      }
+    },
+    {
+      "identity" : "honeybadger-cocoa",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/honeybadger-io/honeybadger-cocoa",
+      "state" : {
+        "revision" : "0f5ae78fa04e69cafcf03a97293b1de82ce4e551",
+        "version" : "1.1.0"
       }
     },
     {

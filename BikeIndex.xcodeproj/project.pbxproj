@@ -13,6 +13,7 @@
 		044BDBC82F26AEA500E0049E /* PreviewGallery in Frameworks */ = {isa = PBXBuildFile; productRef = 044BDBC72F26AEA500E0049E /* PreviewGallery */; };
 		044BDBCA2F26AEA500E0049E /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 044BDBC92F26AEA500E0049E /* SnapshotPreferences */; };
 		044BDBCC2F26AEA500E0049E /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 044BDBCB2F26AEA500E0049E /* SnapshottingTests */; };
+		048770782FCA52CB00340322 /* Honeybadger in Frameworks */ = {isa = PBXBuildFile; productRef = 048770772FCA52CB00340322 /* Honeybadger */; };
 		04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 04E1343D2B4B718200CE88DD /* WebViewKit */; };
 		04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */ = {isa = PBXBuildFile; productRef = 04EA11212B2504340024CDDD /* URLEncodedForm */; };
 		04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04F4B95D2B0990CE009442B5 /* KeychainSwift */; };
@@ -142,6 +143,7 @@
 				044BDBC82F26AEA500E0049E /* PreviewGallery in Frameworks */,
 				044441302DC6A1DC004B19AE /* CachedAsyncImage in Frameworks */,
 				044BDBCA2F26AEA500E0049E /* SnapshotPreferences in Frameworks */,
+				048770782FCA52CB00340322 /* Honeybadger in Frameworks */,
 				04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */,
 				04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */,
 			);
@@ -265,6 +267,7 @@
 				042927702E03D33F009D0609 /* Flow */,
 				044BDBC72F26AEA500E0049E /* PreviewGallery */,
 				044BDBC92F26AEA500E0049E /* SnapshotPreferences */,
+				048770772FCA52CB00340322 /* Honeybadger */,
 			);
 			productName = BikeIndex;
 			productReference = 04F4B8F72B098ADB009442B5 /* BikeIndex.app */;
@@ -358,6 +361,7 @@
 				0444412E2DC6A1DC004B19AE /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
 				0429276F2E03D33F009D0609 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */,
 				044BDBC62F26AEA500E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */,
+				048770762FCA52CB00340322 /* XCRemoteSwiftPackageReference "honeybadger-cocoa" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 04F4B8F82B098ADB009442B5 /* Products */;
@@ -513,8 +517,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BikeIndex/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Bike Index";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Add photos of your bike, and found bikes, to find matches and make recovery easier.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Add photos of your bike, and found bikes, to find matches and make recovery easier.";
+				INFOPLIST_KEY_NSSiriUsageDescription = "Siri interacts with the app to complete your shortcuts.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -655,8 +661,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BikeIndex/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Bike Index";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Add photos of your bike, and found bikes, to find matches and make recovery easier.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Add photos of your bike, and found bikes, to find matches and make recovery easier.";
+				INFOPLIST_KEY_NSSiriUsageDescription = "Siri interacts with the app to complete your shortcuts.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -794,6 +802,14 @@
 				minimumVersion = 0.14.0;
 			};
 		};
+		048770762FCA52CB00340322 /* XCRemoteSwiftPackageReference "honeybadger-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/honeybadger-io/honeybadger-cocoa";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
 		04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/danielsaidi/WebViewKit.git";
@@ -850,6 +866,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 044BDBC62F26AEA500E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
 			productName = SnapshottingTests;
+		};
+		048770772FCA52CB00340322 /* Honeybadger */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 048770762FCA52CB00340322 /* XCRemoteSwiftPackageReference "honeybadger-cocoa" */;
+			productName = Honeybadger;
 		};
 		04E1343D2B4B718200CE88DD /* WebViewKit */ = {
 			isa = XCSwiftPackageProductDependency;
