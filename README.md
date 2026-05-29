@@ -45,7 +45,7 @@ To validate that your xcconfig files have all required keys with non-empty value
 ./scripts/validate-xcconfig.sh test
 ```
 
-Run it locally after setting up your xcconfig files to verify required keys/values are present. This script is used in CI/CD as well.
+This same script is used in CI to catch missing configuration before builds. Run it locally after setting up your xcconfig files from the templates to verify everything is configured correctly.
 
 ### Development
 

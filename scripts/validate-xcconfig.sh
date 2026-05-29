@@ -63,4 +63,16 @@ if [[ ${#MISSING[@]} -gt 0 ]]; then
   exit 1
 fi
 
+# Validate that api_client_id and api_secret are exactly 43 characters long (development/production only)
+if [[ "$ENV" == "development" || "$ENV" == "production" ]]; then
+  for key in API_CLIENT_ID API_SECRET; do
+    value=$(grep "^${key}[[:space:]]*=" "$FILE_PATH" | sed 's/^[^=]*=[[:space:]]*//' | sed 's/[[:space:]]*$//' | tr -d '\r')
+    len=${#value}
+    if [[ $len -ne 43 ]]; then
+      echo "ERROR: $key in $FILE must be exactly 43 characters (got $len)"
+      exit 1
+    fi
+  done
+fi
+
 echo "OK: All required keys present in $FILE ($ENV)"
