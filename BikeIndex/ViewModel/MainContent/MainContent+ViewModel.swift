@@ -73,7 +73,7 @@ extension MainContentPage {
 
                 fetching = false
             } catch {
-                Honeybadger.notify(error: error)
+                // Already notified Honeybadger in fetchProfile or fetchBikes
                 Logger.model.error("Failed to user info: \(error)")
                 lastError = error
                 showError = true
