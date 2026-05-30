@@ -5,8 +5,8 @@
 //  Created by Jack on 5/8/26.
 //
 
-CURRENT_PROJECT_VERSION = 73
-MARKETING_VERSION = 1.6.3
+CURRENT_PROJECT_VERSION = 74
+MARKETING_VERSION = 1.6.4
 
 API_HOST = https:\/\/bikeindex.org
 API_PORT = 443
