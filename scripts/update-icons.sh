@@ -14,7 +14,7 @@
 #
 #     ictool input-document.icon --export-preview iOS Light 1024 1024 2 output.png
 #
-alias ictool="/Applications/Xcode_26.app/Contents/Applications/Icon\ Composer.app/Contents/Executables/ictool"
+alias ictool="/Applications/Xcode_26.4.1.app/Contents/Applications/Icon\ Composer.app/Contents/Executables/ictool"
 
 # create an array of all source Icon Composer files
 icon_composer_files=(BikeIndex/AppIcons/*.icon)
@@ -33,4 +33,4 @@ for ((i=0; i<${#icon_composer_files[@]}; i++)); do
 done
 
 xed BikeIndex.xcodeproj
-open BikeIndex/Assets.xcassets -a /Applications/Xcode_26.app
+open BikeIndex/Assets.xcassets -a /Applications/Xcode_26.4.1.app
