@@ -12,4 +12,13 @@ extension Honeybadger {
         Honeybadger.notify(
             error: error, context: [Honeybadger.ContextKey.bikeId.rawValue: String(bikeId)])
     }
+
+    static func set(userId: String) {
+        Honeybadger.setContext(
+            context: [Honeybadger.ContextKey.userId.rawValue: userId])
+    }
+
+    static func reset() {
+        Honeybadger.resetContext(context: [:])
+    }
 }

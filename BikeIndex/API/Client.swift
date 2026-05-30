@@ -217,7 +217,7 @@ typealias QueryItemTuple = (name: String, value: String)
 
     func invalidateAuth() {
         Logger.client.warning("Auth invalidated, clearing session")
-        Honeybadger.resetContext(context: [:])
+        Honeybadger.reset()
         self.refreshTimer?.invalidate()
         self.refreshTimer = nil
         self.auth = nil
@@ -306,7 +306,7 @@ typealias QueryItemTuple = (name: String, value: String)
                 self.refreshTimer?.invalidate()
                 self.refreshTimer = nil
                 self.keychain.delete(Keychain.oauthToken)
-                Honeybadger.resetContext(context: [:])
+                Honeybadger.reset()
             }
         }
     }

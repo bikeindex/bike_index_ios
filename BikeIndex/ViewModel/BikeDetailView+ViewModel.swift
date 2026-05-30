@@ -40,7 +40,6 @@ extension BikeDetailWebView {
                         modelContext.insert(fullBike)
                     }
                 } catch {
-                    Honeybadger.resetContext(context: [:])
                     Honeybadger.notify(error: error, bikeId: bikeId)
                     Logger.model.error(
                         "\(type(of: self)).\(#function) - Writing Bike failed with \(error) - \(String(reflecting: success))"
