@@ -115,6 +115,11 @@ extension MainContentPage {
                 let myProfile = myProfileSource.modelInstance()
                 myProfile.user = myProfileSource.user.modelInstance()
 
+                Honeybadger.resetContext(context: [:])
+                Honeybadger.setContext(context: [
+                    Honeybadger.ContextKey.userId.rawValue: myProfileSource.id
+                ])
+
                 do {
                     try modelContext.transaction {
                         // 0.

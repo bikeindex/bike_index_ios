@@ -206,6 +206,7 @@ typealias QueryItemTuple = (name: String, value: String)
                     "Failed to persist /oauth/token to keychain after fetching successfully, continuing"
                 )
             }
+            Logger.client.info("OAuth token received successfully")
         case .failure(let failure):
             Logger.client.error("Failed to fetch /oauth/token \(failure)")
             return false
@@ -216,6 +217,7 @@ typealias QueryItemTuple = (name: String, value: String)
 
     func invalidateAuth() {
         Logger.client.warning("Auth invalidated, clearing session")
+        Honeybadger.resetContext(context: [:])
         self.refreshTimer?.invalidate()
         self.refreshTimer = nil
         self.auth = nil
@@ -304,6 +306,7 @@ typealias QueryItemTuple = (name: String, value: String)
                 self.refreshTimer?.invalidate()
                 self.refreshTimer = nil
                 self.keychain.delete(Keychain.oauthToken)
+                Honeybadger.resetContext(context: [:])
             }
         }
     }
