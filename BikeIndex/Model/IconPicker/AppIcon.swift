@@ -55,7 +55,7 @@ enum AppIcon: String, CaseIterable, Identifiable {
         case .striped:
             return "Striped"
         case .pride:
-            return "Pride 🏳️‍🌈"
+            return "🏳️‍⚧️ Pride '26 🏳️‍🌈"
         }
     }
 }
