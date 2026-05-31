@@ -5,6 +5,7 @@
 //  Created by Jack on 6/15/25.
 //
 
+import HoneybadgerSwift
 import OSLog
 import SwiftUI
 
@@ -53,6 +54,7 @@ enum BikeIndexLink: Identifiable {
         do {
             return try AttributedString(markdown: markdownSource)
         } catch {
+            Honeybadger.notify(error: error)
             Logger.views.error(
                 "Failed to create link from \(self.path, privacy: .public) on base \(base, privacy: .public)"
             )

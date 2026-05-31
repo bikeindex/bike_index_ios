@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import HoneybadgerSwift
 import KeychainSwift
 import OSLog
 import StoreKit
@@ -116,6 +117,7 @@ typealias QueryItemTuple = (name: String, value: String)
                     "Client.\(#function) found existing valid token \(String(describing: lastKnownAuth), privacy: .private)"
                 )
             } catch {
+                Honeybadger.notify(error: error)
                 Logger.api.debug("Failed to find existing auth")
             }
         } else {
@@ -199,10 +201,12 @@ typealias QueryItemTuple = (name: String, value: String)
                 let data = try JSONEncoder().encode(fullTokenAuth)
                 self.keychain.set(data, forKey: Keychain.oauthToken)
             } catch {
+                Honeybadger.notify(error: error)
                 Logger.client.error(
                     "Failed to persist /oauth/token to keychain after fetching successfully, continuing"
                 )
             }
+            Logger.client.info("OAuth token received successfully")
         case .failure(let failure):
             Logger.client.error("Failed to fetch /oauth/token \(failure)")
             return false
@@ -213,6 +217,7 @@ typealias QueryItemTuple = (name: String, value: String)
 
     func invalidateAuth() {
         Logger.client.warning("Auth invalidated, clearing session")
+        Honeybadger.reset()
         self.refreshTimer?.invalidate()
         self.refreshTimer = nil
         self.auth = nil
@@ -288,6 +293,7 @@ typealias QueryItemTuple = (name: String, value: String)
                     let data = try JSONEncoder().encode(refreshedToken)
                     self.keychain.set(data, forKey: Keychain.oauthToken)
                 } catch {
+                    Honeybadger.notify(error: error)
                     Logger.client.error(
                         "Failed to persist /oauth/token to keychain after fetching successfully, continuing"
                     )
@@ -300,6 +306,7 @@ typealias QueryItemTuple = (name: String, value: String)
                 self.refreshTimer?.invalidate()
                 self.refreshTimer = nil
                 self.keychain.delete(Keychain.oauthToken)
+                Honeybadger.reset()
             }
         }
     }

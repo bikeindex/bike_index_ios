@@ -35,12 +35,14 @@ jobs:
           API_SECRET: ${{ secrets.PRODUCTION__API_SECRET }}
           API_CLIENT_ID: ${{ secrets.PRODUCTION__API_CLIENT_ID }}
           DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
+          HONEYBADGER_API_KEY: ${{ secrets.HONEYBADGER_API_KEY }}
         run: |
           echo "$MATCH_API_KEY_JSON_CONTENT" > ./fastlane/api-key.json
           echo '#include "Default"' >> BikeIndex-production.xcconfig
           echo "API_SECRET = $API_SECRET" >> BikeIndex-production.xcconfig
           echo "API_CLIENT_ID = $API_CLIENT_ID" >> BikeIndex-production.xcconfig
           echo "DEVELOPMENT_TEAM = $DEVELOPMENT_TEAM" >> BikeIndex-production.xcconfig
+          echo "HONEYBADGER_API_KEY = $HONEYBADGER_API_KEY" >> BikeIndex-production.xcconfig
       - name: Validate production xcconfig
         run: ./scripts/validate-xcconfig.sh production
       - name: Load codesigning

@@ -5,6 +5,7 @@
 //  Created by Jack on 5/11/25.
 //
 
+import HoneybadgerSwift
 import OSLog
 import SwiftData
 import SwiftUI
@@ -82,6 +83,7 @@ struct RecentlyScannedStickersView: View {
                 context: modelContext,
                 stickers: stickersToDelete)
         } catch {
+            Honeybadger.notify(error: error)
             Logger.model.error(
                 "\(type(of: viewModel)) failed to delete sticker \(error, privacy: .private)")
         }
@@ -94,6 +96,7 @@ struct RecentlyScannedStickersView: View {
         do {
             try viewModel.cleanUpExpiredStickers(context: modelContext)
         } catch {
+            Honeybadger.notify(error: error)
             Logger.model.error(
                 "Failed to run regular sticker model clean-up. \(error, privacy: .private)"
             )
