@@ -11,10 +11,12 @@ import Testing
 
 @testable import BikeIndex
 
-/// Aka RecentlyScannedStickersView.ViewModel
+/// Aka StickerCenter.ViewModel
 @MainActor
 struct RecentlyScannedStickersViewModelTests {
-    typealias ViewModel = RecentlyScannedStickersView.ViewModel
+    typealias ViewModel = StickerCenter.ViewModel
+
+    static let stickerCountLimit = StickerCenter.ViewModel.limitOfMostRecent
 
     struct Input: CustomTestArgumentEncodable {
         let numberOfStickers: Int
@@ -81,18 +83,19 @@ struct RecentlyScannedStickersViewModelTests {
     @Test(
         "Scanned Sticker History Data Layer",
         arguments: [
-            Input(  // count within 10, date within 2 weeks ago
+            Input(  // count within limit, date within 2 weeks ago
                 numberOfStickers: 10,
                 expectedNumberOfStickers: 10),
-            Input(  // count within 10, date outside of 2 weeks ago
-                numberOfStickers: 10,
+            Input(  // count within limit, date outside of 2 weeks ago
+                numberOfStickers: stickerCountLimit,
                 genesisBase: Date().addingTimeInterval(-60 * 60 * 24 * 21),
                 expectedNumberOfStickers: 0),
-            Input(  // count within 10, date within 2 weeks ago
+            Input(  // count within limit, date within 2 weeks ago
                 numberOfStickers: 10,
-                genesisBase: Date().addingTimeInterval(-60 * 60 * 24 * 13)),
-            Input(  // count outside of 10, date within 2 weeks ago
-                numberOfStickers: 20),
+                genesisBase: Date().addingTimeInterval(-60 * 60 * 24 * 13),
+                expectedNumberOfStickers: 10),
+            Input(  // count outside of limit, date within 2 weeks ago
+                numberOfStickers: 40),
         ])
     func test_handleStickerDeeplinks(input: Input) async throws {
         let invocationName = input.invocationName
@@ -133,12 +136,12 @@ struct RecentlyScannedStickersViewModelTests {
             endState == input.expectedNumberOfStickers,
             "Expected to find \(input.expectedNumberOfStickers) but actually found \(endState)")
 
-        // Ensure that the 10-most-recent dates in the Input are the same 10-most-recent dates
+        // Ensure that the most-recent dates in the Input are the same most-recent dates
         // written to the database.
         let mostRecentInput = input.scannedBikesHistory
             .map(\.createdAt)
             .sorted(by: >)
-            .prefix(upTo: 10)
+            .prefix(upTo: input.expectedNumberOfStickers)
 
         let outputPersistedModels = try context.fetch(FetchDescriptor<ScannedBike>())
         let zipped = zip(mostRecentInput, outputPersistedModels)

@@ -14,40 +14,43 @@ import WebViewKit
 struct AuthView: View {
     /// API client for performing auth
     @Environment(Client.self) var client
+    @Environment(QRStickerRouter.self) var stickerRouter
     /// ViewModel to manage state.
     /// `viewModel.authNavigator.client` must be connected at runtime.
     @State private var viewModel = ViewModel()
 
     var body: some View {
-        @Bindable var deeplinkManager = client.deeplinkManager
+        @Bindable var stickerRouter = stickerRouter
         NavigationStack(path: $viewModel.topLevelPath) {
-            WelcomeView(displaySignIn: $viewModel.displaySignIn)
-                .toolbar {
-                    ToolbarItemGroup(placement: .topBarLeading) {
-                        #if DEBUG
-                        NavigationLink(value: ViewModel.Nav.debugSettings) {
-                            Label("Settings", systemImage: "gearshape")
-                        }
-                        #endif
-                        NavigationLink(value: ViewModel.Nav.help) {
-                            Label("Help", systemImage: "book.closed")
-                        }
+            WelcomeView(
+                displaySignIn: $viewModel.displaySignIn,
+            )
+            .toolbar {
+                ToolbarItemGroup(placement: .topBarLeading) {
+                    #if DEBUG
+                    NavigationLink(value: ViewModel.Nav.debugSettings) {
+                        Label("Settings", systemImage: "gearshape")
+                    }
+                    #endif
+                    NavigationLink(value: ViewModel.Nav.help) {
+                        Label("Help", systemImage: "book.closed")
                     }
                 }
-                .navigationTitle("Welcome to Bike Index")
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationDestination(for: ViewModel.Nav.self) { navSelection in
-                    switch navSelection {
-                    case .debugSettings:
-                        SettingsPage(path: $viewModel.topLevelPath)
-                            .environment(client)
-                            .accessibilityIdentifier("Settings")
-                    case .help:
-                        NavigableWebView(constantLink: .help, host: client.configuration.host)
-                            .environment(client)
-                            .navigationTitle("Help")
-                    }
+            }
+            .navigationTitle("Welcome to Bike Index")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(for: ViewModel.Nav.self) { navSelection in
+                switch navSelection {
+                case .debugSettings:
+                    SettingsPage(path: $viewModel.topLevelPath)
+                        .environment(client)
+                        .accessibilityIdentifier("Settings")
+                case .help:
+                    NavigableWebView(constantLink: .help, host: client.configuration.host)
+                        .environment(client)
+                        .navigationTitle("Help")
                 }
+            }
         }
         .sheet(
             isPresented: $viewModel.displaySignIn,
@@ -65,6 +68,7 @@ struct AuthView: View {
                     display: $viewModel.displaySignIn
                 )
                 .environment(client)
+                .environment(stickerRouter)
                 .interactiveDismissDisabled()
                 .onAppear {
                     viewModel.authNavigator.routeToAuthenticationPage = {
@@ -74,24 +78,23 @@ struct AuthView: View {
                 }
             }
         )
+        .fullScreenCover(isPresented: $stickerRouter.displayStickerCenter) {
+            StickerCenter()
+                .environment(client)
+                .environment(stickerRouter)
+        }
         .onAppear {
             /// Connect AuthView.viewModel.authenticationNavigator.client at runtime
             /// so that AuthenticationNavigator can respond to sign-in and complete the flow.
             viewModel.authNavigator.client = client
         }
-        .onChange(of: deeplinkManager.scannedBike) { oldValue, newValue in
-            /// When a deeplink arrives ``AuthView`` will display ``AuthSignInView`` which will also check
-            /// onChange(of: deeplinkManager.scannedBike) to display the universal link.
-            viewModel.displaySignIn = true
-
-            Logger.deeplinks.info(
-                "AuthView handling scanned deeplink: \(String(describing: client.deeplinkManager.scannedBike?.url))"
-            )
-        }
     }
 }
 
 #Preview {
+    @Previewable let client = try! Client()
+    @Previewable let stickerRouter = QRStickerRouter()
     AuthView()
-        .environment(try! Client())
+        .environment(client)
+        .environment(stickerRouter)
 }

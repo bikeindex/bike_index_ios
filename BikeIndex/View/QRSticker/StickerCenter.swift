@@ -1,5 +1,5 @@
 //
-//  RecentlyScannedStickersView.swift
+//  StickerCenter.swift
 //  BikeIndex
 //
 //  Created by Jack on 5/11/25.
@@ -10,68 +10,82 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-struct RecentlyScannedStickersView: View {
+struct StickerCenter: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) private var client
-    var viewModel = ViewModel()
+    @Environment(QRStickerRouter.self) private var stickerRouter
+    @State var viewModel = ViewModel()
 
     @Query(sort: [SortDescriptor(\ScannedBike.createdAt, order: .reverse)])
     var stickers: [ScannedBike]
 
-    @State var path = NavigationPath()
-    @State var showHowToPage = false
-    /// Control the presentation of this view.
-    @Binding var display: Bool
-
     var body: some View {
-        NavigationStack(path: $path) {
+        @Bindable var stickerRouter = stickerRouter
+        NavigationStack(path: $stickerRouter.path) {
             // Duplicated/repeated scans are allowed
             // but duplicates on ScannedBike.id will cause problems for List
             // so we need to de-duplicate List on persistentModelID
-            List {
-                Section {
-                    ForEach(stickers, id: \.persistentModelID) { sticker in
-                        NavigationLink {
-                            ScannedBikePage(
-                                viewModel: .init(scan: sticker, path: path, dismiss: nil)
-                            )
-                            .interactiveDismissDisabled()
-                        } label: {
-                            StickerDisplayLabel(sticker: sticker)
+            VStack(spacing: 0) {
+                QRCodeCaptureView(recentlyScannedViewModel: viewModel)
+                List {
+                    Section {
+                        ForEach(stickers, id: \.persistentModelID) { sticker in
+                            NavigationLink(value: sticker) {
+                                StickerDisplayLabel(sticker: sticker)
+                            }
                         }
+                        .onDelete(perform: delete(indexSet:))
                     }
-                    .onDelete(perform: delete(indexSet:))
-                } footer: {
-                    TextLink(
-                        base: client.hostProvider.host,
-                        link: .howToUseStickers
-                    )
-                    .environment(\.openURL, openHowToPage)
+
+                    Section {
+                        Text("Align the QR sticker in the center of the shield")
+                            .font(.callout)
+                        TextLink(
+                            base: client.hostProvider.host,
+                            link: .howToUseStickers
+                        )
+                        .environment(\.openURL, openHowToPage)
+                    } header: {
+                        Text("⚠️ Information")
+
+                    }
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle("Recently Scanned Stickers")
+            .navigationTitle("QR Sticker Center")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Close") {
-                        display = false
+                        stickerRouter.path = NavigationPath()
+                        stickerRouter.displayStickerCenter = false
                     }
                 }
             }
-            .navigationDestination(isPresented: $showHowToPage) {
+            .navigationDestination(isPresented: $stickerRouter.showHowToPage) {
                 NavigableWebView(
                     constantLink: .howToUseStickers,
                     host: client.hostProvider.host)
             }
+            .navigationDestination(for: ScannedBike.self) { scannedBike in
+                ScannedBikePage(
+                    viewModel: .init(scan: scannedBike)
+                )
+            }
+        }
+        .onAppear {
+            Logger.camera.info("[StickerCenter] onAppear \(Date())")
         }
         .onDisappear {
-            cleanUp()
+            Logger.camera.info("[StickerCenter] onDisappear \(Date())")
+            if stickerRouter.path.isEmpty {
+                cleanUp()
+            }
         }
     }
 
     private var openHowToPage: OpenURLAction {
         OpenURLAction { _ in
-            showHowToPage = true
+            stickerRouter.showHowToPage = true
             return .handled
         }
     }
@@ -89,7 +103,7 @@ struct RecentlyScannedStickersView: View {
         }
     }
 
-    /// Run a clean up pass when RecentlyScannedStickersView is dismissed.
+    /// Run a clean up pass when StickerCenter is dismissed.
     /// If the user last scanned stickers outside of the expiration window they will either
     /// be cleaned up here (by way of onDisappear) or at the next scan.
     private func cleanUp() {
@@ -110,10 +124,12 @@ struct RecentlyScannedPreview: PreviewProvider {
         configurations: ModelConfiguration(isStoredInMemoryOnly: true))
 
     static var client = try! Client()
+    static let stickerRouter = QRStickerRouter()
 
     static var previews: some View {
-        RecentlyScannedStickersView(display: .constant(true))
+        StickerCenter()
             .environment(client)
+            .environment(stickerRouter)
             .modelContainer(container)
             .onAppear {
                 for identifier in ["SAM000000", "A40340", "NONMATCH"] {

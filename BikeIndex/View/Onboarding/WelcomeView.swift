@@ -10,6 +10,7 @@ import SwiftUI
 /// Pair with ``AuthView`` for a complete login experience
 struct WelcomeView: View {
     @Environment(Client.self) var client
+    @Environment(QRStickerRouter.self) var stickerRouter
     @Environment(\.colorScheme) var colorScheme
 
     @State var iconsModel = AlternateIconsModel()
@@ -36,18 +37,29 @@ struct WelcomeView: View {
             .frame(maxWidth: .infinity, alignment: .center)
             .padding()
             Spacer()
-            Button {
-                displaySignIn = true
-            } label: {
-                Label(
-                    "Sign in and get started",
-                    systemImage: "person.crop.circle.dashed"
-                )
-                .accessibilityIdentifier("SignIn")
-                .font(.title3)
-                .labelStyle(.titleAndIcon)
+
+            VStack {
+                Button {
+                    displaySignIn = true
+                } label: {
+                    Label(
+                        "Sign in and get started",
+                        systemImage: "person.crop.circle.dashed"
+                    )
+                    .accessibilityIdentifier("SignIn")
+                    .font(.title3)
+                    .labelStyle(.titleAndIcon)
+                }
+                .buttonStyle(.borderedProminent)
+                .padding(.bottom)
+
+                Button {
+                    stickerRouter.displayStickerCenter = true
+                } label: {
+                    Label("Scan QR Sticker", systemImage: "qrcode")
+                }
+                .padding()
             }
-            .buttonStyle(.borderedProminent)
 
         }
         .toolbarTitleDisplayMode(.large)
@@ -61,6 +73,7 @@ struct WelcomeView: View {
     NavigationStack {
         WelcomeView(displaySignIn: .constant(false))
             .environment(try! Client())
+            .environment(QRStickerRouter())
             .navigationTitle("Welcome to Bike Index")
     }
 }

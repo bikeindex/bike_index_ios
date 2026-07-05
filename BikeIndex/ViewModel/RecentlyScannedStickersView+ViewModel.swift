@@ -1,5 +1,5 @@
 //
-//  RecentlyScannedStickersView+ViewModel.swift
+//  StickerCenter+ViewModel.swift
 //  BikeIndex
 //
 //  Created by Jack on 5/11/25.
@@ -9,9 +9,11 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-extension RecentlyScannedStickersView {
+extension StickerCenter {
+    /// Data marshaller for persistence operations
     class ViewModel {
-        static let limitOfMostRecent = 10
+
+        static let limitOfMostRecent = 30
 
         func persist(context: ModelContext, sticker: ScannedBike) throws -> ScannedBike {
             // 1. Save the latest scanned bike sticker

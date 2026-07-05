@@ -35,3 +35,11 @@ struct StolenBikeInfoSectionView: View {
         }
     }
 }
+
+#Preview {
+    @Previewable let client = try! Client()
+    Form {
+        StolenBikeInfoSectionView()
+            .environment(client)
+    }
+}

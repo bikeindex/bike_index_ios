@@ -16,7 +16,7 @@ extension MainContentPage {
         @Binding var loading: Bool
         @Binding var groupMode: ViewModel.GroupMode
         @Binding var sortOrder: SortOrder
-        @Binding var displayRecentlyScannedStickers: Bool
+        @Binding var displayQrStickerScan: Bool
 
         @Query var recentStickers: [ScannedBike]
 
@@ -39,18 +39,23 @@ extension MainContentPage {
                 .accessibilityHint("Open frequently asked questions and help pages")
             }
 
-            if recentStickers.isEmpty == false {
-                ToolbarItem(placement: .status) {
-                    Button {
-                        displayRecentlyScannedStickers = true
-                    } label: {
+            ToolbarItem(placement: .status) {
+                Button {
+                    displayQrStickerScan = true
+                } label: {
+                    if recentStickers.isEmpty == false {
                         Label(
                             "^[\(recentStickers.count) Recently Scanned Stickers](inflect: true)",
                             systemImage: "qrcode"
                         )
                         .labelStyle(.titleAndIcon)
+                    } else {
+                        Label(
+                            "Scan QR Sticker",
+                            systemImage: "qrcode"
+                        )
+                        .labelStyle(.titleAndIcon)
                     }
-
                 }
             }
 
@@ -114,7 +119,7 @@ extension MainContentPage {
                     loading: .constant(true),
                     groupMode: $groupMode,
                     sortOrder: $sortOrder,
-                    displayRecentlyScannedStickers: $displayRecentlyScannedStickers)
+                    displayQrStickerScan: $displayRecentlyScannedStickers)
             }
     }
     .environment(try! Client())
