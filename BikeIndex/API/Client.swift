@@ -53,11 +53,6 @@ typealias QueryItemTuple = (name: String, value: String)
     var refreshTimer: Timer?
     var refreshRunLoop: RunLoop
 
-    // MARK: Deeplink State
-    /// Deeplinks can be opened from stickers at any time.
-    /// Client will keep the authoritative reference to a deeplink manager.
-    var deeplinkManager: DeeplinkManager
-
     init(
         keychain: KeychainSwift = KeychainSwift(),
         refreshRunLoop: RunLoop = RunLoop.main
@@ -70,7 +65,6 @@ typealias QueryItemTuple = (name: String, value: String)
         self.refreshRunLoop = refreshRunLoop
         let configuration = try ClientConfiguration.bundledConfig()
         self.configuration = configuration
-        self.deeplinkManager = DeeplinkManager(host: configuration.hostProvider)
         loadLastToken()
 
         // Configure webView manipulation scripts

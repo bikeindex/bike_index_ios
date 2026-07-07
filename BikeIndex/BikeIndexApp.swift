@@ -17,6 +17,7 @@ struct BikeIndexApp: App {
 
     /// A Client instance for stateful networking.
     @State private var client: Client
+    @State private var qrStickerRouter: QRStickerRouter
 
     /// Set up SwiftData
     private var sharedModelContainer: ModelContainer
@@ -34,9 +35,12 @@ struct BikeIndexApp: App {
                 }
             }
             .tint(.accentColor)
-            .onOpenURL(perform: handleDeeplink)
-            .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { handleDeeplink($0.webpageURL) }
+            .onOpenURL(perform: handleUniversalLink)
+            .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) {
+                handleUniversalLink($0.webpageURL)
+            }
             .environment(client)
+            .environment(qrStickerRouter)
             .modelContainer(sharedModelContainer)
         }
     }
@@ -44,25 +48,35 @@ struct BikeIndexApp: App {
     /// DeeplinkManager parses out the URL and returns a boxed result.
     /// If this boxed result contains a QR sticker scanned bike then the view model will persist it.
     /// After the view model persists the QR sticker, it can be stored in DeeplinkManager as the most-recent.
-    private func handleDeeplink(_ url: URL?) {
-        let scanResult = client.deeplinkManager.scan(url: url)
+    private func handleUniversalLink(_ url: URL?) {
+        let stickerParser = StickerParser(host: client.hostProvider)
+        guard let scannedBike = stickerParser.scan(url: url) else {
+            Logger.model.error("Failed to handle deeplink: \(String(describing: url))")
+            Honeybadger.notify(
+                errorString: "Failed to handle deeplink \(String(describing: url))",
+                context: [
+                    Honeybadger.ContextKey.deeplink.rawValue: url?.description ?? ""
+                ])
+            return
+        }
         do {
-            if let sticker = scanResult?.scannedBike {
-                let scannedBikesViewModel = RecentlyScannedStickersView.ViewModel()
-                let persistedSticker = try scannedBikesViewModel.persist(
-                    context: sharedModelContainer.mainContext,
-                    sticker: sticker)
-                client.deeplinkManager.scannedBike = persistedSticker
-            }
+            let scannedBikesViewModel = StickerCenter.ViewModel()
+            let persistedSticker = try scannedBikesViewModel.persist(
+                context: sharedModelContainer.mainContext,
+                sticker: scannedBike)
+            qrStickerRouter.scanUniversalLink(persistedSticker)
         } catch {
-            Logger.model.error("Failed to handle deeplink: \(error)")
-            Honeybadger.notify(error: error)
+            Logger.deeplinks.error(
+                "Failed to scan QR sticker from deeplink code \(scannedBike.sticker, privacy: .auto)"
+            )
+            Honeybadger.notify(error: error, qrSticker: scannedBike.sticker)
         }
     }
 
     init() {
         let client = try! Client()
         self.client = client
+        self.qrStickerRouter = QRStickerRouter()
 
         Honeybadger.configure(apiKey: client.configuration.honeybadgerApiKey)
 

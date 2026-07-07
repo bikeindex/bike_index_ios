@@ -12,7 +12,7 @@ import RegexBuilder
 import SwiftData
 
 @Model
-class ScannedBike: Equatable, Identifiable {
+class ScannedBike: Equatable, Identifiable, Hashable {
     var id: URL { url }
 
     /// QR Code Identifiers are used in the format [A-Z]\d{5}

@@ -14,6 +14,7 @@ import SwiftUI
 struct MainContentPage: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
+    @Environment(QRStickerRouter.self) var stickerRouter
 
     /// ViewModel for state management.
     /// Forwards dynamic query changes to ``BikesGridContainerView`` to support dynamic grouping selection.
@@ -24,7 +25,7 @@ struct MainContentPage: View {
 
     var body: some View {
         NavigationStack(path: $viewModel.path) {
-            @Bindable var deeplinkManager = client.deeplinkManager
+            @Bindable var stickerRouter = stickerRouter
             ScrollView {
                 LazyVGrid(columns: Array(repeating: GridItem(), count: 1)) {
                     ForEach(ContentButton.allCases, id: \.id) { menuItem in
@@ -46,7 +47,7 @@ struct MainContentPage: View {
                     loading: $viewModel.fetching,
                     groupMode: $viewModel.groupMode,
                     sortOrder: $viewModel.sortOrder,
-                    displayRecentlyScannedStickers: $viewModel.displayRecentlyScannedStickers)
+                    displayQrStickerScan: $stickerRouter.displayStickerCenter)
             }
             .navigationTitle("Bike Index")
             .navigationDestination(for: MainContent.self) { selection in
@@ -76,24 +77,6 @@ struct MainContentPage: View {
                     host: client.configuration.host)
             }
             .sheet(
-                item: $deeplinkManager.scannedBike,
-                content: { scan in
-                    // Open the new sticker
-                    let viewModel = ScannedBikePage.ViewModel(
-                        scan: scan,
-                        path: viewModel.path,
-                        dismiss: {
-                            deeplinkManager.scannedBike = nil
-                        })
-                    ScannedBikePage(viewModel: viewModel)
-                        .onDisappear {
-                            if let exitPath = viewModel.onDisappear {
-                                viewModel.path.append(exitPath)
-                            }
-                        }
-                }
-            )
-            .sheet(
                 item: $appIntentNavManager.presentedItem,
                 content: { presentedItem in
                     // Opens directly into the BikeDetailOfflineView for the bike selected via App Intents
@@ -104,20 +87,13 @@ struct MainContentPage: View {
                     .presentationDragIndicator(.visible)
                 }
             )
-            .fullScreenCover(
-                isPresented: $viewModel.displayRecentlyScannedStickers,
-                content: {
-                    RecentlyScannedStickersView(display: $viewModel.displayRecentlyScannedStickers)
-                        .environment(client)
-                }
-            )
+            .fullScreenCover(isPresented: $stickerRouter.displayStickerCenter) {
+                StickerCenter()
+                    .environment(client)
+                    .environment(stickerRouter)
+            }
             // empty action block to rely on default Button("OK") behavior
             .alert(isPresented: $viewModel.showError, error: viewModel.lastError) {}
-            .onAppear {
-                Logger.views.debug(
-                    "Starting main content page with deeplink scanned bike \(String(describing: deeplinkManager.scannedBike))"
-                )
-            }
         }
         .task {
             /// Comment this out to test ``MainContentPage/ViewModel/fetching`` display
@@ -134,24 +110,28 @@ struct MainContentPage: View {
 // MARK: Empty Data Preview
 #Preview("Empty data") {
     @Previewable let client = try! Client()
-
+    @Previewable let stickerRouter = QRStickerRouter()
     @Previewable let container = try! ModelContainer(
         for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
         configurations: ModelConfiguration(isStoredInMemoryOnly: true))
 
     MainContentPage()
         .environment(client)
+        .environment(stickerRouter)
         .modelContainer(container)
 }
 
 // MARK: Bikes by status (withOwner)
 #Preview("Bikes by status (withOwner)") {
-    let container = try! ModelContainer(
+    @Previewable let client = try! Client()
+    @Previewable let stickerRouter = QRStickerRouter()
+    @Previewable let container = try! ModelContainer(
         for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
         configurations: ModelConfiguration(isStoredInMemoryOnly: true))
 
     MainContentPage()
-        .environment(try! Client())
+        .environment(client)
+        .environment(stickerRouter)
         .modelContainer(container)
         .onAppear {
             do {
@@ -189,12 +169,15 @@ struct MainContentPage: View {
 
 // MARK: Bikes by status (all)
 #Preview("Bikes by status (all)") {
-    let container = try! ModelContainer(
+    @Previewable let client = try! Client()
+    @Previewable let stickerRouter = QRStickerRouter()
+    @Previewable let container = try! ModelContainer(
         for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
         configurations: ModelConfiguration(isStoredInMemoryOnly: true))
 
     MainContentPage()
-        .environment(try! Client())
+        .environment(client)
+        .environment(stickerRouter)
         .modelContainer(container)
         .onAppear {
             do {

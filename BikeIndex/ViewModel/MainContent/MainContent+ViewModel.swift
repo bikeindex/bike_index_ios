@@ -48,9 +48,6 @@ extension MainContentPage {
         /// Control the navigation hierarchy for all views after this one
         var path = NavigationPath()
 
-        /// Present a sheet for Recently Scanned Stickers
-        var displayRecentlyScannedStickers: Bool = false
-
         // MARK: - Network Operations
 
         /// 1. Fetch profile data

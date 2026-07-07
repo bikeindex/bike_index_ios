@@ -78,6 +78,11 @@ extension AcknowledgementPackage {
             license: .mit,
             copyright: "Copyright © 2025 Honeybadger Industries, Inc.",
             repository: URL("https://github.com/honeybadger-io/honeybadger-cocoa")),
+        AcknowledgementPackage(
+            title: "SwiftUI-Barcode-Scanner-Concurrency",
+            license: .mit,
+            copyright: "Copyright © 2026 YouForge",
+            repository: URL("https://github.com/YouForge/SwiftUI-Barcode-Scanner-Concurrency")),
     ]
 
     static var gnuAfferoGPLv3Packages: [AcknowledgementPackage] {

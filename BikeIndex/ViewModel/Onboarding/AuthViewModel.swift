@@ -33,6 +33,7 @@ extension AuthView {
         let historyNavigator: HistoryNavigator
         var authNavigator: AuthenticationNavigator
 
+        /// AuthView may push to a QR sticker scan view
         /// AuthView may push to a Debug view (debug builds only)
         var topLevelPath = NavigationPath()
 
