@@ -119,6 +119,12 @@ import SwiftData
     var stolenRecord: StolenBikeRecord?
     var components: [Component]
 
+    /// scannedSticker represents a QR Sticker that has been scanned _locally_
+    /// by the user and is displayed in the sticker center.
+    /// Scanned stickers fetch the bike details from v3/bikes/scanned/:sticker
+    @Relationship
+    var scannedSticker: ScannedBike?
+
     struct Constants {
         /// The range of supported years for Bike models
         static let yearRange = 1900..<2100

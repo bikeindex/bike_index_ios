@@ -11,6 +11,10 @@ import OSLog
 import RegexBuilder
 import SwiftData
 
+/// Light-weight representation of a scanned sticker.
+///     Store details of the sticker, metadata, and establish a relationship to
+///     the associated bike if one is linked.
+// TODO: Renamed to ScannedSticker
 @Model
 class ScannedBike: Equatable, Identifiable, Hashable {
     var id: URL { url }
@@ -23,9 +27,15 @@ class ScannedBike: Equatable, Identifiable, Hashable {
     /// Note: this is _not_ the bike's URL.
     var url: URL
 
+    /// In-app only sticker created-at date
     var createdAt: Date
 
-    // TODO: var bikeTitle: String?
+    /// Every sticker, stored in this class, can have an associated bike.
+    /// Every sticker detail display will attempt to fetch the associated bike.
+    /// When that bike is successfully fetched, this relationship will be
+    /// established.
+    @Relationship(inverse: \Bike.scannedSticker)
+    var bike: Bike?
 
     /// Designated initializer only for SwiftData.
     init(sticker: String, url: URL, createdAt: Date = Date()) {
