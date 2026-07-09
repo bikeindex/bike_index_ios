@@ -19,9 +19,13 @@ class ScannedBike: Equatable, Identifiable, Hashable {
     /// Example: https://bikeindex.org/bikes/scanned/A40340
     var sticker: String
 
+    /// Sticker URL.
+    /// Note: this is _not_ the bike's URL.
     var url: URL
 
     var createdAt: Date
+
+    // TODO: Add `var bikeTitle: String?` here
 
     /// Designated initializer only for SwiftData.
     init(sticker: String, url: URL, createdAt: Date = Date()) {

@@ -151,20 +151,26 @@ struct StickerDisplayLabel: View {
 
     var body: some View {
         LabeledContent {
-            Text("\(sticker.createdAt, style: .relative)")
-                .foregroundStyle(.primary)
+            VStack {
+                Text("\(sticker.createdAt, style: .relative)")
+                    .foregroundStyle(.primary)
+                Spacer()
+            }
         } label: {
-            Text(sticker.displayTitle)
-                .monospaced()
-                .bold()
-                .foregroundStyle(.white)
-                .frame(maxHeight: .infinity)
-                .background {
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .scale(1.15)
-                        .fill(.accent)
-                }
-                .padding(.leading, 4)
+            VStack(alignment: .leading) {
+                Text(sticker.displayTitle)
+                    .monospaced()
+                    .bold()
+                    .foregroundStyle(.white)
+                    .frame(maxHeight: .infinity)
+                    .background {
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .scale(1.15)
+                            .fill(.accent)
+                    }
+                    .padding(.leading, 4)
+                Text("Red Jamis")
+            }
 
         }
     }
