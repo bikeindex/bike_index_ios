@@ -14,7 +14,7 @@ import SwiftData
 /// Light-weight representation of a scanned sticker.
 ///     Store details of the sticker, metadata, and establish a relationship to
 ///     the associated bike if one is linked.
-// TODO: Renamed to ScannedSticker
+// TODO: Consider renaming to ScannedSticker
 @Model
 class ScannedBike: Equatable, Identifiable, Hashable {
     var id: URL { url }
