@@ -159,6 +159,7 @@ enum Bikes: APIEndpoint {
     case image(identifier: BikeId, imageData: Data)
     case images(identifier: BikeId, imageIdentifier: String)
     case send_stolen_notification(identifier: BikeId)
+    case scanned(sticker: String)
 
     var path: [String] {
         switch self {
@@ -178,6 +179,9 @@ enum Bikes: APIEndpoint {
             [api, v3, "bikes", String(bikeIdentifier), "images", imageIdentifier]
         case .send_stolen_notification(let identifier):
             [api, v3, "bikes", String(identifier), "send_stolen_notification"]
+        case .scanned(let sticker):
+            // also works with `v3/bikes/s/:sticker`
+            [api, v3, "bikes", "scanned", sticker]
         }
     }
 
@@ -197,6 +201,8 @@ enum Bikes: APIEndpoint {
             .delete
         case .send_stolen_notification:
             .post
+        case .scanned:
+            .get
         }
     }
 
@@ -221,6 +227,8 @@ enum Bikes: APIEndpoint {
             return RegisterBikeResponseContainer.self
         case .image:
             return ImageResponseContainer.self
+        case .scanned:
+            return FullBikeResponseContainer.self
         default:
             return EmptyResponse.self
         }

@@ -25,7 +25,7 @@ class ScannedBike: Equatable, Identifiable, Hashable {
 
     var createdAt: Date
 
-    // TODO: Add `var bikeTitle: String?` here
+    // TODO: var bikeTitle: String?
 
     /// Designated initializer only for SwiftData.
     init(sticker: String, url: URL, createdAt: Date = Date()) {
