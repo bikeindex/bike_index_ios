@@ -107,7 +107,9 @@ extension ScannedBike {
             let url = components.url,
             components.host == provider.host.host()
         else {
-            print("ScannedBike.init failed on nil URL input. Found \(inputCorrectedBase)")
+            print(
+                "ScannedBike.init failed on nil URL input. Found \(inputCorrectedBase), host component must match \(String(describing: provider.host.host()))"
+            )
             return nil
         }
 
