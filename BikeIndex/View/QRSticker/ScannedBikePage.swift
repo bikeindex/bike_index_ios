@@ -5,7 +5,9 @@
 //  Created by Jack on 3/29/25.
 //
 
+import Honeybadger
 import OSLog
+import SwiftData
 import SwiftUI
 import WebKit
 
@@ -14,6 +16,7 @@ import WebKit
 /// for bike sticker -> registration links and bike sticker -> bike details links.
 struct ScannedBikePage: View {
     @Environment(Client.self) var client
+    @Environment(\.modelContext) var modelContext: ModelContext
     @State var viewModel: ViewModel
 
     var body: some View {
@@ -26,6 +29,13 @@ struct ScannedBikePage: View {
             Logger.views.debug(
                 "ScannedBikePage opening sticker for \(viewModel.scan.url)"
             )
+            do {
+                try viewModel.fetchScanDetails(modelContext: modelContext)
+            } catch {
+                Logger.api.error(
+                    "Failed to fetch full details for scanned sticker \(viewModel.scan.sticker)")
+                Honeybadger.notify(error: error, qrSticker: viewModel.scan.sticker)
+            }
         }
     }
 }
@@ -41,6 +51,10 @@ extension ScannedBikePage {
 
         init(scan: ScannedBike) {
             self.scan = scan
+        }
+
+        func fetchScanDetails(modelContext: ModelContext) throws {
+            // TODO: Fill in Bikes.scanned(sticker) fetch and persistence
         }
     }
 }

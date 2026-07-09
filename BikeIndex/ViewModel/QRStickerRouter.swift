@@ -9,14 +9,11 @@ import Foundation
 import OSLog
 import SwiftUI
 
-/// The goal of these changes is to:
-/// 1. toggle display of the sticker center
-/// 2. toggle display of a particular sticker deeplink -- adding to the navigation
-///     hierarchy with the sticker center
-/// Hmm.
-/// Maybe we need to replace two Bools with 1 NavigationPath that we can just append
-/// to.
-/// Will that work pre/post authorization? Not certain.
+/// QRSticker control controls the navigation of the Sticker Center
+/// 1. The first thing it controls is toggling display of the sticker center
+/// 2. The second facet is wehter a particular sticker deeplink is displayed
+///     adding the scanned sticker model to the navigation path to jump to a
+///     scan.
 @MainActor @Observable
 class QRStickerRouter {
     var displayStickerCenter: Bool = false
