@@ -1,5 +1,5 @@
 //
-//  ScannedBike.swift
+//  ScannedSticker.swift
 //  BikeIndex
 //
 //  Created by Jack on 5/11/25.
@@ -11,19 +11,26 @@ import OSLog
 import RegexBuilder
 import SwiftData
 
+/// Represent scanned QR code stickers that were actively scanned from the camera in-app
+/// (just the sticker identifier), or by deeplink (external camera).
 @Model
-class ScannedBike: Equatable, Identifiable, Hashable {
+class ScannedSticker: Equatable, Identifiable, Hashable {
     var id: URL { url }
 
     /// QR Code Identifiers are used in the format [A-Z]\d{5}
-    /// Example: https://bikeindex.org/bikes/scanned/A40340
+    /// Example: the last path component of https://bikeindex.org/bikes/scanned/A40340
     var sticker: String
 
+    /// The fully resolved host path against the host provider (see BikeIndex-template.xcconfig)
+    /// with the appropriate path components for this specific sticker.
     var url: URL
 
+    /// Date of the scan, used in-app only.
     var createdAt: Date
 
-    /// Designated initializer only for SwiftData.
+    /// Required initializer only for SwiftData.
+    /// Use convenience initializer ``ScannedSticker/init(host:url:)`` to resolve a sticker
+    /// (the last path component) against the configured host.
     init(sticker: String, url: URL, createdAt: Date = Date()) {
         self.sticker = sticker
         self.url = url
@@ -39,7 +46,7 @@ class ScannedBike: Equatable, Identifiable, Hashable {
         }
 
         do {
-            if let match = try ScannedBike.regex.ignoresCase(true).firstMatch(in: sticker) {
+            if let match = try ScannedSticker.regex.ignoresCase(true).firstMatch(in: sticker) {
                 // First tuple item is the whole match
                 let (_, letterGroup, firstDigits, secondDigits) = match.output
                 return "\(letterGroup) \(firstDigits) \(secondDigits)"
@@ -88,8 +95,8 @@ class ScannedBike: Equatable, Identifiable, Hashable {
     }
 }
 
-extension ScannedBike {
-    /// Try to initialize a ScannedBike from a sticker.
+extension ScannedSticker {
+    /// Try to initialize a ScannedSticker from a sticker.
     /// URLs will be bikes/scanned/:id and _may_ start with bikeindex:// (this is useful for development and testing).
     /// NOTE: Deeplinks will remove the second `:` from `bikeindex://https://bikeindex...`
     /// - Parameters:
@@ -107,7 +114,7 @@ extension ScannedBike {
             let url = components.url,
             components.host == provider.host.host()
         else {
-            print("ScannedBike.init failed on nil URL input. Found \(inputCorrectedBase)")
+            print("ScannedSticker.init failed on nil URL input. Found \(inputCorrectedBase)")
             return nil
         }
 
@@ -117,7 +124,7 @@ extension ScannedBike {
         let expectedPathComponents = ["/", "bikes", "scanned", identifier]
 
         guard givenPathComponents == expectedPathComponents else {
-            print("ScannedBike.init failed to find bikes/scanned/:id")
+            print("ScannedSticker.init failed to find bikes/scanned/:id")
             return nil
         }
 

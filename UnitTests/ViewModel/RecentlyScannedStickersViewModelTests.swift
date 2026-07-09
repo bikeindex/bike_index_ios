@@ -23,10 +23,10 @@ struct RecentlyScannedStickersViewModelTests {
         let testSamples: [(URL, Date)]
         let expectedNumberOfStickers: Int
 
-        var scannedBikesHistory: [ScannedBike] {
+        var scannedBikesHistory: [ScannedSticker] {
             testSamples.map { (url, createdAt) in
                 let sticker = url.lastPathComponent
-                return ScannedBike(sticker: sticker, url: url, createdAt: createdAt)
+                return ScannedSticker(sticker: sticker, url: url, createdAt: createdAt)
             }
         }
 
@@ -102,14 +102,14 @@ struct RecentlyScannedStickersViewModelTests {
         let config = ModelConfiguration(
             invocationName, isStoredInMemoryOnly: true, allowsSave: true)
         let container = try! ModelContainer(
-            for: ScannedBike.self,
+            for: ScannedSticker.self,
             configurations: config
         )
         let context = container.mainContext
         context.autosaveEnabled = false
         let model = ViewModel()
 
-        let fetch = FetchDescriptor(predicate: #Predicate<ScannedBike> { _ in true })
+        let fetch = FetchDescriptor(predicate: #Predicate<ScannedSticker> { _ in true })
         let beginningState = try context.fetchCount(fetch)
         #expect(beginningState == 0)
 
@@ -131,7 +131,7 @@ struct RecentlyScannedStickersViewModelTests {
             "\(type(of: self)) should not have pending changes before reaching body of test function \(#function)"
         )
 
-        let endState = try! context.fetchCount(FetchDescriptor<ScannedBike>())
+        let endState = try! context.fetchCount(FetchDescriptor<ScannedSticker>())
         #expect(
             endState == input.expectedNumberOfStickers,
             "Expected to find \(input.expectedNumberOfStickers) but actually found \(endState)")
@@ -143,7 +143,7 @@ struct RecentlyScannedStickersViewModelTests {
             .sorted(by: >)
             .prefix(upTo: input.expectedNumberOfStickers)
 
-        let outputPersistedModels = try context.fetch(FetchDescriptor<ScannedBike>())
+        let outputPersistedModels = try context.fetch(FetchDescriptor<ScannedSticker>())
         let zipped = zip(mostRecentInput, outputPersistedModels)
         #expect(zipped.underestimatedCount == input.expectedNumberOfStickers)
         for (mostRecent, persisted) in zipped {

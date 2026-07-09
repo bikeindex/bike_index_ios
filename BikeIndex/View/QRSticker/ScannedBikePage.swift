@@ -33,13 +33,13 @@ struct ScannedBikePage: View {
 extension ScannedBikePage {
     @Observable
     final class ViewModel {
-        var scan: ScannedBike
+        var scan: ScannedSticker
 
         var title: String {
             scan.displayTitle.trimmingCharacters(in: .whitespaces)
         }
 
-        init(scan: ScannedBike) {
+        init(scan: ScannedSticker) {
             self.scan = scan
         }
     }

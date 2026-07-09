@@ -18,7 +18,7 @@ extension MainContentPage {
         @Binding var sortOrder: SortOrder
         @Binding var displayQrStickerScan: Bool
 
-        @Query var recentStickers: [ScannedBike]
+        @Query var recentStickers: [ScannedSticker]
 
         var body: some ToolbarContent {
             ToolbarItemGroup(placement: .topBarLeading) {

@@ -85,7 +85,7 @@ struct BikeIndexApp: App {
             User.self,
             AuthenticatedUser.self,
             AutocompleteManufacturer.self,
-            ScannedBike.self,  // QR sticker history
+            ScannedSticker.self,  // QR sticker history
             FullPublicImage.self,
             StolenBikeRecord.self,
         ])

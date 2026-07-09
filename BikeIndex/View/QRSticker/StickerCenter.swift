@@ -16,14 +16,14 @@ struct StickerCenter: View {
     @Environment(QRStickerRouter.self) private var stickerRouter
     @State var viewModel = ViewModel()
 
-    @Query(sort: [SortDescriptor(\ScannedBike.createdAt, order: .reverse)])
-    var stickers: [ScannedBike]
+    @Query(sort: [SortDescriptor(\ScannedSticker.createdAt, order: .reverse)])
+    var stickers: [ScannedSticker]
 
     var body: some View {
         @Bindable var stickerRouter = stickerRouter
         NavigationStack(path: $stickerRouter.path) {
             // Duplicated/repeated scans are allowed
-            // but duplicates on ScannedBike.id will cause problems for List
+            // but duplicates on ScannedSticker.id will cause problems for List
             // so we need to de-duplicate List on persistentModelID
             VStack(spacing: 0) {
                 QRCodeCaptureView(recentlyScannedViewModel: viewModel)
@@ -66,7 +66,7 @@ struct StickerCenter: View {
                     constantLink: .howToUseStickers,
                     host: client.hostProvider.host)
             }
-            .navigationDestination(for: ScannedBike.self) { scannedBike in
+            .navigationDestination(for: ScannedSticker.self) { scannedBike in
                 ScannedBikePage(
                     viewModel: .init(scan: scannedBike)
                 )
@@ -120,7 +120,7 @@ struct StickerCenter: View {
 
 struct RecentlyScannedPreview: PreviewProvider {
     static let container = try! ModelContainer(
-        for: ScannedBike.self,
+        for: ScannedSticker.self,
         configurations: ModelConfiguration(isStoredInMemoryOnly: true))
 
     static var client = try! Client()
@@ -133,7 +133,7 @@ struct RecentlyScannedPreview: PreviewProvider {
             .modelContainer(container)
             .onAppear {
                 for identifier in ["SAM000000", "A40340", "NONMATCH"] {
-                    if let sampleSticker = ScannedBike(
+                    if let sampleSticker = ScannedSticker(
                         host: client.hostProvider,
                         url: URL(string: "https://bikeindex.org/bikes/scanned/\(identifier)"))
                     {
@@ -147,7 +147,7 @@ struct RecentlyScannedPreview: PreviewProvider {
 }
 
 struct StickerDisplayLabel: View {
-    var sticker: ScannedBike
+    var sticker: ScannedSticker
 
     var body: some View {
         LabeledContent {

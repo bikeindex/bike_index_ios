@@ -27,11 +27,11 @@ class QRStickerRouter {
 
     /// Keep only 1 active QR scanned bike for immediate display in the UI.
     /// This is ephemeral and does not care about scan history.
-    private var scannedBike: ScannedBike?
+    private var scannedBike: ScannedSticker?
 
     // MARK: Update Navigation
 
-    func scanUniversalLink(_ scan: ScannedBike) {
+    func scanUniversalLink(_ scan: ScannedSticker) {
         scannedBike = scan
         displayStickerCenter = true
         path.append(scan)

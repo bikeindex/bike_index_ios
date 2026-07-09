@@ -22,8 +22,8 @@ final class StickerParser: Identifiable {
 
     /// Parse Deeplinks / Universal Links for QR Stickers
     /// e.g. external camera scans or Safari deeplinks
-    func scan(url: URL?) -> ScannedBike? {
-        guard let scannedBike = ScannedBike(host: hostProvider, url: url) else {
+    func scan(url: URL?) -> ScannedSticker? {
+        guard let scannedBike = ScannedSticker(host: hostProvider, url: url) else {
             Logger.deeplinks.error(
                 "Failed to scan QR sticker from universal link \(String(describing: url), privacy: .auto)"
             )
@@ -33,9 +33,9 @@ final class StickerParser: Identifiable {
     }
 
     /// Parse in-app camera scans
-    func parse(code: String) -> ScannedBike? {
+    func parse(code: String) -> ScannedSticker? {
         guard
-            let scannedBike = ScannedBike(
+            let scannedBike = ScannedSticker(
                 host: hostProvider, url: URL(string: code))
         else {
             Honeybadger.notify(

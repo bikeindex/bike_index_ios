@@ -15,7 +15,7 @@ extension StickerCenter {
 
         static let limitOfMostRecent = 30
 
-        func persist(context: ModelContext, sticker: ScannedBike) throws -> ScannedBike {
+        func persist(context: ModelContext, sticker: ScannedSticker) throws -> ScannedSticker {
             // 1. Save the latest scanned bike sticker
             context.insert(sticker)
             try context.save()
@@ -32,11 +32,11 @@ extension StickerCenter {
             // Ex: The 11th sticker scan will be forgotten.
             // Ex: A sticker scanned 15 days ago will be forgotten.
             let twoWeeksAgo = Date().addingTimeInterval(-60 * 60 * 24 * 14)
-            let bikesScannedInTheLastTwoWeeks = #Predicate<ScannedBike> { model in
+            let bikesScannedInTheLastTwoWeeks = #Predicate<ScannedSticker> { model in
                 model.createdAt > twoWeeksAgo
             }
 
-            var fetchDescriptor = FetchDescriptor<ScannedBike>(
+            var fetchDescriptor = FetchDescriptor<ScannedSticker>(
                 predicate: bikesScannedInTheLastTwoWeeks,
                 sortBy: [SortDescriptor(\.createdAt, order: .reverse)])
             fetchDescriptor.fetchLimit = Self.limitOfMostRecent
@@ -48,14 +48,14 @@ extension StickerCenter {
 
             // 3. Delete the rest
             try context.delete(
-                model: ScannedBike.self,
-                where: #Predicate<ScannedBike> { model in
+                model: ScannedSticker.self,
+                where: #Predicate<ScannedSticker> { model in
                     tenMostRecentStickers.contains(model.persistentModelID) == false
                 })
         }
 
         /// Support deleting for manual removal
-        func delete(context: ModelContext, stickers: [ScannedBike]) throws {
+        func delete(context: ModelContext, stickers: [ScannedSticker]) throws {
             try context.transaction {
                 for sticker in stickers {
                     context.delete(sticker)
