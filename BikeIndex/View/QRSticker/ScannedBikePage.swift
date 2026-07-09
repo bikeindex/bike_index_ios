@@ -29,19 +29,15 @@ struct ScannedBikePage: View {
             Logger.views.debug(
                 "ScannedBikePage opening sticker for \(viewModel.scan.url)"
             )
-            do {
-                try viewModel.fetchScanDetails(modelContext: modelContext)
-            } catch {
-                Logger.api.error(
-                    "Failed to fetch full details for scanned sticker \(viewModel.scan.sticker)")
-                Honeybadger.notify(error: error, qrSticker: viewModel.scan.sticker)
-            }
+        }
+        .task {
+            await viewModel.fetchScanDetails(client: client, modelContext: modelContext)
         }
     }
 }
 
 extension ScannedBikePage {
-    @Observable
+    @MainActor @Observable
     final class ViewModel {
         var scan: ScannedBike
 
@@ -53,8 +49,56 @@ extension ScannedBikePage {
             self.scan = scan
         }
 
-        func fetchScanDetails(modelContext: ModelContext) throws {
-            // TODO: Fill in Bikes.scanned(sticker) fetch and persistence
+        func fetchScanDetails(client: Client, modelContext: ModelContext) async {
+            guard scan.bike == nil else {
+                Logger.model.info(
+                    "ScannedBikePage.ViewModel attempted to fetch bike details for \(self.scan.sticker) but the associated bike was already fetched and is known in the database, skipping fetch."
+                )
+                return
+            }
+
+            let stickerId = scan.sticker
+            let fullBikeResponseContainer = await client.get(Bikes.scanned(sticker: stickerId))
+            switch fullBikeResponseContainer {
+            case .success(let success):
+                Logger.api.info(
+                    "Fetched bike details from sticker \(self.scan.sticker), \(String(describing: success))"
+                )
+
+                guard let responseContainer = success as? FullBikeResponseContainer else {
+                    Logger.api.error(
+                        "Failed to fetch full bike details for scanned sticker \(self.scan.sticker)"
+                    )
+                    Honeybadger.notify(
+                        errorString:
+                            "Failed to parse FullBikeResponseContainer for associated sticker",
+                        context: [
+                            Honeybadger.ContextKey.qrSticker.rawValue: scan.sticker
+                        ])
+                    return
+                }
+
+                let bike = responseContainer.bike.modelInstance()
+                do {
+                    try modelContext.transaction {
+                        modelContext.insert(bike)
+                        bike.scannedSticker = scan
+                        scan.bike = bike
+                        modelContext.insert(scan)
+                    }
+                } catch {
+                    Logger.api.error(
+                        "Failed to fetch full details for scanned sticker \(self.scan.sticker) due to \(error)"
+                    )
+                    Honeybadger.notify(error: error, qrSticker: scan.sticker)
+                }
+
+            case .failure(let failure):
+                Logger.api.error(
+                    "Failed to fetch full details for scanned sticker \(self.scan.sticker) due to \(failure)"
+                )
+                Honeybadger.notify(error: failure, qrSticker: scan.sticker)
+            }
         }
     }
 }
