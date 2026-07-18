@@ -64,18 +64,13 @@ struct AuthView: View {
                 // Also supports QR-code bike display in a web view.
                 AuthSignInView(
                     baseUrl: viewModel.signInPageRequest.url!,
+                    // pre-condition: historyNavigator.child is assigned to viewModel.authNavigator
                     navigator: viewModel.historyNavigator,
                     display: $viewModel.displaySignIn
                 )
                 .environment(client)
                 .environment(stickerRouter)
                 .interactiveDismissDisabled()
-                .onAppear {
-                    viewModel.authNavigator.routeToAuthenticationPage = {
-                        let webView = viewModel.historyNavigator.wkWebView
-                        webView?.load(viewModel.signInPageRequest)
-                    }
-                }
             }
         )
         .fullScreenCover(isPresented: $stickerRouter.displayStickerCenter) {
@@ -86,7 +81,7 @@ struct AuthView: View {
         .onAppear {
             /// Connect AuthView.viewModel.authenticationNavigator.client at runtime
             /// so that AuthenticationNavigator can respond to sign-in and complete the flow.
-            viewModel.authNavigator.client = client
+            viewModel.assign(client: client)
         }
     }
 }
