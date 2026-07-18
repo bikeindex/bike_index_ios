@@ -18,3 +18,15 @@ PRODUCT_BUNDLE_IDENTIFIER = org.bikeindex.app
 // Deactivated for compatibility with GitHub Actions
 // TODO: Figure out how to re-enable in continuous delivery builds
 APP_SHORTCUTS_ENABLE_FLEXIBLE_MATCHING = NO
+
+// Default values for local-Rails development
+// To use these, check out https://github.com/bikeindex/bike_index
+// follow the 'Running Bike Index locally' steps and start the dev server
+// then sign-in with any seeded account (of https://github.com/bikeindex/bike_index/blob/main/db/seeds/seed_test_users.rb )
+//
+// alternatively, provide your own OAuth config in BikeIndex-development.xcconfig
+//
+API_HOST = http:\/\/localhost
+API_PORT = 3042
+API_CLIENT_ID = 9cBuxnqbhums1vun26ZfMv-91rInzdc6_G9HCulFxKs
+API_SECRET = Tcw_4Cr1-Yowsjs-E2Te0YZnVdYmeES3UJ0AhbeBE10
