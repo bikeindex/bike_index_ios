@@ -5,6 +5,7 @@
 //  Created by Jack on 1/14/24.
 //
 
+import OSLog
 import SwiftUI
 import WebKit
 import WebViewKit
@@ -44,6 +45,14 @@ struct NavigableWebView: View {
         .onChange(
             of: url,
             { _, newValue in
+                if let currentURL = navigator.wkWebView?.url, currentURL == newValue {
+                    // WKWebView is already navigating to this URL. Our onChange(of: wkWebView?.url) callback triggered a binding update, which triggered this onChange(of: url). Don't load again.
+                    Logger.webNavigation.debug(
+                        "NavigableWebView onChange skip - WKWebView already at \(newValue)"
+                    )
+                    return
+                }
+
                 // Accept updates from the owning State/Binding, navigate to the new page.
                 navigator.wkWebView?.load(URLRequest(url: newValue))
             }
@@ -54,6 +63,9 @@ struct NavigableWebView: View {
                 // Accept updates from the webView (such as clicking links).
                 // After a user action causes a change, update the binding.
                 // This allows assigning new values to the binding to navigate to.
+                Logger.webNavigation.debug(
+                    "NavigableWebView onChange(of: wkWebView?.url) oldValue=\(oldValue ?? URL(stringLiteral: "nil")), newValue=\(String(describing: newValue)), currentBindingUrl=\(self.url), skippingLoad=\(newValue != url)"
+                )
                 if let newValue, newValue != url {
                     url = newValue
                 }
