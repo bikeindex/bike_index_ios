@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OSLog
 import SwiftUI
 
 extension ClientConfiguration {
@@ -18,6 +19,12 @@ extension ClientConfiguration {
         ].map { (item: QueryItemTuple) in
             URLQueryItem(name: item.name, value: item.value)
         }
+    }
+
+    var signInPageRequest: URLRequest {
+        OAuth.authorize(queryItems: authorizeQueryItems).request(
+            for: hostProvider
+        )
     }
 }
 
@@ -38,12 +45,11 @@ extension AuthView {
         var topLevelPath = NavigationPath()
 
         @ObservationIgnored
-        var configuration = try! ClientConfiguration.bundledConfig()
+        var configuration: ClientConfiguration
 
         init() {
             let configuration = try! ClientConfiguration.bundledConfig()
-            let authNavigator = AuthenticationNavigator(
-                interceptor: .init(hostProvider: configuration.hostProvider))
+            let authNavigator = AuthenticationNavigator(clientConfiguration: configuration)
             let historyNavigator = HistoryNavigator(child: authNavigator)
             self.authNavigator = authNavigator
             self.historyNavigator = historyNavigator
@@ -62,8 +68,13 @@ extension AuthView {
 
         /// URL helper to find the right user-facing authorization page for this app config.
         var signInPageRequest: URLRequest {
-            OAuth.authorize(queryItems: configuration.authorizeQueryItems).request(
-                for: configuration.hostProvider
+            configuration.signInPageRequest
+        }
+
+        func assign(client: Client) {
+            authNavigator.client = client
+            Logger.auth.debug(
+                "\(#file) assigned authNavigator.client to \(String(describing: client), privacy: .public)"
             )
         }
     }

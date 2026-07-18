@@ -17,7 +17,7 @@ extension Robot {
 
     @discardableResult
     func signIn() throws -> Self {
-        // Step 1: Open the Sign In Page
+        // Step 1: A) Open the Sign In Page
         let signIn = app.buttons["SignIn"]
         let result = signIn.waitForExistence(timeout: 2)
 
@@ -28,10 +28,10 @@ extension Robot {
 
         signIn.tap()
 
-        // Catch any interruptions atop the OAuth authorization
+        // Step 1: B) Catch any interruptions atop the OAuth authorization
         attemptAppOAuthSecurity()
 
-        // Try to tap Authorize __if it exists__, continue if it is absent.
+        // Step 1: C) Try to tap Authorize, continue if it is absent.
         attemptOAuthAuthorize()
 
         let timeout: TimeInterval = 120
@@ -42,7 +42,7 @@ extension Robot {
         let testUsername = try XCTUnwrap(infoDictionary["TEST_USERNAME"] as? String)
         let testPassword = try XCTUnwrap(infoDictionary["TEST_PASSWORD"] as? String)
 
-        // Step 2: Fill credentials and proceed
+        // Step 2: A) Enter email
         let usernameField = app.webViews.firstMatch.textFields["Email"]
         if usernameField.waitForExistence(timeout: timeout) {
             usernameField.tap()
@@ -50,6 +50,19 @@ extension Robot {
         } else {
             XCTFail("Couldn't find email field")
         }
+
+        // Step 2: B) Continue
+        let continueButton = app.webViews.firstMatch.buttons["Continue"]
+        _ = continueButton.waitForExistence(timeout: timeout)
+        continueButton.tap()
+
+        // Step 3: A) Ensure password page is ready
+        // Now that we're using a two-step email page -> password page flow,
+        // the UITests need a stronger signal that the password page is ready.
+        let displayedEmailConfirmation = app.webViews.textFields[testUsername]
+        _ = displayedEmailConfirmation.waitForExistence(timeout: timeout)
+
+        // Step 3: B) Enter password
         let passwordField = app.webViews.firstMatch.secureTextFields["Password"]
         if passwordField.waitForExistence(timeout: timeout) {
             passwordField.tap()
@@ -60,10 +73,10 @@ extension Robot {
         _ = loginButton.waitForExistence(timeout: timeout)
         loginButton.tap()
 
-        // Step 3: Resolve the "insecure authorization" prompt if present
+        // Step 4: Resolve the "insecure authorization" prompt if present
         attemptAppOAuthSecurity()
 
-        // Step 4: Make sure that this OAuth Application is authorized.
+        // Step 5: Make sure that this OAuth Application is authorized.
         authorizeOAuthApplication()
 
         return self

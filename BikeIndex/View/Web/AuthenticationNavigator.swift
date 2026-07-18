@@ -10,43 +10,50 @@ import WebKit
 
 @Observable
 /// Delegate to intercept completed OAuth callback URLs, forward them to Client, and complete authentication.
+/// Must be annotated Observable for parent class conformance.
 final class AuthenticationNavigator: NavigationResponder {
-    @ObservationIgnored
-    /// Allow composition for ``AuthView/ViewModel`` to connect this client.
+    /// Allow ``AuthView/ViewModel`` to connect this client at runtime.
     /// Authentication cannot proceed until this value is assigned.
-    var client: Client?
-
+    @ObservationIgnored var client: Client?
     @ObservationIgnored
-    var routeToAuthenticationPage: () -> Void
-
+    let signInPageRequest: URLRequest
+    @ObservationIgnored
     private(set) var interceptor: Interceptor
 
     init(
-        client: Client? = nil, routeToAuthenticationPage: @escaping () -> Void = {},
-        interceptor: Interceptor
+        clientConfiguration: ClientConfiguration
     ) {
-        self.client = client
-        self.routeToAuthenticationPage = routeToAuthenticationPage
-        self.interceptor = interceptor
+        self.signInPageRequest = clientConfiguration.signInPageRequest
+        self.interceptor = Interceptor(hostProvider: clientConfiguration.hostProvider)
+    }
+
+    private func routeToAuthenticationPage() {
+        assert(self.wkWebView != nil)
+        self.wkWebView?.load(signInPageRequest)
     }
 
     // MARK: - Decide Policy
 
+    /// Pre-condition: self.client is not nil
     override func webView(
         _ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
         preferences: WKWebpagePreferences
     ) async -> (WKNavigationActionPolicy, WKWebpagePreferences) {
+        Logger.auth.debug("\(#file).\(#function) enter")
+        assert(client != nil)
+
         /// Flow: Guest > Sticker > Please Sign In
         /// Re-route the AuthSignInView experience away from /session/new.
         /// - /session/new is only for browser sessions.
         /// - APp sessions must use the ``AuthView/ViewModel/signInPageRequest`` page (or sign-in will fail!)
-        /// How does the user get to /session/new? A) if they navigate around the sign-in page
-        /// B) if they scan a QR code Bike Sticker
+        /// How does the user get to /session/new?
+        /// A) if they navigate around the sign-in page (ex: help -> sign in)
+        /// B) if they scan a QR code Bike Sticker (universal link)
         if let signInAction = interceptor.filterSignInRedirect(navigationAction.request.url) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
-                self?.routeToAuthenticationPage()
-            }
+            routeToAuthenticationPage()
 
+            Logger.auth.debug(
+                "\(#file).\(#function) found a sign-in redirect, routing to authentication page")
             return (signInAction, preferences)
         }
 
@@ -57,13 +64,20 @@ final class AuthenticationNavigator: NavigationResponder {
             navigationAction.request.url,
             client: client)
         {
+            Logger.auth.debug(
+                "\(#file).\(#function) interceptor successfully completed authentication")
             return (action, preferences)
         }
 
         if let child {
-            return await child.webView(
+            let result = await child.webView(
                 webView, decidePolicyFor: navigationAction, preferences: preferences)
+            Logger.auth.debug("\(#file).\(#function) deferring decision via child navigator")
+            return result
         } else {
+            Logger.auth.debug(
+                "\(#file).\(#function) fallback: returning allow for \(String(describing: navigationAction.request.url))"
+            )
             return (.allow, preferences)
         }
     }
@@ -72,30 +86,45 @@ final class AuthenticationNavigator: NavigationResponder {
     struct Interceptor {
         var hostProvider: HostProvider
 
-        var routeToAuthentication: () -> Void = {}
-
         /// Guest > Scan Sticker QR Code > Please Sign In
         func filterSignInRedirect(_ url: URL?) -> WKNavigationActionPolicy? {
+            Logger.auth.debug(
+                "\(#file).\(#function) Enter, checking \(String(describing: url)) against session/new"
+            )
+
             guard let url,
                 let prefixTrimmed = Optional(url.absoluteString.trimmingPrefix("bikeindex://")),
                 let components = URLComponents(string: String(prefixTrimmed))
-            else { return nil }
+            else {
+                Logger.auth.debug(
+                    "\(#file).\(#function) returning nil - invalid url or components of \(String(describing: url), privacy: .auto)"
+                )
+                return nil
+            }
 
             if let baseHost = hostProvider.host.host(),
                 components.host != baseHost
             {
                 /// E.g. bikeindex.org in the input URL must match bikeindex.org
+                Logger.auth.debug(
+                    "\(#file).\(#function) exiting, host mismatch, \(baseHost) vs. \(String(describing: components.host))"
+                )
                 return nil
             }
 
+            /// Ex: `session/new?return_to=SAM000000`
             if components.path == "/session/new",
                 let returnTo = components.queryItems?.first(where: { $0.name == "return_to" }),
                 let decoded = returnTo.value?.removingPercentEncoding,
                 decoded.contains("scanned")
             {
+                Logger.auth.debug(
+                    "\(#file).\(#function) returning cancel for session/new with scanned return_to")
                 return .cancel
             }
 
+            Logger.auth.debug(
+                "\(#file).\(#function) returning nil - no matching condition against \(url)")
             return nil
         }
 
@@ -104,14 +133,21 @@ final class AuthenticationNavigator: NavigationResponder {
         func filterCompletedAuthentication(_ url: URL?, client: Client?) async
             -> WKNavigationActionPolicy?
         {
+            Logger.auth.debug("\(#file).\(#function) enter")
+
             if let url,
                 let scheme = url.scheme,
                 scheme + "://" == client?.configuration.redirectUri,
                 let result = await client?.accept(authCallback: url),
                 result == true
             {
+                Logger.auth.debug(
+                    "\(#file) \(#function) returning cancel - authentication completed")
                 return WKNavigationActionPolicy.cancel
             } else {
+                Logger.auth.debug(
+                    "\(#file).\(#function) returning nil - authentication not completed against \(String(describing: url))"
+                )
                 return nil
             }
         }
