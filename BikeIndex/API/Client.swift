@@ -15,6 +15,7 @@ import WebKit
 
 /// Provide a subset of ``ClientConfiguration`` to control access.
 struct HostProvider: Sendable {
+    /// Must be in format: `https://domain.tld`, most often `https://bikeindex.org`
     let host: URL
 }
 

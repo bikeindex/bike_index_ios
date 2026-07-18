@@ -3,17 +3,21 @@ permissions:
   contents: read
 
 on:
-  pull_request:
-    branch: ["release/v*"]
+  push:
+    branches: ["release/v*"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   requires-integration-tests:
-    if: startsWith(github.head_ref, 'release/v')
+    if: startsWith(github.ref_name, 'release/v')
     uses: bikeindex/bike_index_ios/.github/workflows/integration.yml@main
     secrets: inherit
 
   build-release:
-    if: startsWith(github.head_ref, 'release/v')
+    if: startsWith(github.ref_name, 'release/v')
     name: Build release archive and distribute
     runs-on: macos-26
     needs: requires-integration-tests

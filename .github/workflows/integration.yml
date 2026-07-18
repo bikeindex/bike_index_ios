@@ -7,6 +7,8 @@ on:
     branches: [ "main" ]
   pull_request:
   workflow_call: # allows delivery.yml to invoke test-suite
+  schedule:
+    - cron: '0 13 * * 4' # Thursday 9:00 AM EDT (13:00 UTC)
 
 jobs:
   build-tests:
