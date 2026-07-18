@@ -13,7 +13,17 @@ struct AuthSignInView: View {
     @State var baseUrl: URL
     var navigator: HistoryNavigator
     @Binding var display: Bool
-    @State private var title: String = "Sign in"
+    @State private var title: String
+
+    init(
+        baseUrl: URL, navigator: HistoryNavigator, display: Binding<Bool>, title: String = "Sign in"
+    ) {
+        self.baseUrl = baseUrl
+        self.navigator = navigator
+        self._display = display
+        self.title = title
+        assert(self.navigator.child is AuthenticationNavigator)
+    }
 
     var body: some View {
         @Bindable var stickerRouter = stickerRouter
