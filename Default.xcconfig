@@ -5,7 +5,7 @@
 //  Created by Jack on 5/8/26.
 //
 
-CURRENT_PROJECT_VERSION = 76
+CURRENT_PROJECT_VERSION = 77
 MARKETING_VERSION = 1.7
 
 API_HOST = https:\/\/bikeindex.org
