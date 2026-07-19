@@ -14,6 +14,7 @@
 		044BDBCA2F26AEA500E0049E /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 044BDBC92F26AEA500E0049E /* SnapshotPreferences */; };
 		044BDBCC2F26AEA500E0049E /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 044BDBCB2F26AEA500E0049E /* SnapshottingTests */; };
 		048770782FCA52CB00340322 /* Honeybadger in Frameworks */ = {isa = PBXBuildFile; productRef = 048770772FCA52CB00340322 /* Honeybadger */; };
+		04CE915B300D2F97002546C3 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE915A300D2F97002546C3 /* SnapshotHelper.swift */; };
 		04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 04E1343D2B4B718200CE88DD /* WebViewKit */; };
 		04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */ = {isa = PBXBuildFile; productRef = 04EA11212B2504340024CDDD /* URLEncodedForm */; };
 		04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04F4B95D2B0990CE009442B5 /* KeychainSwift */; };
@@ -53,6 +54,15 @@
 		04566C7D2E67475E00E3EC6E /* Scanfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Scanfile; sourceTree = "<group>"; };
 		04566C7F2E67475E00E3EC6E /* update-icons.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "update-icons.sh"; sourceTree = "<group>"; };
 		0496C6702CB36BED00B88D1B /* Brewfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Brewfile; sourceTree = "<group>"; };
+		04CE8FC2300C7220002546C3 /* delivery.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = delivery.yml; sourceTree = "<group>"; };
+		04CE8FC3300C7220002546C3 /* integration.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = integration.yml; sourceTree = "<group>"; };
+		04CE8FC4300C7220002546C3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		04CE8FC6300C7220002546C3 /* CODEOWNERS */ = {isa = PBXFileReference; lastKnownFileType = text; path = CODEOWNERS; sourceTree = "<group>"; };
+		04CE8FC7300C7220002546C3 /* FUNDING.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = FUNDING.yml; sourceTree = "<group>"; };
+		04CE915A300D2F97002546C3 /* SnapshotHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
+		04CE915C300D2FB2002546C3 /* Gymfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Gymfile; sourceTree = "<group>"; };
+		04CE915D300D2FB2002546C3 /* Matchfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Matchfile; sourceTree = "<group>"; };
+		04CE915E300D2FB2002546C3 /* Snapshotfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Snapshotfile; sourceTree = "<group>"; };
 		04D641902FAE35B4000B5546 /* format.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = format.sh; sourceTree = "<group>"; };
 		04D641912FAE35B4000B5546 /* lint.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = lint.sh; sourceTree = "<group>"; };
 		04D641922FAE35B4000B5546 /* validate-xcconfig.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "validate-xcconfig.sh"; sourceTree = "<group>"; };
@@ -179,10 +189,15 @@
 		04566C7E2E67475E00E3EC6E /* fastlane */ = {
 			isa = PBXGroup;
 			children = (
+				04CE915A300D2F97002546C3 /* SnapshotHelper.swift */,
 				04566C7A2E67475E00E3EC6E /* Appfile */,
 				04566C7B2E67475E00E3EC6E /* Fastfile */,
 				04566C7C2E67475E00E3EC6E /* README.md */,
+				04CE915C300D2FB2002546C3 /* Gymfile */,
+				04CE915D300D2FB2002546C3 /* Matchfile */,
+				04CE915E300D2FB2002546C3 /* Snapshotfile */,
 				04566C7D2E67475E00E3EC6E /* Scanfile */,
+				04CE9159300D2F80002546C3 /* metadata */,
 			);
 			path = fastlane;
 			sourceTree = "<group>";
@@ -205,6 +220,33 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		04CE8FC5300C7220002546C3 /* workflows */ = {
+			isa = PBXGroup;
+			children = (
+				04CE8FC2300C7220002546C3 /* delivery.yml */,
+				04CE8FC3300C7220002546C3 /* integration.yml */,
+				04CE8FC4300C7220002546C3 /* README.md */,
+			);
+			path = workflows;
+			sourceTree = "<group>";
+		};
+		04CE8FC8300C7220002546C3 /* .github */ = {
+			isa = PBXGroup;
+			children = (
+				04CE8FC5300C7220002546C3 /* workflows */,
+				04CE8FC6300C7220002546C3 /* CODEOWNERS */,
+				04CE8FC7300C7220002546C3 /* FUNDING.yml */,
+			);
+			path = .github;
+			sourceTree = "<group>";
+		};
+		04CE9159300D2F80002546C3 /* metadata */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = metadata;
+			sourceTree = "<group>";
+		};
 		04F4B8EE2B098ADB009442B5 = {
 			isa = PBXGroup;
 			children = (
@@ -224,6 +266,7 @@
 				04566C802E67475E00E3EC6E /* scripts */,
 				04566C792E67475E00E3EC6E /* docs */,
 				04566C7E2E67475E00E3EC6E /* fastlane */,
+				04CE8FC8300C7220002546C3 /* .github */,
 				04ABEBC32D1F399E00E30577 /* Frameworks */,
 				04F4B8F82B098ADB009442B5 /* Products */,
 			);
@@ -418,6 +461,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04CE915B300D2F97002546C3 /* SnapshotHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -32,6 +32,9 @@
             reference = "container:SharedTests/AllTests.xctestplan"
             default = "YES">
          </TestPlanReference>
+         <TestPlanReference
+            reference = "container:SharedTests/ReleaseScreenshots.xctestplan">
+         </TestPlanReference>
       </TestPlans>
       <Testables>
          <TestableReference

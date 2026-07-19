@@ -40,7 +40,11 @@
     {
       "parallelizable" : true,
       "skippedTests" : [
-        "BikeIndexAppAccessibilityPreviewTest"
+        "BikeIndexAppAccessibilityPreviewTest",
+        "ScreenshotUITest",
+        "ScreenshotUITest\/test_screenshot_details_page_a40340()",
+        "ScreenshotUITest\/test_screenshot_main_content_page()",
+        "ScreenshotUITest\/test_screenshot_register_bike()"
       ],
       "target" : {
         "containerPath" : "container:BikeIndex.xcodeproj",
