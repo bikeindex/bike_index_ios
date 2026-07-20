@@ -5,7 +5,7 @@
 
 1. Create a release branch in the format `release/v1.5`
 2. Open the project and run the test suite
-3. Increment the BikeIndex Target Version and Build numbers in the project settings
+3. Increment the BikeIndex Target Version and Build numbers in Default.xcconfig
 4. Capture screenshots for "iPhone 16 Plus"
 	1. Build and run the project for iPhone
 	2. Set the simulator date/time with `xcrun simctl status_bar booted override --time "2007-01-09T14:41:00.000Z" --dataNetwork wifi --wifiMode active --wifiBars 3 --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100`
