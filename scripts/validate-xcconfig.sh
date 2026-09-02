@@ -8,6 +8,9 @@
 #   test          -> Test-credentials.xcconfig (TEST_USERNAME, TEST_PASSWORD)
 #   development   -> BikeIndex-development.xcconfig (API_SECRET, API_CLIENT_ID, DEVELOPMENT_TEAM)
 #   production    -> BikeIndex-production.xcconfig (API_SECRET, API_CLIENT_ID, DEVELOPMENT_TEAM)
+#
+# Note: UITests also need API_HOST and API_PORT for universal link resolution.
+# In CI/CD scenarios that need is met by include-Default.
 
 set -euo pipefail
 

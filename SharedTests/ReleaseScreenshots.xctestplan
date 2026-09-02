@@ -1,0 +1,50 @@
+{
+  "configurations" : [
+    {
+      "id" : "A2471E49-FB8E-4204-ADA1-FAF7911CB646",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "defaultTestExecutionTimeAllowance" : 60,
+    "preferredScreenCaptureFormat" : "screenshot",
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:BikeIndex.xcodeproj",
+      "identifier" : "04F4B8F62B098ADB009442B5",
+      "name" : "BikeIndex"
+    },
+    "testTimeoutsEnabled" : true,
+    "uiTestingScreenshotsLifetime" : "keepAlways",
+    "userAttachmentLifetime" : "keepAlways"
+  },
+  "testTargets" : [
+    {
+      "skippedTests" : [
+        "BikeIndexUITests",
+        "BikeIndexUITests\/testLaunchPerformance()",
+        "BikeIndexUITests\/testMainContentPageHelp()",
+        "BikeIndexUITests\/testUnauthenticatedHelp()",
+        "BikeIndexUITests\/test_acknowledgements_webView_navigation_history()",
+        "BikeIndexUITests\/test_authenticated_bikes_scanned_id_universal_link()",
+        "BikeIndexUITests\/test_basic_bike_detail_navigation()",
+        "BikeIndexUITests\/test_basic_settings_navigation()",
+        "BikeIndexUITests\/test_register_bike_stolen_guide_link()",
+        "BikeIndexUITests\/test_serial_page_navigation()",
+        "BikeIndexUITests\/test_settings_account_pages()",
+        "MainContentUITestCase",
+        "MainContentUITestCase\/test_main_content_section()",
+        "ManufacturerKeyboardUITestCase"
+      ],
+      "target" : {
+        "containerPath" : "container:BikeIndex.xcodeproj",
+        "identifier" : "04F4B9132B098ADE009442B5",
+        "name" : "UITests"
+      }
+    }
+  ],
+  "version" : 1
+}

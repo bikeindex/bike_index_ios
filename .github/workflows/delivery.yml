@@ -5,6 +5,22 @@ permissions:
 on:
   push:
     branches: ["release/v*"]
+  schedule:
+    # Weekly snapshot validation (canary): Monday 6am UTC.
+    # Runs only the snapshot-capture steps (no archive / ASC upload / TestFlight)
+    # and validates the screenshots. Override: github.event_name == 'schedule'
+    # (or `SNAPSHOT_VALIDATION_ONLY=true` via workflow_dispatch) selects this mode.
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+    inputs:
+      SNAPSHOT_VALIDATION_ONLY:
+        description: "Run only snapshot capture + validation (no build / upload)"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "true"
+          - "false"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -12,28 +28,114 @@ concurrency:
 
 jobs:
   requires-integration-tests:
-    if: startsWith(github.ref_name, 'release/v')
+    # Integration tests only gate a real release build.
+    if: startsWith(github.ref_name, 'release/v') && github.event_name == 'push'
     uses: bikeindex/bike_index_ios/.github/workflows/integration.yml@main
     secrets: inherit
 
   build-release:
-    if: startsWith(github.ref_name, 'release/v')
     name: Build release archive and distribute
+    # Release pushes and manual dispatch run the full flow;
+    # scheduled runs are snapshot-validation canaries only.
+    if: >-
+      (github.event_name == 'push' && startsWith(github.ref_name, 'release/v')) ||
+      github.event_name == 'workflow_dispatch'
     runs-on: macos-26
     needs: requires-integration-tests
     steps:
+      - name: Select flow (release vs. snapshot validation)
+        env:
+          SCHEDULED: ${{ github.event_name == 'schedule' }}
+          DISPATCH_ONLY: ${{ inputs.SNAPSHOT_VALIDATION_ONLY }}
+        id: flow
+        run: |
+          if [ "$SCHEDULED" = "true" ] || [ "$DISPATCH_ONLY" = "true" ]; then
+            echo "SNAPSHOT_VALIDATION_ONLY=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "SNAPSHOT_VALIDATION_ONLY=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Checkout
         uses: actions/checkout@v6
         with:
           ref: ${{ github.ref }}
-      - name: Set Xcode 26.4
+
+      # ─── Snapshot validation (always) ─────────────────────────────────
+
+      - name: Set Xcode
         run: sudo xcode-select -s /Applications/Xcode_26.4.app
+
+      # Screenshot capture runs against the hosted sandbox review environment
+      # (sandbox.review.bikeindex.org) 
+      # The seeded OAuth credentials (seed_oauth_app.rb) match the sandbox —
+      - name: Set up development and production xcconfigs (sandbox)
+        run: |
+          echo '#include "Default"' > BikeIndex-development.xcconfig
+          echo 'API_HOST = https:\/\/sandbox.review.bikeindex.org' >> BikeIndex-development.xcconfig
+          echo 'API_PORT = 443' >> BikeIndex-development.xcconfig
+          echo 'DEVELOPMENT_TEAM = 8ZM5ZL6ABT' >> BikeIndex-development.xcconfig
+          echo 'HONEYBADGER_API_KEY = ' >> BikeIndex-development.xcconfig
+          # Validate script won't follow the include-Default, help it out
+          grep API_SECRET Default.xcconfig >> BikeIndex-development.xcconfig
+          grep API_CLIENT_ID Default.xcconfig >> BikeIndex-development.xcconfig
+
+          # Placeholder so the app target's Release config resolves during
+          # snapshot. Not used by snapshot (Debug build); the release-mode
+          # "Load API key and xcconfig" step appends the production values.
+          echo '#include "Default"' > BikeIndex-production.xcconfig
+          echo 'API_HOST = https:\/\/sandbox.review.bikeindex.org' >> BikeIndex-production.xcconfig
+          echo 'API_PORT = 443' >> BikeIndex-production.xcconfig
+          echo 'DEVELOPMENT_TEAM = 8ZM5ZL6ABT' >> BikeIndex-production.xcconfig
+          echo 'HONEYBADGER_API_KEY = ' >> BikeIndex-production.xcconfig
+          grep API_SECRET Default.xcconfig >> BikeIndex-production.xcconfig
+          grep API_CLIENT_ID Default.xcconfig >> BikeIndex-production.xcconfig
+
+      # Absent from set up: API_HOST and API_PORT used in UITest universal link
+      # resolution but that will be solved by include-Default.
+      - name: Set up test credentials
+        run: |
+          echo '#include "BikeIndex-development"' > Test-credentials.xcconfig
+          # Seeded sandbox user: bike_index db/seeds/seed_test_users.rb
+          # user@bikeindex.org owns the seeded OAuth app and bike 44
+          echo 'TEST_USERNAME = user@bikeindex.org' >> Test-credentials.xcconfig
+          echo 'TEST_PASSWORD = pleaseplease12' >> Test-credentials.xcconfig
+
+      - name: Validate development and test xcconfigs
+        run: |
+          ./scripts/validate-xcconfig.sh development
+          ./scripts/validate-xcconfig.sh test
+
+      - name: Capture snapshots
+        run: fastlane snapshot
+
+      - name: Validate snapshots
+        run: |
+          # Expect exactly one PNG per (ScreenshotUITest method x Snapfile device):
+          # 3 test methods (main content, register bike, bike 44) x 4 devices
+          # (iPhone 17 Pro Max, iPhone 17 Pro, iPad Air 13-inch, iPad Air 11-inch) = 12.
+          ruby scripts/validate-screenshots.rb fastlane/screenshots 12
+
+      - name: Upload snapshots as artifact
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: snapshots-${{ github.sha }}
+          path: fastlane/screenshots/**/*.png
+          retention-days: 30
+
+      # Validation-only flow ends here (weekly canary / manual dispatch).
+      # All release-mode steps below are gated on steps.flow.outputs.
+
+      # ─── Release build and distribution ───────────────────────────────
+
       - name: Strip SnapshotPreviews package
+        if: steps.flow.outputs.SNAPSHOT_VALIDATION_ONLY != 'true'
         run: |
           brew install swift-sh
           ./scripts/release/strip-SnapshotPreviews.swift BikeIndex.xcodeproj
           xcodebuild -resolvePackageDependencies
       - name: Load API key and xcconfig
+        if: steps.flow.outputs.SNAPSHOT_VALIDATION_ONLY != 'true'
         env:
           MATCH_API_KEY_JSON_CONTENT: ${{ secrets.MATCH_API_KEY_JSON_CONTENT }}
           API_SECRET: ${{ secrets.PRODUCTION__API_SECRET }}
@@ -48,8 +150,10 @@ jobs:
           echo "DEVELOPMENT_TEAM = $DEVELOPMENT_TEAM" >> BikeIndex-production.xcconfig
           echo "HONEYBADGER_API_KEY = $HONEYBADGER_API_KEY" >> BikeIndex-production.xcconfig
       - name: Validate production xcconfig
+        if: steps.flow.outputs.SNAPSHOT_VALIDATION_ONLY != 'true'
         run: ./scripts/validate-xcconfig.sh production
-      - name: Load codesigning
+      - name: Set up keychain and codesigning
+        if: steps.flow.outputs.SNAPSHOT_VALIDATION_ONLY != 'true'
         env:
           CODESIGNING_IOS_READ_TOKEN: ${{ secrets.CODESIGNING_IOS_READ_TOKEN }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
@@ -58,11 +162,13 @@ jobs:
           sed -i.bak "s/git_url.*/git_url\(\"https:\/\/${GITHUB_ACTOR}:${CODESIGNING_IOS_READ_TOKEN}@github.com\/bikeindex\/codesigning_ios.git\"\)/g" fastlane/Matchfile
           fastlane CD_setup_keychain_and_codesigning
       - name: Build release archive
+        if: steps.flow.outputs.SNAPSHOT_VALIDATION_ONLY != 'true'
         run: fastlane CD_build_release_archive
       - name: Calculate delivery changes
+        if: steps.flow.outputs.SNAPSHOT_VALIDATION_ONLY != 'true'
         run: git diff > delivery-changes.patch
       - uses: actions/upload-artifact@v5
-        if: success()
+        if: success() && steps.flow.outputs.SNAPSHOT_VALIDATION_ONLY != 'true'
         with:
           name: ${{ github.sha }}-artifact
           path: |

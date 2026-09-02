@@ -17,4 +17,11 @@ extension BikeIndexUITests {
             .checkUnlinkedMessage()
     }
 
+    func test_guest_bikes_scanned_id_universal_link() throws {
+        try UniversalLinksRobot(app)
+            .start()
+            .openLink()
+            .checkStickerHeader()
+            .checkUnlinkedMessage()
+    }
 }
