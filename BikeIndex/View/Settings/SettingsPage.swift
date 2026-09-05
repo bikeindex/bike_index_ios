@@ -47,11 +47,14 @@ struct SettingsPage: View {
                         Label("Sharing + Personal Page", systemImage: "shared.with.you")
                     }
 
+                    /*
+                     // TODO: Restore this after checking if the user is in one or more organizations
                     NavigationLink(value: SettingsSelection.registrationOrganization) {
                         Label(
                             "Registration Organization",
                             systemImage: "person.badge.shield.checkmark")
                     }
+                     */
 
                     Button {
                         Task {

@@ -49,6 +49,9 @@ public final class ScreenshotUITest: XCTestCase {
         try MainContentRobot(app)
             .startWithSignIn()
             .tapRegisterBikeButton()
+            .scrollToOwnerEmailTextField()
+            .redactAutofillEmail()  // required for iPad
+            .scrollToTop()
             .captureSnapshot(named: "2-register-bike-initial")
     }
 

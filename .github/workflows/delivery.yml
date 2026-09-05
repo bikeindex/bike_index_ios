@@ -79,9 +79,6 @@ jobs:
           grep API_SECRET Default.xcconfig >> BikeIndex-development.xcconfig
           grep API_CLIENT_ID Default.xcconfig >> BikeIndex-development.xcconfig
 
-          # Placeholder so the app target's Release config resolves during
-          # snapshot. Not used by snapshot (Debug build); the release-mode
-          # "Load API key and xcconfig" step appends the production values.
           echo '#include "Default"' > BikeIndex-production.xcconfig
           echo 'API_HOST = https:\/\/sandbox.review.bikeindex.org' >> BikeIndex-production.xcconfig
           echo 'API_PORT = 443' >> BikeIndex-production.xcconfig

@@ -49,10 +49,6 @@ struct RegisterBikeView: View {
     var body: some View {
         ScrollViewReader { scrollProxy in
             Form {
-                #if DEBUG
-                Text("Debug build: BikeRegistrations will be automatically deleted.")
-                #endif
-
                 if mode == .myStolenBike {
                     StolenBikeInfoSectionView()
                 }
@@ -103,6 +99,7 @@ struct RegisterBikeView: View {
                     }
                 } header: {
                     Text("Photo")
+                        .accessibilityIdentifier("photoUploadHeader")
                 }
 
                 // MARK: Serial number
@@ -328,6 +325,7 @@ struct RegisterBikeView: View {
                         .keyboardType(.emailAddress)
                         .textInputAutocapitalization(.never)
                         .focused($focus, equals: .ownerEmailText)
+                        .accessibilityIdentifier("ownerEmailTextField")
 
                         Button("Clear", systemImage: clearImage) {
                             viewModel.ownerEmail = ""
@@ -389,19 +387,6 @@ struct RegisterBikeView: View {
             )
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    #if DEBUG
-                    Menu("Scroll to") {
-                        ForEach(Field.allCases) { field in
-                            Button(field.title) {
-                                scrollProxy.scrollTo(field)
-                                focus = field
-                            }
-                        }
-                    }
-                    #endif
-                }
-
-                ToolbarItem(placement: .topBarTrailing) {
                     if client.userCanRegisterBikes && !viewModel.requiredFieldsNotMet {
                         Button {
                             focus = .registerButton
@@ -411,6 +396,18 @@ struct RegisterBikeView: View {
                         }
                     } else {
                         Text(viewModel.remainingRequiredFields)
+
+                        /*
+                         // TODO: Replace plain text of remaining required fields to a useful Menu, must fix scrollTo first
+                        Menu("Scroll to") {
+                            ForEach(Field.allCases) { field in
+                                Button(field.title) {
+                                    scrollProxy.scrollTo(field)
+                                    focus = field
+                                }
+                            }
+                        }
+                         */
                     }
                 }
             }

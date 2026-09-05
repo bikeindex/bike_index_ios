@@ -105,6 +105,7 @@ enum BikeIndexLink: Identifiable {
             // https://bikeindex.org/my_account/edit/sharing
             return "my_account/edit/sharing"
         case .accountRegistrationOrganization:
+            // NOTE: /registration_organizations is only available for users who are already in one or more organizations
             // https://bikeindex.org/my_account/edit/registration_organizations
             return "my_account/edit/registration_organizations"
         case .deleteAccount:
