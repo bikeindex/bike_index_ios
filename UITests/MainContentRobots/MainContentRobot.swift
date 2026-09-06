@@ -150,14 +150,14 @@ final class MainContentRobot: Robot {
         let timeout: TimeInterval = 5
         switch sortOrder {
         case .forward:
-            // _change to_ ascending/reverse
+            // _change to_ ascending/reverse, if not using that already
             if sortOrderAscending.waitForExistence(timeout: timeout) {
                 tap(sortOrderAscending)
             } else {
                 tapGroupButton(for: groupMode)
             }
         case .reverse:
-            // _change to_ descending/forward
+            // _change to_ descending/forward, if not using that already
             if sortOrderDescending.waitForExistence(timeout: timeout) {
                 tap(sortOrderDescending)
             } else {

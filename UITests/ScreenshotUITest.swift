@@ -64,6 +64,24 @@ public final class ScreenshotUITest: XCTestCase {
         try MainContentRobot(app)
             .startWithSignIn()
             .tapFirstBike()
+            .finishWebViewLoading()
             .captureSnapshot(named: "3-bike-details-44")
+    }
+
+    public func test_4_sticker_details() throws {
+        try UniversalLinksRobot(app)
+            .startWithSignIn()
+            .openLink()
+            .finishWebViewLoading()
+            .captureSnapshot(named: "4-sticker-center")
+    }
+
+    public func test_5_sticker_center() throws {
+        try UniversalLinksRobot(app)
+            .startWithSignIn()
+            .openLink()
+            .finishWebViewLoading()
+            .back()
+            .captureSnapshot(named: "5-sticker-center")
     }
 }

@@ -65,9 +65,8 @@ jobs:
       - name: Set Xcode
         run: sudo xcode-select -s /Applications/Xcode_26.4.app
 
-      # Screenshot capture runs against the hosted sandbox review environment
-      # (sandbox.review.bikeindex.org) 
-      # The seeded OAuth credentials (seed_oauth_app.rb) match the sandbox —
+      # Snapshot runs against the sandbox env at sandbox.review.bikeindex.org
+      # The seeded OAuth credentials (seed_oauth_app.rb) match the sandbox.
       - name: Set up development and production xcconfigs (sandbox)
         run: |
           echo '#include "Default"' > BikeIndex-development.xcconfig
@@ -107,10 +106,9 @@ jobs:
 
       - name: Validate snapshots
         run: |
-          # Expect exactly one PNG per (ScreenshotUITest method x Snapfile device):
-          # 3 test methods (main content, register bike, bike 44) x 4 devices
-          # (iPhone 17 Pro Max, iPhone 17 Pro, iPad Air 13-inch, iPad Air 11-inch) = 12.
-          ruby scripts/validate-screenshots.rb fastlane/screenshots 12
+          # Expect one PNG per (ScreenshotUITest method x Snapfile device):
+          # 4 test methods (main content, register bike, bike 44) x 4 devices = 16
+          ruby scripts/validate-screenshots.rb fastlane/screenshots 16
 
       - name: Upload snapshots as artifact
         if: always()
