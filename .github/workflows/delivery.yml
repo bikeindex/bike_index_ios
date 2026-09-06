@@ -162,7 +162,7 @@ jobs:
       - name: Calculate delivery changes
         if: steps.flow.outputs.SNAPSHOT_VALIDATION_ONLY != 'true'
         run: git diff > delivery-changes.patch
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7
         if: success() && steps.flow.outputs.SNAPSHOT_VALIDATION_ONLY != 'true'
         with:
           name: ${{ github.sha }}-artifact
