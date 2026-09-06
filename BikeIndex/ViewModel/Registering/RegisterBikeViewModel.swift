@@ -14,7 +14,7 @@ import SwiftUI
 
 extension RegisterBikeView {
     @Observable @MainActor
-    class ViewModel: ObservableObject {
+    class ViewModel {
         init(
             mode: RegisterMode, bike: Bike = Bike(),
             propulsion: BikeRegistration.Propulsion = BikeRegistration.Propulsion(),
