@@ -18,22 +18,8 @@ final class UniversalLinksRobot: Robot {
 
     private func stickerUrl() throws -> URL {
         // Configure these values in Test-credentials.xcconfig (see adjacent template file)
-        let uiTestBundle = try XCTUnwrap(Bundle.uiTests)
-        let infoDictionary = try XCTUnwrap(uiTestBundle.infoDictionary)
-
-        let hostString = try XCTUnwrap(
-            (infoDictionary["API_HOST"] as? String)?
-                .replacing("\\/\\/", with: "//")
-        )
-        var host = try XCTUnwrap(URL(string: hostString))
-        let portString = try XCTUnwrap(infoDictionary["API_PORT"] as? String)
-        let port = try XCTUnwrap(UInt16(portString))
-
-        if port != 443 {
-            host = try XCTUnwrap(URL(string: hostString + ":\(port)"))
-        }
-
-        return URL(string: "bikeindex://\(host)/bikes/scanned/BR0001")!
+        let config = try APIConfiguration.uiTestConfig()
+        return URL(string: "bikeindex://\(config.host)/bikes/scanned/BR0001")!
     }
 
     @discardableResult

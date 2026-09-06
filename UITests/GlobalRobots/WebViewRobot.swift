@@ -10,11 +10,18 @@ import XCUIAutomation
 // TODO: Refactor into base WebViewRobot and subclass for specific web views, like Acknowledgements page in settings.
 final class WebViewRobot: Robot {
 
-    enum Page: String {
-        case oauth = "https://bikeindex.org/oauth/applications"
+    /// Used for any link that begins with this value
+    enum PagePrefix: String {
         case license = "LICENSE.txt"
 
         var linkPrefix: String { rawValue }
+    }
+
+    /// The configured host must be prepended.
+    enum PageSuffix: String {
+        case oauth = "/oauth/applications"
+
+        var path: String { rawValue }
     }
 
     lazy var backButton = app.buttons["WebViewBack"]
@@ -36,9 +43,21 @@ final class WebViewRobot: Robot {
     }
 
     @discardableResult
-    func navigate(to page: Page) -> Self {
+    func navigate(to page: PagePrefix) -> Self {
         // Links may not be hittable if off screen, so check if exists instead before tapping.
         let link = link(with: page.linkPrefix)
+        assert(link, [.exists])
+        link.tap()
+
+        return self
+    }
+
+    @discardableResult
+    func navigate(to page: PageSuffix) throws -> Self {
+        // Links may not be hittable if off screen, so check if exists instead before tapping.
+        let config = try APIConfiguration.uiTestConfig()
+        let resolvedUrl = config.host.appending(path: page.path)
+        let link = link(with: resolvedUrl.absoluteString)
         assert(link, [.exists])
         link.tap()
 

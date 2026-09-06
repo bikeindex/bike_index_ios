@@ -53,6 +53,9 @@ To get started:
 3. If building for a device you will need to provide a bundle identifier and your development team
 4. Build and run!
 
+> [!NOTE]
+> The public sandbox environment at https://sandbox.review.bikeindex.org/oauth/applications is available for testing (and used in continuous delivery).
+
 #### Config Validation
 
 To validate that your xcconfig files have all required keys with non-empty values:
