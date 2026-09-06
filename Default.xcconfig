@@ -8,9 +8,15 @@
 CURRENT_PROJECT_VERSION = 77
 MARKETING_VERSION = 1.7
 
-API_HOST = https:\/\/bikeindex.org
+API_HOST = https:\/\/sandbox.review.bikeindex.org
 API_PORT = 443
 API_REDIRECT_URI = bikeindex:\/\/
+
+// OAuth client from Rails database seeds: https://github.com/bikeindex/bike_index/blob/main/db/seeds/seed_oauth_app.rb#L10
+// Suitable for local-Rails development _and_ sandbox.review.bikeindex.org development
+// as both read from the db/seeds.
+API_CLIENT_ID = 9cBuxnqbhums1vun26ZfMv-91rInzdc6_G9HCulFxKs
+API_SECRET = Tcw_4Cr1-Yowsjs-E2Te0YZnVdYmeES3UJ0AhbeBE10
 
 // Recommended to provide your own bundle identifier, please see `BikeIndex-template.xcconfig`.
 PRODUCT_BUNDLE_IDENTIFIER = org.bikeindex.app
@@ -23,10 +29,7 @@ APP_SHORTCUTS_ENABLE_FLEXIBLE_MATCHING = NO
 // To use these, check out https://github.com/bikeindex/bike_index
 // follow the 'Running Bike Index locally' steps and start the dev server
 // then sign-in with any seeded account (of https://github.com/bikeindex/bike_index/blob/main/db/seeds/seed_test_users.rb )
-//
 // alternatively, provide your own OAuth config in BikeIndex-development.xcconfig
 //
-API_HOST = http:\/\/localhost
-API_PORT = 3042
-API_CLIENT_ID = 9cBuxnqbhums1vun26ZfMv-91rInzdc6_G9HCulFxKs
-API_SECRET = Tcw_4Cr1-Yowsjs-E2Te0YZnVdYmeES3UJ0AhbeBE10
+//API_HOST = http:\/\/localhost
+//API_PORT = 3042
