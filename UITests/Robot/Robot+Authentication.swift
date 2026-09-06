@@ -37,7 +37,7 @@ extension Robot {
         let timeout: TimeInterval = 120
 
         // Configure these values in Test-credentials.xcconfig (see adjacent template file)
-        let uiTestBundle = try XCTUnwrap(Bundle(identifier: "org.bikeindex.UITests"))
+        let uiTestBundle = try XCTUnwrap(Bundle.uiTests)
         let infoDictionary = try XCTUnwrap(uiTestBundle.infoDictionary)
         let testUsername = try XCTUnwrap(infoDictionary["TEST_USERNAME"] as? String)
         let testPassword = try XCTUnwrap(infoDictionary["TEST_PASSWORD"] as? String)
@@ -59,7 +59,7 @@ extension Robot {
         // Step 3: A) Ensure password page is ready
         // Now that we're using a two-step email page -> password page flow,
         // the UITests need a stronger signal that the password page is ready.
-        let displayedEmailConfirmation = app.webViews.textFields[testUsername]
+        let displayedEmailConfirmation = app.webViews.staticTexts[testUsername]
         _ = displayedEmailConfirmation.waitForExistence(timeout: timeout)
 
         // Step 3: B) Enter password

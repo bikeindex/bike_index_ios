@@ -68,14 +68,18 @@ extension MainContentPage {
 
                 Menu {
                     // MARK: - Sorty By
+                    let activeSortIndicator = (sortOrder == .forward ? "arrow.down" : "arrow.up")
+                    let buttonResultSortIndicator =
+                        (sortOrder == .forward ? "arrow.up" : "arrow.down")
                     Button {
-                        sortOrder = sortOrder.toggle()
+                        sortOrder.toggle()
                     } label: {
-                        let systemImage = sortOrder == .forward ? "arrow.down" : "arrow.up"
+                        let systemImage = activeSortIndicator
                         Label("Sort order:", systemImage: systemImage)
                     }
                     .accessibilityValue(sortOrder.displayName)
                     .accessibilityHint("Toggle sort order")
+                    .accessibilityIdentifier("sortOrder-\(buttonResultSortIndicator)")
                     Divider()
                     // MARK: - Group By
                     Text("Group by:")

@@ -26,24 +26,33 @@ final class MainContentUITestCase: XCTestCase {
     func test_main_content_section() throws {
         try MainContentRobot(app)
             .startWithSignIn()
-            .tapGroupingMenuButton()
-            .tapGroupButton(.byStatus)
 
-            .checkSection(.withOwner, isExpanded: true)
-            .checkFirstBike(exists: true)
-            .tapSectionHeader(.withOwner)
-            .checkSection(.withOwner, isExpanded: false)
-            .checkFirstBike(exists: false)
-            .tapSectionHeader(.withOwner)
+            // Validate By-Status display
+            .tapGroupingMenuButton()
+            .tapGroupButton(for: Status.groupMode)
 
             .tapGroupingMenuButton()
-            .tapGroupButton(.byManufacturer)
+            // will continue if sort order is already correct and dismsis menu
+            .tapGroupSortOrderButton(.forward, returnTo: Status.groupMode)
 
-            .checkSection(.jamis, isExpanded: true)
-            .checkFirstBike(exists: true)
-            .tapSectionHeader(.jamis)
-            .checkSection(.jamis, isExpanded: false)
-            .checkFirstBike(exists: false)
-            .tapSectionHeader(.jamis)
+            .check(section: Status.withOwner, isExpanded: true)
+            .checkBike(section: Status.withOwner, index: 1, exists: true)
+            .tap(section: Status.withOwner)
+            .check(section: Status.withOwner, isExpanded: false)
+            .checkBike(section: Status.withOwner, index: 1, exists: false)
+            .tap(section: Status.withOwner)
+
+            // Validate By-Manufacturer display
+            .tapGroupingMenuButton()
+            .tapGroupButton(for: Manufacturer.groupMode)
+            .tapGroupingMenuButton()
+            .tapGroupSortOrderButton(.forward, returnTo: Manufacturer.groupMode)
+
+            .check(section: Manufacturer.specialized, isExpanded: true)
+            .checkBike(section: Manufacturer.specialized, index: 1, exists: true)
+            .tap(section: Manufacturer.specialized)
+            .check(section: Manufacturer.specialized, isExpanded: false)
+            .checkBike(section: Manufacturer.specialized, index: 1, exists: false)
+            .tap(section: Manufacturer.specialized)
     }
 }

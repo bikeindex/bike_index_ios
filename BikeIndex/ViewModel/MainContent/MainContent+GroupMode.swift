@@ -136,11 +136,11 @@ extension SortOrder {
         }
     }
 
-    func toggle() -> SortOrder {
+    mutating func toggle() {
         if self == .forward {
-            .reverse
+            self = .reverse
         } else {
-            .forward
+            self = .forward
         }
     }
 }

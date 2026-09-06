@@ -13,8 +13,17 @@ extension BikeIndexUITests {
         try UniversalLinksRobot(app)
             .startWithSignIn()
             .openLink()
+            .finishWebViewLoading()
             .checkStickerHeader()
             .checkUnlinkedMessage()
     }
 
+    func test_guest_bikes_scanned_id_universal_link() throws {
+        try UniversalLinksRobot(app)
+            .start()
+            .openLink()
+            .finishWebViewLoading()
+            .checkStickerHeader()
+            .checkUnlinkedMessage()
+    }
 }

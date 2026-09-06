@@ -40,7 +40,7 @@ struct BikesGridSectionView: View {
                     path: $path,
                     bikeIdentifier: bike.identifier
                 )
-                .accessibilityIdentifier("Bike \(index + 1)")
+                .accessibilityIdentifier("Bike \(section)-\(index + 1)")
                 .accessibilityValue(bike.bikeDescription ?? bike.manufacturerName)
             }
             .padding()

@@ -8,7 +8,7 @@
 import XCTest
 
 /// From Robot Pattern for UI testing: https://jhandguy.github.io/posts/robot-pattern-ios/
-class Robot {
+open class Robot {
     static var defaultTimeout: Double = 60
 
     var app: XCUIApplication
@@ -62,6 +62,13 @@ class Robot {
     func swipeUp() -> Self {
         app.swipeUp()
 
+        return self
+    }
+
+    @discardableResult
+    func finishWebViewLoading() -> Self {
+        let progressIndicator = app.progressIndicators["navigableWebViewProgressView"]
+        progressIndicator.waitForNonExistence(timeout: 10)
         return self
     }
 }

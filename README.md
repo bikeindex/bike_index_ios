@@ -122,6 +122,10 @@ Running UI Tests from Xcode may cache logged-in state. Set up a credentials xcco
 
 Fastlane scan can run a single test case such as: `fastlane scan --only-testing "UITests/ManufacturerKeyboardUITestCase"`.
 
+## Creating a release
+
+See the [docs](https://github.com/bikeindex/bike_index_ios/blob/main/docs/release-steps.md#release-steps) for information on the release process, requirements, and continuous delivery.
+
 ## Sponsorship
 
 Bike Index is a 501(c)(3) nonprofit: https://bikeindex.org/why-donate
