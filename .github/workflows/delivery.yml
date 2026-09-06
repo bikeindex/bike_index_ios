@@ -35,7 +35,7 @@ jobs:
 
   build-release:
     name: Build release archive and distribute
-    runs-on: macos-26
+    runs-on: macos-27
     needs: requires-integration-tests
     # Release pushes and manual dispatch run the full flow; scheduled runs are
     # snapshot-validation canaries only.
@@ -75,8 +75,8 @@ jobs:
 
       # ─── Snapshot validation (always) ─────────────────────────────────
 
-      - name: Set Xcode
-        run: sudo xcode-select -s /Applications/Xcode_26.6.app
+      - name: Set Xcode 27
+        run: sudo xcode-select -s /Applications/Xcode_27.0.app
 
       # Snapshot runs against the sandbox env at sandbox.review.bikeindex.org
       # The seeded OAuth credentials (seed_oauth_app.rb) match the sandbox.

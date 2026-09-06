@@ -370,7 +370,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 2610;
+				LastUpgradeCheck = 2700;
 				TargetAttributes = {
 					04F4B8F62B098ADB009442B5 = {
 						CreatedOnToolsVersion = 15.0.1;
@@ -554,6 +554,7 @@
 				DEVELOPMENT_ASSET_PATHS = "BikeIndex/Preview\\ Content/MultipleBikeResponse_mock.json BikeIndex/Preview\\ Content";
 				DEVELOPMENT_TEAM = 8ZM5ZL6ABT;
 				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -698,6 +699,7 @@
 				DEVELOPMENT_ASSET_PATHS = "BikeIndex/Preview\\ Content/MultipleBikeResponse_mock.json BikeIndex/Preview\\ Content";
 				DEVELOPMENT_TEAM = 8ZM5ZL6ABT;
 				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
