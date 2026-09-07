@@ -115,7 +115,7 @@ jobs:
           ./scripts/validate-xcconfig.sh test
 
       - name: Capture snapshots
-        run: fastlane snapshot
+        run: fastlane CD_capture_app_store_connect_screenshots
 
       - name: Validate snapshots
         run: |
