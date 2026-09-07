@@ -74,7 +74,7 @@ This same script is used in CI to catch missing configuration before builds. Run
 
 ### Development
 
-- Requirements: Xcode 26.4.1
+- Requirements: Xcode 26.6
 - Target deployment: iOS 17.2
 
 This project uses SwiftUI and SwiftData. At this time iPhone and iPad are the primary targets with a goal to include Mac support.
