@@ -35,14 +35,27 @@ jobs:
 
   build-release:
     name: Build release archive and distribute
-    # Release pushes and manual dispatch run the full flow;
-    # scheduled runs are snapshot-validation canaries only.
-    if: >-
-      (github.event_name == 'push' && startsWith(github.ref_name, 'release/v')) ||
-      github.event_name == 'workflow_dispatch'
     runs-on: macos-26
     needs: requires-integration-tests
+    # Release pushes and manual dispatch run the full flow; scheduled runs are
+    # snapshot-validation canaries only.
+    #
+    # `always()` keeps this job alive when the integration gate is skipped
+    # (non-push events like schedule / workflow_dispatch). A *failed* gate
+    # still blocks: the guard below re-checks the gate's result in release mode
+    # before any destructive step runs.
+    if: >-
+      always() &&
+      ((github.event_name == 'push' && startsWith(github.ref_name, 'release/v')) ||
+       github.event_name == 'workflow_dispatch' ||
+       github.event_name == 'schedule')
     steps:
+      # Release mode must not proceed if the integration gate failed (the job
+      # runs thanks to `always()`). Snapshot-validation mode ignores the gate.
+      - name: Enforce integration gate (release mode)
+        if: startsWith(github.ref_name, 'release/v') && needs.requires-integration-tests.result != 'success'
+        run: exit 1
+
       - name: Select flow (release vs. snapshot validation)
         env:
           SCHEDULED: ${{ github.event_name == 'schedule' }}
