@@ -23,7 +23,7 @@ scheme("BikeIndex")
 
 # Where should the resulting screenshots be stored?
 # Shared by fastlane snapshot and deliver (screenshot_paths default)
-output_directory("./screenshots")
+output_directory("./fastlane/screenshots")
 
 devices([
   "iPhone 17 Pro Max",

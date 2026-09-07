@@ -105,7 +105,7 @@ jobs:
         run: |
           echo '#include "BikeIndex-development"' > Test-credentials.xcconfig
           # Seeded sandbox user: bike_index db/seeds/seed_test_users.rb
-          # user@bikeindex.org owns the seeded OAuth app and bike 44
+          # user@bikeindex.org owns the seeded OAuth app and bike
           echo 'TEST_USERNAME = user@bikeindex.org' >> Test-credentials.xcconfig
           echo 'TEST_PASSWORD = pleaseplease12' >> Test-credentials.xcconfig
 
@@ -120,12 +120,13 @@ jobs:
       - name: Validate snapshots
         run: |
           # Expect one PNG per (ScreenshotUITest method x Snapfile device):
-          # 4 test methods (main content, register bike, bike 44) x 4 devices = 16
-          ruby scripts/validate-screenshots.rb fastlane/screenshots 16
+          # 5 test methods (main content, register bike, bike detail,
+          # sticker details, sticker center) x 4 devices = 20
+          ruby scripts/validate-screenshots.rb fastlane/screenshots 20
 
       - name: Upload snapshots as artifact
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: snapshots-${{ github.sha }}
           path: fastlane/screenshots/**/*.png
