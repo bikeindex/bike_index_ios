@@ -68,7 +68,7 @@ open class Robot {
     @discardableResult
     func finishWebViewLoading() -> Self {
         let progressIndicator = app.progressIndicators["navigableWebViewProgressView"]
-        progressIndicator.waitForNonExistence(timeout: 10)
+        assert(progressIndicator, [.doesNotExist], timeout: 15)
         return self
     }
 }
