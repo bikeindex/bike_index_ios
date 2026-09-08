@@ -60,12 +60,16 @@ platform :ios do
       build_for_testing: true,
       testplan: "ReleaseScreenshots",
       derived_data_path: "build/",
+      # Catch xcresult if snapshots failed
+      result_bundle_path: "build/test-output/ReleaseScreenshots.xcresult",
     )
 
     snapshot(
       derived_data_path: "build/",
       test_without_building: true,
       concurrent_simulators: true,
+      # Catch xcresult if snapshots failed
+      result_bundle: true,
     )
   end
 

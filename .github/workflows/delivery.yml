@@ -14,9 +14,9 @@ on:
   workflow_dispatch:
     inputs:
       SNAPSHOT_VALIDATION_ONLY:
-        description: "Run only snapshot capture + validation (no build / upload)"
+        description: "Run only snapshot capture + validation (no build / no upload). Default on; select 'false' for a full release build."
         required: false
-        default: "false"
+        default: "true"
         type: choice
         options:
           - "true"
@@ -131,6 +131,17 @@ jobs:
           name: snapshots-${{ github.sha }}
           path: fastlane/screenshots/**/*.png
           retention-days: 30
+
+      - name: Upload test results (.xcresult) for diagnosis
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-results-${{ github.sha }}
+          path: |
+            build/test-output/**/*.xcresult
+            fastlane/screenshots/test_output/**/*.xcresult
+          if-no-files-found: warn
+          retention-days: 14
 
       # Validation-only flow ends here (weekly canary / manual dispatch).
       # All release-mode steps below are gated on steps.flow.outputs.
