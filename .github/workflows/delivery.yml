@@ -14,9 +14,9 @@ on:
   workflow_dispatch:
     inputs:
       SNAPSHOT_VALIDATION_ONLY:
-        description: "Run only snapshot capture + validation (no build / upload)"
+        description: "Run only snapshot capture + validation (no build / no upload). Default on; select 'false' for a full release build."
         required: false
-        default: "false"
+        default: "true"
         type: choice
         options:
           - "true"
@@ -35,14 +35,27 @@ jobs:
 
   build-release:
     name: Build release archive and distribute
-    # Release pushes and manual dispatch run the full flow;
-    # scheduled runs are snapshot-validation canaries only.
-    if: >-
-      (github.event_name == 'push' && startsWith(github.ref_name, 'release/v')) ||
-      github.event_name == 'workflow_dispatch'
     runs-on: macos-26
     needs: requires-integration-tests
+    # Release pushes and manual dispatch run the full flow; scheduled runs are
+    # snapshot-validation canaries only.
+    #
+    # `always()` keeps this job alive when the integration gate is skipped
+    # (non-push events like schedule / workflow_dispatch). A *failed* gate
+    # still blocks: the guard below re-checks the gate's result in release mode
+    # before any destructive step runs.
+    if: >-
+      always() &&
+      ((github.event_name == 'push' && startsWith(github.ref_name, 'release/v')) ||
+       github.event_name == 'workflow_dispatch' ||
+       github.event_name == 'schedule')
     steps:
+      # Release mode must not proceed if the integration gate failed (the job
+      # runs thanks to `always()`). Snapshot-validation mode ignores the gate.
+      - name: Enforce integration gate (release mode)
+        if: startsWith(github.ref_name, 'release/v') && needs.requires-integration-tests.result != 'success'
+        run: exit 1
+
       - name: Select flow (release vs. snapshot validation)
         env:
           SCHEDULED: ${{ github.event_name == 'schedule' }}
@@ -92,7 +105,7 @@ jobs:
         run: |
           echo '#include "BikeIndex-development"' > Test-credentials.xcconfig
           # Seeded sandbox user: bike_index db/seeds/seed_test_users.rb
-          # user@bikeindex.org owns the seeded OAuth app and bike 44
+          # user@bikeindex.org owns the seeded OAuth app and bike
           echo 'TEST_USERNAME = user@bikeindex.org' >> Test-credentials.xcconfig
           echo 'TEST_PASSWORD = pleaseplease12' >> Test-credentials.xcconfig
 
@@ -107,16 +120,28 @@ jobs:
       - name: Validate snapshots
         run: |
           # Expect one PNG per (ScreenshotUITest method x Snapfile device):
-          # 4 test methods (main content, register bike, bike 44) x 4 devices = 16
-          ruby scripts/validate-screenshots.rb fastlane/screenshots 16
+          # 5 test methods (main content, register bike, bike detail,
+          # sticker details, sticker center) x 4 devices = 20
+          ruby scripts/validate-screenshots.rb fastlane/screenshots 20
 
       - name: Upload snapshots as artifact
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: snapshots-${{ github.sha }}
           path: fastlane/screenshots/**/*.png
           retention-days: 30
+
+      - name: Upload test results (.xcresult) for diagnosis
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-results-${{ github.sha }}
+          path: |
+            build/test-output/**/*.xcresult
+            fastlane/screenshots/test_output/**/*.xcresult
+          if-no-files-found: warn
+          retention-days: 14
 
       # Validation-only flow ends here (weekly canary / manual dispatch).
       # All release-mode steps below are gated on steps.flow.outputs.

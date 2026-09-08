@@ -65,6 +65,7 @@ public final class ScreenshotUITest: XCTestCase {
             .startWithSignIn()
             .tapFirstBike()
             .finishWebViewLoading()
+            .ensureSandboxReviewAppBannerAbsent()
             .captureSnapshot(named: "3-bike-details-44")
     }
 
@@ -73,6 +74,7 @@ public final class ScreenshotUITest: XCTestCase {
             .startWithSignIn()
             .openLink()
             .finishWebViewLoading()
+            .ensureSandboxReviewAppBannerAbsent()
             .captureSnapshot(named: "4-sticker-center")
     }
 

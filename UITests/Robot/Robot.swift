@@ -67,8 +67,16 @@ open class Robot {
 
     @discardableResult
     func finishWebViewLoading() -> Self {
-        let progressIndicator = app.progressIndicators["navigableWebViewProgressView"]
-        progressIndicator.waitForNonExistence(timeout: 10)
+        // SwiftUI.ProgressView == XCUIElement.ElementType.activityIndicator
+        let activityIndicator = app.activityIndicators["navigableWebViewProgressView"]
+        assert(activityIndicator, [.doesNotExist], timeout: 15)
+        return self
+    }
+
+    @discardableResult
+    func ensureSandboxReviewAppBannerAbsent() -> Self {
+        let reviewAppBanner = app.staticTexts["Sandbox"]
+        assert(reviewAppBanner, [.doesNotExist], timeout: 10)
         return self
     }
 }
