@@ -52,27 +52,6 @@ platform :ios do
 
   # ------ Continuous Delivery ------
 
-  desc "Capture App Store Connect release screenshots (build once, then run all devices in parallel against that build)"
-  lane :CD_capture_app_store_connect_screenshots do
-    # Continuous-delivery snapshot capture, in two steps against a shared
-    # derived-data path so the app is built ONCE
-    scan(
-      build_for_testing: true,
-      testplan: "ReleaseScreenshots",
-      derived_data_path: "build/",
-      # Catch xcresult if snapshots failed
-      result_bundle_path: "build/test-output/ReleaseScreenshots.xcresult",
-    )
-
-    snapshot(
-      derived_data_path: "build/",
-      test_without_building: true,
-      concurrent_simulators: true,
-      # Catch xcresult if snapshots failed
-      result_bundle: true,
-    )
-  end
-
   desc "Set up keychain access and codesigning"
   lane :CD_setup_keychain_and_codesigning do
     keychain = "bikeindex_keychain"

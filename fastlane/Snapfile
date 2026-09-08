@@ -32,7 +32,8 @@ devices([
   "iPad Air 11-inch (M4)",
 ])
 
-concurrent_simulators(true)
+concurrent_simulators(false)
+result_bundle(true)
 
 # Essential test plan
 testplan("ReleaseScreenshots")
