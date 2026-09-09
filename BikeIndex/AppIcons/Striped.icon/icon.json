@@ -44,16 +44,9 @@
               }
             }
           ],
+          "glass" : false,
           "hidden" : false,
-          "image-name-specializations" : [
-            {
-              "value" : "black-base.jpg"
-            },
-            {
-              "appearance" : "light",
-              "value" : "white-base.jpg"
-            }
-          ],
+          "image-name" : "black-base.jpg",
           "name" : "white-base"
         }
       ],

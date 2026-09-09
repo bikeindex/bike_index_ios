@@ -34,6 +34,7 @@
               "value" : true
             }
           ],
+          "hidden" : false,
           "image-name" : "shield-1024.svg",
           "name" : "logo 3",
           "position" : {

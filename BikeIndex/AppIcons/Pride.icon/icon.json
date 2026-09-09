@@ -5,7 +5,7 @@
     {
       "layers" : [
         {
-          "glass" : false,
+          "glass" : true,
           "image-name-specializations" : [
             {
               "value" : "logo_pride_2026_gradient-3.png"
