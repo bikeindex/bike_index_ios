@@ -37,6 +37,17 @@ iOS client for [bikeindex.org](https://bikeindex.org)
 
 ## Quick Start
 
+#### Sandbox quick start (no OAuth setup)
+
+To build and run against the public sandbox at https://sandbox.review.bikeindex.org without registering your own OAuth app, generate the development xcconfig with the shared sandbox credentials from `Default.xcconfig`:
+
+```bash
+HONEYBADGER_API_KEY= ./scripts/generate-xcconfig.sh development BikeIndex-development.xcconfig
+./scripts/validate-xcconfig.sh development
+```
+
+This is what CI uses. It bakes in the Bike Index development team and the shared sandbox OAuth credentials, so it's ideal for simulator development. Use the full template flow below if you need your own OAuth app, a different development team, or to build to a device.
+
 To get started:
 
 1. Copy the BikeIndex-template.xcconfig file into BikeIndex-development.xcconfig and BikeIndex-production.xcconfig files.

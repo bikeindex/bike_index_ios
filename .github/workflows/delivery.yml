@@ -138,14 +138,10 @@ jobs:
         run: |
           echo "$MATCH_API_KEY_JSON_CONTENT" > ./fastlane/api-key.json
           # Rewrite the production xcconfig fresh (the sandbox block above
-          # already generated one); API_HOST/API_PORT come from #include "Default".
-          {
-            echo '#include "Default"'
-            echo "API_SECRET = $API_SECRET"
-            echo "API_CLIENT_ID = $API_CLIENT_ID"
-            echo "DEVELOPMENT_TEAM = $DEVELOPMENT_TEAM"
-            echo "HONEYBADGER_API_KEY = $HONEYBADGER_API_KEY"
-          } > BikeIndex-production.xcconfig
+          # already generated one). DEVELOPMENT_TEAM comes from a secret here,
+          # hence the env var; the script bakes it in along with the real
+          # Honeybadger key and the API credentials from Default.
+          ./scripts/generate-xcconfig.sh production BikeIndex-production.xcconfig
       - name: Validate production xcconfig
         if: steps.flow.outputs.SNAPSHOT_VALIDATION_ONLY != 'true'
         run: ./scripts/validate-xcconfig.sh production
