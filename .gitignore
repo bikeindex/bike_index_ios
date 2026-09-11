@@ -22,6 +22,10 @@ Test-credentials.xcconfig
 
 # scan temporary files
 **/fastlane/test_output
+# locally-extracted scan test-output artifacts (downloaded from CI)
+**/test_output_*/
+test_output_*.zip
+*.xcresult
 
 # symbolic link to metadata elsewhere on disk
 app-store-metadata
