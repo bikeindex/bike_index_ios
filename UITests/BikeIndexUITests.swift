@@ -112,10 +112,7 @@ final class BikeIndexUITests: XCTestCase {
             .startWithSignIn()
             .tapRegisterStolenBikeButton()
             .checkWhatToDoPageLoads()
-        #warning("TODO: Restore this when we get this page working on sandbox")
-        /*
             .checkHowToPageLoads()
-         */
     }
 
     func test_settings_account_pages() throws {
