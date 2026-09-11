@@ -11,11 +11,6 @@ on:
     - cron: '0 13 * * 4' # Thursday 9:00 AM EDT (13:00 UTC)
 
 jobs:
-  # ------------------------------------------------------------------
-  # Build once per push/PR. The test-suite job and the (conditional)
-  # retry-failed-tests job both restore this cached build, so a flaky
-  # re-run does not rebuild the app.
-  # ------------------------------------------------------------------
   build-tests:
     name: Build project and cache build products
     runs-on: macos-26
@@ -62,13 +57,8 @@ jobs:
     needs: build-tests
     runs-on: macos-26
     name: ${{ matrix.device }} ${{ matrix.only-testing }} ${{ matrix.deployment_target_version }}
-    # Collect the still-failing tests (after the testplan's
-    # retryOnFailure repetitions) and surface them as job outputs so a
-    # follow-up job can re-run ONLY those via --only-test-configurations.
-    # See: https://github.blog/news-insights/product-news/save-time-partial-re-runs-github-actions/
+    # Still-failing tests (post-retry), newline-separated "<target>/<class>/<method>".
     outputs:
-      # Newline-separated list of "<target>/<class>/<method>" selectors.
-      # Empty when the suite passed (or when there was nothing to re-run).
       failed-tests: ${{ steps.collect-failed.outputs.failed-tests }}
     strategy:
       matrix:
@@ -97,7 +87,6 @@ jobs:
           echo 'API_PORT = 443' >> BikeIndex-development.xcconfig
           echo 'DEVELOPMENT_TEAM = 8ZM5ZL6ABT' >> BikeIndex-development.xcconfig
           echo "HONEYBADGER_API_KEY = $HONEYBADGER_API_KEY" >> BikeIndex-development.xcconfig
-          # Validate script won't follow the include-Default, help it out
           grep API_SECRET Default.xcconfig >> BikeIndex-development.xcconfig
           grep API_CLIENT_ID Default.xcconfig >> BikeIndex-development.xcconfig
       - name: Set up test credentials
@@ -108,12 +97,8 @@ jobs:
       - name: Validate xcconfigs
         run: ./scripts/validate-xcconfig.sh development && ./scripts/validate-xcconfig.sh test
       - name: ${{ matrix.only-testing}} on ${{ matrix.device }} ${{ matrix.deployment_target_version }}
-        # `if: always()` on scan is intentionally NOT set: a hard build/
-        # infra failure should fail the job. The JUnit report (and thus the
-        # collect-failed step below) is still produced on test failures,
-        # which is the recoverable case we care about.
         run: fastlane scan --only-testing="${{ matrix.only-testing }}" --device="${{ matrix.device }}" --deployment-target-version="${{ matrix.deployment_target_version }}" --test_without_building=true
-      - name: Collect still-failing tests (for partial re-run)
+      - name: Collect still-failing tests
         id: collect-failed
         if: failure()
         env:
@@ -121,26 +106,14 @@ jobs:
           ONLY_TESTING: ${{ matrix.only-testing }}
         run: |
           set -euo pipefail
-          # Locate the JUnit report for this (target, device) matrix cell.
-          # `scan` writes it under fastlane/test_output/<...>_<Target>/report.junit
           report="fastlane/test_output/test_output_${DEVICE}_${ONLY_TESTING}/report.junit"
           if [ ! -f "$report" ]; then
-            echo "JUnit report not found at: $report" >&2
-            echo "No partial re-run possible for this cell." >&2
-            echo "failed-tests=<<EOF" >> "$GITHUB_OUTPUT"
-            echo "EOF" >> "$GITHUB_OUTPUT"
+            echo "no JUnit report at $report; nothing to re-run" >&2
+            printf 'failed-tests<<EOF\nEOF\n' >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          # Parse out the tests that are STILL failing after retries.
-          # Each line is an "<target>/<class>/<method>" selector.
           failed=$(ruby scripts/failed-test-configurations.rb "$report")
-          echo "Still-failing tests for ${ONLY_TESTING} on ${DEVICE}:" >&2
-          if [ -n "$failed" ]; then
-            printf '%s\n' "$failed" | sed 's/^/    /' >&2
-          fi
-          # Emit as a job output (newline-separated). Using a heredoc so a
-          # single-line value with no trailing newline is still valid.
-          { echo "failed-tests<<EOF"; printf '%s\n' "$failed"; echo "EOF"; } >> "$GITHUB_OUTPUT"
+          printf 'failed-tests<<EOF\n%s\nEOF\n' "$failed" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -148,22 +121,13 @@ jobs:
           path: "fastlane/test_output/*"
           compression-level: 9 # maximum compression
 
-  # ------------------------------------------------------------------
-  # Partial re-run: re-execute ONLY the tests that failed the full run
-  # (and still failed after the testplan's retryOnFailure repetitions).
-  # Skipped entirely when the test-suite job passed.
-  # ------------------------------------------------------------------
+  # Re-run only the still-failing tests; skipped when test-suite passed.
   retry-failed-tests:
     needs: [build-tests, test-suite]
-    if: |
-      always() &&
-      needs.test-suite.result == 'failure' &&
-      needs.test-suite.outputs['failed-tests'] != ''
+    if: always() && needs.test-suite.result == 'failure' && needs.test-suite.outputs['failed-tests'] != ''
     runs-on: macos-26
     name: Retry failed ${{ matrix.only-testing }} on ${{ matrix.device }}
     strategy:
-      # Re-run the same device / deployment-target matrix as test-suite so
-      # the retry matches the original environment.
       matrix:
         device: ["iPhone 17"] # "iPhone 17 Pro", "iPad (A16)"
         deployment_target_version: ["26.5"]
@@ -192,7 +156,6 @@ jobs:
           echo 'API_PORT = 443' >> BikeIndex-development.xcconfig
           echo 'DEVELOPMENT_TEAM = 8ZM5ZL6ABT' >> BikeIndex-development.xcconfig
           echo "HONEYBADGER_API_KEY = $HONEYBADGER_API_KEY" >> BikeIndex-development.xcconfig
-          # Validate script won't follow the include-Default, help it out
           grep API_SECRET Default.xcconfig >> BikeIndex-development.xcconfig
           grep API_CLIENT_ID Default.xcconfig >> BikeIndex-development.xcconfig
       - name: Set up test credentials
@@ -203,15 +166,6 @@ jobs:
       - name: Validate xcconfigs
         run: ./scripts/validate-xcconfig.sh development && ./scripts/validate-xcconfig.sh test
       - name: Retry only the failing tests
-        # The failed-tests output is aggregated across the whole test-suite
-        # job (all matrix cells). We pass the full list; scan's
-        # --only-test-configurations accepts multiple space-separated
-        # selectors, and any that don't exist for this cell are ignored by
-        # xcodebuild (it warns but does not fail on unknown selectors).
-        #
-        # We deliberately do NOT gate per-cell here: if the output is empty
-        # for a given cell, scan would run the whole cell. To avoid that we
-        # skip the step (and the cell) when there is nothing for it.
         id: retry
         env:
           FAILED_TESTS: ${{ needs.test-suite.outputs['failed-tests'] }}
@@ -219,18 +173,12 @@ jobs:
           DEVICE: ${{ matrix.device }}
         run: |
           set -euo pipefail
-          # Filter the aggregated failed list down to selectors relevant to
-          # THIS cell (they are prefixed with "<Target>/").
-          IFS= read -r -d '' selectors <<'EOF'
-          $FAILED_TESTS
-          EOF
-          cell_selectors="$(printf '%s\n' "$selectors" | grep "^${ONLY_TESTING}/" | tr '\n' ' ' | sed 's/ $//')"
+          # Keep only selectors for this cell (prefixed "<Target>/").
+          cell_selectors="$(printf '%s\n' "$FAILED_TESTS" | grep "^${ONLY_TESTING}/" | tr '\n' ' ' | sed 's/ $//')"
           if [ -z "$cell_selectors" ]; then
-            echo "No failing tests for ${ONLY_TESTING} on ${DEVICE}; nothing to retry." >&2
+            echo "no failing tests for ${ONLY_TESTING} on ${DEVICE}; nothing to retry" >&2
             exit 0
           fi
-          echo "Retrying for ${ONLY_TESTING} on ${DEVICE}:" >&2
-          printf '%s\n' "$cell_selectors" | tr ' ' '\n' | sed 's/^/    /' >&2
           fastlane scan \
             --only-test-configurations="$cell_selectors" \
             --device="${DEVICE}" \

@@ -20,9 +20,8 @@ Test-credentials.xcconfig
 # snapshot generated screenshots
 **/fastlane/screenshots
 
-# scan temporary files
+# scan temporary files / locally-extracted test-output artifacts
 **/fastlane/test_output
-# locally-extracted scan test-output artifacts (downloaded from CI)
 **/test_output_*/
 test_output_*.zip
 *.xcresult
