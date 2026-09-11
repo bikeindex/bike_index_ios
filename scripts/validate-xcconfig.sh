@@ -45,6 +45,14 @@ esac
 
 FILE_PATH="$PROJECT_ROOT/$FILE"
 
+# Last value of a key (xcconfig semantics: a later definition wins).
+# `|| true` so a key with no match doesn't trip `set -o pipefail`/`-e`.
+key_value() {
+  local key="$1"
+  ( (grep "^${key}[[:space:]]*=" "$FILE_PATH" || true) | tail -n1 \
+    | sed 's/^[^=]*=[[:space:]]*//' | sed 's/[[:space:]]*$//' | tr -d '\r' )
+}
+
 if [[ ! -f "$FILE_PATH" ]]; then
   echo "ERROR: File not found: $FILE_PATH"
   exit 1
@@ -69,7 +77,7 @@ fi
 # Validate that api_client_id and api_secret are exactly 43 characters long (development/production only)
 if [[ "$ENV" == "development" || "$ENV" == "production" ]]; then
   for key in API_CLIENT_ID API_SECRET; do
-    value=$(grep "^${key}[[:space:]]*=" "$FILE_PATH" | sed 's/^[^=]*=[[:space:]]*//' | sed 's/[[:space:]]*$//' | tr -d '\r')
+    value=$(key_value "$key")
     len=${#value}
     if [[ $len -ne 43 ]]; then
       echo "ERROR: $key in $FILE must be exactly 43 characters (got $len)"
@@ -81,9 +89,7 @@ fi
 # Production releases must ship with a real Honeybadger key (error reporting
 # is non-fatal in the app, but a release should not ship with it silently off).
 if [[ "$ENV" == "production" ]]; then
-  # `|| true` so a missing line doesn't trip `set -o pipefail`/`-e` before
-  # we can report it.
-  hb=$( (grep "^HONEYBADGER_API_KEY[[:space:]]*=" "$FILE_PATH" || true) | sed 's/^[^=]*=[[:space:]]*//' | sed 's/[[:space:]]*$//' | tr -d '\r')
+  hb=$(key_value "HONEYBADGER_API_KEY")
   if [[ -z "$hb" ]]; then
     echo "ERROR: HONEYBADGER_API_KEY in $FILE is empty or missing (required for production)"
     exit 1
