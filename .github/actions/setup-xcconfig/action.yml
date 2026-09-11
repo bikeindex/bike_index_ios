@@ -1,0 +1,33 @@
+name: Set up CI xcconfigs
+description: Generate development + test credentials xcconfigs and validate them.
+
+inputs:
+  honeybadger_api_key:
+    description: Honeybadger API key to bake into BikeIndex-development.xcconfig.
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Set up xcconfig (see README.md#quick-start)
+      env:
+        HONEYBADGER_API_KEY: ${{ inputs.honeybadger_api_key }}
+      run: |
+        echo '#include "Default"' >> BikeIndex-development.xcconfig
+        echo 'API_HOST = https:\/\/sandbox.review.bikeindex.org' >> BikeIndex-development.xcconfig
+        echo 'API_PORT = 443' >> BikeIndex-development.xcconfig
+        echo 'DEVELOPMENT_TEAM = 8ZM5ZL6ABT' >> BikeIndex-development.xcconfig
+        echo "HONEYBADGER_API_KEY = $HONEYBADGER_API_KEY" >> BikeIndex-development.xcconfig
+        grep API_SECRET Default.xcconfig >> BikeIndex-development.xcconfig
+        grep API_CLIENT_ID Default.xcconfig >> BikeIndex-development.xcconfig
+      shell: bash
+    - name: Set up test credentials
+      run: |
+        echo '#include "BikeIndex-development"' >> Test-credentials.xcconfig
+        echo 'TEST_USERNAME = user@bikeindex.org' >> Test-credentials.xcconfig
+        echo 'TEST_PASSWORD = pleaseplease12' >> Test-credentials.xcconfig
+      shell: bash
+    - name: Validate xcconfigs
+      run: ./scripts/validate-xcconfig.sh development && ./scripts/validate-xcconfig.sh test
+      shell: bash
