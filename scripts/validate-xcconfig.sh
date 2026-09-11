@@ -78,4 +78,16 @@ if [[ "$ENV" == "development" || "$ENV" == "production" ]]; then
   done
 fi
 
+# Production releases must ship with a real Honeybadger key (error reporting
+# is non-fatal in the app, but a release should not ship with it silently off).
+if [[ "$ENV" == "production" ]]; then
+  # `|| true` so a missing line doesn't trip `set -o pipefail`/`-e` before
+  # we can report it.
+  hb=$( (grep "^HONEYBADGER_API_KEY[[:space:]]*=" "$FILE_PATH" || true) | sed 's/^[^=]*=[[:space:]]*//' | sed 's/[[:space:]]*$//' | tr -d '\r')
+  if [[ -z "$hb" ]]; then
+    echo "ERROR: HONEYBADGER_API_KEY in $FILE is empty or missing (required for production)"
+    exit 1
+  fi
+fi
+
 echo "OK: All required keys present in $FILE ($ENV)"
