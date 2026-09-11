@@ -133,14 +133,12 @@ jobs:
           MATCH_API_KEY_JSON_CONTENT: ${{ secrets.MATCH_API_KEY_JSON_CONTENT }}
           API_SECRET: ${{ secrets.PRODUCTION__API_SECRET }}
           API_CLIENT_ID: ${{ secrets.PRODUCTION__API_CLIENT_ID }}
-          DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
           HONEYBADGER_API_KEY: ${{ secrets.HONEYBADGER_API_KEY }}
         run: |
           echo "$MATCH_API_KEY_JSON_CONTENT" > ./fastlane/api-key.json
           # Rewrite the production xcconfig fresh (the sandbox block above
-          # already generated one). DEVELOPMENT_TEAM comes from a secret here,
-          # hence the env var; the script bakes it in along with the real
-          # Honeybadger key and the API credentials from Default.
+          # already generated one); the script bakes in the real Honeybadger
+          # key and the API credentials from Default.
           ./scripts/generate-xcconfig.sh production BikeIndex-production.xcconfig
       - name: Validate production xcconfig
         if: steps.flow.outputs.SNAPSHOT_VALIDATION_ONLY != 'true'
