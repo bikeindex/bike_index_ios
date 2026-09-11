@@ -1,33 +1,57 @@
 name: Set up CI xcconfigs
-description: Generate development + test credentials xcconfigs and validate them.
+description: (Re)write one or more environment xcconfigs from Default and validate them.
 
 inputs:
+  # Space- or comma-separated list of: development, production
+  environments:
+    description: Which environment xcconfig file(s) to generate.
+    required: false
+    default: "development"
+  # Baked into each generated file. Empty for sandbox/snapshot runs;
+  # the real secret for release builds.
   honeybadger_api_key:
-    description: Honeybadger API key to bake into BikeIndex-development.xcconfig.
+    description: Honeybadger API key to bake into each environment's xcconfig.
     required: false
     default: ""
 
 runs:
   using: composite
   steps:
-    - name: Set up xcconfig (see README.md#quick-start)
+    - name: Generate xcconfigs
       env:
+        ENVIRONMENTS: ${{ inputs.environments }}
         HONEYBADGER_API_KEY: ${{ inputs.honeybadger_api_key }}
       run: |
-        echo '#include "Default"' >> BikeIndex-development.xcconfig
-        echo 'API_HOST = https:\/\/sandbox.review.bikeindex.org' >> BikeIndex-development.xcconfig
-        echo 'API_PORT = 443' >> BikeIndex-development.xcconfig
-        echo 'DEVELOPMENT_TEAM = 8ZM5ZL6ABT' >> BikeIndex-development.xcconfig
-        echo "HONEYBADGER_API_KEY = $HONEYBADGER_API_KEY" >> BikeIndex-development.xcconfig
-        grep API_SECRET Default.xcconfig >> BikeIndex-development.xcconfig
-        grep API_CLIENT_ID Default.xcconfig >> BikeIndex-development.xcconfig
+        set -euo pipefail
+        for env in ${ENVIRONMENTS//,/ }; do
+          case "$env" in
+            development) file="BikeIndex-development.xcconfig" ;;
+            production)  file="BikeIndex-production.xcconfig" ;;
+            *) echo "unknown environment: $env (use development, production)"; exit 1 ;;
+          esac
+          # API_HOST / API_PORT come from #include "Default"; only override the
+          # keys that must differ from the sandbox defaults.
+          {
+            echo '#include "Default"'
+            echo "DEVELOPMENT_TEAM = 8ZM5ZL6ABT"
+            echo "HONEYBADGER_API_KEY = ${HONEYBADGER_API_KEY}"
+            grep '^API_SECRET' Default.xcconfig
+            grep '^API_CLIENT_ID' Default.xcconfig
+          } > "$file"
+        done
       shell: bash
     - name: Set up test credentials
       run: |
-        echo '#include "BikeIndex-development"' >> Test-credentials.xcconfig
-        echo 'TEST_USERNAME = user@bikeindex.org' >> Test-credentials.xcconfig
-        echo 'TEST_PASSWORD = pleaseplease12' >> Test-credentials.xcconfig
+        {
+          echo '#include "BikeIndex-development"'
+          echo 'TEST_USERNAME = user@bikeindex.org'
+          echo 'TEST_PASSWORD = pleaseplease12'
+        } > Test-credentials.xcconfig
       shell: bash
+    # Always validates the two invariants (development + test credentials).
+    # Production is not validated here: the release path runs its own
+    # `validate-xcconfig.sh production` after injecting the real secrets.
     - name: Validate xcconfigs
-      run: ./scripts/validate-xcconfig.sh development && ./scripts/validate-xcconfig.sh test
+      run: |
+        ./scripts/validate-xcconfig.sh development && ./scripts/validate-xcconfig.sh test
       shell: bash

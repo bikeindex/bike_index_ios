@@ -78,41 +78,14 @@ jobs:
       - name: Set Xcode
         run: sudo xcode-select -s /Applications/Xcode_26.6.app
 
-      # Snapshot runs against the sandbox env at sandbox.review.bikeindex.org
-      # The seeded OAuth credentials (seed_oauth_app.rb) match the sandbox.
-      - name: Set up development and production xcconfigs (sandbox)
-        run: |
-          echo '#include "Default"' > BikeIndex-development.xcconfig
-          echo 'API_HOST = https:\/\/sandbox.review.bikeindex.org' >> BikeIndex-development.xcconfig
-          echo 'API_PORT = 443' >> BikeIndex-development.xcconfig
-          echo 'DEVELOPMENT_TEAM = 8ZM5ZL6ABT' >> BikeIndex-development.xcconfig
-          echo 'HONEYBADGER_API_KEY = ' >> BikeIndex-development.xcconfig
-          # Validate script won't follow the include-Default, help it out
-          grep API_SECRET Default.xcconfig >> BikeIndex-development.xcconfig
-          grep API_CLIENT_ID Default.xcconfig >> BikeIndex-development.xcconfig
-
-          echo '#include "Default"' > BikeIndex-production.xcconfig
-          echo 'API_HOST = https:\/\/sandbox.review.bikeindex.org' >> BikeIndex-production.xcconfig
-          echo 'API_PORT = 443' >> BikeIndex-production.xcconfig
-          echo 'DEVELOPMENT_TEAM = 8ZM5ZL6ABT' >> BikeIndex-production.xcconfig
-          echo 'HONEYBADGER_API_KEY = ' >> BikeIndex-production.xcconfig
-          grep API_SECRET Default.xcconfig >> BikeIndex-production.xcconfig
-          grep API_CLIENT_ID Default.xcconfig >> BikeIndex-production.xcconfig
-
-      # Absent from set up: API_HOST and API_PORT used in UITest universal link
-      # resolution but that will be solved by include-Default.
-      - name: Set up test credentials
-        run: |
-          echo '#include "BikeIndex-development"' > Test-credentials.xcconfig
-          # Seeded sandbox user: bike_index db/seeds/seed_test_users.rb
-          # user@bikeindex.org owns the seeded OAuth app and bike
-          echo 'TEST_USERNAME = user@bikeindex.org' >> Test-credentials.xcconfig
-          echo 'TEST_PASSWORD = pleaseplease12' >> Test-credentials.xcconfig
-
-      - name: Validate development and test xcconfigs
-        run: |
-          ./scripts/validate-xcconfig.sh development
-          ./scripts/validate-xcconfig.sh test
+      # Snapshot runs against the sandbox env (host + seeded OAuth creds come
+      # from #include "Default" / Default.xcconfig). Empty Honeybadger key on
+      # purpose: canary screenshots don't need error reporting.
+      - name: Set up development + production xcconfigs (sandbox)
+        uses: ./.github/actions/setup-xcconfig
+        with:
+          environments: development production
+          honeybadger_api_key: ""
 
       - name: Capture snapshots
         run: fastlane snapshot
@@ -164,11 +137,15 @@ jobs:
           HONEYBADGER_API_KEY: ${{ secrets.HONEYBADGER_API_KEY }}
         run: |
           echo "$MATCH_API_KEY_JSON_CONTENT" > ./fastlane/api-key.json
-          echo '#include "Default"' >> BikeIndex-production.xcconfig
-          echo "API_SECRET = $API_SECRET" >> BikeIndex-production.xcconfig
-          echo "API_CLIENT_ID = $API_CLIENT_ID" >> BikeIndex-production.xcconfig
-          echo "DEVELOPMENT_TEAM = $DEVELOPMENT_TEAM" >> BikeIndex-production.xcconfig
-          echo "HONEYBADGER_API_KEY = $HONEYBADGER_API_KEY" >> BikeIndex-production.xcconfig
+          # Rewrite the production xcconfig fresh (the sandbox block above
+          # already generated one); API_HOST/API_PORT come from #include "Default".
+          {
+            echo '#include "Default"'
+            echo "API_SECRET = $API_SECRET"
+            echo "API_CLIENT_ID = $API_CLIENT_ID"
+            echo "DEVELOPMENT_TEAM = $DEVELOPMENT_TEAM"
+            echo "HONEYBADGER_API_KEY = $HONEYBADGER_API_KEY"
+          } > BikeIndex-production.xcconfig
       - name: Validate production xcconfig
         if: steps.flow.outputs.SNAPSHOT_VALIDATION_ONLY != 'true'
         run: ./scripts/validate-xcconfig.sh production
