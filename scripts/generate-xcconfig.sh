@@ -7,8 +7,10 @@
 # Environment variables:
 #   HONEYBADGER_API_KEY  Baked into the file. Empty for sandbox/snapshot runs;
 #                        the real secret for release builds.
-#   DEVELOPMENT_TEAM     Defaults to 8ZM5ZL6ABT; overridden on the release path
-#                        where it comes from a secret.
+#
+# DEVELOPMENT_TEAM is the Bike Index team, hardcoded: it is not a secret (it
+# appears in provisioning profiles and docs) and is the same for every
+# environment and every CI path.
 #
 # API_HOST / API_PORT come from #include "Default"; only the keys that must
 # differ from the sandbox defaults are written.
@@ -18,11 +20,10 @@ ENVIRONMENT="${1:?usage: generate-xcconfig.sh <environment> <file>}"
 FILE="${2:?usage: generate-xcconfig.sh <environment> <file>}"
 
 case "$ENVIRONMENT" in
-  development) TEAM_DEFAULT="8ZM5ZL6ABT" ;;
-  production)  TEAM_DEFAULT="8ZM5ZL6ABT" ;;
+  development|production) ;;
   *) echo "unknown environment: $ENVIRONMENT (use development, production)" >&2; exit 1 ;;
 esac
-DEVELOPMENT_TEAM="${DEVELOPMENT_TEAM:-$TEAM_DEFAULT}"
+DEVELOPMENT_TEAM="8ZM5ZL6ABT"
 HONEYBADGER_API_KEY="${HONEYBADGER_API_KEY:-}"
 
 {
