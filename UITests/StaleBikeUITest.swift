@@ -19,16 +19,19 @@ final class StaleBikeUITest: XCTestCase {
 
     func test_staleBikesAreRemoved() throws {
         try MainContentRobot(app)
-            .startWithSignIn()
+            .startWithSignIn(email: "user@bikeindex.org", password: "pleaseplease12")
 
             // Validate By-Status display
             .tapGroupingMenuButton()
-            .tapGroupButton(for: Status.groupMode)
+            .tapGroupButton(mode: Status.groupMode)
             .checkBike(section: Status.withOwner, index: 1, exists: true)
             .identifyBikes(&bikes_belonging_to_first_user)
             .logOut()
-            .signIn(email: "member@bikeindex.org", password: "pleaseplease12")
-            .checkBike(section: Status.withOwner, index: 1, exists: false)
+
+            .signIn(email: "member@brakebills.edu", password: "pleaseplease12")
+            .tapGroupingMenuButton()
+            .tapGroupButton(mode: Status.groupMode)
+            .checkBike(section: Status.unregisteredParkingNotification, index: 1, exists: false)
             .identifyBikes(&bikes_belonging_to_second_user)
 
         XCTAssertFalse(bikes_belonging_to_first_user.isEmpty)
