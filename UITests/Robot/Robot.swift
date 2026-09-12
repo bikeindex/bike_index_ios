@@ -66,10 +66,10 @@ open class Robot {
     }
 
     @discardableResult
-    func finishWebViewLoading() -> Self {
-        // SwiftUI.ProgressView == XCUIElement.ElementType.activityIndicator
+    func finishWebViewLoading(timeout: TimeInterval = Robot.defaultTimeout) -> Self {
+        // also known as SwiftUI.ProgressView
         let activityIndicator = app.activityIndicators["navigableWebViewProgressView"]
-        assert(activityIndicator, [.doesNotExist], timeout: 15)
+        assert(activityIndicator, [.doesNotExist], timeout: timeout)
         return self
     }
 
