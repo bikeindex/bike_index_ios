@@ -1,5 +1,5 @@
-name: Set up CI xcconfigs
-description: (Re)write one or more environment xcconfigs from Default and validate them.
+name: Set up xcconfigs
+description: Write xcconfigs based on the environment.
 
 inputs:
   # Space- or comma-separated list of: development, production
@@ -7,8 +7,7 @@ inputs:
     description: Which environment xcconfig file(s) to generate.
     required: false
     default: "development"
-  # Baked into each generated file. Empty for sandbox/snapshot runs;
-  # the real secret for release builds.
+  # Empty for sandbox/snapshot runs
   honeybadger_api_key:
     description: Honeybadger API key to bake into each environment's xcconfig.
     required: false
@@ -41,8 +40,7 @@ runs:
         } > Test-credentials.xcconfig
       shell: bash
     # Always validates the two invariants (development + test credentials).
-    # Production is not validated here: the release path runs its own
-    # `validate-xcconfig.sh production` after injecting the real secrets.
+    # Production validated by delivery.yml.
     - name: Validate xcconfigs
       run: |
         ./scripts/validate-xcconfig.sh development && ./scripts/validate-xcconfig.sh test
