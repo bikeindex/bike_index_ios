@@ -11,7 +11,7 @@ import XCUIAutomation
 final class UniversalLinksRobot: Robot {
     private lazy var stickerHeader = app.navigationBars.staticTexts["BR 000 1"]
     private lazy var unlinkedMessage: [XCUIElement] = [
-        app.webViews.staticTexts["You scanned the sticker"],
+        app.webViews.staticTexts["You scanned"],
         app.webViews.staticTexts["BR 000 1"],
         app.webViews.staticTexts[", which is assigned to this bike."],
     ]
