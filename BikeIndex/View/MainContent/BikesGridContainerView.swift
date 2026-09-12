@@ -5,6 +5,7 @@
 //  Created by Jack on 3/23/25.
 //
 
+import HoneybadgerSwift
 import SectionedQuery
 import SwiftData
 import SwiftUI
@@ -29,14 +30,25 @@ struct BikesGridContainerView: View {
         path: Binding<NavigationPath>,
         fetching: Binding<Bool>,
         sectionGroup group: MainContentPage.ViewModel.GroupMode,
-        sectionSortOrder: SortOrder
+        sectionSortOrder: SortOrder,
+        authenticatedUsers: [AuthenticatedUser]
     ) {
         _path = path
         _fetching = fetching
         self.group = group
         self.sectionSortOrder = sectionSortOrder
 
-        _sections = group.sectionQuery(with: sectionSortOrder)
+        let authenticatedUserEmail: String
+        if authenticatedUsers.count == 1, let user = authenticatedUsers.first?.user {
+            authenticatedUserEmail = user.email
+        } else {
+            let error = "Found more than one active authenticated user"
+            Honeybadger.notify(errorString: error)
+            authenticatedUserEmail = ""
+        }
+
+        _sections = group.sectionQuery(
+            with: sectionSortOrder, authenticatedUserEmail: authenticatedUserEmail)
     }
 
     var body: some View {
