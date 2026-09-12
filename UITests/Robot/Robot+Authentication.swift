@@ -10,14 +10,14 @@ import XCTest
 
 extension Robot {
     @discardableResult
-    func startWithSignIn() throws -> Self {
+    func startWithSignIn(email: String? = nil, password: String? = nil) throws -> Self {
         try start()
             .finishRestoringSession()
             .signIn()
     }
 
     @discardableResult
-    func signIn() throws -> Self {
+    func signIn(email: String? = nil, password: String? = nil) throws -> Self {
         // Ensure the launch-time session restoration has completed before interacting.
         finishRestoringSession()
 
@@ -40,11 +40,19 @@ extension Robot {
 
         let timeout: TimeInterval = 180
 
-        // Configure these values in Test-credentials.xcconfig (see adjacent template file)
-        let uiTestBundle = try XCTUnwrap(Bundle.uiTests)
-        let infoDictionary = try XCTUnwrap(uiTestBundle.infoDictionary)
-        let testUsername = try XCTUnwrap(infoDictionary["TEST_USERNAME"] as? String)
-        let testPassword = try XCTUnwrap(infoDictionary["TEST_PASSWORD"] as? String)
+        let testUsername: String
+        let testPassword: String
+
+        if let email, let password {
+            testUsername = email
+            testPassword = password
+        } else {
+            // Configure these values in Test-credentials.xcconfig (see adjacent template file)
+            let uiTestBundle = try XCTUnwrap(Bundle.uiTests)
+            let infoDictionary = try XCTUnwrap(uiTestBundle.infoDictionary)
+            testUsername = try XCTUnwrap(infoDictionary["TEST_USERNAME"] as? String)
+            testPassword = try XCTUnwrap(infoDictionary["TEST_PASSWORD"] as? String)
+        }
 
         // Step 2: A) Enter email
         let usernameField = app.webViews.firstMatch.textFields["Email"]
