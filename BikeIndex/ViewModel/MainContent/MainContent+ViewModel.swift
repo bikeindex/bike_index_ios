@@ -179,11 +179,16 @@ extension MainContentPage {
                         myProfile.bikes = bikes
 
                         // 4.
-                        try cleanStaleBikes(
-                            myBikeIdentifiers: myBikeIdentifiers,
-                            currentOwner: user,
-                            modelContext: modelContext
-                        )
+                        let currentUserId = user.persistentModelID
+                        let staleBikePredicate = #Predicate<Bike> { model in
+                            model.owner?.persistentModelID == currentUserId
+                                && !myBikeIdentifiers.contains(model.identifier)
+                        }
+                        let staleDescriptor = FetchDescriptor<Bike>(predicate: staleBikePredicate)
+                        let staleBikes = try modelContext.fetch(staleDescriptor)
+                        for bike in staleBikes {
+                            bike.owner = nil
+                        }
                     }
                 } catch (let swiftError) {
                     Honeybadger.notify(error: swiftError)

@@ -9,6 +9,7 @@ import XCTest
 
 @MainActor
 final class MainContentUITestCase: XCTestCase {
+
     let app = XCUIApplication()
 
     override func setUpWithError() throws {

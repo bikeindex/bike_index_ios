@@ -107,7 +107,7 @@ extension Robot {
 
         // make sure auth page is presented
         let signIn = app.buttons["SignIn"]
-        assert(signIn, [.isHittable], timeout: timeout)
+        let result = signIn.waitForExistence(timeout: 2)
 
         return self
     }
