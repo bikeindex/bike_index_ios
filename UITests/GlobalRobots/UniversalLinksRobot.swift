@@ -9,7 +9,6 @@ import XCTest
 import XCUIAutomation
 
 final class UniversalLinksRobot: Robot {
-    let timeout: TimeInterval = 45
     private lazy var stickerHeader = app.navigationBars.staticTexts["BR 000 1"]
     private lazy var unlinkedMessage: [XCUIElement] = [
         app.webViews.staticTexts["You scanned the sticker"],
@@ -33,7 +32,7 @@ final class UniversalLinksRobot: Robot {
 
     @discardableResult
     func checkStickerHeader() -> Self {
-        assert(stickerHeader, [.exists], timeout: timeout)
+        assert(stickerHeader, [.exists])
 
         return self
     }
@@ -41,7 +40,7 @@ final class UniversalLinksRobot: Robot {
     @discardableResult
     func checkUnlinkedMessage() -> Self {
         for message in unlinkedMessage {
-            assert(message, [.exists], timeout: timeout)
+            assert(message, [.exists])
         }
 
         return self
