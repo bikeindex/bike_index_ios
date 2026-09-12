@@ -44,24 +44,35 @@ extension MainContentPage.ViewModel {
         /// E.g. byManufacturer:
         ///     SortOrder.forward: Giant, Jamis, Specialized (down arrow)
         ///     SortOrder.reverse: Specialized, Jamis, Giant (up arrow)
+        /// Bikes are filtered by owner email,
+        /// and must belong to the authenticated user.
         /// NOTE: Although the queries _could_ have different types (\Bike.year: Int?) in practice
         /// these must all use String key paths (or an enum with a String raw value).
         /// Unfortunately this requires shadowing Enum and Int fields
-        /// with String fields but hopefully this improves in iOS 19.
-        func sectionQuery(with sortOrder: SortOrder) -> SectionedQuery<String, Bike> {
-            switch self {
+        /// with String fields but hopefully this improves in iOS 28.
+        func sectionQuery(with sortOrder: SortOrder, authenticatedUserEmail: String)
+            -> SectionedQuery<String, Bike>
+        {
+            let bikeOwnerFilter = #Predicate<Bike> { predicateBike in
+                predicateBike.owner?.email == authenticatedUserEmail
+            }
+
+            return switch self {
             case .byStatus:
                 SectionedQuery(
                     \Bike.statusString,
+                    filter: bikeOwnerFilter,
                     sort: [SortDescriptor(\Bike.statusString, order: sortOrder)])
             case .byYear:
                 SectionedQuery(
                     \Bike.yearString,
+                    filter: bikeOwnerFilter,
                     // use Int sorting
                     sort: [SortDescriptor(\Bike.year, order: sortOrder)])
             case .byManufacturer:
                 SectionedQuery(
                     \Bike.manufacturerName,
+                    filter: bikeOwnerFilter,
                     sort: [SortDescriptor(\Bike.manufacturerName, order: sortOrder)])
             }
         }

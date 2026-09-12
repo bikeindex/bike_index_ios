@@ -19,6 +19,7 @@ struct MainContentPage: View {
     /// ViewModel for state management.
     /// Forwards dynamic query changes to ``BikesGridContainerView`` to support dynamic grouping selection.
     @State private var viewModel = ViewModel()
+    @Query private var authenticatedUsers: [AuthenticatedUser]
 
     /// Binds to the shared App Intent navigation state to handle sheet presentation.
     @Bindable(AppIntentNavigationManager.shared) var appIntentNavManager
@@ -39,7 +40,8 @@ struct MainContentPage: View {
                     path: $viewModel.path,
                     fetching: $viewModel.fetching,
                     sectionGroup: viewModel.groupMode,
-                    sectionSortOrder: viewModel.sortOrder)
+                    sectionSortOrder: viewModel.sortOrder,
+                    authenticatedUsers: authenticatedUsers)
             }
             .toolbar {
                 MainToolbar(
