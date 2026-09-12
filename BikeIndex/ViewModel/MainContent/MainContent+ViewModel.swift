@@ -84,6 +84,10 @@ extension MainContentPage {
         /// 1. Write this ``AuthenticatedUser``
         /// 2. Write the User
         /// 3. Find any cached bikes known-to-be-owned by this user and link them.
+        /// 4. Clean stale bikes: any locally-stored bike owned by this user
+        /// whose identifier is not in this profile's list of owned bike IDs is
+        /// no longer owned. Reassign its owner to nil. Bikes owned by other
+        /// users are left untouched.
         /// Wrapped Swift.Error can be thrown from A) network operations and B) SwiftData operations.
         /// ViewModel.Error can be thrown from C) application state errors or D) application logic errors.
         /// - Parameter client: App network Client to perform network requests.
@@ -127,9 +131,14 @@ extension MainContentPage {
 
                         // 1. and 2.
                         modelContext.insert(myProfile)
-                        if let user = myProfile.user {
-                            modelContext.insert(user)
+                        guard let user = myProfile.user else {
+                            Honeybadger.notify(
+                                errorString:
+                                    "Failed to transform and persist User model while fetching profile information."
+                            )
+                            return
                         }
+                        modelContext.insert(user)
 
                         // 3.
                         let myBikeIdentifiers = myProfileSource.bike_ids
@@ -144,6 +153,18 @@ extension MainContentPage {
                             bike.owner = myProfile.user
                         }
                         myProfile.bikes = bikes
+
+                        // 4.
+                        let currentUserId = user.persistentModelID
+                        let staleBikePredicate = #Predicate<Bike> { model in
+                            model.owner?.persistentModelID == currentUserId
+                                && !myBikeIdentifiers.contains(model.identifier)
+                        }
+                        let staleDescriptor = FetchDescriptor<Bike>(predicate: staleBikePredicate)
+                        let staleBikes = try modelContext.fetch(staleDescriptor)
+                        for bike in staleBikes {
+                            bike.owner = nil
+                        }
                     }
                 } catch (let swiftError) {
                     Honeybadger.notify(error: swiftError)

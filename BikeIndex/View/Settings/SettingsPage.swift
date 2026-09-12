@@ -66,6 +66,7 @@ struct SettingsPage: View {
                             .foregroundStyle(Color.highlightPrimary)
                     }
                     .tint(Color.highlightPrimary)
+                    .accessibilityIdentifier("signOutButton")
 
                     NavigationLink(value: SettingsSelection.deleteAccount) {
                         Label("Delete Account", systemImage: "trash.fill")

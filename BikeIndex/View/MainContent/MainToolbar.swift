@@ -29,6 +29,7 @@ extension MainContentPage {
                     Label("Settings", systemImage: "gearshape")
                 }
                 .accessibilityHint("Open application settings")
+                .accessibilityIdentifier("settingsMenu")
 
                 // Help
                 Button {

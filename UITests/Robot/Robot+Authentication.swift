@@ -82,6 +82,25 @@ extension Robot {
         return self
     }
 
+    @discardableResult
+    func logOut() throws -> Self {
+        let timeout: TimeInterval = 5
+
+        let settingsButton = app.buttons["settingsMenu"]
+        assert(settingsButton, [.isHittable], timeout: timeout)
+        settingsButton.tap()
+
+        let signOutButton = app.buttons["signOutButton"]
+        assert(signOutButton, [.isHittable], timeout: timeout)
+        signOutButton.tap()
+
+        // make sure auth page is presented
+        let signIn = app.buttons["SignIn"]
+        let result = signIn.waitForExistence(timeout: 2)
+
+        return self
+    }
+
     /// If OAuth Authorization is required, there _may also_ be a security
     /// warning overlay for authorizations that are new to this user + OAuth app
     private func attemptAppOAuthSecurity() {

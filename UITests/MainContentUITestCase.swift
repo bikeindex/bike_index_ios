@@ -9,12 +9,6 @@ import XCTest
 
 @MainActor
 final class MainContentUITestCase: XCTestCase {
-    enum GroupMode: String, CaseIterable, Identifiable, Equatable {
-        case byStatus
-        case byManufacturer
-
-        var id: String { rawValue }
-    }
 
     let app = XCUIApplication()
 
