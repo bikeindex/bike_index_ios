@@ -23,7 +23,7 @@ final class MainContentUITestCase: XCTestCase {
 
             // Validate By-Status display
             .tapGroupingMenuButton()
-            .tapGroupButton(for: Status.groupMode)
+            .tapGroupButton(mode: Status.groupMode)
 
             .tapGroupingMenuButton()
             // will continue if sort order is already correct and dismsis menu
@@ -38,7 +38,7 @@ final class MainContentUITestCase: XCTestCase {
 
             // Validate By-Manufacturer display
             .tapGroupingMenuButton()
-            .tapGroupButton(for: Manufacturer.groupMode)
+            .tapGroupButton(mode: Manufacturer.groupMode)
             .tapGroupingMenuButton()
             .tapGroupSortOrderButton(.forward, returnTo: Manufacturer.groupMode)
 

@@ -132,7 +132,7 @@ final class MainContentRobot: Robot {
     }
 
     @discardableResult
-    func tapGroupButton(for groupMode: GroupMode) -> Self {
+    func tapGroupButton(mode groupMode: GroupMode) -> Self {
         switch groupMode {
         case .byStatus:
             tap(groupByStatusButton)
@@ -154,14 +154,14 @@ final class MainContentRobot: Robot {
             if sortOrderAscending.waitForExistence(timeout: timeout) {
                 tap(sortOrderAscending)
             } else {
-                tapGroupButton(for: groupMode)
+                tapGroupButton(mode: groupMode)
             }
         case .reverse:
             // _change to_ descending/forward, if not using that already
             if sortOrderDescending.waitForExistence(timeout: timeout) {
                 tap(sortOrderDescending)
             } else {
-                tapGroupButton(for: groupMode)
+                tapGroupButton(mode: groupMode)
             }
         }
         return self
