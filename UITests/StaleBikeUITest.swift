@@ -31,15 +31,16 @@ final class StaleBikeUITest: XCTestCase {
             .signIn(email: "member@brakebills.edu", password: "pleaseplease12")
             .tapGroupingMenuButton()
             .tapGroupButton(mode: Status.groupMode)
-            .checkBike(section: Status.unregisteredParkingNotification, index: 1, exists: false)
+            .checkBike(section: Status.unregisteredParkingNotification, index: 1, exists: true)
             .identifyBikes(&bikes_belonging_to_second_user)
 
         XCTAssertFalse(bikes_belonging_to_first_user.isEmpty)
+        XCTAssertFalse(bikes_belonging_to_second_user.isEmpty)
         XCTAssertNotEqual(bikes_belonging_to_first_user, bikes_belonging_to_second_user)
 
         let setOfFirstBikes = Set(bikes_belonging_to_first_user)
         let setOfSecondBikes = Set(bikes_belonging_to_second_user)
-        XCTAssertTrue(setOfFirstBikes.isDisjoint(with: setOfSecondBikes))
+        XCTAssertTrue(setOfFirstBikes.isDisjoint(with: setOfSecondBikes), "expected distinct sets, found A) <\(setOfFirstBikes)> -- vs -- <\(setOfSecondBikes)>")
     }
 
 }
