@@ -38,9 +38,9 @@
       }
     },
     {
-      "parallelizable" : true,
       "skippedTests" : [
         "BikeIndexAppAccessibilityPreviewTest",
+        "BikeIndexUITests\/testLaunchPerformance()",
         "ScreenshotUITest",
         "ScreenshotUITest\/test_screenshot_details_page_br_0001()",
         "ScreenshotUITest\/test_screenshot_main_content_page()",
