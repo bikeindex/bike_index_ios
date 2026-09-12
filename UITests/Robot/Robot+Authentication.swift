@@ -12,8 +12,7 @@ extension Robot {
     @discardableResult
     func startWithSignIn(email: String? = nil, password: String? = nil) throws -> Self {
         try start()
-            .finishRestoringSession()
-            .signIn()
+            .signIn(email: email, password: password)
     }
 
     @discardableResult
