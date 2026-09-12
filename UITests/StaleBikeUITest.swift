@@ -27,9 +27,9 @@ final class StaleBikeUITest: XCTestCase {
             .checkBike(section: Status.withOwner, index: 1, exists: true)
             .identifyBikes(&bikes_belonging_to_first_user)
             .logOut()
-//            .startWithSignIn(email: "", password: "")
-//            .checkFirstBike(exists: true)
-//            .identifyBikes(&bikes_belonging_to_second_user)
+            .signIn(email: "member@bikeindex.org", password: "pleaseplease12")
+            .checkBike(section: Status.withOwner, index: 1, exists: false)
+            .identifyBikes(&bikes_belonging_to_second_user)
 
         XCTAssertFalse(bikes_belonging_to_first_user.isEmpty)
         XCTAssertNotEqual(bikes_belonging_to_first_user, bikes_belonging_to_second_user)
@@ -42,6 +42,7 @@ final class StaleBikeUITest: XCTestCase {
 }
 
 extension MainContentRobot {
+    @discardableResult
     func identifyBikes(_ identifiedBikes: inout [String]) -> Self {
         let predicate = NSPredicate(format: "identifier BEGINSWITH 'Bike'")
         let bikeButtons = app.buttons.matching(predicate)
