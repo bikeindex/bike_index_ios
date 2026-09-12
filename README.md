@@ -46,7 +46,9 @@ HONEYBADGER_API_KEY= ./scripts/generate-xcconfig.sh development BikeIndex-develo
 ./scripts/validate-xcconfig.sh development
 ```
 
-This is what CI uses. It bakes in the Bike Index development team and the shared sandbox OAuth credentials, so it's ideal for simulator development. Use the full template flow below if you need your own OAuth app, a different development team, or to build to a device.
+Providing a Honeybadger API key is optional. You will need to change the development team to run on your own devices. Follow the 'Full Development directions' below to set up your own OAuth config and/or development team.
+
+#### Full development directions
 
 To get started:
 
