@@ -120,11 +120,21 @@ typealias QueryItemTuple = (name: String, value: String)
         }
     }
 
+    // MARK: Logout
     /// Allow users to log out
     func destroySession() async {
         // Clear web state
         // NOTE: We could parse this for a 302 redirect to /goodbye but that seems unnecessary
-        _ = await get(OAuth.logout)
+        let logoutResult = await get(OAuth.logout)
+        switch logoutResult {
+        case .success(let success):
+            Logger.api.info(
+                "\(#function) Logged out successfully, \(String(describing: success), privacy: .public)"
+            )
+        case .failure(let failure):
+            // Don't report to Honeybadger, mimeType==text/html response is not parsed
+            Logger.api.info("\(#function) Failed to call logout, \(failure, privacy: .public)")
+        }
 
         let allCookies = await webConfiguration.websiteDataStore.httpCookieStore.allCookies()
         var authCookie: HTTPCookie?

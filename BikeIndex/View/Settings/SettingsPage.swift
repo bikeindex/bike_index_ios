@@ -183,8 +183,8 @@ struct SettingsPage: View {
     }
 
     func logout() async {
-        path = NavigationPath()
         await client.destroySession()
+        path = NavigationPath()
     }
 
     /// Excluding signOut and contactUs which don't navigate internally
