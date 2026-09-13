@@ -155,16 +155,11 @@ extension MainContentPage {
                         myProfile.bikes = bikes
 
                         // 4.
-                        let currentUserId = user.persistentModelID
-                        let staleBikePredicate = #Predicate<Bike> { model in
-                            model.owner?.persistentModelID == currentUserId
-                                && !myBikeIdentifiers.contains(model.identifier)
-                        }
-                        let staleDescriptor = FetchDescriptor<Bike>(predicate: staleBikePredicate)
-                        let staleBikes = try modelContext.fetch(staleDescriptor)
-                        for bike in staleBikes {
-                            bike.owner = nil
-                        }
+                        try cleanStaleBikes(
+                            myBikeIdentifiers: myBikeIdentifiers,
+                            currentOwner: user,
+                            modelContext: modelContext
+                        )
                     }
                 } catch (let swiftError) {
                     Honeybadger.notify(error: swiftError)
@@ -174,6 +169,36 @@ extension MainContentPage {
                 Logger.model.error("\(type(of: self)).\(#function) - Failed with \(failure)")
                 throw Error.swiftError(failure)
             }
+        }
+
+        /// Unlink locally-stored bikes owned by `currentOwner` whose identifier is
+        /// not present in `myBikeIdentifiers`.
+        ///
+        /// Performs the pure fetch + mutate step only. The caller is responsible
+        /// for committing changes (e.g. by wrapping the call in a
+        /// `ModelContext.transaction` or calling `save()` afterwards). Bikes owned
+        /// by other users are left untouched.
+        /// - Parameters:
+        ///   - myBikeIdentifiers: Identifiers of bikes the current user still owns per their profile.
+        ///   - currentOwner: The user whose stale bikes should be unlinked.
+        ///   - modelContext: SwiftData context to fetch and mutate bikes in.
+        @MainActor
+        func cleanStaleBikes(
+            myBikeIdentifiers: [Int],
+            currentOwner: User,
+            modelContext: ModelContext
+        ) throws {
+            let currentUserId = currentOwner.persistentModelID
+            let staleBikePredicate = #Predicate<Bike> { model in
+                model.owner?.persistentModelID == currentUserId
+                    && !myBikeIdentifiers.contains(model.identifier)
+            }
+            let staleDescriptor = FetchDescriptor<Bike>(predicate: staleBikePredicate)
+            let staleBikes = try modelContext.fetch(staleDescriptor)
+            for bike in staleBikes {
+                bike.owner = nil
+            }
+            modelContext.processPendingChanges()
         }
 
         /// Fetch the current user's bikes. Must be authenticated already! Must have an AuthenticatedUser already!
