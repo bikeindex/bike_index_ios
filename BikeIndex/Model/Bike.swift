@@ -11,9 +11,10 @@ import OSLog
 import SwiftData
 
 @Model final class Bike {
-    /// Rails-specific Bike identifier.
+    /// Rails-specific Bike identifier typealias.
     typealias BikeIdentifier = Int
 
+    /// Rails-specific Bike Identifier
     @Attribute(.unique) var identifier: BikeIdentifier
     @Relationship var owner: User?
     @Relationship var authenticatedOwner: AuthenticatedUser?
