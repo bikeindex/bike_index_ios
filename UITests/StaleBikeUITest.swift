@@ -24,6 +24,7 @@ final class StaleBikeUITest: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
     }
 
+    // TODO: Validate this test
     func test_staleBikesAreRemoved() throws {
         try MainContentRobot(app)
             .startWithSignIn(email: "user@bikeindex.org", password: "pleaseplease12")
@@ -56,49 +57,33 @@ final class StaleBikeUITest: XCTestCase {
     }
 
     func test_transferredBikesAreRemoved() throws {
-//        XCTFail("Todo: implement scenario 2 after transferring a bike.")
         try MainContentRobot(app)
-            .startWithSignIn(email: "api@bikeindex.org", password: "pleaseplease12")
+        // TODO: Change this to a different account so I don't statefully break other tests!
+            .startWithSignIn(email: "user@bikeindex.org", password: "pleaseplease12")
             .tapGroupingMenuButton()
             .tapGroupButton(mode: Status.groupMode)
             .checkBike(section: Status.withOwner, index: 1, exists: true)
             .tapFirstBike()
             .tapEditButton()
-            .tapEditDetails()
-            .tapEditTransferHideOrDelete()
+            .finishWebViewLoading()
+            .scrollToFooter()
+            .tapTransferHideOrDelete()
+            .typeNewOwner(email: "api@bikeindex.org")
+            .updateOwnership()
+            .finishWebViewLoading()
+            .back()
+            .logOut()  // will go to Settings for us
 
-        let webViewsQuery = app.webViews
-        let element3 = webViewsQuery/*@START_MENU_TOKEN@*/.containing(.link, identifier: "Skip to main content").firstMatch/*[[".element(boundBy: 2)",".containing(.other, identifier: \"content information\").firstMatch",".containing(.other, identifier: \"main\").firstMatch",".containing(.link, identifier: \"Skip to main content\").firstMatch"],[[[-1,3],[-1,2],[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
-        element3.swipeUp()
-        app/*@START_MENU_TOKEN@*/.staticTexts["Edit this bike"]/*[[".links[\"Edit this bike\"].staticTexts",".links.staticTexts[\"Edit this bike\"]",".staticTexts[\"Edit this bike\"]"],[[[-1,2],[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.firstMatch.tap()
-        
-        let element4 = webViewsQuery/*@START_MENU_TOKEN@*/.containing(.other, identifier: "Details: Intense").firstMatch/*[[".element(boundBy: 2)",".containing(.other, identifier: \"main\").firstMatch",".containing(.link, identifier: \"Skip to main content\").firstMatch",".containing(.other, identifier: \"Details: Intense\").firstMatch"],[[[-1,3],[-1,2],[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
-        element4.swipeUp()
-        element4.swipeUp()
-        element4.swipeUp()
-        app/*@START_MENU_TOKEN@*/.staticTexts["Transfer, Hide or Delete"]/*[[".links[\"Transfer, Hide or Delete\"].staticTexts",".links.staticTexts[\"Transfer, Hide or Delete\"]",".staticTexts[\"Transfer, Hide or Delete\"]"],[[[-1,2],[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.firstMatch.tap()
-        
-        let element5 = app/*@START_MENU_TOKEN@*/.textFields["Owner email"]/*[[".otherElements.textFields[\"Owner email\"]",".textFields",".textFields[\"Owner email\"]"],[[[-1,2],[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.firstMatch
-        element5.tap()
-        element5.doubleTap()
-        element5.typeText("2")
-        app/*@START_MENU_TOKEN@*/.buttons["Update ownership"]/*[[".otherElements[\"form\"].buttons",".otherElements.buttons[\"Update ownership\"]",".buttons[\"Update ownership\"]"],[[[-1,2],[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.firstMatch.tap()
-        app/*@START_MENU_TOKEN@*/.otherElements["form"]/*[[".otherElements",".containing(.textField, identifier: \"Owner email\")",".containing(.other, identifier: \"Owner email\")",".containing(.other, identifier: \"TRANSFER OWNERSHIP\")",".otherElements[\"form\"]"],[[[-1,4],[-1,0,1]],[[-1,4],[-1,3],[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.firstMatch.swipeDown()
-        app/*@START_MENU_TOKEN@*/.buttons["Close"]/*[[".otherElements[\"alert\"].buttons",".otherElements.buttons[\"Close\"]",".buttons[\"Close\"]"],[[[-1,2],[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.firstMatch.tap()
-        
-        let element6 = app/*@START_MENU_TOKEN@*/.buttons["Edit"]/*[[".navigationBars.buttons[\"Edit\"]",".buttons[\"Edit\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.firstMatch
-        element6.tap()
-        element6.tap()
-        element6.tap()
-        app/*@START_MENU_TOKEN@*/.staticTexts["View Bike"]/*[[".links[\"View Bike\"].staticTexts",".links.staticTexts[\"View Bike\"]",".staticTexts[\"View Bike\"]"],[[[-1,2],[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.firstMatch.tap()
-        element3.swipeUp()
-        element3.swipeDown()
-        app/*@START_MENU_TOKEN@*/.buttons["BackButton"]/*[[".navigationBars",".buttons[\"Bike Index\"]",".buttons[\"BackButton\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.firstMatch.tap()
-        app/*@START_MENU_TOKEN@*/.buttons["settingsMenu"]/*[[".navigationBars",".buttons[\"Settings\"]",".buttons[\"settingsMenu\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.firstMatch.tap()
-        app/*@START_MENU_TOKEN@*/.buttons["BackButton"]/*[[".navigationBars",".buttons",".buttons[\"Bike Index\"]",".buttons[\"BackButton\"]"],[[[-1,3],[-1,2],[-1,0,1]],[[-1,3],[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.firstMatch.tap()
-        app.windows.element(boundBy: 1).swipeUp()
+        // TODO: Need to sign-in with the recipient account and accept the transfer
 
-        sleep(600)
+        app.terminate()
+        sleep(3)
+        app.launch()
+        try MainContentRobot(app)
+            .startWithSignIn(email: "user@bikeindex.org", password: "pleaseplease12")
+            .tapGroupingMenuButton()
+            .tapGroupButton(mode: Status.groupMode)
+            .checkBike(section: Status.withOwner, index: 1, exists: false)
     }
 
 }

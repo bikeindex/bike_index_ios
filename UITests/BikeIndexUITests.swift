@@ -38,6 +38,7 @@ final class BikeIndexUITests: XCTestCase {
             .tapViewBikeButton()
             .tapEditButton()
             .back()
+            .tapHelpButton()
     }
 
     func test_basic_settings_navigation() throws {
