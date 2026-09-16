@@ -23,7 +23,7 @@ struct BikesGridContainerView: View {
 
     /// "Output": bikes grouped by a particular section suitable for ordered display.
     @SectionedQuery
-    private var sections: SectionedResults<String, Bike>
+    private var sections: SectionedQuery::SectionedResults<String, Bike>
 
     init(
         path: Binding<NavigationPath>,

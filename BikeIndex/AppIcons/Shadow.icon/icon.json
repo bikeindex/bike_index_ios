@@ -1,4 +1,5 @@
 {
+  "color-space-for-untagged-svg-colors" : "display-p3",
   "fill-specializations" : [
     {
       "value" : {
@@ -32,6 +33,7 @@
               "value" : "none"
             }
           ],
+          "glass" : true,
           "image-name" : "white-on-blue-border.svg",
           "name" : "logo_blue_black",
           "position" : {

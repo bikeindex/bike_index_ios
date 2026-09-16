@@ -13,14 +13,14 @@ on:
 jobs:
   build-tests:
     name: Build project and cache build products
-    runs-on: macos-26
+    runs-on: xcode-27
     steps:
       - name: Checkout
         uses: actions/checkout@v6
         with:
           ref: ${{ github.ref }}
-      - name: Set Xcode 26.6
-        run: sudo xcode-select -s /Applications/Xcode_26.6.app
+      - name: Set Xcode 27
+        run: sudo xcode-select -s /Applications/Xcode_27.0.app
       - name: Install tools
         run: brew bundle install
       - name: Set up xcconfig (see README.md#quick-start)
@@ -55,20 +55,20 @@ jobs:
 
   test-suite:
     needs: build-tests
-    runs-on: macos-26
+    runs-on: xcode-27
     name: ${{ matrix.device }} ${{ matrix.only-testing }} ${{ matrix.deployment_target_version }}
     strategy:
       matrix:
         device: ["iPhone 17"] # "iPhone 17 Pro", "iPad (A16)"
-        deployment_target_version: ["26.5"]
+        deployment_target_version: ["27.0"]
         only-testing: ["UnitTests", "UITests"]
     steps:
       - name: Checkout
         uses: actions/checkout@v6
         with:
           ref: ${{ github.ref }}
-      - name: Set Xcode 26.6
-        run: sudo xcode-select -s /Applications/Xcode_26.6.app
+      - name: Set Xcode 27
+        run: sudo xcode-select -s /Applications/Xcode_27.0.app
       - name: Restore cached build products
         id: cache-build-restore
         uses: actions/cache/restore@v5

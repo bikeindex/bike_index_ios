@@ -458,6 +458,7 @@ struct RegisterBikeView: View {
         }
     }
 
+    // TODO: Add confirmation alert first
     var deleteButton: some View {
         Button {
             viewModel.imageState = .empty
