@@ -13,7 +13,7 @@ on:
 jobs:
   build-tests:
     name: Build project and cache build products
-    runs-on: macos-27
+    runs-on: xcode-27
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -55,7 +55,7 @@ jobs:
 
   test-suite:
     needs: build-tests
-    runs-on: macos-27
+    runs-on: xcode-27
     name: ${{ matrix.device }} ${{ matrix.only-testing }} ${{ matrix.deployment_target_version }}
     strategy:
       matrix:
