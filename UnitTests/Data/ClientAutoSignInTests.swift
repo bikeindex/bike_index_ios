@@ -94,6 +94,46 @@ final class ClientAutoSignInTests {
         #expect(client.auth == nil)
     }
 
+    @Test func setupRefreshTimer_enforces_15_second_minimum() throws {
+        // Token that expires in 20 seconds → (expiration - 15) = 5s → clamped to 15s
+        let shortLivedToken = OAuthToken.newToken(expiresIn: 20)
+        let client = try Client(keychain: StubKeychain(), restoreSession: false)
+        client.auth = shortLivedToken
+        client.setupRefreshTimer()
+
+        #expect(client.refreshTimer != nil, "Refresh timer should be scheduled")
+        // The timer's fireDate should be at least 15 seconds in the future.
+        let remaining = client.refreshTimer!.fireDate.timeIntervalSinceNow
+        // small tolerance for clock granularity
+        #expect(remaining >= 14,
+            "Timer should fire at least ~15s from now (clamped minimum), got \(remaining)s")
+
+        // Token that expires in 3600 seconds → (expiration - 15) = 3585s → not clamped
+        let longLivedToken = OAuthToken.newToken(expiresIn: 3600)
+        client.auth = longLivedToken
+        client.setupRefreshTimer()
+
+        #expect(client.refreshTimer != nil, "Refresh timer should be re-scheduled")
+        let longRemaining = client.refreshTimer!.fireDate.timeIntervalSinceNow
+        #expect(longRemaining > 15,
+            "Long-lived token should produce a timer well above 15s, got \(longRemaining)s")
+
+        // Clean up
+        client.refreshTimer?.invalidate()
+    }
+
+    @Test func setupRefreshTimer_no_op_without_auth() throws {
+        let client = try Client(keychain: StubKeychain(), restoreSession: false)
+
+        #expect(client.auth == nil)
+        #expect(client.refreshTimer == nil)
+
+        // Should not crash or schedule anything
+        client.setupRefreshTimer()
+
+        #expect(client.refreshTimer == nil)
+    }
+
     @Test func restoreSession_disabled_skips_keychain() throws {
         let validToken = OAuthToken.newToken(expiresIn: 3600)
         let data = try JSONEncoder().encode(validToken)
