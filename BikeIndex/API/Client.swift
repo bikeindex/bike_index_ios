@@ -48,13 +48,12 @@ typealias QueryItemTuple = (name: String, value: String)
     /// Access token is provided by the OAuth flow to the application from `ASWebAuthenticationSession`.
     /// The access token may be required in requests and it may be used to retrieve the full OAuth token (see ``auth``).
     internal var accessToken: Token?
-    /// Kept as a reference type so tests can subclass and stub storage behavior.
+    /// Inject the keychain dependency as a variable, used by tests to stub.
     private var keychain: KeychainSwift
 
-    /// UI state while the app boots and attempts to restore a session from the keychain.
+    /// UI state as the app launches and restores a session from the keychain.
     /// `restoring` means a persisted (possibly expired) token was found and we are waiting for the
-    /// result of a token refresh before showing either the signed-in or welcome UI. Views should not
-    /// flash the welcome screen while `restoring` is true.
+    /// result of a token refresh.
     var isRestoringSession: Bool = false
 
     // MARK: Refresh Properties

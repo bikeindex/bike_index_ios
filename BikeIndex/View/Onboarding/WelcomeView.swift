@@ -29,13 +29,23 @@ struct WelcomeView: View {
                 Spacer()
             }
 
-            Text(
-                "The world's largest and most effective bicycle registry and stolen bike recovery platform."
-            )
-            .font(.headline)
-            .multilineTextAlignment(.center)
-            .frame(maxWidth: .infinity, alignment: .center)
-            .padding()
+            if client.isRestoringSession {
+                HStack(spacing: 8) {
+                    ProgressView()
+                    Text("Logging in…")
+                        .font(.headline)
+                }
+                .foregroundStyle(.red)
+                .padding()
+            } else {
+                Text(
+                    "The world's largest and most effective bicycle registry and stolen bike recovery platform."
+                )
+                .font(.headline)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding()
+            }
             Spacer()
 
             VStack {
