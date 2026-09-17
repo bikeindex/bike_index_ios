@@ -5,6 +5,7 @@
 //  Created by Jack on 1/1/24.
 //
 
+import KeychainSwift
 import SwiftUI
 
 /// Pair with ``AuthView`` for a complete login experience
@@ -35,7 +36,6 @@ struct WelcomeView: View {
                     Text("Logging in…")
                         .font(.headline)
                 }
-                .foregroundStyle(.red)
                 .padding()
             } else {
                 Text(
@@ -79,7 +79,7 @@ struct WelcomeView: View {
     }
 }
 
-#Preview {
+#Preview("Client w/ failed session restoration") {
     NavigationStack {
         WelcomeView(displaySignIn: .constant(false))
             .environment(try! Client())
@@ -87,3 +87,23 @@ struct WelcomeView: View {
             .navigationTitle("Welcome to Bike Index")
     }
 }
+
+#Preview("Client always restoring") {
+    NavigationStack {
+        WelcomeView(displaySignIn: .constant(false))
+            .environment(try! Client().alwaysRestoringSession())
+            .environment(QRStickerRouter())
+            .navigationTitle("Welcome to Bike Index")
+    }
+}
+
+#if DEBUG
+/// #Preview-only variation of Client to force isRestoringSession=true purely
+/// for SwiftUI preview design.
+extension Client {
+    func alwaysRestoringSession() -> Self {
+        isRestoringSession = true
+        return self
+    }
+}
+#endif
