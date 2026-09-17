@@ -5,7 +5,6 @@
 //  Created by Jack on 1/1/24.
 //
 
-import KeychainSwift
 import SwiftUI
 
 /// Pair with ``AuthView`` for a complete login experience
@@ -97,13 +96,4 @@ struct WelcomeView: View {
     }
 }
 
-#if DEBUG
-/// #Preview-only variation of Client to force isRestoringSession=true purely
-/// for SwiftUI preview design.
-extension Client {
-    func alwaysRestoringSession() -> Self {
-        isRestoringSession = true
-        return self
-    }
-}
-#endif
+

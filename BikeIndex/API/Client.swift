@@ -51,10 +51,15 @@ typealias QueryItemTuple = (name: String, value: String)
     /// Inject the keychain dependency as a variable, used by tests to stub.
     private var keychain: KeychainSwift
 
-    /// UI state as the app launches and restores a session from the keychain.
-    /// `restoring` means a persisted (possibly expired) token was found and we are waiting for the
-    /// result of a token refresh.
-    var isRestoringSession: Bool = false
+    /// The in-flight task that is attempting to restore a session from a persisted (possibly
+    /// expired) keychain token. Non-nil while the token refresh is in flight.
+    private var sessionRestorationTask: Task<Void, Never>?
+
+    /// True while a launch-time token refresh is in flight. Derived from the task reference so
+    /// it is always in sync with the actual work.
+    var isRestoringSession: Bool {
+        sessionRestorationTask != nil
+    }
 
     // MARK: Refresh Properties
     var refreshTimer: Timer?
@@ -123,15 +128,14 @@ typealias QueryItemTuple = (name: String, value: String)
                 Logger.api.info(
                     "Client.\(#function) found existing token, but it is expired; attempting refresh"
                 )
-                isRestoringSession = true
-                Task {
+                sessionRestorationTask = Task { [weak self] in
                     // Re-check in case a concurrent sign-in already updated the token
-                    guard !(auth?.isValid ?? false) else {
-                        isRestoringSession = false
+                    guard let self, !(self.auth?.isValid ?? false) else {
+                        self?.sessionRestorationTask = nil
                         return
                     }
-                    let result = await renewToken(refreshToken: lastKnownAuth.refreshToken)
-                    isRestoringSession = false
+                    let result = await self.renewToken(refreshToken: lastKnownAuth.refreshToken)
+                    self.sessionRestorationTask = nil
                     switch result {
                     case .success:
                         Logger.api.info(
@@ -318,15 +322,15 @@ typealias QueryItemTuple = (name: String, value: String)
             return
         }
 
-        Task {
-            let renewedTokenRequest: Result<OAuthToken, Error> = await renewToken(
+        Task { [weak self] in
+            guard let self else { return }
+            let renewedTokenRequest: Result<OAuthToken, Error> = await self.renewToken(
                 refreshToken: tokenPayload.refreshToken)
             switch renewedTokenRequest {
             case .success:
                 break
             case .failure(let failure):
                 Logger.client.error("Failed to fetch /oauth/token \(failure)")
-                self.isRestoringSession = false
                 self.invalidateAuth()
                 Honeybadger.reset()
             }
@@ -371,3 +375,20 @@ typealias QueryItemTuple = (name: String, value: String)
         }
     }
 }
+
+#if DEBUG
+/// #Preview-only variation of Client to force isRestoringSession=true purely
+/// for SwiftUI preview design. Starts a never-completing task so the computed
+/// property reports `true`.
+extension Client {
+    func alwaysRestoringSession() -> Self {
+        sessionRestorationTask = Task { [weak self] in
+            // Block indefinitely; this task is only alive in a #Preview context.
+            while self != nil {
+                try? await Task.sleep(for: .seconds(3600))
+            }
+        }
+        return self
+    }
+}
+#endif
