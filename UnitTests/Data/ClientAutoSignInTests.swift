@@ -105,7 +105,8 @@ final class ClientAutoSignInTests {
         // The timer's fireDate should be at least 15 seconds in the future.
         let remaining = client.refreshTimer!.fireDate.timeIntervalSinceNow
         // small tolerance for clock granularity
-        #expect(remaining >= 14,
+        #expect(
+            remaining >= 14,
             "Timer should fire at least ~15s from now (clamped minimum), got \(remaining)s")
 
         // Token that expires in 3600 seconds → (expiration - 15) = 3585s → not clamped
@@ -115,7 +116,8 @@ final class ClientAutoSignInTests {
 
         #expect(client.refreshTimer != nil, "Refresh timer should be re-scheduled")
         let longRemaining = client.refreshTimer!.fireDate.timeIntervalSinceNow
-        #expect(longRemaining > 15,
+        #expect(
+            longRemaining > 15,
             "Long-lived token should produce a timer well above 15s, got \(longRemaining)s")
 
         // Clean up

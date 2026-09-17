@@ -36,6 +36,7 @@ struct WelcomeView: View {
                         .font(.headline)
                 }
                 .padding()
+                .accessibilityIdentifier("restoringSession-loggingIn-indicator")
             } else {
                 Text(
                     "The world's largest and most effective bicycle registry and stolen bike recovery platform."
@@ -95,5 +96,3 @@ struct WelcomeView: View {
             .navigationTitle("Welcome to Bike Index")
     }
 }
-
-

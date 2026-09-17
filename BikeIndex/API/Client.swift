@@ -55,6 +55,9 @@ typealias QueryItemTuple = (name: String, value: String)
     /// expired) keychain token. Non-nil while the token refresh is in flight.
     private var sessionRestorationTask: Task<Void, Never>?
 
+    /// The in-flight warm-refresh task. Non-nil while a token refresh is in progress.
+    private var refreshTask: Task<Void, Never>?
+
     /// True while a launch-time token refresh is in flight. Derived from the task reference so
     /// it is always in sync with the actual work.
     var isRestoringSession: Bool {
@@ -267,6 +270,10 @@ typealias QueryItemTuple = (name: String, value: String)
     func invalidateAuth() {
         Logger.client.warning("Auth invalidated, clearing session")
         Honeybadger.reset()
+        self.refreshTask?.cancel()
+        self.refreshTask = nil
+        self.sessionRestorationTask?.cancel()
+        self.sessionRestorationTask = nil
         self.refreshTimer?.invalidate()
         self.refreshTimer = nil
         self.auth = nil
@@ -322,10 +329,17 @@ typealias QueryItemTuple = (name: String, value: String)
             return
         }
 
-        Task { [weak self] in
+        // Skip if a refresh is already in flight to prevent racing on a single-use refresh token.
+        guard refreshTask == nil else {
+            Logger.client.warning("refreshToken(timer:) skipped, refresh already in flight")
+            return
+        }
+
+        refreshTask = Task { [weak self] in
             guard let self else { return }
             let renewedTokenRequest: Result<OAuthToken, Error> = await self.renewToken(
                 refreshToken: tokenPayload.refreshToken)
+            self.refreshTask = nil
             switch renewedTokenRequest {
             case .success:
                 break
