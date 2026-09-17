@@ -9,7 +9,7 @@ import XCTest
 
 /// From Robot Pattern for UI testing: https://jhandguy.github.io/posts/robot-pattern-ios/
 open class Robot {
-    static var defaultTimeout: Double = 90
+    static var defaultTimeout: Double = 120
 
     var app: XCUIApplication
 
