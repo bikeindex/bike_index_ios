@@ -121,7 +121,9 @@ typealias QueryItemTuple = (name: String, value: String)
         guard let lastKnownToken = self.keychain.get(Keychain.oauthToken),
             let rawData = lastKnownToken.data(using: .utf8)
         else {
-            Logger.api.debug("\(#function) Could not find valid oauth token in keychain")
+            Logger.api.info(
+                "\(#function) No persisted oauth token in keychain; user will need to sign in manually"
+            )
             return
         }
 
