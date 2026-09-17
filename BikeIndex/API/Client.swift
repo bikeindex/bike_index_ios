@@ -359,6 +359,7 @@ typealias QueryItemTuple = (name: String, value: String)
     private func renewToken(refreshToken: Token) async -> Result<OAuthToken, Error> {
         let tokenQuery = [
             ("client_id", configuration.clientId),
+            ("client_secret", configuration.secret),
             ("refresh_token", refreshToken),
             ("grant_type", "refresh_token"),
         ].map { (item: QueryItemTuple) in
