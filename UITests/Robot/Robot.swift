@@ -74,6 +74,16 @@ open class Robot {
     }
 
     @discardableResult
+    func finishRestoringSession(timeout: TimeInterval = Robot.defaultTimeout) -> Self {
+        // The WelcomeView shows a ProgressView + "Logging in…" while the app
+        // attempts to restore a session from a persisted (possibly expired) keychain token.
+        // Wait for it to disappear before proceeding with sign-in.
+        let restoringIndicator = app.otherElements["restoringSession-loggingIn-indicator"]
+        assert(restoringIndicator, [.doesNotExist], timeout: timeout)
+        return self
+    }
+
+    @discardableResult
     func ensureSandboxReviewAppBannerAbsent() -> Self {
         let reviewAppBanner = app.staticTexts["Sandbox"]
         assert(reviewAppBanner, [.doesNotExist], timeout: 10)

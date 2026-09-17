@@ -12,11 +12,15 @@ extension Robot {
     @discardableResult
     func startWithSignIn() throws -> Self {
         try start()
+            .finishRestoringSession()
             .signIn()
     }
 
     @discardableResult
     func signIn() throws -> Self {
+        // Ensure the launch-time session restoration has completed before interacting.
+        finishRestoringSession()
+
         // Step 1: A) Open the Sign In Page
         let signIn = app.buttons["SignIn"]
         let result = signIn.waitForExistence(timeout: 2)
