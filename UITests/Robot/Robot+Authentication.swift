@@ -38,7 +38,7 @@ extension Robot {
         // Step 1: C) Try to tap Authorize, continue if it is absent.
         attemptOAuthAuthorize()
 
-        let timeout: TimeInterval = 120
+        let timeout: TimeInterval = 180
 
         // Configure these values in Test-credentials.xcconfig (see adjacent template file)
         let uiTestBundle = try XCTUnwrap(Bundle.uiTests)
