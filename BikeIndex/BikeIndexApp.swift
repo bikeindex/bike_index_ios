@@ -30,6 +30,11 @@ struct BikeIndexApp: App {
             Group {
                 if client.authenticated {
                     MainContentPage()
+                } else if client.isRestoringSession {
+                    // A persisted token was found but is expired; a token refresh is in flight.
+                    // Show a minimal splash instead of flashing the welcome screen.
+                    ProgressView("Signing in…")
+                        .tint(.accentColor)
                 } else {
                     AuthView()
                 }

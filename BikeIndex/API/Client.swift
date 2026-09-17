@@ -48,7 +48,14 @@ typealias QueryItemTuple = (name: String, value: String)
     /// Access token is provided by the OAuth flow to the application from `ASWebAuthenticationSession`.
     /// The access token may be required in requests and it may be used to retrieve the full OAuth token (see ``auth``).
     internal var accessToken: Token?
-    private var keychain = KeychainSwift()
+    /// Kept as a reference type so tests can subclass and stub storage behavior.
+    private var keychain: KeychainSwift
+
+    /// UI state while the app boots and attempts to restore a session from the keychain.
+    /// `restoring` means a persisted (possibly expired) token was found and we are waiting for the
+    /// result of a token refresh before showing either the signed-in or welcome UI. Views should not
+    /// flash the welcome screen while `restoring` is true.
+    var isRestoringSession: Bool = false
 
     // MARK: Refresh Properties
     var refreshTimer: Timer?
@@ -56,7 +63,8 @@ typealias QueryItemTuple = (name: String, value: String)
 
     init(
         keychain: KeychainSwift = KeychainSwift(),
-        refreshRunLoop: RunLoop = RunLoop.main
+        refreshRunLoop: RunLoop = RunLoop.main,
+        restoreSession: Bool = true
     ) throws {
         self.backgroundSessionDelegate = BackgroundSessionDelegate()
         self.backgroundSession = URLSession(
@@ -66,7 +74,9 @@ typealias QueryItemTuple = (name: String, value: String)
         self.refreshRunLoop = refreshRunLoop
         let configuration = try ClientConfiguration.bundledConfig()
         self.configuration = configuration
-        loadLastToken()
+        if restoreSession {
+            loadLastToken()
+        }
 
         // Configure webView manipulation scripts
         Task {
@@ -96,27 +106,58 @@ typealias QueryItemTuple = (name: String, value: String)
     }
 
     /// Load any persisted OAuth Token and attempt to use it to continue the last session.
+    /// If the stored token is still valid, the session is restored synchronously.
+    /// If the stored token is expired, a background token refresh is attempted immediately so the
+    /// user is signed in automatically on launch. If the refresh token itself is rejected, the
+    /// persisted session is wiped and the user will see the welcome screen.
     private func loadLastToken() {
-        if let lastKnownToken = self.keychain.get(Keychain.oauthToken),
+        guard let lastKnownToken = self.keychain.get(Keychain.oauthToken),
             let rawData = lastKnownToken.data(using: .utf8)
-        {
-            do {
-                let lastKnownAuth = try JSONDecoder().decode(OAuthToken.self, from: rawData)
-
-                auth = lastKnownAuth
-                accessToken = lastKnownAuth.accessToken
-
-                setupRefreshTimer()
-
-                Logger.api.debug(
-                    "Client.\(#function) found existing valid token \(String(describing: lastKnownAuth), privacy: .private)"
-                )
-            } catch {
-                Honeybadger.notify(error: error)
-                Logger.api.debug("Failed to find existing auth")
-            }
-        } else {
+        else {
             Logger.api.debug("\(#function) Could not find valid oauth token in keychain")
+            return
+        }
+
+        do {
+            let lastKnownAuth = try JSONDecoder().decode(OAuthToken.self, from: rawData)
+            guard lastKnownAuth.isValid else {
+                Logger.api.info(
+                    "Client.\(#function) found existing token, but it is expired; attempting refresh"
+                )
+                isRestoringSession = true
+                Task {
+                    // Re-check in case a concurrent sign-in already updated the token
+                    guard !(auth?.isValid ?? false) else {
+                        isRestoringSession = false
+                        return
+                    }
+                    let result = await renewToken(refreshToken: lastKnownAuth.refreshToken)
+                    isRestoringSession = false
+                    switch result {
+                    case .success:
+                        Logger.api.info(
+                            "Client.\(#function) restored session from keychain token refresh")
+                    case .failure(let failure):
+                        Logger.api.error(
+                            "Client.\(#function) failed to restore session, \(failure, privacy: .public)"
+                        )
+                        self.invalidateAuth()
+                    }
+                }
+                return
+            }
+
+            auth = lastKnownAuth
+            accessToken = lastKnownAuth.accessToken
+
+            setupRefreshTimer()
+
+            Logger.api.debug(
+                "Client.\(#function) found existing valid token \(String(describing: lastKnownAuth), privacy: .private)"
+            )
+        } catch {
+            Honeybadger.notify(error: error)
+            Logger.api.debug("Failed to find existing auth")
         }
     }
 
@@ -278,41 +319,56 @@ typealias QueryItemTuple = (name: String, value: String)
             return
         }
 
+        Task {
+            let renewedTokenRequest: Result<OAuthToken, Error> = await renewToken(
+                refreshToken: tokenPayload.refreshToken)
+            switch renewedTokenRequest {
+            case .success:
+                break
+            case .failure(let failure):
+                Logger.client.error("Failed to fetch /oauth/token \(failure)")
+                self.isRestoringSession = false
+                self.invalidateAuth()
+                Honeybadger.reset()
+            }
+        }
+    }
+
+    /// Exchange a refresh token for a new OAuth token, update in-memory state, and persist it.
+    /// - Parameter refreshToken: The refresh token value to send to `OAuth.refresh`.
+    /// - Returns: Success if the new token was applied and persisted. Failure if the server
+    ///   rejected the refresh token (session is dead) or on any other transport error.
+    @discardableResult
+    private func renewToken(refreshToken: Token) async -> Result<OAuthToken, Error> {
         let tokenQuery = [
             ("client_id", configuration.clientId),
-            ("refresh_token", tokenPayload.refreshToken),
+            ("refresh_token", refreshToken),
             ("grant_type", "refresh_token"),
         ].map { (item: QueryItemTuple) in
             URLQueryItem(name: item.name, value: item.value)
         }
 
-        Task {
-            let renewedTokenRequest: Result<OAuthToken, Error> = await post(
-                OAuth.refresh(queryItems: tokenQuery))
-            switch renewedTokenRequest {
-            case .success(let refreshedToken):
-                self.auth = refreshedToken
-                self.accessToken = refreshedToken.accessToken
-                self.setupRefreshTimer()
-                do {
-                    let data = try JSONEncoder().encode(refreshedToken)
-                    self.keychain.set(data, forKey: Keychain.oauthToken)
-                } catch {
-                    Honeybadger.notify(error: error)
-                    Logger.client.error(
-                        "Failed to persist /oauth/token to keychain after fetching successfully, continuing"
-                    )
-                }
-                Logger.client.info("Refreshed oauth token to keychain")
-            case .failure(let failure):
-                Logger.client.error("Failed to fetch /oauth/token \(failure)")
-                self.auth = nil
-                self.accessToken = nil
-                self.refreshTimer?.invalidate()
-                self.refreshTimer = nil
-                self.keychain.delete(Keychain.oauthToken)
-                Honeybadger.reset()
+        let renewedTokenRequest: Result<OAuthToken, Error> = await post(
+            OAuth.refresh(queryItems: tokenQuery))
+        switch renewedTokenRequest {
+        case .success(let refreshedToken):
+            self.auth = refreshedToken
+            self.accessToken = refreshedToken.accessToken
+            self.setupRefreshTimer()
+            do {
+                let data = try JSONEncoder().encode(refreshedToken)
+                self.keychain.set(data, forKey: Keychain.oauthToken)
+            } catch {
+                Honeybadger.notify(error: error)
+                Logger.client.error(
+                    "Failed to persist /oauth/token to keychain after fetching successfully, continuing"
+                )
             }
+            Logger.client.info("Refreshed oauth token to keychain")
+            return .success(refreshedToken)
+        case .failure(let failure):
+            Logger.client.error("Failed to fetch /oauth/token \(failure)")
+            return .failure(failure)
         }
     }
 }
