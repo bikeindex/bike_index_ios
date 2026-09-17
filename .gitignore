@@ -25,3 +25,4 @@ Test-credentials.xcconfig
 
 # symbolic link to metadata elsewhere on disk
 app-store-metadata
+build/
