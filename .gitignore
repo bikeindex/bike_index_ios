@@ -20,8 +20,11 @@ Test-credentials.xcconfig
 # snapshot generated screenshots
 **/fastlane/screenshots
 
-# scan temporary files
+# scan temporary files / locally-extracted test-output artifacts
 **/fastlane/test_output
+**/test_output_*/
+test_output_*.zip
+*.xcresult
 
 # symbolic link to metadata elsewhere on disk
 app-store-metadata
