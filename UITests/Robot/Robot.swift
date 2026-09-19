@@ -58,6 +58,30 @@ open class Robot {
         tap(navigationBarButton, timeout: timeout)
     }
 
+    /// Run an action a bounded number of times, stopping as soon as it succeeds.
+    ///
+    /// Useful for webview-backed pages that occasionally fail to load on the first
+    /// attempt (transient 404s, slow first paint). The action is expected to signal
+    /// success by returning `true`; a persistent failure still fails the test because
+    /// the final attempt is surfaced to XCTest. This is deliberately *not* a way to
+    /// weaken an assertion — it retries the same correct check.
+    @discardableResult
+    func retry(
+        times: Int = 3,
+        _ action: @escaping () -> Bool
+    ) -> Self {
+        for attempt in 1...times {
+            if action() {
+                return self
+            }
+            if attempt < times {
+                print("[\(self)] \(#function) attempt \(attempt)/\(times) failed, retrying")
+            }
+        }
+        XCTFail("[\(self)] \(#function) action did not succeed after \(times) attempts")
+        return self
+    }
+
     @discardableResult
     func swipeUp() -> Self {
         app.swipeUp()
