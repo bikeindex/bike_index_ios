@@ -1,0 +1,47 @@
+name: Set up xcconfigs
+description: Write xcconfigs based on the environment.
+
+inputs:
+  # Space- or comma-separated list of: development, production
+  environments:
+    description: Which environment xcconfig file(s) to generate.
+    required: false
+    default: "development"
+  # Empty for sandbox/snapshot runs
+  honeybadger_api_key:
+    description: Honeybadger API key to bake into each environment's xcconfig.
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Generate xcconfigs
+      env:
+        ENVIRONMENTS: ${{ inputs.environments }}
+        HONEYBADGER_API_KEY: ${{ inputs.honeybadger_api_key }}
+      run: |
+        set -euo pipefail
+        for env in ${ENVIRONMENTS//,/ }; do
+          case "$env" in
+            development) file="BikeIndex-development.xcconfig" ;;
+            production)  file="BikeIndex-production.xcconfig" ;;
+            *) echo "unknown environment: $env (use development, production)"; exit 1 ;;
+          esac
+          ./scripts/generate-xcconfig.sh "$env" "$file"
+        done
+      shell: bash
+    - name: Set up test credentials
+      run: |
+        {
+          echo '#include "BikeIndex-development"'
+          echo 'TEST_USERNAME = user@bikeindex.org'
+          echo 'TEST_PASSWORD = pleaseplease12'
+        } > Test-credentials.xcconfig
+      shell: bash
+    # Always validates the two invariants (development + test credentials).
+    # Production validated by delivery.yml.
+    - name: Validate xcconfigs
+      run: |
+        ./scripts/validate-xcconfig.sh development && ./scripts/validate-xcconfig.sh test
+      shell: bash

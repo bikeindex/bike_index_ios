@@ -23,25 +23,10 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_27.0.app
       - name: Install tools
         run: brew bundle install
-      - name: Set up xcconfig (see README.md#quick-start)
-        env:
-          HONEYBADGER_API_KEY: ${{ secrets.HONEYBADGER_API_KEY }}
-        run: |
-          echo '#include "Default"' >> BikeIndex-development.xcconfig
-          echo 'API_HOST = https:\/\/sandbox.review.bikeindex.org' >> BikeIndex-development.xcconfig
-          echo 'API_PORT = 443' >> BikeIndex-development.xcconfig
-          echo 'DEVELOPMENT_TEAM = 8ZM5ZL6ABT' >> BikeIndex-development.xcconfig
-          echo "HONEYBADGER_API_KEY = $HONEYBADGER_API_KEY" >> BikeIndex-development.xcconfig
-          # Validate script won't follow the include-Default, help it out
-          grep API_SECRET Default.xcconfig >> BikeIndex-development.xcconfig
-          grep API_CLIENT_ID Default.xcconfig >> BikeIndex-development.xcconfig
-      - name: Set up test credentials
-        run: |
-          echo '#include "BikeIndex-development"' >> Test-credentials.xcconfig
-          echo 'TEST_USERNAME = user@bikeindex.org' >> Test-credentials.xcconfig
-          echo 'TEST_PASSWORD = pleaseplease12' >> Test-credentials.xcconfig
-      - name: Validate xcconfigs
-        run: ./scripts/validate-xcconfig.sh development && ./scripts/validate-xcconfig.sh test
+      - name: Set up xcconfigs
+        uses: ./.github/actions/setup-xcconfig
+        with:
+          honeybadger_api_key: ${{ secrets.HONEYBADGER_API_KEY }}
       - name: List available simulators
         run: xcodebuild -scheme BikeIndex -project BikeIndex.xcodeproj -showdestinations
       - name: Build
@@ -57,6 +42,9 @@ jobs:
     needs: build-tests
     runs-on: xcode-27
     name: ${{ matrix.device }} ${{ matrix.only-testing }} ${{ matrix.deployment_target_version }}
+    # Still-failing tests (post-retry), newline-separated "<target>/<class>/<method>".
+    outputs:
+      failed-tests: ${{ steps.collect-failed.outputs.failed-tests }}
     strategy:
       matrix:
         device: ["iPhone 17"] # "iPhone 17 Pro", "iPad (A16)"
@@ -75,30 +63,87 @@ jobs:
         with:
           path: build
           key: cache-build-${{ github.sha }}
-      - name: Set up xcconfig (see README.md#quick-start)
-        env:
-          HONEYBADGER_API_KEY: ${{ secrets.HONEYBADGER_API_KEY }}
-        run: |
-          echo '#include "Default"' >> BikeIndex-development.xcconfig
-          echo 'API_HOST = https:\/\/sandbox.review.bikeindex.org' >> BikeIndex-development.xcconfig
-          echo 'API_PORT = 443' >> BikeIndex-development.xcconfig
-          echo 'DEVELOPMENT_TEAM = 8ZM5ZL6ABT' >> BikeIndex-development.xcconfig
-          echo "HONEYBADGER_API_KEY = $HONEYBADGER_API_KEY" >> BikeIndex-development.xcconfig
-          # Validate script won't follow the include-Default, help it out
-          grep API_SECRET Default.xcconfig >> BikeIndex-development.xcconfig
-          grep API_CLIENT_ID Default.xcconfig >> BikeIndex-development.xcconfig
-      - name: Set up test credentials
-        run: |
-          echo '#include "BikeIndex-development"' >> Test-credentials.xcconfig
-          echo 'TEST_USERNAME = user@bikeindex.org' >> Test-credentials.xcconfig
-          echo 'TEST_PASSWORD = pleaseplease12' >> Test-credentials.xcconfig
-      - name: Validate xcconfigs
-        run: ./scripts/validate-xcconfig.sh development && ./scripts/validate-xcconfig.sh test
+      - name: Set up xcconfigs
+        uses: ./.github/actions/setup-xcconfig
+        with:
+          honeybadger_api_key: ${{ secrets.HONEYBADGER_API_KEY }}
       - name: ${{ matrix.only-testing}} on ${{ matrix.device }} ${{ matrix.deployment_target_version }}
         run: fastlane scan --only-testing="${{ matrix.only-testing }}" --device="${{ matrix.device }}" --deployment-target-version="${{ matrix.deployment_target_version }}" --test_without_building=true
+      - name: Collect still-failing tests
+        id: collect-failed
+        if: failure()
+        env:
+          DEVICE: ${{ matrix.device }}
+          ONLY_TESTING: ${{ matrix.only-testing }}
+        run: |
+          set -euo pipefail
+          report="fastlane/test_output/test_output_${DEVICE}_${ONLY_TESTING}/report.junit"
+          if [ ! -f "$report" ]; then
+            echo "no JUnit report at $report; nothing to re-run" >&2
+            printf 'failed-tests<<EOF\nEOF\n' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          failed=$(ruby scripts/failed-test-configurations.rb "$report")
+          printf 'failed-tests<<EOF\n%s\nEOF\n' "$failed" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: test_output_${{ matrix.device }}_${{ matrix.only-testing }}
+          path: "fastlane/test_output/*"
+          compression-level: 9 # maximum compression
+
+  # Re-run only the still-failing tests; skipped when test-suite passed.
+  retry-failed-tests:
+    needs: [build-tests, test-suite]
+    if: always() && needs.test-suite.result == 'failure' && needs.test-suite.outputs['failed-tests'] != ''
+    runs-on: macos-26
+    name: Retry failed ${{ matrix.only-testing }} on ${{ matrix.device }}
+    strategy:
+      matrix:
+        device: ["iPhone 17"] # "iPhone 17 Pro", "iPad (A16)"
+        deployment_target_version: ["26.5"]
+        only-testing: ["UnitTests", "UITests"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref }}
+      - name: Set Xcode 26.6
+        run: sudo xcode-select -s /Applications/Xcode_26.6.app
+      - name: Install tools
+        run: brew bundle install
+      - name: Restore cached build products
+        id: cache-build-restore
+        uses: actions/cache/restore@v5
+        with:
+          path: build
+          key: cache-build-${{ github.sha }}
+      - name: Set up xcconfigs
+        uses: ./.github/actions/setup-xcconfig
+        with:
+          honeybadger_api_key: ${{ secrets.HONEYBADGER_API_KEY }}
+      - name: Retry only the failing tests
+        id: retry
+        env:
+          FAILED_TESTS: ${{ needs.test-suite.outputs['failed-tests'] }}
+          ONLY_TESTING: ${{ matrix.only-testing }}
+          DEVICE: ${{ matrix.device }}
+        run: |
+          set -euo pipefail
+          # Keep only selectors for this cell (prefixed "<Target>/").
+          cell_selectors="$(printf '%s\n' "$FAILED_TESTS" | grep "^${ONLY_TESTING}/" | tr '\n' ' ' | sed 's/ $//')"
+          if [ -z "$cell_selectors" ]; then
+            echo "no failing tests for ${ONLY_TESTING} on ${DEVICE}; nothing to retry" >&2
+            exit 0
+          fi
+          fastlane scan \
+            --only-test-configurations="$cell_selectors" \
+            --device="${DEVICE}" \
+            --deployment-target-version="${{ matrix.deployment_target_version }}" \
+            --test_without_building=true
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: retry_test_output_${{ matrix.device }}_${{ matrix.only-testing }}
           path: "fastlane/test_output/*"
           compression-level: 9 # maximum compression
