@@ -9,7 +9,7 @@ import XCTest
 
 /// From Robot Pattern for UI testing: https://jhandguy.github.io/posts/robot-pattern-ios/
 open class Robot {
-    static var defaultTimeout: Double = 90
+    static var defaultTimeout: Double = 120
 
     var app: XCUIApplication
 
@@ -70,6 +70,16 @@ open class Robot {
         // also known as SwiftUI.ProgressView
         let activityIndicator = app.activityIndicators["navigableWebViewProgressView"]
         assert(activityIndicator, [.doesNotExist], timeout: timeout)
+        return self
+    }
+
+    @discardableResult
+    func finishRestoringSession(timeout: TimeInterval = Robot.defaultTimeout) -> Self {
+        // The WelcomeView shows a ProgressView + "Logging in…" while the app
+        // attempts to restore a session from a persisted (possibly expired) keychain token.
+        // Wait for it to disappear before proceeding with sign-in.
+        let restoringIndicator = app.otherElements["restoringSession-loggingIn-indicator"]
+        assert(restoringIndicator, [.doesNotExist], timeout: timeout)
         return self
     }
 

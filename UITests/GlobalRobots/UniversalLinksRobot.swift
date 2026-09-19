@@ -10,11 +10,26 @@ import XCUIAutomation
 
 final class UniversalLinksRobot: Robot {
     private lazy var stickerHeader = app.navigationBars.staticTexts["BR 000 1"]
-    private lazy var unlinkedMessage: [XCUIElement] = [
-        app.webViews.staticTexts["You scanned"],
-        app.webViews.staticTexts["BR 000 1"],
-        app.webViews.staticTexts[", which is assigned to this bike."],
-    ]
+
+    /// The scanned-sticker confirmation message. The site renders it as a single
+    /// paragraph with the sticker code embedded in a <code> run, e.g.
+    /// "You scanned the sticker BR 000 1, which is assigned to this bike."
+    /// WebKit may expose this as one static text (label = the whole sentence) or as
+    /// several runs, so we match on a distinctive substring rather than exact labels.
+    /// This keeps the assertion resilient to the site rewording the sentence (which is
+    /// exactly what broke the previous exact-match queries).
+    private var unlinkedMessage: XCUIElement {
+        app.webViews.staticTexts.matching(
+            NSPredicate(format: "label CONTAINS 'assigned to this bike'")
+        ).firstMatch
+    }
+
+    /// The embedded sticker code, rendered as a <code> element ("BR 000 1").
+    private var stickerCode: XCUIElement {
+        app.webViews.staticTexts.matching(
+            NSPredicate(format: "label CONTAINS 'BR 000 1'")
+        ).firstMatch
+    }
 
     private func stickerUrl() throws -> URL {
         // Configure these values in Test-credentials.xcconfig (see adjacent template file)
@@ -39,9 +54,11 @@ final class UniversalLinksRobot: Robot {
 
     @discardableResult
     func checkUnlinkedMessage() -> Self {
-        for message in unlinkedMessage {
-            assert(message, [.exists])
-        }
+        // Confirm the confirmation paragraph is present, then confirm the sticker code
+        // is rendered within the page. Both use substring matches so the assertion
+        // survives rewording of the surrounding prose.
+        assert(unlinkedMessage, [.exists])
+        assert(stickerCode, [.exists])
 
         return self
     }

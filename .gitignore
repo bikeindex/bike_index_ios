@@ -28,3 +28,4 @@ test_output_*.zip
 
 # symbolic link to metadata elsewhere on disk
 app-store-metadata
+build/

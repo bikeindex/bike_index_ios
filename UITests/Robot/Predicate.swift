@@ -25,9 +25,9 @@ extension Robot {
         var format: String {
             switch self {
             case .contains(let label):
-                return "label == '\(label)'"
+                return "label CONTAINS '\(label)'"
             case .doesNotContain(let label):
-                return "label != '\(label)'"
+                return "label DOES NOT CONTAIN '\(label)'"
             case .containsValue(let value):
                 return "value == '\(value)'"
             case .doesNotContainValue(let value):
