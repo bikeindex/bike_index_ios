@@ -58,6 +58,27 @@ open class Robot {
         tap(navigationBarButton, timeout: timeout)
     }
 
+    /// Scroll an element into the visible region of its scroll container.
+    ///
+    /// `tap` asserts `isHittable`, which fails for elements that exist but are below
+    /// the fold (e.g. a section header in a long grouped list). `scrollToElement` swipes
+    /// the primary scroll view upward until the element becomes hittable, and is a
+    /// no-op once it already is.
+    @discardableResult
+    func scrollToElement(
+        _ element: XCUIElement,
+        timeout: TimeInterval = Robot.defaultTimeout
+    ) -> Self {
+        // A bounded swipe-up loop. `isHittable` is only true once the element is both
+        // visible and not occluded, which is exactly what `tap` requires.
+        for _ in 0..<6 where !element.isHittable {
+            app.swipeUp()
+            Thread.sleep(forTimeInterval: 0.2)
+        }
+        assert(element, [.isHittable], timeout: timeout)
+        return self
+    }
+
     /// Run an action a bounded number of times, stopping as soon as it succeeds.
     ///
     /// Useful for webview-backed pages that occasionally fail to load on the first

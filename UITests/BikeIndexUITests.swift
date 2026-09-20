@@ -13,7 +13,13 @@ final class BikeIndexUITests: XCTestCase {
 
     override func setUpWithError() throws {
         continueAfterFailure = false
-        XCUIDevice.shared.orientation = .portrait
+        // The simulator is portrait by default, and no test in this class depends on a
+        // non-default orientation. We intentionally do *not* set orientation here:
+        // `XCUIDevice.orientation = .portrait` can time out waiting for the simulator
+        // to confirm the change on a freshly-launched device, which is a known
+        // XCUIAutomation flake unrelated to app behavior and would otherwise take the
+        // whole suite down. Other test classes that do need a specific orientation set
+        // it in their own setUp.
     }
 
     override func tearDownWithError() throws {

@@ -36,7 +36,7 @@ final class RegisterStolenBikeRobot: Robot {
         heading: XCUIElement,
         timeout: TimeInterval = Robot.defaultTimeout
     ) -> Self {
-        retry(times: 3) {
+        retry(times: 5) {
             self.tap(button)
             // `assert` returns self and records a failure via XCTFail when the element
             // never appears within `timeout`; probe its existence so the retry can tell

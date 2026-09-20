@@ -92,6 +92,9 @@ final class MainContentRobot: Robot {
 
         let ownedBike = app.buttons["Bike \(Status.withOwner.bikeIdentifier)-1"]
         assert(ownedBike, [.exists])
+        // When grouped by status, "With Owner" is often below the fold, so the bike
+        // row exists but is not yet hittable. Scroll its section header into view.
+        scrollToElement(app.staticTexts["With Owner"])
         tap(ownedBike)
 
         return BikeDetailRobot(app)
