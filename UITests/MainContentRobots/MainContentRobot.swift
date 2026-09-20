@@ -84,6 +84,20 @@ final class MainContentRobot: Robot {
     }
 
     @discardableResult
+    func tapFirstOwnedBike() -> BikeDetailRobot {
+        // Ensure bikes are grouped by status so the "With owner" section identifier is stable.
+        tapGroupingMenuButton()
+        tapGroupButton(for: Status.groupMode)
+        dismissGroupingMenuButton()
+
+        let ownedBike = app.buttons["Bike \(Status.withOwner.bikeIdentifier)-1"]
+        assert(ownedBike, [.exists])
+        tap(ownedBike)
+
+        return BikeDetailRobot(app)
+    }
+
+    @discardableResult
     func checkBike(section: any MainContentSection, index: Int, exists: Bool) -> Self {
         let bike = app.buttons["Bike \(section.bikeIdentifier)-\(index)"]
         assert(bike, [exists ? .exists : .doesNotExist])

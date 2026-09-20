@@ -29,13 +29,23 @@ struct WelcomeView: View {
                 Spacer()
             }
 
-            Text(
-                "The world's largest and most effective bicycle registry and stolen bike recovery platform."
-            )
-            .font(.headline)
-            .multilineTextAlignment(.center)
-            .frame(maxWidth: .infinity, alignment: .center)
-            .padding()
+            if client.isRestoringSession {
+                HStack(spacing: 8) {
+                    ProgressView()
+                    Text("Logging in…")
+                        .font(.headline)
+                }
+                .padding()
+                .accessibilityIdentifier("restoringSession-loggingIn-indicator")
+            } else {
+                Text(
+                    "The world's largest and most effective bicycle registry and stolen bike recovery platform."
+                )
+                .font(.headline)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding()
+            }
             Spacer()
 
             VStack {
@@ -69,10 +79,19 @@ struct WelcomeView: View {
     }
 }
 
-#Preview {
+#Preview("Client w/ failed session restoration") {
     NavigationStack {
         WelcomeView(displaySignIn: .constant(false))
             .environment(try! Client())
+            .environment(QRStickerRouter())
+            .navigationTitle("Welcome to Bike Index")
+    }
+}
+
+#Preview("Client always restoring") {
+    NavigationStack {
+        WelcomeView(displaySignIn: .constant(false))
+            .environment(try! Client().alwaysRestoringSession())
             .environment(QRStickerRouter())
             .navigationTitle("Welcome to Bike Index")
     }
