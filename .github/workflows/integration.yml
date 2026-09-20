@@ -29,6 +29,8 @@ jobs:
           honeybadger_api_key: ${{ secrets.HONEYBADGER_API_KEY }}
       - name: List available simulators
         run: xcodebuild -scheme BikeIndex -project BikeIndex.xcodeproj -showdestinations
+      - name: Validate failed-test selector parser (self-test)
+        run: ruby scripts/failed-test-configurations.rb --self-test
       - name: Build
         run: fastlane scan --build_for_testing=true
       - name: Save build products directory
@@ -96,20 +98,22 @@ jobs:
   retry-failed-tests:
     needs: [build-tests, test-suite]
     if: always() && needs.test-suite.result == 'failure' && needs.test-suite.outputs['failed-tests'] != ''
-    runs-on: macos-26
+    # Must match the build-tests image/Xcode so --test_without_building works on
+    # the cached build products. See build-tests.
+    runs-on: xcode-27
     name: Retry failed ${{ matrix.only-testing }} on ${{ matrix.device }}
     strategy:
       matrix:
         device: ["iPhone 17"] # "iPhone 17 Pro", "iPad (A16)"
-        deployment_target_version: ["26.5"]
+        deployment_target_version: ["27.0"]
         only-testing: ["UnitTests", "UITests"]
     steps:
       - name: Checkout
         uses: actions/checkout@v6
         with:
           ref: ${{ github.ref }}
-      - name: Set Xcode 26.6
-        run: sudo xcode-select -s /Applications/Xcode_26.6.app
+      - name: Set Xcode 27
+        run: sudo xcode-select -s /Applications/Xcode_27.0.app
       - name: Install tools
         run: brew bundle install
       - name: Restore cached build products
@@ -130,10 +134,19 @@ jobs:
           DEVICE: ${{ matrix.device }}
         run: |
           set -euo pipefail
-          # Keep only selectors for this cell (prefixed "<Target>/").
-          cell_selectors="$(printf '%s\n' "$FAILED_TESTS" | grep "^${ONLY_TESTING}/" | tr '\n' ' ' | sed 's/ $//')"
+          # Selectors are "<Target>/<Class>/<method>" where <Target> is the value
+          # passed to --only-testing (UnitTests | UITests). Keep only this cell's.
+          cell_selectors="$(printf '%s\n' "$FAILED_TESTS" | grep -E "^${ONLY_TESTING}/" | tr '\n' ' ' | sed 's/ $//')"
           if [ -z "$cell_selectors" ]; then
-            echo "no failing tests for ${ONLY_TESTING} on ${DEVICE}; nothing to retry" >&2
+            # If the whole run reported no failures at all, there is legitimately
+            # nothing to retry. If failures exist for *other* cells only, that is
+            # fine too (this cell passed). Only warn when the reported selectors
+            # exist but none match this cell, which would indicate a selector bug.
+            if [ -z "$(printf '%s' "$FAILED_TESTS")" ]; then
+              echo "no failing tests reported; nothing to retry" >&2
+            else
+              echo "::warning::failed-tests reported but none match ${ONLY_TESTING}: $(printf '%s' "$FAILED_TESTS" | tr '\n' ' ')"
+            fi
             exit 0
           fi
           fastlane scan \

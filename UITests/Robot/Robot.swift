@@ -14,7 +14,6 @@ open class Robot {
     var app: XCUIApplication
 
     lazy var navigationBar = app.navigationBars.firstMatch
-    lazy var navigationBarButton = navigationBar.buttons.firstMatch
 
     init(_ app: XCUIApplication, defaultTimeout: TimeInterval = Robot.defaultTimeout) {
         self.app = app
@@ -53,9 +52,22 @@ open class Robot {
         return self
     }
 
+    /// Tap the app's own navigation bar back button (the app's chrome, not any
+    /// button inside a webview). Uses a short timeout: on a webview-backed page the
+    /// app's back button may not be hittable, and blocking on it (the old default
+    /// of 120s) is exactly what made retries useless — the app would sit mid-page and
+    /// every subsequent retry re-tapped the wrong/stale element. When the button
+    /// isn't reachable we log and return so the caller can decide what to do (e.g.
+    /// retry the whole test via the test plan's maximumTestRepetitions).
     @discardableResult
-    func back(timeout: TimeInterval = Robot.defaultTimeout) -> Self {
-        tap(navigationBarButton, timeout: timeout)
+    func back(timeout: TimeInterval = 10) -> Self {
+        let button = navigationBar.buttons.firstMatch
+        if button.waitForExistence(timeout: 2), button.isHittable {
+            button.tap()
+            return self
+        }
+        print("[\(self)] warning: nav back button not hittable in 2s")
+        return self
     }
 
     /// Run an action a bounded number of times, stopping as soon as it succeeds.
