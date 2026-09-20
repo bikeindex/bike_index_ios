@@ -14,7 +14,7 @@ import SwiftUI
 
 extension RegisterBikeView {
     @Observable @MainActor
-    class ViewModel: ObservableObject {
+    class ViewModel {
         init(
             mode: RegisterMode, bike: Bike = Bike(),
             propulsion: BikeRegistration.Propulsion = BikeRegistration.Propulsion(),
@@ -71,27 +71,18 @@ extension RegisterBikeView {
             }
         }
 
+        var photosPickerChange: Task<Void, Never>? = nil
         var photosPickerItem: PhotosPickerItem? = nil {
             didSet {
-                if let photosPickerItem {
-                    let progress = photosPickerItem.loadTransferable(type: UIImage.self) { result in
-                        DispatchQueue.main.async { [weak self] in
-                            switch result {
-                            case .success(let image?):
-                                self?.imageState = .success(image)
-                            case .success(nil):
-                                self?.imageState = .empty
-                            case .failure(let error):
-                                self?.imageState = .failure(error)
-                            }
-                        }
-                    }
-                    imageState = .loading(progress)
+                photosPickerChange?.cancel()
+                photosPickerChange = nil
+                photosPickerChange = Task {
+                    await update(photosPickerItem: photosPickerItem)
                 }
             }
         }
 
-        enum ImageState {
+        enum ImageState: Sendable {
             case empty
             case loading(Progress)
             case success(UIImage)
@@ -176,6 +167,26 @@ extension RegisterBikeView {
                     6: "✔︎",
                 ]
                 return glyphs[completedFields, default: ""]
+            }
+        }
+
+        private func update(photosPickerItem: PhotosPickerItem?) async {
+            guard let photosPickerItem else {
+                imageState = .empty
+                return
+            }
+
+            imageState = .loading(.init(totalUnitCount: 0))
+            do {
+                let result = try await photosPickerItem.loadTransferable(type: UIImage.self)
+                if let result {
+                    self.imageState = .success(result)
+                } else {
+                    self.imageState = .empty
+                }
+            } catch {
+                Logger.camera.error("Failed to update photo picker item, \(error)")
+                self.imageState = .failure(error)
             }
         }
 

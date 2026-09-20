@@ -1,6 +1,6 @@
 # Metadata
 
-Image details: https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md
+Image details: https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md
 
 ### Required CI checks
 

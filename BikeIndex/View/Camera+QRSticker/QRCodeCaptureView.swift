@@ -8,6 +8,7 @@
 import AVFoundation
 import HoneybadgerSwift
 import OSLog
+import SwiftData
 import SwiftUI
 
 /// A view that displays a camera preview and scans for QR codes in the camera feed.
