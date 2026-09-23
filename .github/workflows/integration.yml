@@ -40,10 +40,10 @@ jobs:
           path: build
           key: cache-build-${{ github.sha }}
 
-  test-suite:
+  test-unit:
     needs: build-tests
     runs-on: xcode-27
-    name: ${{ matrix.device }} ${{ matrix.only-testing }} ${{ matrix.deployment_target_version }}
+    name: ${{ matrix.device }} UnitTests ${{ matrix.deployment_target_version }}
     # Still-failing tests (post-retry), newline-separated "<target>/<class>/<method>".
     outputs:
       failed-tests: ${{ steps.collect-failed.outputs.failed-tests }}
@@ -51,7 +51,6 @@ jobs:
       matrix:
         device: ["iPhone 17"] # "iPhone 17 Pro", "iPad (A16)"
         deployment_target_version: ["27.0"]
-        only-testing: ["UnitTests", "UITests"]
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -69,17 +68,16 @@ jobs:
         uses: ./.github/actions/setup-xcconfig
         with:
           honeybadger_api_key: ${{ secrets.HONEYBADGER_API_KEY }}
-      - name: ${{ matrix.only-testing}} on ${{ matrix.device }} ${{ matrix.deployment_target_version }}
-        run: fastlane scan --only-testing="${{ matrix.only-testing }}" --device="${{ matrix.device }}" --deployment-target-version="${{ matrix.deployment_target_version }}" --test_without_building=true
+      - name: UnitTests on ${{ matrix.device }} ${{ matrix.deployment_target_version }}
+        run: fastlane scan --only-testing="UnitTests" --device="${{ matrix.device }}" --deployment-target-version="${{ matrix.deployment_target_version }}" --test_without_building=true
       - name: Collect still-failing tests
         id: collect-failed
         if: failure()
         env:
           DEVICE: ${{ matrix.device }}
-          ONLY_TESTING: ${{ matrix.only-testing }}
         run: |
           set -euo pipefail
-          report="fastlane/test_output/test_output_${DEVICE}_${ONLY_TESTING}/report.junit"
+          report="fastlane/test_output/test_output_${DEVICE}_UnitTests/report.junit"
           if [ ! -f "$report" ]; then
             echo "no JUnit report at $report; nothing to re-run" >&2
             printf 'failed-tests<<EOF\nEOF\n' >> "$GITHUB_OUTPUT"
@@ -90,23 +88,76 @@ jobs:
       - uses: actions/upload-artifact@v7
         if: always()
         with:
-          name: test_output_${{ matrix.device }}_${{ matrix.only-testing }}
+          name: test_output_${{ matrix.device }}_UnitTests
           path: "fastlane/test_output/*"
           compression-level: 9 # maximum compression
 
-  # Re-run only the still-failing tests; skipped when test-suite passed.
-  retry-failed-tests:
-    needs: [build-tests, test-suite]
-    if: always() && needs.test-suite.result == 'failure' && needs.test-suite.outputs['failed-tests'] != ''
-    # Must match the build-tests image/Xcode so --test_without_building works on
-    # the cached build products. See build-tests.
+  test-ui:
+    # UITests only run when UnitTests pass. A failing unit test indicates a
+    # broken build or API contract that makes UI test results meaningless.
+    needs: [build-tests, test-unit]
     runs-on: xcode-27
-    name: Retry failed ${{ matrix.only-testing }} on ${{ matrix.device }}
+    name: ${{ matrix.device }} UITests ${{ matrix.deployment_target_version }}
+    # Still-failing tests (post-retry), newline-separated "<target>/<class>/<method>".
+    outputs:
+      failed-tests: ${{ steps.collect-failed.outputs.failed-tests }}
     strategy:
       matrix:
         device: ["iPhone 17"] # "iPhone 17 Pro", "iPad (A16)"
         deployment_target_version: ["27.0"]
-        only-testing: ["UnitTests", "UITests"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref }}
+      - name: Set Xcode 27
+        run: sudo xcode-select -s /Applications/Xcode_27.0.app
+      - name: Restore cached build products
+        id: cache-build-restore
+        uses: actions/cache/restore@v5
+        with:
+          path: build
+          key: cache-build-${{ github.sha }}
+      - name: Set up xcconfigs
+        uses: ./.github/actions/setup-xcconfig
+        with:
+          honeybadger_api_key: ${{ secrets.HONEYBADGER_API_KEY }}
+      - name: UITests on ${{ matrix.device }} ${{ matrix.deployment_target_version }}
+        run: fastlane scan --only-testing="UITests" --device="${{ matrix.device }}" --deployment-target-version="${{ matrix.deployment_target_version }}" --test_without_building=true
+      - name: Collect still-failing tests
+        id: collect-failed
+        if: failure()
+        env:
+          DEVICE: ${{ matrix.device }}
+        run: |
+          set -euo pipefail
+          report="fastlane/test_output/test_output_${DEVICE}_UITests/report.junit"
+          if [ ! -f "$report" ]; then
+            echo "no JUnit report at $report; nothing to re-run" >&2
+            printf 'failed-tests<<EOF\nEOF\n' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          failed=$(ruby scripts/failed-test-configurations.rb "$report")
+          printf 'failed-tests<<EOF\n%s\nEOF\n' "$failed" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: test_output_${{ matrix.device }}_UITests
+          path: "fastlane/test_output/*"
+          compression-level: 9 # maximum compression
+
+  # Re-run only the still-failing tests; skipped when test jobs passed.
+  retry-unit:
+    needs: [build-tests, test-unit]
+    if: always() && needs.test-unit.result == 'failure' && needs.test-unit.outputs['failed-tests'] != ''
+    # Must match the build-tests image/Xcode so --test_without_building works on
+    # the cached build products. See build-tests.
+    runs-on: xcode-27
+    name: Retry failed UnitTests on ${{ matrix.device }}
+    strategy:
+      matrix:
+        device: ["iPhone 17"]
+        deployment_target_version: ["27.0"]
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -126,27 +177,16 @@ jobs:
         uses: ./.github/actions/setup-xcconfig
         with:
           honeybadger_api_key: ${{ secrets.HONEYBADGER_API_KEY }}
-      - name: Retry only the failing tests
+      - name: Retry failing UnitTests
         id: retry
         env:
-          FAILED_TESTS: ${{ needs.test-suite.outputs['failed-tests'] }}
-          ONLY_TESTING: ${{ matrix.only-testing }}
+          FAILED_TESTS: ${{ needs.test-unit.outputs['failed-tests'] }}
           DEVICE: ${{ matrix.device }}
         run: |
           set -euo pipefail
-          # Selectors are "<Target>/<Class>/<method>" where <Target> is the value
-          # passed to --only-testing (UnitTests | UITests). Keep only this cell's.
-          cell_selectors="$(printf '%s\n' "$FAILED_TESTS" | grep -E "^${ONLY_TESTING}/" | tr '\n' ' ' | sed 's/ $//')"
+          cell_selectors="$(printf '%s\n' "$FAILED_TESTS" | grep -E "^UnitTests/" | tr '\n' ' ' | sed 's/ $//')"
           if [ -z "$cell_selectors" ]; then
-            # If the whole run reported no failures at all, there is legitimately
-            # nothing to retry. If failures exist for *other* cells only, that is
-            # fine too (this cell passed). Only warn when the reported selectors
-            # exist but none match this cell, which would indicate a selector bug.
-            if [ -z "$(printf '%s' "$FAILED_TESTS")" ]; then
-              echo "no failing tests reported; nothing to retry" >&2
-            else
-              echo "::warning::failed-tests reported but none match ${ONLY_TESTING}: $(printf '%s' "$FAILED_TESTS" | tr '\n' ' ')"
-            fi
+            echo "no failing UnitTests selectors; nothing to retry" >&2
             exit 0
           fi
           fastlane scan \
@@ -157,6 +197,60 @@ jobs:
       - uses: actions/upload-artifact@v7
         if: always()
         with:
-          name: retry_test_output_${{ matrix.device }}_${{ matrix.only-testing }}
+          name: retry_test_output_${{ matrix.device }}_UnitTests
+          path: "fastlane/test_output/*"
+          compression-level: 9 # maximum compression
+
+  retry-ui:
+    needs: [build-tests, test-ui]
+    if: always() && needs.test-ui.result == 'failure' && needs.test-ui.outputs['failed-tests'] != ''
+    # Must match the build-tests image/Xcode so --test_without_building works on
+    # the cached build products. See build-tests.
+    runs-on: xcode-27
+    name: Retry failed UITests on ${{ matrix.device }}
+    strategy:
+      matrix:
+        device: ["iPhone 17"]
+        deployment_target_version: ["27.0"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref }}
+      - name: Set Xcode 27
+        run: sudo xcode-select -s /Applications/Xcode_27.0.app
+      - name: Install tools
+        run: brew bundle install
+      - name: Restore cached build products
+        id: cache-build-restore
+        uses: actions/cache/restore@v5
+        with:
+          path: build
+          key: cache-build-${{ github.sha }}
+      - name: Set up xcconfigs
+        uses: ./.github/actions/setup-xcconfig
+        with:
+          honeybadger_api_key: ${{ secrets.HONEYBADGER_API_KEY }}
+      - name: Retry failing UITests
+        id: retry
+        env:
+          FAILED_TESTS: ${{ needs.test-ui.outputs['failed-tests'] }}
+          DEVICE: ${{ matrix.device }}
+        run: |
+          set -euo pipefail
+          cell_selectors="$(printf '%s\n' "$FAILED_TESTS" | grep -E "^UITests/" | tr '\n' ' ' | sed 's/ $//')"
+          if [ -z "$cell_selectors" ]; then
+            echo "no failing UITests selectors; nothing to retry" >&2
+            exit 0
+          fi
+          fastlane scan \
+            --only-test-configurations="$cell_selectors" \
+            --device="${DEVICE}" \
+            --deployment-target-version="${{ matrix.deployment_target_version }}" \
+            --test_without_building=true
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: retry_test_output_${{ matrix.device }}_UITests
           path: "fastlane/test_output/*"
           compression-level: 9 # maximum compression
