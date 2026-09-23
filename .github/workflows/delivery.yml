@@ -35,7 +35,7 @@ jobs:
 
   build-release:
     name: Build release archive and distribute
-    runs-on: xcode-27
+    runs-on: xcode-27-xlarge
     needs: requires-integration-tests
     # Release pushes and manual dispatch run the full flow; scheduled runs are
     # snapshot-validation canaries only.

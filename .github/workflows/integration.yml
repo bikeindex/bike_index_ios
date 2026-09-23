@@ -13,7 +13,8 @@ on:
 jobs:
   build-tests:
     name: Build project and cache build products
-    runs-on: xcode-27
+    runs-on: xcode-27-xlarge
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -42,7 +43,8 @@ jobs:
 
   test-unit:
     needs: build-tests
-    runs-on: xcode-27
+    runs-on: xcode-27-xlarge
+    timeout-minutes: 45
     name: ${{ matrix.device }} UnitTests ${{ matrix.deployment_target_version }}
     # Still-failing tests (post-retry), newline-separated "<target>/<class>/<method>".
     outputs:
@@ -96,7 +98,8 @@ jobs:
     # UITests only run when UnitTests pass. A failing unit test indicates a
     # broken build or API contract that makes UI test results meaningless.
     needs: [build-tests, test-unit]
-    runs-on: xcode-27
+    runs-on: xcode-27-xlarge
+    timeout-minutes: 60
     name: ${{ matrix.device }} UITests ${{ matrix.deployment_target_version }}
     # Still-failing tests (post-retry), newline-separated "<target>/<class>/<method>".
     outputs:
@@ -152,7 +155,8 @@ jobs:
     if: always() && needs.test-unit.result == 'failure' && needs.test-unit.outputs['failed-tests'] != ''
     # Must match the build-tests image/Xcode so --test_without_building works on
     # the cached build products. See build-tests.
-    runs-on: xcode-27
+    runs-on: xcode-27-xlarge
+    timeout-minutes: 30
     name: Retry failed UnitTests on ${{ matrix.device }}
     strategy:
       matrix:
@@ -206,7 +210,8 @@ jobs:
     if: always() && needs.test-ui.result == 'failure' && needs.test-ui.outputs['failed-tests'] != ''
     # Must match the build-tests image/Xcode so --test_without_building works on
     # the cached build products. See build-tests.
-    runs-on: xcode-27
+    runs-on: xcode-27-xlarge
+    timeout-minutes: 45
     name: Retry failed UITests on ${{ matrix.device }}
     strategy:
       matrix:
