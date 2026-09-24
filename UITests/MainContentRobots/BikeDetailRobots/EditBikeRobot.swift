@@ -14,6 +14,7 @@ final class EditBikeRobot: Robot {
     lazy var transferButton = app.links["Transfer, Hide or Delete"]
     lazy var ownerEmailTextField = app.textFields["Owner email"].firstMatch
     lazy var updateOwnershipButton = app.buttons["Update ownership"]
+    lazy var claimBikeButon = app.links["Claim bike"]
 
     /// Return control to app-based behavior
     @discardableResult
@@ -63,5 +64,11 @@ final class EditBikeRobot: Robot {
     func back() -> MainContentRobot {
         tap(navigationBarButton, timeout: Robot.defaultTimeout)
         return MainContentRobot(app)
+    }
+
+    @discardableResult
+    func claimBike() -> BikeDetailRobot {
+        tap(claimBikeButon)
+        return BikeDetailRobot(app)
     }
 }

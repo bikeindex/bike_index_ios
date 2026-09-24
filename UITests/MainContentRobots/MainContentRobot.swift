@@ -88,8 +88,13 @@ final class MainContentRobot: Robot {
 
     @discardableResult
     func tapFirstBike() -> BikeDetailRobot {
+        return tapBike(at: 1)
+    }
+
+    @discardableResult
+    func tapBike(at index: Int) -> BikeDetailRobot {
         let firstBike = app.buttons.matching(
-            NSPredicate(format: "identifier BEGINSWITH 'Bike' AND identifier ENDSWITH '1'")
+            NSPredicate(format: "identifier BEGINSWITH 'Bike' AND identifier ENDSWITH '\(index)'")
         ).firstMatch
         tap(firstBike)
 
@@ -108,6 +113,16 @@ final class MainContentRobot: Robot {
         tap(firstBike)
 
         return BikeDetailRobot(app)
+    }
+
+    @discardableResult
+    func tapBike(at index: Int) -> EditBikeRobot {
+        let firstBike = app.buttons.matching(
+            NSPredicate(format: "identifier BEGINSWITH 'Bike' AND identifier ENDSWITH '\(index)'")
+        ).firstMatch
+        tap(firstBike)
+
+        return EditBikeRobot(app)
     }
 
     @discardableResult
