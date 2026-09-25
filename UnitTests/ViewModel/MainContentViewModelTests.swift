@@ -137,13 +137,17 @@ struct MainContentViewModelTests {
     // MARK: - fetchProfile guard behavior
 
     /// `fetchProfile` should short-circuit cleanly when the client is not
-    /// authenticated, without touching the model context.
+    /// authenticated, without touching the model context or the network.
     @Test func test_fetchProfileReturnsEarlyWhenUnauthenticated() async throws {
         let (container, currentOwner, otherOwner) =
             try makePrepopulatedContainer(name: "unauthenticated")
         let context = container.mainContext
         let viewModel = MainContentPage.ViewModel()
-        let client = try Client()
+
+        // An empty stub keychain guarantees a fresh, unauthenticated client so the
+        // guard early-returns deterministically — no ambient keychain state and no
+        // real network call can sneak in (see ClientAutoSignInTests for the pattern).
+        let client = try Client(keychain: StubKeychain(), restoreSession: false)
         #expect(client.authenticated == false)
 
         do {

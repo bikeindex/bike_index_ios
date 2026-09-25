@@ -14,30 +14,6 @@ import Testing
 
 @MainActor
 final class ClientAutoSignInTests {
-    /// A keychain stub subclass that stores values in memory and can be pre-seeded with a token.
-    final class StubKeychain: KeychainSwift, @unchecked Sendable {
-        private let lock = NSLock()
-        private var store: [String: String] = [:]
-
-        init(preloaded: [String: String] = [:]) {
-            store = preloaded
-            super.init()
-        }
-
-        override func get(_ key: String) -> String? {
-            lock.lock()
-            defer { lock.unlock() }
-            return store[key]
-        }
-
-        override func delete(_ key: String) -> Bool {
-            lock.lock()
-            defer { lock.unlock() }
-            let existed = store.removeValue(forKey: key) != nil
-            return existed
-        }
-    }
-
     @Test func valid_persisted_token_restores_session_synchronously() throws {
         let validToken = OAuthToken.newToken(expiresIn: 3600)
         let data = try JSONEncoder().encode(validToken)
