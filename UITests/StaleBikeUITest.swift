@@ -24,31 +24,41 @@ final class StaleBikeUITest: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
     }
 
-    // TODO: Validate this test
+    // user@bikeindex.org owns a small, stable set of named fixture bikes (see
+    // db/seeds/seed_test_users.rb in the Rails repo). We match on their rendered labels
+    // ("<year> <manufacturer>") so the test is independent of list position and order.
+    private let userFixtureBikeLabels = ["2019 Specialized", "2022 Trek", "2020 Cannondale"]
+    private let transferSourceBikeLabel = "2020 Cannondale"
+
     func test_staleBikesAreRemoved() throws {
         try MainContentRobot(app)
             .startWithSignIn(email: "user@bikeindex.org", password: "pleaseplease12")
 
-            // Validate By-Status display
+            // Validate By-Status display: the primary user's fixture bikes are present.
             .tapGroupingMenuButton()
             .tapGroupButton(mode: Status.groupMode)
-            .checkBike(section: Status.withOwner, index: 1, exists: true)
-            .identifyBikes(&bikes_belonging_to_first_user)
+            .checkBike(withLabel: userFixtureBikeLabels[0], exists: true)
+            .checkBike(withLabel: userFixtureBikeLabels[1], exists: true)
+            .checkBike(withLabel: userFixtureBikeLabels[2], exists: true)
             .logOut()
 
+        bikes_belonging_to_first_user = MainContentRobot(app).identifyBikeLabels()
+
+        try MainContentRobot(app)
             .signIn(email: "member@brakebills.edu", password: "pleaseplease12")
             .tapGroupingMenuButton()
             .tapGroupButton(mode: Status.groupMode)
+            // member has an unregistered (parking-notification) bike; assert by position
+            // only for existence (its label is not a stable fixture).
             .checkBike(section: Status.unregisteredParkingNotification, index: 1, exists: true)
-            .identifyBikes(&bikes_belonging_to_second_user)
+            .logOut()
+
+        bikes_belonging_to_second_user = MainContentRobot(app).identifyBikeLabels()
 
         XCTAssertFalse(bikes_belonging_to_first_user.isEmpty)
         XCTAssertFalse(bikes_belonging_to_second_user.isEmpty)
         XCTAssertNotEqual(bikes_belonging_to_first_user, bikes_belonging_to_second_user)
 
-        /*
-         TODO: Alright so this UI test isn't behaving quite right. Let's move on to validating in the app and in the unit tests. Then we can come back to the UITest.
-         */
         let setOfFirstBikes = Set(bikes_belonging_to_first_user)
         let setOfSecondBikes = Set(bikes_belonging_to_second_user)
         XCTAssertTrue(
@@ -56,14 +66,21 @@ final class StaleBikeUITest: XCTestCase {
             "expected distinct sets, found A) <\(setOfFirstBikes)> -- vs -- <\(setOfSecondBikes)>")
     }
 
+    /// Transfers one of user@bikeindex.org's fixture bikes to api@bikeindex.org and
+    /// verifies the recipient can claim it and the source user no longer sees it.
+    ///
+    /// NOTE: This mutates shared-sandbox state, so the sandbox needs a reseed between runs.
+    /// It transfers `2020 Cannondale` specifically so the other two fixture bikes
+    /// (`2019 Specialized`, `2022 Trek`) stay intact for the other UI tests.
     func test_transferredBikesAreRemoved() throws {
+        let sourceBikeLabel = transferSourceBikeLabel
+
         try MainContentRobot(app)
-        // TODO: Change this to a different account so I don't statefully break other tests!
             .startWithSignIn(email: "user@bikeindex.org", password: "pleaseplease12")
             .tapGroupingMenuButton()
             .tapGroupButton(mode: Status.groupMode)
-            .checkBike(section: Status.withOwner, index: 1, exists: true)
-            .tapFirstBike()
+            .checkBike(withLabel: sourceBikeLabel, exists: true)
+            .tapBike(withLabel: sourceBikeLabel)
             .tapEditButton()
             .finishWebViewLoading()
             .scrollToFooter()
@@ -74,8 +91,6 @@ final class StaleBikeUITest: XCTestCase {
             .back()
             .logOut()  // will go to Settings for us
 
-        // TODO: Need to sign-in with the recipient account and accept the transfer
-
         app.terminate()
         sleep(3)
         app.launch()
@@ -83,8 +98,8 @@ final class StaleBikeUITest: XCTestCase {
             .startWithSignIn(email: "api@bikeindex.org", password: "pleaseplease12")
             .tapGroupingMenuButton()
             .tapGroupButton(mode: Status.groupMode)
-            .checkBike(section: Status.withOwner, index: 2, exists: true)
-            .tapBike(at: 2)
+            .checkBike(withLabel: sourceBikeLabel, exists: true)
+            .tapBikeForEdit(withLabel: sourceBikeLabel)
             .claimBike()
             .back()
             .logOut()
@@ -96,23 +111,12 @@ final class StaleBikeUITest: XCTestCase {
             .startWithSignIn(email: "user@bikeindex.org", password: "pleaseplease12")
             .tapGroupingMenuButton()
             .tapGroupButton(mode: Status.groupMode)
-            .checkBike(section: Status.withOwner, index: 1, exists: false)
+            .checkNoBike(withLabel: sourceBikeLabel)
+            // The other fixture bikes should be untouched.
+            .checkBike(withLabel: userFixtureBikeLabels[0], exists: true)
+            .checkBike(withLabel: userFixtureBikeLabels[1], exists: true)
     }
 
 }
 
-extension MainContentRobot {
-    @discardableResult
-    func identifyBikes(_ identifiedBikes: inout [String]) -> Self {
-        let predicate = NSPredicate(format: "identifier BEGINSWITH 'Bike'")
-        let bikeButtons = app.buttons.matching(predicate)
-        let filteredBikes = bikeButtons.allElementsBoundByIndex.map {
-            $0.identifier
-            // TODO: do some validation to make sure these are the right elements and we're not getting non-bike UI elements
-            // TODO: Transform to appropriate bike identifiers for comparison against other account
-        }
-        identifiedBikes.append(contentsOf: filteredBikes)
 
-        return self
-    }
-}

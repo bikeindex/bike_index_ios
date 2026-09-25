@@ -55,18 +55,20 @@ public final class ScreenshotUITest: XCTestCase {
             .captureSnapshot(named: "2-register-bike-initial")
     }
 
-    // MARK: - 3. Bike Details Page (bike 44)
+    // MARK: - 3. Bike Details Page (fixture bike)
 
-    /// Bike 44 is associated with the sandbox user (user@bikeindex.org) and is
-    /// the first bike on the main content page, so a simple tap-through
-    /// reaches it without any deep-link plumbing.
-    public func test_3_screenshot_bike_details_44() throws {
+    /// Captures the bike detail page for one of the sandbox user's (user@bikeindex.org)
+    /// stable fixture bikes (see db/seeds/seed_test_users.rb in the Rails repo). We open
+    /// it by its rendered label ("<year> <manufacturer>") rather than by list position.
+    /// NOTE: renaming the snapshot from "3-bike-details-44" requires regenerating the
+    /// reference screenshot (the displayed bike changed from the old "bike 44").
+    public func test_3_screenshot_bike_details() throws {
         try MainContentRobot(app)
             .startWithSignIn()
-            .tapFirstBike()
+            .tapBike(withLabel: "2019 Specialized")
             .finishWebViewLoading()
             .ensureSandboxReviewAppBannerAbsent()
-            .captureSnapshot(named: "3-bike-details-44")
+            .captureSnapshot(named: "3-bike-details")
     }
 
     public func test_4_sticker_details() throws {

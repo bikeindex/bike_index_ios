@@ -132,6 +132,62 @@ final class MainContentRobot: Robot {
         return self
     }
 
+    // MARK: Label-based (stable) bike lookups
+    //
+    // Positional lookups (`Bike <section>-<index>`) break whenever the set or order of
+    // seeded bikes changes. The main-content bike buttons render `displayTitle`
+    // ("<year> <manufacturer>") as their label, so matching on a distinct label is stable
+    // across reseeds and sort order. Use these for the UI-test fixture bikes.
+
+    /// The bike button whose label contains `label`.
+    func bikeButton(withLabel label: String) -> XCUIElement {
+        app.buttons.matching(
+            NSPredicate(format: "label CONTAINS '\(label)'")
+        ).firstMatch
+    }
+
+    @discardableResult
+    func checkBike(withLabel label: String, exists: Bool) -> Self {
+        assert(bikeButton(withLabel: label), [exists ? .exists : .doesNotExist])
+        return self
+    }
+
+    @discardableResult
+    func checkNoBike(withLabel label: String) -> Self {
+        return checkBike(withLabel: label, exists: false)
+    }
+
+    @discardableResult
+    func tapBike(withLabel label: String) -> BikeDetailRobot {
+        let bike = bikeButton(withLabel: label)
+        assert(bike, [.exists])
+        tap(bike)
+        return BikeDetailRobot(app)
+    }
+
+    /// Taps the bike and hands off to the web-based edit robot, used when the next
+    /// action (e.g. claiming a transferred bike) lives in the edit web view.
+    @discardableResult
+    func tapBikeForEdit(withLabel label: String) -> EditBikeRobot {
+        let bike = bikeButton(withLabel: label)
+        assert(bike, [.exists])
+        tap(bike)
+        return EditBikeRobot(app)
+    }
+
+    /// Collects the labels of every bike currently shown on the main content page.
+    /// Used to assert that two accounts see distinct sets of bikes.
+    @discardableResult
+    func identifyBikeLabels() -> [String] {
+        // Every main-content bike button carries an accessibility identifier beginning
+        // with "Bike " (see BikesGridSectionView). We match on that prefix to scope to
+        // real bikes and read their rendered labels.
+        let bikeButtons = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'Bike '"))
+        return bikeButtons.allElementsBoundByIndex
+            .compactMap { $0.label }
+            .filter { !$0.isEmpty }
+    }
+
     @discardableResult
     func tapRegisterBikeButton() -> RegisterBikeRobot {
         tap(registerBikeButton)
