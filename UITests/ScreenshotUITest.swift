@@ -57,15 +57,16 @@ public final class ScreenshotUITest: XCTestCase {
 
     // MARK: - 3. Bike Details Page (fixture bike)
 
-    /// Captures the bike detail page for one of the sandbox user's (user@bikeindex.org)
-    /// stable fixture bikes (see db/seeds/seed_test_users.rb in the Rails repo). We open
-    /// it by its rendered label ("<year> <manufacturer>") rather than by list position.
-    /// NOTE: renaming the snapshot from "3-bike-details-44" requires regenerating the
-    /// reference screenshot (the displayed bike changed from the old "bike 44").
+    /// Captures the bike detail page for a claimed bike owned by a real seeded account.
+    /// We sign in as user@fakegmail.com (which owns the 2023 Riese & Müller Load4) and
+    /// open it by its rendered label ("<year> <manufacturer>") rather than by list
+    /// position. (user@bikeindex.org, the CI default, owns no claimed bike, so it can't
+    /// be the source here.) NOTE: renaming the snapshot from "3-bike-details-44" requires
+    /// regenerating the reference screenshot (the displayed bike changed from "bike 44").
     public func test_3_screenshot_bike_details() throws {
         try MainContentRobot(app)
-            .startWithSignIn()
-            .tapBike(withLabel: "2019 Specialized")
+            .startWithSignIn(email: "user@fakegmail.com", password: "pleaseplease12")
+            .tapBike(withLabel: "2023 Riese & Müller")
             .finishWebViewLoading()
             .ensureSandboxReviewAppBannerAbsent()
             .captureSnapshot(named: "3-bike-details")
