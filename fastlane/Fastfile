@@ -23,16 +23,16 @@ platform :ios do
     # See Scanfile for default configuration
     scan(
       devices: ["iPhone 17"],
-      deployment_target_version: "26.5"
+      deployment_target_version: "27.0"
     )
   end
 
-  desc "Run test suite on iPhone 17 Pro"
-  lane :tests_iphone17pro do
+  desc "Run test suite on iPhone 18 Pro"
+  lane :tests_iphone18pro do
     # See Scanfile for default configuration
     scan(
-      devices: ["iPhone 17 Pro"],
-      deployment_target_version: "26.5"
+      devices: ["iPhone 18 Pro"],
+      deployment_target_version: "27.0"
     )
   end
 
@@ -41,7 +41,7 @@ platform :ios do
     # See Scanfile for default configuration
     scan(
       devices: ["iPad (A16)"],
-      deployment_target_version: "26.5"
+      deployment_target_version: "27.0"
     )
   end
 
