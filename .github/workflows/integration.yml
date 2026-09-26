@@ -44,7 +44,7 @@ jobs:
   test-unit:
     needs: build-tests
     runs-on: xcode-27
-    timeout-minutes: 45
+    timeout-minutes: 60
     name: ${{ matrix.device }} UnitTests ${{ matrix.deployment_target_version }}
     # Still-failing tests (post-retry), newline-separated "<target>/<class>/<method>".
     outputs:
@@ -156,7 +156,7 @@ jobs:
     # Must match the build-tests image/Xcode so --test_without_building works on
     # the cached build products. See build-tests.
     runs-on: xcode-27
-    timeout-minutes: 30
+    timeout-minutes: 45
     name: Retry failed UnitTests on ${{ matrix.device }}
     strategy:
       matrix:
@@ -211,7 +211,7 @@ jobs:
     # Must match the build-tests image/Xcode so --test_without_building works on
     # the cached build products. See build-tests.
     runs-on: xcode-27
-    timeout-minutes: 45
+    timeout-minutes: 60
     name: Retry failed UITests on ${{ matrix.device }}
     strategy:
       matrix:
