@@ -47,7 +47,6 @@
         "ScreenshotUITest\/test_screenshot_details_page_br_0001()",
         "ScreenshotUITest\/test_screenshot_main_content_page()",
         "ScreenshotUITest\/test_screenshot_register_bike()",
-        "StaleBikeUITest\/test_staleBikesAreRemoved()",
         "StaleBikeUITest\/test_transferredBikesAreRemoved()"
       ],
       "target" : {
