@@ -116,6 +116,14 @@ extension MainContentPage {
                 }
                 myProfile.user = myUser
 
+                // Org users need the web UI's `nav` visible to render their menu, so gate
+                // `WebScripts.removeFrame` on this flag.
+                let hasOrgs = !myUser.organizations.isEmpty
+                if client.userIsInOrganization != hasOrgs {
+                    client.userIsInOrganization = hasOrgs
+                    client.registerUserScripts()
+                }
+
                 Honeybadger.reset()
                 Honeybadger.set(userId: myProfileSource.id)
 

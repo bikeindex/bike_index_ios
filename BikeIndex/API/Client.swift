@@ -64,6 +64,12 @@ typealias QueryItemTuple = (name: String, value: String)
         sessionRestorationTask != nil
     }
 
+    /// Whether the signed-in user belongs to at least one organization. Drives whether
+    /// `WebScripts.removeFrame` is registered: org users need the web UI's `nav` visible
+    /// to render their per-organization menu. `false` until `fetchProfile` runs.
+    @ObservationIgnored var userIsInOrganization: Bool = false
+    private var removeFrameScript: WKUserScript?
+
     // MARK: Refresh Properties
     var refreshTimer: Timer?
     var refreshRunLoop: RunLoop
@@ -85,13 +91,28 @@ typealias QueryItemTuple = (name: String, value: String)
             loadLastToken()
         }
 
-        // Configure webView manipulation scripts
-        Task {
-            webConfiguration.userContentController.addUserScript(WebScripts.removeFrame)
+        Task { registerUserScripts() }
+    }
 
+    /// Idempotently register the WKUserScripts on ``webConfiguration``. `removeFrame` is
+    /// added only when `userIsInOrganization == false`.
+    @MainActor
+    func registerUserScripts() {
+        let controller = webConfiguration.userContentController
+        if !userIsInOrganization {
+            let script = WebScripts.removeFrame
+            controller.addUserScript(script)
+            removeFrameScript = script
+            Logger.webNavigation.debug(
+                "Client.registerUserScripts: added removeFrame (no org membership)")
+        } else {
+            Logger.webNavigation.debug(
+                "Client.registerUserScripts: skipped removeFrame (org membership present)")
+        }
+
+        Task {
             if let countryCode = await Storefront.current?.countryCode, countryCode != "USA" {
-                webConfiguration.userContentController
-                    .addUserScript(WebScripts.hideMembership)
+                controller.addUserScript(WebScripts.hideMembership)
                 Logger.donate.debug("App is outside the US app store")
             } else {
                 Logger.donate.debug("App is inside the US app store")

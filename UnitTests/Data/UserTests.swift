@@ -75,4 +75,67 @@ final class UserTests: XCTestCase {
         XCTAssertFalse(organization.menu.isEmpty)
     }
 
+    /// A `GET /me` payload without the `memberships` key (token lacks the
+    /// `read_organization_membership` scope). Must decode with `memberships == nil`.
+    @MainActor
+    func test_authenticated_user_without_memberships_key() throws {
+        let json =
+            """
+            {
+                "id": "456654",
+                "user": {
+                    "username": "00d66fc4724cad",
+                    "name": "Test User",
+                    "email": "test@example.com",
+                    "secondary_emails": [],
+                    "twitter": null,
+                    "created_at": 1694235377,
+                    "image": null
+                },
+                "bike_ids": []
+            }
+            """
+        let inputData = try XCTUnwrap(json.data(using: .utf8))
+        let response = try JSONDecoder().decode(AuthenticatedUserResponse.self, from: inputData)
+
+        XCTAssertNil(response.memberships)
+
+        let user = response.user.modelInstance()
+        XCTAssertTrue(user.organizations.isEmpty)
+
+        // And the model instance still builds without crashing.
+        let authUser = response.modelInstance()
+        XCTAssertEqual(authUser.identifier, "456654")
+    }
+
+    /// A `GET /me` payload with an empty `memberships` array. Must decode cleanly.
+    @MainActor
+    func test_authenticated_user_with_empty_memberships_array() throws {
+        let json =
+            """
+            {
+                "id": "456654",
+                "user": {
+                    "username": "00d66fc4724cad",
+                    "name": "Test User",
+                    "email": "test@example.com",
+                    "secondary_emails": [],
+                    "twitter": null,
+                    "created_at": 1694235377,
+                    "image": null
+                },
+                "bike_ids": [],
+                "memberships": []
+            }
+            """
+        let inputData = try XCTUnwrap(json.data(using: .utf8))
+        let response = try JSONDecoder().decode(AuthenticatedUserResponse.self, from: inputData)
+
+        let memberships = try XCTUnwrap(response.memberships)
+        XCTAssertTrue(memberships.isEmpty)
+
+        let user = response.user.modelInstance()
+        XCTAssertTrue(user.organizations.isEmpty)
+    }
+
 }
