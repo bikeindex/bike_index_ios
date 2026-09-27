@@ -86,4 +86,3 @@ struct AuthenticatedUserResponse: ResponseDecodable, ResponseModelInstantiable {
         }
     }
 }
-

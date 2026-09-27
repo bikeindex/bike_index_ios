@@ -53,7 +53,8 @@ final class UserRelationshipTests: XCTestCase {
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: timeout)
-        XCTAssertNil(saveError, "Failed to save authenticated user: \(String(describing: saveError))")
+        XCTAssertNil(
+            saveError, "Failed to save authenticated user: \(String(describing: saveError))")
 
         let user = response_authenticateduser.user.modelInstance()
         authenticatedUser.user = user

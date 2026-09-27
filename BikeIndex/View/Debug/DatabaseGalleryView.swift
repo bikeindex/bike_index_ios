@@ -81,7 +81,7 @@ struct DatabaseGalleryView: View {
                             } else if value.isBoolean {
                                 rendered = value.value ?? ""
                             } else {
-                                rendered = "\(value.value ?? "")" 
+                                rendered = "\(value.value ?? "")"
                             }
                             return "\(key)=\(rendered)"
                         }
@@ -274,7 +274,7 @@ extension MenuItem {
     /// Decode the stored menu row (with nested `children`) for display.
     var json: MenuItemJSON? {
         guard let childrenJSON,
-              let decoded = try? JSONDecoder().decode(MenuItemJSON.self, from: childrenJSON)
+            let decoded = try? JSONDecoder().decode(MenuItemJSON.self, from: childrenJSON)
         else { return nil }
         return decoded
     }

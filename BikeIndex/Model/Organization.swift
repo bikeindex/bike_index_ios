@@ -101,7 +101,7 @@ import SwiftData
     /// The rows nested inside this item (`.group` rows only), decoded on demand.
     var children: [MenuItemJSON] {
         guard let childrenJSON,
-              let decoded = try? JSONDecoder().decode([MenuItemJSON].self, from: childrenJSON)
+            let decoded = try? JSONDecoder().decode([MenuItemJSON].self, from: childrenJSON)
         else { return [] }
         return decoded
     }
@@ -164,10 +164,13 @@ struct MenuItemJSON: Codable {
         // `match_paths`/`match_params`/`children` only appear on the row types that carry
         // them, so they're looked up by raw name rather than decoded as optional properties
         // (which would still throw `keyNotFound` when absent).
-        matchPaths = try container.decodeIfPresent(MatchPaths.self, forKey: CodingKeys("match_paths"))
-        matchParams = try container.decodeIfPresent(
-            [String: MatchParam].self, forKey: CodingKeys("match_params")) ?? [:]
-        children = try container.decodeIfPresent([MenuItemJSON].self, forKey: CodingKeys("children"))
+        matchPaths = try container.decodeIfPresent(
+            MatchPaths.self, forKey: CodingKeys("match_paths"))
+        matchParams =
+            try container.decodeIfPresent(
+                [String: MatchParam].self, forKey: CodingKeys("match_params")) ?? [:]
+        children = try container.decodeIfPresent(
+            [MenuItemJSON].self, forKey: CodingKeys("children"))
     }
 }
 
