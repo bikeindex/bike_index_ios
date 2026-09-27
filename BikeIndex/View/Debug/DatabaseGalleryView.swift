@@ -87,13 +87,8 @@ struct DatabaseGalleryView: View {
                         }
                     Text("Match Params: \(params.joined(separator: ", "))")
                 }
-                if let json = item.json {
-                    Divider()
-                    Text("Children: \(item.childrenJSONString ?? "(none)")")
-                    let children = json.children ?? []
-                    ForEach(Array(children.enumerated()), id: \.offset) { _, child in
-                        Text("  child: \(child.type) \(child.label ?? child.path ?? "")")
-                    }
+                ForEach(Array(item.children.enumerated()), id: \.offset) { _, child in
+                    MenuChildRow(item: child, indent: 1)
                 }
             }
 
@@ -288,6 +283,47 @@ extension MenuItem {
     var childrenJSONString: String? {
         guard let childrenJSON else { return nil }
         return String(data: childrenJSON, encoding: .utf8)
+    }
+}
+
+/// Renders one nested menu row (and its own children) for the ``DatabaseGalleryView``
+/// MenuItem section. Indented by `indent` levels.
+private struct MenuChildRow: View {
+    let item: MenuItemJSON
+    let indent: Int
+
+    var body: some View {
+        let prefix = String(repeating: "  ", count: indent)
+        VStack(alignment: .leading, spacing: 2) {
+            Text("\(prefix)Type: \(item.type)")
+            if let label = item.label {
+                Text("\(prefix)Label: \(label)")
+            }
+            if let key = item.key {
+                Text("\(prefix)Key: \(key)")
+            }
+            if let icon = item.icon {
+                Text("\(prefix)Icon: \(icon)")
+            }
+            if let path = item.path {
+                Text("\(prefix)Path: \(path)")
+            }
+            if let matchPaths = item.matchPaths, !matchPaths.paths.isEmpty {
+                Text("\(prefix)Match Paths: \(matchPaths.paths.joined(separator: ", "))")
+            }
+            if !item.matchParams.isEmpty {
+                let params = item.matchParams
+                    .sorted { $0.key < $1.key }
+                    .map { key, value in
+                        let rendered = value.value == nil ? "(absent)" : (value.value ?? "")
+                        return "\(key)=\(rendered)"
+                    }
+                Text("\(prefix)Match Params: \(params.joined(separator: ", "))")
+            }
+            ForEach(Array((item.children ?? []).enumerated()), id: \.offset) { _, child in
+                MenuChildRow(item: child, indent: indent + 1)
+            }
+        }
     }
 }
 
