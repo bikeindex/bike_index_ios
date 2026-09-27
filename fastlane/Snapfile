@@ -26,8 +26,8 @@ scheme("BikeIndex")
 output_directory("./fastlane/screenshots")
 
 devices([
-  "iPhone 17 Pro Max",
-  "iPhone 17 Pro",
+  "iPhone 18 Pro Max",
+  "iPhone 18 Pro",
   "iPad Air 13-inch (M4)",
   "iPad Air 11-inch (M4)",
 ])

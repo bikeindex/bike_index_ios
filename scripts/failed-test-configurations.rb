@@ -6,6 +6,8 @@
 # Usage: ./scripts/failed-test-configurations.rb path/to/report.junit
 
 require "rexml/document"
+require "fileutils"
+require "tmpdir"
 
 def main
   path = ARGV[0]
@@ -14,6 +16,7 @@ def main
 
   doc = REXML::Document.new(File.read(path))
   target = infer_target(path)
+  warn "inferred test target: #{target.inspect}"
 
   # key => [max repetition index (0-based), failed? at that index]
   best = {}
@@ -65,11 +68,78 @@ def repetition_index(tc)
   nil
 end
 
-# Test target name = last "_"-separated segment of the report dir
-# (e.g. "test_output_iPhone 17_UITests" -> "UITests").
+# The Xcode test *target* name, used as the first segment of an
+# `--only-test-configurations` selector ("UITests/BikeIndexUITests/test_foo").
+#
+# scan writes the JUnit file to `fastlane/test_output/<output_directory>_<scheme>/report.junit`
+# where the directory basename equals the *target* name passed to
+# `--only-testing` (e.g. "UITests", "UnitTests") — NOT the Xcode scheme and NOT
+# the class name (the class, "BikeIndexUITests", is already in the classname).
+# Prefer that; fall back to the outermost <testsuite> name.
 def infer_target(path)
   base = File.basename(File.dirname(path))
-  base.sub(/\Atest_output[_ -]?/, "").split("_").last
+  return base if base.match?(/\A\p{Word}+\z/)
+
+  # Fallback: outermost <testsuite> under the root <testsuites> element.
+  root = REXML::Document.new(File.read(path)).root
+  suite = root.elements.to_a("testsuite").first
+  suite && suite.attributes["name"]
+end
+
+if ARGV[0] == "--self-test"
+  # Regression guard: the selector's first segment must be the *target* name
+  # (the value passed to --only-testing), and the class/method must match the
+  # JUnit classname/name. A wrong prefix is exactly what silently no-ops the
+  # CI retry job, so this must keep passing.
+  fixture_path = File.join(Dir.mktmpdir("ftc-selftest"), "report.junit")
+  File.write(fixture_path, <<~XML)
+    <?xml version='1.0' encoding='UTF-8'?>
+    <testsuites tests='2' failures='1'>
+      <testsuite name='UITests' tests='2' failures='1'>
+        <testsuite name='BikeIndexUITests' tests='2' failures='1'>
+          <testcase name='test_flaky()' classname='BikeIndexUITests'>
+            <failure message='boom'/>
+            <properties><property name='repetition' value='Retry 2'/></properties>
+          </testcase>
+          <testcase name='test_ok()' classname='BikeIndexUITests'>
+            <properties><property name='repetition' value='First Run'/></properties>
+          </testcase>
+        </testsuite>
+      </testsuite>
+    </testsuites>
+  XML
+  # Re-parse the fixture through the same code path the CLI uses.
+  doc = REXML::Document.new(File.read(fixture_path))
+  target = infer_target(fixture_path)
+  best = {}
+  walk = lambda do |el|
+    el.each_element do |child|
+      if child.name == "testcase"
+        cls = child.attributes["classname"]
+        m = child.attributes["name"]
+        if cls && m
+          failed = child.get_elements("failure").any? || child.get_elements("error").any?
+          rep = repetition_index(child)
+          key = cls + "\u0000" + m
+          if rep
+            b = best[key]
+            best[key] = [rep, failed] if b.nil? || rep >= b[0]
+          else
+            best[key] ||= [0, failed]
+          end
+        end
+      end
+      walk.call(child)
+    end
+  end
+  walk.call(doc.root)
+  selectors = best.filter_map { |k, (_, f)| f ? k : nil }
+                 .map { |k| c, m = k.split("\u0000", 2); "#{target}/#{c}/#{m.sub(/\(\)$/, '')}" }
+  expected = ["UITests/BikeIndexUITests/test_flaky"]
+  FileUtils.remove_entry(File.dirname(fixture_path))
+  abort "self-test FAILED: got #{selectors.inspect}, expected #{expected.inspect}" unless selectors == expected
+  puts "self-test OK"
+  exit 0
 end
 
 main
