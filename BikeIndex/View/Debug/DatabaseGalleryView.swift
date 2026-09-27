@@ -12,6 +12,8 @@ import SwiftUI
 struct DatabaseGalleryView: View {
     @Query var authenticatedUsers: [AuthenticatedUser]
     @Query var users: [User]
+    @Query var organizations: [Organization]
+    @Query var menuItems: [MenuItem]
     @Query var bikes: [Bike]
     @Query var manufacturers: [AutocompleteManufacturer]
 
@@ -33,6 +35,66 @@ struct DatabaseGalleryView: View {
                 Text("Created At: \(user.createdAt.description)")
                 Text("Image: \(String(describing: user.image))")
                 Text("Twitter: \(String(describing: user.twitter))")
+            }
+
+            // MARK: - Organizations
+            DataModelDebugView(models: organizations) { organization in
+                Text("Name: \(organization.name)")
+                Text("Short Name: \(organization.shortName)")
+                Text("ID: \(organization.identifier)")
+                Text("Slug: \(organization.slug)")
+                Text("Admin?: \(organization.userIsOrganizationAdmin.description)")
+                Text("Access Token: \(organization.accessToken)")
+                Text("Logo: \(organization.logo?.absoluteString ?? "(none)")")
+                let lines = organization.menu.compactMap { $0.json }
+                    .flatMap { menuDebugLines($0, indent: 0) }
+                ForEach(Array(lines.enumerated()), id: \.offset) { _, line in
+                    Text(line)
+                }
+            }
+
+            // MARK: - MenuItems
+            DataModelDebugView(models: menuItems) { item in
+                Text("Type: \(item.type)")
+                if let label = item.label {
+                    Text("Label: \(label)")
+                }
+                if let key = item.key {
+                    Text("Key: \(key)")
+                }
+                if let icon = item.icon {
+                    Text("Icon: \(icon)")
+                }
+                if let path = item.path {
+                    Text("Path: \(path)")
+                }
+                if !item.matchPaths.isEmpty {
+                    Text("Match Paths: \(item.matchPaths.joined(separator: ", "))")
+                }
+                if !item.matchParams.isEmpty {
+                    let params = item.matchParams
+                        .sorted { $0.key < $1.key }
+                        .map { key, value in
+                            let rendered: String
+                            if value.value == nil {
+                                rendered = "(absent)"
+                            } else if value.isBoolean {
+                                rendered = value.value ?? ""
+                            } else {
+                                rendered = "\(value.value ?? "")" 
+                            }
+                            return "\(key)=\(rendered)"
+                        }
+                    Text("Match Params: \(params.joined(separator: ", "))")
+                }
+                if let json = item.json {
+                    Divider()
+                    Text("Children: \(item.childrenJSONString ?? "(none)")")
+                    let children = json.children ?? []
+                    ForEach(Array(children.enumerated()), id: \.offset) { _, child in
+                        Text("  child: \(child.type) \(child.label ?? child.path ?? "")")
+                    }
+                }
             }
 
             // MARK: - Bikes
@@ -189,7 +251,7 @@ struct DataModelDebugView<Model: PersistentModel, Content: View>: View {
     do {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let mockContainer = try ModelContainer(
-            for: Bike.self, User.self, AuthenticatedUser.self,
+            for: Bike.self, User.self, Organization.self, MenuItem.self, AuthenticatedUser.self,
             AutocompleteManufacturer.self, FullPublicImage.self,
             configurations: config
         )
@@ -198,6 +260,34 @@ struct DataModelDebugView<Model: PersistentModel, Content: View>: View {
             .modelContainer(mockContainer)
     } catch {
         return Text(error.localizedDescription)
+    }
+}
+
+private func menuDebugLines(_ item: MenuItemJSON, indent: Int) -> [String] {
+    let prefix = String(repeating: "  ", count: indent)
+    switch item.type {
+    case "group":
+        return ["\(prefix)group \(item.key ?? "?") (\(item.label ?? "?"))"]
+            + (item.children ?? []).flatMap { menuDebugLines($0, indent: indent + 1) }
+    default:
+        let label = item.label ?? item.path ?? "?"
+        return ["\(prefix)\(item.type) \(label)"]
+    }
+}
+
+extension MenuItem {
+    /// Decode the stored menu row (with nested `children`) for display.
+    var json: MenuItemJSON? {
+        guard let childrenJSON,
+              let decoded = try? JSONDecoder().decode(MenuItemJSON.self, from: childrenJSON)
+        else { return nil }
+        return decoded
+    }
+
+    /// The stored `childrenJSON` payload, decoded to text for display.
+    var childrenJSONString: String? {
+        guard let childrenJSON else { return nil }
+        return String(data: childrenJSON, encoding: .utf8)
     }
 }
 

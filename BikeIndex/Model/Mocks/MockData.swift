@@ -34,6 +34,27 @@ struct MockData {
         }
         """
 
+    /// The organization menu the Rails app serves in `GET /api/v3/me` memberships
+    /// (see `UserServices::MenuItemsOrg` and `ComponentStructs::Shapes`).
+    static let organizationMenuJson =
+        """
+        [
+            {
+                "type": "group",
+                "key": "registrations",
+                "label": "Test account Registrations",
+                "icon": "bike",
+                "children": [
+                    {"type": "link", "label": "Registrations", "path": "/o/testers/registrations", "icon": null},
+                    {"type": "link", "label": "Incomplete registrations", "path": "/o/testers/bikes/incompletes", "icon": null},
+                    {"type": "disabled", "label": "Registration stickers"}
+                ]
+            },
+            {"type": "divider"},
+            {"type": "link", "label": "Add a bike", "path": "/o/testers/registrations/new", "icon": "plus-circle", "match_params": {"parking_notification": null}}
+        ]
+        """
+
     static let authenticatedUserJson =
         """
         {
@@ -45,10 +66,13 @@ struct MockData {
             "memberships": [
                 {
                     "organization_name": "Test account",
+                    "organization_short_name": "Test account",
                     "organization_slug": "testers",
                     "organization_id": 1234,
                     "organization_access_token": "59658bae53dec4cced6eafee0abc9670",
-                    "user_is_organization_admin": true
+                    "organization_logo_url": null,
+                    "user_is_organization_admin": true,
+                    "menu": \(organizationMenuJson)
                 }
             ]
         }

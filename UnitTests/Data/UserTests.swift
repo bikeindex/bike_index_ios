@@ -34,7 +34,7 @@ final class UserTests: XCTestCase {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
 
         let container = try ModelContainer(
-            for: AuthenticatedUser.self,
+            for: AuthenticatedUser.self, User.self, Organization.self, MenuItem.self,
             configurations: config)
 
         let input = MockData.authenticatedUserJson
@@ -64,6 +64,15 @@ final class UserTests: XCTestCase {
 
         authenticatedUser.user = user
         XCTAssertEqual(authenticatedUser.identifier, "456654")
+
+        // Memberships are served as an array when the token has the scope.
+        let memberships = try XCTUnwrap(response_authenticatedUser.memberships)
+        XCTAssertEqual(memberships.count, 1)
+        let organization = memberships.first!.modelInstance()
+        XCTAssertEqual(organization.identifier, 1234)
+        XCTAssertEqual(organization.slug, "testers")
+        XCTAssertTrue(organization.userIsOrganizationAdmin)
+        XCTAssertFalse(organization.menu.isEmpty)
     }
 
 }

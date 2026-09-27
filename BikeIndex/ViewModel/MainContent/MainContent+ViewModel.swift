@@ -110,7 +110,11 @@ extension MainContentPage {
                 }
 
                 let myProfile = myProfileSource.modelInstance()
-                myProfile.user = myProfileSource.user.modelInstance()
+                let myUser = myProfileSource.user.modelInstance()
+                if let memberships = myProfileSource.memberships {
+                    myUser.organizations = memberships.map { $0.modelInstance() }
+                }
+                myProfile.user = myUser
 
                 Honeybadger.reset()
                 Honeybadger.set(userId: myProfileSource.id)
