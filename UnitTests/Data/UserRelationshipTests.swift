@@ -89,8 +89,10 @@ final class UserRelationshipTests: XCTestCase {
         XCTAssertEqual(addBikeLink.type, "link")
         XCTAssertEqual(addBikeLink.path, "/o/testers/registrations/new")
         // A `null` param value is a "match only when the param is absent" marker.
-        XCTAssertEqual(addBikeLink.matchParams["parking_notification"] ?? nil, nil)
-        XCTAssertTrue(addBikeLink.matchParams.keys.contains("parking_notification"))
+        // The param is present with a nil value (not a missing key).
+        let parkingParam = try XCTUnwrap(addBikeLink.matchParams["parking_notification"])
+        XCTAssertNil(parkingParam.value)
+        XCTAssertFalse(parkingParam.isBoolean)
 
         // The menu is stored on the model and round-trips through the context.
         let orgResults = try container.mainContext.fetch(FetchDescriptor<Organization>())

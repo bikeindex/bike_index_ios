@@ -65,10 +65,10 @@ typealias QueryItemTuple = (name: String, value: String)
     }
 
     /// Whether the signed-in user belongs to at least one organization. Drives whether
-    /// `WebScripts.removeFrame` is registered: org users need the web UI's `nav` visible
+    /// `WebScripts.hideNav` is registered: org users need the web UI's `nav` visible
     /// to render their per-organization menu. `false` until `fetchProfile` runs.
     @ObservationIgnored var userIsInOrganization: Bool = false
-    private var removeFrameScript: WKUserScript?
+    private var hideNavScript: WKUserScript?
 
     // MARK: Refresh Properties
     var refreshTimer: Timer?
@@ -94,20 +94,19 @@ typealias QueryItemTuple = (name: String, value: String)
         Task { registerUserScripts() }
     }
 
-    /// Idempotently register the WKUserScripts on ``webConfiguration``. `removeFrame` is
-    /// added only when `userIsInOrganization == false`.
+    /// Idempotently register the WKUserScripts on ``webConfiguration``.
+    /// `removeFrame` is always added; `hideNav` only when `userIsInOrganization == false`.
     @MainActor
     func registerUserScripts() {
         let controller = webConfiguration.userContentController
+        controller.addUserScript(WebScripts.removeFrame)
         if !userIsInOrganization {
-            let script = WebScripts.removeFrame
+            let script = WebScripts.hideNav
             controller.addUserScript(script)
-            removeFrameScript = script
-            Logger.webNavigation.debug(
-                "Client.registerUserScripts: added removeFrame (no org membership)")
+            hideNavScript = script
+            Logger.webNavigation.debug("Client.registerUserScripts: added hideNav (no org)")
         } else {
-            Logger.webNavigation.debug(
-                "Client.registerUserScripts: skipped removeFrame (org membership present)")
+            Logger.webNavigation.debug("Client.registerUserScripts: skipped hideNav (org)")
         }
 
         Task {

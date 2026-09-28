@@ -11,11 +11,11 @@ import WebKit
 @MainActor
 /// JavaScript injection
 struct WebScripts {
-    /// Remove top navigation that is supplanted by app navigation
+    /// Styling applied to every user: hides chrome the app supplants (footer terms,
+    /// overlays, banners) and adjusts padding. Does NOT touch `nav` — see `hideNav`.
     static let removeFrame: WKUserScript = {
-        let source =
+        let css =
             """
-            nav { display: none }
             .primary-footer .terms-and-stuff { display: none }
             body, .organized-left-menu { padding-top: 16px }
             .bike-overlay-wrapper { display: none }
@@ -23,18 +23,23 @@ struct WebScripts {
             .credibility-score, .parking-notifications-wrap { display: none }
             #review-app-banner { display: none }
             """
-        let escapedNewlines = source.replacingOccurrences(of: "\n", with: "\\n")
-        let javascript =
-            """
-            document.head.insertAdjacentHTML('beforeend', \"<style>\(escapedNewlines)</style>\")
-            """
-
-        Logger.webNavigation.debug("Injecting styling \(javascript, privacy: .public)")
-        return WKUserScript(
-            source: javascript,
-            injectionTime: .atDocumentEnd,
-            forMainFrameOnly: true)
+        return makeStyleScript(css)
     }()
+
+    /// Hides the top `nav` element, which is supplanted by app navigation for
+    /// non-org users. Org users need `nav` visible to render their per-organization
+    /// menu, so this script is registered only when `userIsInOrganization == false`.
+    static let hideNav: WKUserScript = {
+        makeStyleScript("nav { display: none }")
+    }()
+
+    private static func makeStyleScript(_ css: String) -> WKUserScript {
+        let escaped = css.replacingOccurrences(of: "\n", with: "\\n")
+        let javascript =
+            "document.head.insertAdjacentHTML('beforeend', \"<style>\(escaped)</style>\")"
+        Logger.webNavigation.debug("Injecting styling \(javascript, privacy: .public)")
+        return WKUserScript(source: javascript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+    }
 
     /// Remove all links _starting with_ `/membership`
     /// Remove all links _starting with_ `/donate`
