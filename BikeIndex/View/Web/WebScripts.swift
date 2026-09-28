@@ -38,7 +38,10 @@ struct WebScripts {
         let javascript =
             "document.head.insertAdjacentHTML('beforeend', \"<style>\(escaped)</style>\")"
         Logger.webNavigation.debug("Injecting styling \(javascript, privacy: .public)")
-        return WKUserScript(source: javascript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+        return WKUserScript(
+            source: javascript,
+            injectionTime: .atDocumentEnd,
+            forMainFrameOnly: true)
     }
 
     /// Remove all links _starting with_ `/membership`
