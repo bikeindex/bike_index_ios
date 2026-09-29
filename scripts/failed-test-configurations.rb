@@ -1,38 +1,50 @@
 #!/usr/bin/env ruby
 # Parse a JUnit report (from `fastlane scan`) and print, one per line, the
-# `--only-testing` selector for each test still failing after the testplan's
-# retryOnFailure repetitions. Output: "<target>/<class>/<method>" per line.
+# `-only-testing` identifier for each test still failing after the testplan's
+# retryOnFailure repetitions.
 #
 # Usage:
-#   scripts/failed-test-configurations.rb path/to/report.junit <target>
+#   scripts/failed-test-configurations.rb path/to/report.junit <target> [source_root]
 #
-# `<target>` is the Xcode *test target* name (the value passed to
-# `--only-testing`), e.g. "UnitTests". It MUST be passed explicitly. The JUnit
-# does not reliably encode it:
-#   * the report always lives in a generic `test_output/` directory, not a
-#     per-target directory, so the directory name is useless;
-#   * under the xcpretty formatter the outermost <testsuite name> is the
-#     *class* name; under the trainer (xcresult) formatter it is the target.
-# So the target cannot be inferred from the file path or the XML alone.
+#   <target>       the Xcode test target name (value passed to --only-testing),
+#                  e.g. "UnitTests". Passed explicitly because the JUnit does
+#                  not reliably encode it (the report lives in a generic
+#                  test_output/ dir, and the outermost <testsuite> name is a
+#                  class name under the xcpretty formatter).
+#   [source_root]  directory to scan for Swift Testing suites (default: CWD).
 #
-# Retries: with `retryOnFailure` a retried test is written as MULTIPLE
-# <testcase> elements (one per attempt, in log order). Neither xcpretty's nor
-# trainer's JUnit carries a "repetition" property, so the LAST <testcase> for a
-# given (class, method) is the authoritative (final) result. We therefore use
-# last-occurrence-wins: a test that failed then passed on a retry is NOT
-# reported; only a test whose final attempt failed is.
+# Output granularity (the whole point of this script):
+#   - XCTest:        <target>/<class>/<method>   function-level works.
+#   - Swift Testing: <target>/<suite>            class-level ONLY. A
+#                                                 function-level identifier for
+#                                                 a Swift Testing test silently
+#                                                 runs ZERO tests, which would
+#                                                 make the retry "succeed"
+#                                                 vacuously and mask the failure.
+#
+# A type is a Swift Testing suite if it declares at least one @Test function.
+# That is detected by scanning the checked-out sources (the CI job runs in the
+# repo root). The JUnit itself cannot tell the two frameworks apart: under the
+# trainer/xcresult JUnit both are just <testcase classname=... name=...>, and
+# under the xcpretty formatter Swift Testing tests are omitted entirely (which
+# is why CI forces a non-xcpretty formatter so the report includes them).
+#
+# Retries: with retryOnFailure a retried test is written as multiple
+# <testcase> elements (one per attempt, in order) with no "repetition"
+# property, so the LAST <testcase> for a (class, method) is the final result.
 
 require "rexml/document"
 require "fileutils"
 require "tmpdir"
+require "set"
 
-# Returns an array of "<target>/<class>/<method>" selectors, one per test whose
-# FINAL (last) <testcase> in the report has a <failure> or <error>.
-def failing_selectors(path, target)
+# Returns an array of "-only-testing" identifiers for the still-failing tests.
+def failing_selectors(path, target, source_root = Dir.pwd)
+  swift_suites = swift_testing_suites(source_root)
+
+  # class => { method => failed? } (last occurrence wins per method)
+  results = {}
   doc = REXML::Document.new(File.read(path))
-
-  # key "<class>\u0000<method>" => failed? (last occurrence wins)
-  best = {}
   walk = lambda do |el|
     el.each_element do |child|
       if child.name == "testcase"
@@ -40,7 +52,7 @@ def failing_selectors(path, target)
         m = child.attributes["name"]
         if cls && m
           failed = child.get_elements("failure").any? || child.get_elements("error").any?
-          best[cls + "\u0000" + m] = failed
+          (results[cls] ||= {})[m] = failed
         end
       end
       walk.call(child)
@@ -48,57 +60,112 @@ def failing_selectors(path, target)
   end
   walk.call(doc.root)
 
-  best.filter_map do |key, failed|
-    next unless failed
-    cls, m = key.split("\u0000", 2)
-    "#{target}/#{cls}/#{m.sub(/\(\)$/, '')}"
+  selectors = []
+  results.each do |cls, methods|
+    failing = methods.select { |_, failed| failed }
+    next if failing.empty?
+    # The JUnit classname may be module-prefixed ("UnitTests.ManufacturerTests")
+    # depending on the formatter; -only-testing wants the bare type name.
+    bare = cls.to_s.split(".").last
+    if swift_suites.include?(bare)
+      selectors << "#{target}/#{bare}" # Swift Testing: whole suite (dedupes methods)
+    else
+      failing.each_key { |m| selectors << "#{target}/#{bare}/#{m.sub(/\(\)$/, '')}" } # XCTest
+    end
   end
+  selectors.sort
+end
+
+# Scans source_root and returns the set of type names that are Swift Testing
+# suites (they declare at least one @Test function). A lightweight
+# brace-matching scan; good enough for well-formed Swift.
+def swift_testing_suites(source_root)
+  suites = Set.new
+  files = Dir[File.join(source_root, "**", "*.swift")].reject do |f|
+    f =~ %r{(^|/)(build|\.build|DerivedData|Pods|Carthage)(/|\z)}
+  end
+  files.each do |f|
+    stack = [] # [type_name, brace_depth]
+    File.foreach(f) do |line|
+      code = line.sub(/\/\/.*\z/, "") # drop trailing line comment
+      if code =~ /\b(struct|class|extension)\s+([A-Z]\w*)/
+        stack.push([ $2, 0 ])
+      end
+      suites << stack.last[0] if code =~ /@Test\b/ && stack.any?
+      code.each_char do |c|
+        if c == "{"
+          stack.last[1] += 1 if stack.any?
+        elsif c == "}" && stack.any?
+          stack.last[1] -= 1
+          stack.pop if stack.last[1] <= 0
+        end
+      end
+    end
+  end
+  suites.to_a
 end
 
 def main
   path, target = ARGV[0], ARGV[1]
-  abort "usage: #{File.basename($0)} <report.junit> <target>" if path.nil? || target.nil?
+  source_root = ARGV[2] || Dir.pwd
+  abort "usage: #{File.basename($0)} <report.junit> <target> [source_root]" if path.nil? || target.nil?
   abort "report not found: #{path}" unless File.exist?(path)
 
-  failing_selectors(path, target).each { |s| puts s }
+  warn "swift testing suites: #{swift_testing_suites(source_root).sort.inspect}" if ENV["FTC_DEBUG"]
+  failing_selectors(path, target, source_root).each { |s| puts s }
 rescue REXML::ParseException => e
   warn "failed to parse #{path}: #{e.message}"
   exit 1
 end
 
 if ARGV[0] == "--self-test"
-  # Regression guard. A wrong first segment (target) or a first-occurrence-wins
-  # bug is exactly what silently no-ops / mis-fires the CI retry job, so this
-  # must keep passing. It exercises the SAME code path the CLI uses.
+  # Regression guard: Swift Testing failures must map to a whole-suite
+  # identifier (function-level would silently run zero tests), while XCTest
+  # failures stay function-level. A wrong mapping is exactly what no-ops the
+  # CI retry, so this must keep passing. Runs the real code paths.
   dir = Dir.mktmpdir("ftc-selftest")
-  fixture_path = File.join(dir, "report.junit")
-  File.write(fixture_path, <<~XML)
+  src = File.join(dir, "src")
+  FileUtils.mkdir_p(src)
+  # A Swift Testing suite (implicit @Suite struct with @Test funcs)
+  File.write(File.join(src, "SwiftThingTests.swift"), <<~SWIFT)
+    import Testing
+    struct SwiftThingTests {
+        @Test func test_a() { #expect(true) }
+        @Test func test_b() { #expect(true) }
+    }
+  SWIFT
+  # A classic XCTest class (NOT a Swift Testing suite)
+  File.write(File.join(src, "XThingTests.swift"), <<~SWIFT)
+    import XCTest
+    final class XThingTests: XCTestCase {
+        func test_xc_one() { }
+        func test_xc_two() { }
+    }
+  SWIFT
+  # Trainer/xcresult-style report: both frameworks share the same <testcase>
+  # shape, so only the source scan can tell them apart.
+  report = File.join(dir, "report.junit")
+  File.write(report, <<~XML)
     <?xml version='1.0' encoding='UTF-8'?>
-    <testsuites tests='5' failures='3'>
-      <testsuite name='BikeIndexAppPreviewTest' tests='5' failures='3'>
-        <!-- flaky: failed attempt 1, passed attempt 2 -> final PASS -> NOT listed -->
-        <testcase classname='BikeIndexAppPreviewTest' name='test_flaky()' time='1.0'>
-          <failure message='boom'/>
-        </testcase>
-        <testcase classname='BikeIndexAppPreviewTest' name='test_flaky()' time='0.5'/>
-        <!-- still failing: failed both attempts -> final FAIL -> listed -->
-        <testcase classname='BikeIndexAppPreviewTest' name='test_broken()' time='1.0'>
-          <failure message='boom'/>
-        </testcase>
-        <testcase classname='BikeIndexAppPreviewTest' name='test_broken()' time='1.0'>
-          <failure message='boom'/>
-        </testcase>
-        <!-- snapshot method name with spaces must round-trip intact -->
-        <testcase classname='BikeIndexAppPreviewTest' name='portrait-Main Content Page-0-15()' time='1.0'>
-          <failure message='snapshot diff'/>
-        </testcase>
+    <testsuites tests='6' failures='4'>
+      <testsuite name='UnitTests'>
+        <testsuite name='SwiftThingTests'>
+          <testcase classname='SwiftThingTests' name='test_a()'><failure message='x'/></testcase>
+          <testcase classname='SwiftThingTests' name='test_a()'/><!-- retried, passed -->
+          <testcase classname='SwiftThingTests' name='test_b()'><failure message='x'/></testcase>
+          <testcase classname='SwiftThingTests' name='test_b()'><failure message='x'/></testcase>
+        </testsuite>
+        <testsuite name='XThingTests'>
+          <testcase classname='XThingTests' name='test_xc_one()'><failure message='x'/></testcase>
+          <testcase classname='XThingTests' name='test_xc_two()'/><!-- passed -->
+        </testsuite>
       </testsuite>
     </testsuites>
   XML
-  got = failing_selectors(fixture_path, "UnitTests").sort
+  got = failing_selectors(report, "UnitTests", src)
   expected = [
-    "UnitTests/BikeIndexAppPreviewTest/test_broken",
-    "UnitTests/BikeIndexAppPreviewTest/portrait-Main Content Page-0-15"
+    "UnitTests/SwiftThingTests", # whole suite (test_a retried-pass ignored; test_b failed)
+    "UnitTests/XThingTests/test_xc_one" # function-level
   ].sort
   FileUtils.remove_entry(dir)
   abort "self-test FAILED: got #{got.inspect}, expected #{expected.inspect}" unless got == expected
