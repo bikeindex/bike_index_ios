@@ -20,7 +20,7 @@ final class UserRelationshipTests: XCTestCase {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
 
         let container = try ModelContainer(
-            for: User.self, AuthenticatedUser.self,
+            for: User.self, Organization.self, MenuItem.self, AuthenticatedUser.self,
             configurations: config)
         let input = MockData.authenticatedUserJson
 
@@ -31,6 +31,7 @@ final class UserRelationshipTests: XCTestCase {
         let response_authenticateduser = try JSONDecoder()
             .decode(AuthenticatedUserResponse.self, from: inputData)
         let expectation = XCTestExpectation(description: "SwiftData operations will complete.")
+        expectation.assertForOverFulfill = false
 
         let authenticatedUser = response_authenticateduser.modelInstance()
 
@@ -40,19 +41,75 @@ final class UserRelationshipTests: XCTestCase {
         let userResults1 = try container.mainContext.fetch(FetchDescriptor<User>())
         XCTAssertEqual(userResults1.count, 0)
 
+        var saveError: Error?
         Task { @MainActor in
-            let context = container.mainContext
-            context.insert(authenticatedUser)
-            try context.save()
+            do {
+                let context = container.mainContext
+                context.insert(authenticatedUser)
+                try context.save()
+            } catch {
+                saveError = error
+            }
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: timeout)
+        XCTAssertNil(
+            saveError, "Failed to save authenticated user: \(String(describing: saveError))")
 
         let user = response_authenticateduser.user.modelInstance()
         authenticatedUser.user = user
         Logger.tests.debug("User is \(user.username, privacy: .public)")
         let username: String = user.username
         XCTAssert(username == "00d66fc4724cad")
+
+        // The server serves organizations under a `memberships` array.
+        let memberships = try XCTUnwrap(response_authenticateduser.memberships)
+        let organizations = memberships.map { $0.modelInstance() }
+        user.organizations = organizations
+        XCTAssertFalse(organizations.isEmpty)
+
+        let organization = try XCTUnwrap(organizations.first)
+        XCTAssertEqual(organization.name, "Test account")
+        XCTAssertEqual(organization.shortName, "Test account")
+        XCTAssertEqual(organization.slug, "testers")
+        XCTAssertEqual(organization.identifier, 1234)
+        XCTAssertEqual(organization.accessToken, "59658bae53dec4cced6eafee0abc9670")
+        XCTAssertTrue(organization.userIsOrganizationAdmin)
+        XCTAssertNil(organization.logo)
+
+        // The menu is served as nested groups, links and dividers.
+        XCTAssertEqual(organization.menu.count, 3)
+        let group = try XCTUnwrap(organization.menu.first)
+        XCTAssertEqual(group.type, "group")
+        XCTAssertEqual(group.key, "registrations")
+        XCTAssertEqual(group.children.count, 3)
+        XCTAssertEqual(group.children.last?.type, "disabled")
+        XCTAssertEqual(organization.menu[1].type, "divider")
+        let addBikeLink = try XCTUnwrap(organization.menu.last)
+        XCTAssertEqual(addBikeLink.type, "link")
+        XCTAssertEqual(addBikeLink.path, "/o/testers/registrations/new")
+        // A `null` param value is a "match only when the param is absent" marker.
+        // The param is present with a nil value (not a missing key).
+        let parkingParam = try XCTUnwrap(addBikeLink.matchParams["parking_notification"])
+        XCTAssertNil(parkingParam.value)
+        XCTAssertFalse(parkingParam.isBoolean)
+
+        // The menu is stored on the model and round-trips through the context.
+        let orgResults = try container.mainContext.fetch(FetchDescriptor<Organization>())
+        XCTAssertEqual(orgResults.count, 1)
+        let fetchedOrg = try XCTUnwrap(orgResults.first)
+        XCTAssertEqual(fetchedOrg.menu.count, 3)
+        XCTAssertEqual(fetchedOrg.menu.first?.children.count, 3)
+
+        // The polymorphic `match_params` value (a `null` here) survives the SwiftData
+        // round-trip as a present `MatchParam` with a nil value, not a missing key.
+        let fetchedAddBike = try XCTUnwrap(fetchedOrg.menu.last)
+        let fetchedParking = try XCTUnwrap(fetchedAddBike.matchParams["parking_notification"])
+        XCTAssertNil(fetchedParking.value)
+        XCTAssertFalse(fetchedParking.isBoolean)
+
+        let menuResults = try container.mainContext.fetch(FetchDescriptor<MenuItem>())
+        XCTAssertEqual(menuResults.count, 3)
 
         let name: String = user.name
         //        Logger.tests.debug("Found user.name \(name), assertion \(name == "Test User")")
@@ -85,7 +142,7 @@ final class UserRelationshipTests: XCTestCase {
         let config = ModelConfiguration(isStoredInMemoryOnly: true, allowsSave: true)
 
         let container = try ModelContainer(
-            for: User.self, AuthenticatedUser.self,
+            for: User.self, Organization.self, MenuItem.self, AuthenticatedUser.self,
             configurations: config)
         Logger.model.trace("Container.id is \(config.id)")
         let input = MockData.authenticatedUserJson
@@ -145,6 +202,9 @@ final class UserRelationshipTests: XCTestCase {
             .decode(AuthenticatedUserResponse.self, from: inputData)
 
         let responseUser = meResponse.user.modelInstance()
+        if let memberships = meResponse.memberships {
+            responseUser.organizations = memberships.map { $0.modelInstance() }
+        }
         let responseAuthUser = meResponse.modelInstance()
 
         XCTAssertNil(responseAuthUser.id.storeIdentifier)
@@ -194,6 +254,43 @@ final class UserRelationshipTests: XCTestCase {
         let userResults2 = try container.mainContext.fetch(FetchDescriptor<User>())
         XCTAssertEqual(userResults2.count, 1)
 
+    }
+
+    /// Deleting an ``Organization`` must cascade-delete its menu rows, so the stale-org
+    /// cleanup in `fetchProfile` doesn't leak orphaned ``MenuItem`` rows across sessions.
+    @MainActor
+    func test_deleting_organization_cascades_to_menu_items() throws {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(
+            for: User.self, Organization.self, MenuItem.self,
+            configurations: config)
+
+        let user = User(
+            email: "cascade@test.example", username: "cascade", name: "Cascade",
+            additionalEmails: [], createdAt: Date(), bikes: [])
+        let org = Organization(
+            identifier: 1,
+            name: "Org",
+            shortName: "Org",
+            slug: "org",
+            accessToken: "token",
+            userIsOrganizationAdmin: true,
+            menu: [
+                MenuItem(type: "link", label: "A", path: "/a"),
+                MenuItem(type: "divider"),
+            ])
+        user.organizations = [org]
+
+        let context = container.mainContext
+        context.insert(user)
+        try context.save()
+        XCTAssertEqual(try context.fetchCount(FetchDescriptor<Organization>()), 1)
+        XCTAssertEqual(try context.fetchCount(FetchDescriptor<MenuItem>()), 2)
+
+        context.delete(org)
+        try context.save()
+        XCTAssertEqual(try context.fetchCount(FetchDescriptor<Organization>()), 0)
+        XCTAssertEqual(try context.fetchCount(FetchDescriptor<MenuItem>()), 0)
     }
 
 }

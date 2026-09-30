@@ -83,6 +83,8 @@ struct BikeIndexApp: App {
         let schema = Schema([
             Bike.self,
             User.self,
+            Organization.self,
+            MenuItem.self,
             AuthenticatedUser.self,
             AutocompleteManufacturer.self,
             ScannedBike.self,  // QR sticker history

@@ -64,6 +64,12 @@ typealias QueryItemTuple = (name: String, value: String)
         sessionRestorationTask != nil
     }
 
+    /// Whether the signed-in user belongs to at least one organization. Drives whether
+    /// `WebScripts.hideNav` is registered: org users need the web UI's `nav` visible
+    /// to render their per-organization menu. `nil` (unknown) until `fetchProfile` runs;
+    /// an org user must never have `hideNav` added, so unknown is treated as "don't hide".
+    @ObservationIgnored var userIsInOrganization: Bool?
+
     // MARK: Refresh Properties
     var refreshTimer: Timer?
     var refreshRunLoop: RunLoop
@@ -85,13 +91,29 @@ typealias QueryItemTuple = (name: String, value: String)
             loadLastToken()
         }
 
-        // Configure webView manipulation scripts
-        Task {
-            webConfiguration.userContentController.addUserScript(WebScripts.removeFrame)
+        Task { registerUserScripts() }
+    }
 
+    /// Register the WKUserScripts on ``webConfiguration`` from a clean slate.
+    /// `WKUserContentController` can't remove a single script, so this clears all and
+    /// re-adds: `removeFrame` always, `hideNav` only when `userIsInOrganization == false`
+    /// (never when unknown/`nil`), and `hideMembership` for non-US storefronts.
+    @MainActor
+    func registerUserScripts() {
+        let controller = webConfiguration.userContentController
+        controller.removeAllUserScripts()
+        controller.addUserScript(WebScripts.removeFrame)
+        if userIsInOrganization == false {
+            controller.addUserScript(WebScripts.hideNav)
+            Logger.webNavigation.debug("Client.registerUserScripts: added hideNav (no org)")
+        } else {
+            Logger.webNavigation.debug(
+                "Client.registerUserScripts: skipped hideNav (org or unknown)")
+        }
+
+        Task {
             if let countryCode = await Storefront.current?.countryCode, countryCode != "USA" {
-                webConfiguration.userContentController
-                    .addUserScript(WebScripts.hideMembership)
+                controller.addUserScript(WebScripts.hideMembership)
                 Logger.donate.debug("App is outside the US app store")
             } else {
                 Logger.donate.debug("App is inside the US app store")
@@ -281,6 +303,13 @@ typealias QueryItemTuple = (name: String, value: String)
         self.auth = nil
         self.accessToken = nil
         self.keychain.delete(Keychain.oauthToken)
+
+        // The webview configuration outlives a session, so reset the org flag to unknown and
+        // re-register from a clean slate. This drops any non-org sign-in's `hideNav` so it can't
+        // leak into a subsequent org user's session; the next `fetchProfile` re-decides `hideNav`
+        // once the new user's org state is known.
+        userIsInOrganization = nil
+        registerUserScripts()
     }
 
     /// Inform any `@State` watchers if the authentication is valid or has become void.

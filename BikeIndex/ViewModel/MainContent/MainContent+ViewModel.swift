@@ -110,7 +110,19 @@ extension MainContentPage {
                 }
 
                 let myProfile = myProfileSource.modelInstance()
-                myProfile.user = myProfileSource.user.modelInstance()
+                let myUser = myProfileSource.user.modelInstance()
+                if let memberships = myProfileSource.memberships {
+                    myUser.organizations = memberships.map { $0.modelInstance() }
+                }
+                myProfile.user = myUser
+
+                // Org users need the web UI's `nav` visible to render their menu, so gate
+                // `WebScripts.hideNav` on this flag.
+                let hasOrgs = !myUser.organizations.isEmpty
+                if client.userIsInOrganization != hasOrgs {
+                    client.userIsInOrganization = hasOrgs
+                    client.registerUserScripts()
+                }
 
                 Honeybadger.reset()
                 Honeybadger.set(userId: myProfileSource.id)
@@ -124,6 +136,19 @@ extension MainContentPage {
                         }
                         try modelContext.delete(
                             model: AuthenticatedUser.self, where: inactiveAuthUserPredicate)
+
+                        // 0.5. Remove stale organizations (and their menus) from prior
+                        // sessions. Reassigning `user.organizations` below only changes the
+                        // relationship; without this the old rows would be orphaned.
+                        let userEmail = myUser.email
+                        let priorUsers = try modelContext.fetch(
+                            FetchDescriptor<User>(
+                                predicate: #Predicate<User> { $0.email == userEmail }))
+                        for prior in priorUsers {
+                            for stale in prior.organizations {
+                                modelContext.delete(stale)
+                            }
+                        }
 
                         // 1. and 2.
                         modelContext.insert(myProfile)

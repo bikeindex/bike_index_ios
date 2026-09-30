@@ -15,6 +15,8 @@ enum Scope: String, CaseIterable, Identifiable {
 
     case readBikes = "read_bikes"
     case writeBikes = "write_bikes"
+
+    case readOrganizationMembership = "read_organization_membership"
 }
 
 extension [Scope] {

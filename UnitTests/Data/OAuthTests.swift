@@ -27,7 +27,10 @@ struct OAuthTests {
     }
 
     @Test func oauth_queryItem() {
-        #expect(Scope.allCases.queryItem == "read_user+write_user+read_bikes+write_bikes")
+        #expect(
+            Scope.allCases.queryItem
+                == "read_user+write_user+read_bikes+write_bikes+read_organization_membership"
+        )
 
         let readOnlyScopes: [Scope] = [.readUser, .readBikes]
         #expect(readOnlyScopes.queryItem == "read_user+read_bikes")

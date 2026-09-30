@@ -48,9 +48,15 @@ import SwiftData
     @Relationship(inverse: \Bike.owner)
     fileprivate(set) var bikes: [Bike]
 
+    /// The organizations this user belongs to, as reported by `GET /api/v3/me`.
+    /// Ordered the way the server serves them (the user's set organization-role order).
+    @Relationship(deleteRule: .cascade)
+    var organizations: [Organization]
+
     init(
         email: String, username: String, name: String, additionalEmails: [String], createdAt: Date,
-        image: URL? = nil, twitter: URL? = nil, parent: AuthenticatedUser? = nil, bikes: [Bike]
+        image: URL? = nil, twitter: URL? = nil, parent: AuthenticatedUser? = nil, bikes: [Bike],
+        organizations: [Organization] = []
     ) {
         self.email = email
         self.username = username
@@ -61,5 +67,6 @@ import SwiftData
         self.twitter = twitter
         self.parent = parent
         self.bikes = bikes
+        self.organizations = organizations
     }
 }

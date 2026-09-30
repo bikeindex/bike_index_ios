@@ -15,6 +15,8 @@ struct AuthenticatedUserResponse: ResponseDecodable, ResponseModelInstantiable {
     let id: String
     let user: UserResponse
     let bike_ids: [Int]
+    /// Only present when the access token has the `read_organization_membership` scope.
+    let memberships: [OrganizationResponse]?
 
     func modelInstance() -> ModelInstance {
         // AuthenticatedUser will be instantiated without bike model connections.
@@ -45,6 +47,48 @@ struct AuthenticatedUserResponse: ResponseDecodable, ResponseModelInstantiable {
                 image: image,
                 twitter: twitter,
                 bikes: [])
+        }
+    }
+
+    struct OrganizationResponse: Decodable, ResponseModelInstantiable {
+        typealias ModelInstance = Organization
+
+        let organization_name: String
+        let organization_short_name: String
+        let organization_slug: String
+        let organization_id: Int
+        let organization_access_token: String
+        let organization_logo_url: URL?
+        let user_is_organization_admin: Bool
+        /// The per-user, per-organization menu served by `UserServices::MenuItemsOrg`.
+        let menu: [MenuItemJSON]
+
+        func modelInstance() -> ModelInstance {
+            Organization(
+                identifier: organization_id,
+                name: organization_name,
+                shortName: organization_short_name,
+                slug: organization_slug,
+                logo: organization_logo_url,
+                accessToken: organization_access_token,
+                userIsOrganizationAdmin: user_is_organization_admin,
+                menu: menu.map { item in
+                    // Only serialize a nested payload for rows that actually have children;
+                    // leaf rows store a nil payload rather than a `null`/`[]` blob.
+                    let childrenData: Data? = {
+                        guard let children = item.children, !children.isEmpty else { return nil }
+                        return try? JSONEncoder().encode(children)
+                    }()
+                    return MenuItem(
+                        type: item.type,
+                        label: item.label,
+                        key: item.key,
+                        icon: item.icon,
+                        path: item.path,
+                        matchPaths: item.matchPaths?.paths ?? [],
+                        matchParams: item.matchParams,
+                        childrenData: childrenData)
+                })
         }
     }
 }
