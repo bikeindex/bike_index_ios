@@ -137,6 +137,19 @@ extension MainContentPage {
                         try modelContext.delete(
                             model: AuthenticatedUser.self, where: inactiveAuthUserPredicate)
 
+                        // 0.5. Remove stale organizations (and their menus) from prior
+                        // sessions. Reassigning `user.organizations` below only changes the
+                        // relationship; without this the old rows would be orphaned.
+                        let userEmail = myUser.email
+                        let priorUsers = try modelContext.fetch(
+                            FetchDescriptor<User>(
+                                predicate: #Predicate<User> { $0.email == userEmail }))
+                        for prior in priorUsers {
+                            for stale in prior.organizations {
+                                modelContext.delete(stale)
+                            }
+                        }
+
                         // 1. and 2.
                         modelContext.insert(myProfile)
                         if let user = myProfile.user {

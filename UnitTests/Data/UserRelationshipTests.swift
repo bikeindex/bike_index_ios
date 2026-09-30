@@ -101,6 +101,13 @@ final class UserRelationshipTests: XCTestCase {
         XCTAssertEqual(fetchedOrg.menu.count, 3)
         XCTAssertEqual(fetchedOrg.menu.first?.children.count, 3)
 
+        // The polymorphic `match_params` value (a `null` here) survives the SwiftData
+        // round-trip as a present `MatchParam` with a nil value, not a missing key.
+        let fetchedAddBike = try XCTUnwrap(fetchedOrg.menu.last)
+        let fetchedParking = try XCTUnwrap(fetchedAddBike.matchParams["parking_notification"])
+        XCTAssertNil(fetchedParking.value)
+        XCTAssertFalse(fetchedParking.isBoolean)
+
         let menuResults = try container.mainContext.fetch(FetchDescriptor<MenuItem>())
         XCTAssertEqual(menuResults.count, 3)
 
@@ -247,6 +254,43 @@ final class UserRelationshipTests: XCTestCase {
         let userResults2 = try container.mainContext.fetch(FetchDescriptor<User>())
         XCTAssertEqual(userResults2.count, 1)
 
+    }
+
+    /// Deleting an ``Organization`` must cascade-delete its menu rows, so the stale-org
+    /// cleanup in `fetchProfile` doesn't leak orphaned ``MenuItem`` rows across sessions.
+    @MainActor
+    func test_deleting_organization_cascades_to_menu_items() throws {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(
+            for: User.self, Organization.self, MenuItem.self,
+            configurations: config)
+
+        let user = User(
+            email: "cascade@test.example", username: "cascade", name: "Cascade",
+            additionalEmails: [], createdAt: Date(), bikes: [])
+        let org = Organization(
+            identifier: 1,
+            name: "Org",
+            shortName: "Org",
+            slug: "org",
+            accessToken: "token",
+            userIsOrganizationAdmin: true,
+            menu: [
+                MenuItem(type: "link", label: "A", path: "/a"),
+                MenuItem(type: "divider"),
+            ])
+        user.organizations = [org]
+
+        let context = container.mainContext
+        context.insert(user)
+        try context.save()
+        XCTAssertEqual(try context.fetchCount(FetchDescriptor<Organization>()), 1)
+        XCTAssertEqual(try context.fetchCount(FetchDescriptor<MenuItem>()), 2)
+
+        context.delete(org)
+        try context.save()
+        XCTAssertEqual(try context.fetchCount(FetchDescriptor<Organization>()), 0)
+        XCTAssertEqual(try context.fetchCount(FetchDescriptor<MenuItem>()), 0)
     }
 
 }

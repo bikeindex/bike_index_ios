@@ -46,10 +46,8 @@ struct DatabaseGalleryView: View {
                 Text("Admin?: \(organization.userIsOrganizationAdmin.description)")
                 Text("Access Token: \(organization.accessToken)")
                 Text("Logo: \(organization.logo?.absoluteString ?? "(none)")")
-                let lines = organization.menu.compactMap { $0.json }
-                    .flatMap { menuDebugLines($0, indent: 0) }
-                ForEach(Array(lines.enumerated()), id: \.offset) { _, line in
-                    Text(line)
+                ForEach(Array(organization.menu.enumerated()), id: \.offset) { _, item in
+                    MenuChildRow(item: item.toJSON(), indent: 0)
                 }
             }
 
@@ -258,31 +256,20 @@ struct DataModelDebugView<Model: PersistentModel, Content: View>: View {
     }
 }
 
-private func menuDebugLines(_ item: MenuItemJSON, indent: Int) -> [String] {
-    let prefix = String(repeating: "  ", count: indent)
-    switch item.type {
-    case "group":
-        return ["\(prefix)group \(item.key ?? "?") (\(item.label ?? "?"))"]
-            + (item.children ?? []).flatMap { menuDebugLines($0, indent: indent + 1) }
-    default:
-        let label = item.label ?? item.path ?? "?"
-        return ["\(prefix)\(item.type) \(label)"]
-    }
-}
-
 extension MenuItem {
-    /// Decode the stored menu row (with nested `children`) for display.
-    var json: MenuItemJSON? {
-        guard let childrenJSON,
-            let decoded = try? JSONDecoder().decode(MenuItemJSON.self, from: childrenJSON)
-        else { return nil }
-        return decoded
-    }
-
-    /// The stored `childrenJSON` payload, decoded to text for display.
-    var childrenJSONString: String? {
-        guard let childrenJSON else { return nil }
-        return String(data: childrenJSON, encoding: .utf8)
+    /// Rebuild the decoded JSON form of this row (including nested `children`) so the
+    /// Organizations section can render top-level rows with the same recursive
+    /// `MenuChildRow` used for nested rows.
+    func toJSON() -> MenuItemJSON {
+        MenuItemJSON(
+            type: type,
+            label: label,
+            key: key,
+            icon: icon,
+            path: path,
+            matchPaths: matchPaths,
+            matchParams: matchParams,
+            children: children)
     }
 }
 

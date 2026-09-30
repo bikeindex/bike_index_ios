@@ -73,7 +73,13 @@ struct AuthenticatedUserResponse: ResponseDecodable, ResponseModelInstantiable {
                 accessToken: organization_access_token,
                 userIsOrganizationAdmin: user_is_organization_admin,
                 menu: menu.map { item in
-                    MenuItem(
+                    // Only serialize a nested payload for rows that actually have children;
+                    // leaf rows store a nil payload rather than a `null`/`[]` blob.
+                    let childrenData: Data? = {
+                        guard let children = item.children, !children.isEmpty else { return nil }
+                        return try? JSONEncoder().encode(children)
+                    }()
+                    return MenuItem(
                         type: item.type,
                         label: item.label,
                         key: item.key,
@@ -81,7 +87,7 @@ struct AuthenticatedUserResponse: ResponseDecodable, ResponseModelInstantiable {
                         path: item.path,
                         matchPaths: item.matchPaths?.paths ?? [],
                         matchParams: item.matchParams,
-                        childrenJSON: (try? JSONEncoder().encode(item.children)) as Data?)
+                        childrenData: childrenData)
                 })
         }
     }

@@ -26,6 +26,8 @@ import SwiftData
     fileprivate(set) var userIsOrganizationAdmin: Bool
 
     /// The organization menu rendered by the web UI, served per-user and per-organization.
+    /// Cascades so deleting an ``Organization`` also removes its menu rows.
+    @Relationship(deleteRule: .cascade)
     fileprivate(set) var menu: [MenuItem]
 
     init(
@@ -76,7 +78,7 @@ import SwiftData
     /// A `nil` value means "match only when the param is absent" (e.g. `parking_notification`).
     fileprivate(set) var matchParams: [String: MatchParam]
     /// The rows nested inside a `.group`, as an ordered JSON payload.
-    fileprivate(set) var childrenJSON: Data?
+    fileprivate(set) var childrenData: Data?
 
     init(
         type: String,
@@ -86,7 +88,7 @@ import SwiftData
         path: String? = nil,
         matchPaths: [String] = [],
         matchParams: [String: MatchParam] = [:],
-        childrenJSON: Data? = nil
+        childrenData: Data? = nil
     ) {
         self.type = type
         self.label = label
@@ -95,20 +97,20 @@ import SwiftData
         self.path = path
         self.matchPaths = matchPaths
         self.matchParams = matchParams
-        self.childrenJSON = childrenJSON
+        self.childrenData = childrenData
     }
 
     /// The rows nested inside this item (`.group` rows only), decoded on demand.
     var children: [MenuItemJSON] {
-        guard let childrenJSON,
-            let decoded = try? JSONDecoder().decode([MenuItemJSON].self, from: childrenJSON)
+        guard let childrenData,
+            let decoded = try? JSONDecoder().decode([MenuItemJSON].self, from: childrenData)
         else { return [] }
         return decoded
     }
 }
 
 /// A decoded menu row (the shape of the JSON served by the API and stored in
-/// ``MenuItem/childrenJSON``). Distinct from the ``MenuItem`` model so nested rows
+/// ``MenuItem/childrenData``). Distinct from the ``MenuItem`` model so nested rows
 /// don't form a self-referencing SwiftData relationship.
 struct MenuItemJSON: Codable {
     let type: String
