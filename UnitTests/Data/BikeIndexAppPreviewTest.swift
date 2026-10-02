@@ -20,5 +20,9 @@ final class BikeIndexAppPreviewTest: SnapshotTest {
     override class func excludedSnapshotPreviews() -> [String]? {
         return nil
     }
+
+    func test_placeholder() {
+
+    }
 }
 #endif
