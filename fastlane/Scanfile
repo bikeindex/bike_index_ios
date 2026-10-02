@@ -28,6 +28,12 @@ include_simulator_logs(false)
 # (see .github/workflows/integration.yml).
 xcodebuild_formatter("xcbeautify")
 
+# Only ask scan for the JUnit report. The default output_types is "html,junit",
+# and with a non-xcpretty formatter scan prints a warning that HTML (and the
+# other output_types) are unsupported. JUnit here is still generated from the
+# xcresult by trainer (report.junit), which is what the CI retry parses.
+output_types("junit")
+
 # Retries are configured in AllTests.xctestplan
 
 # Output Fastlane build prodcuts in a local directory
