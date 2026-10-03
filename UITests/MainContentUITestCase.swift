@@ -35,12 +35,12 @@ final class MainContentUITestCase: XCTestCase {
             // will continue if sort order is already correct and dismsis menu
             .tapGroupSortOrderButton(.forward, returnTo: Status.groupMode)
 
-            .check(section: Status.withOwner, isExpanded: true)
-            .checkBike(section: Status.withOwner, index: 1, exists: true)
-            .tap(section: Status.withOwner)
-            .check(section: Status.withOwner, isExpanded: false)
-            .checkBike(section: Status.withOwner, index: 1, exists: false)
-            .tap(section: Status.withOwner)
+            .check(section: Status.found, isExpanded: true)
+            .checkBike(section: Status.found, index: 1, exists: true)
+            .tap(section: Status.found)
+            .check(section: Status.found, isExpanded: false)
+            .checkBike(section: Status.found, index: 1, exists: false)
+            .tap(section: Status.found)
 
             // Validate By-Manufacturer display
             .tapGroupingMenuButton()
