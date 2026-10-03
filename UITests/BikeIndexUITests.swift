@@ -32,7 +32,7 @@ final class BikeIndexUITests: XCTestCase {
     func test_basic_bike_detail_navigation() throws {
         try MainContentRobot(app)
             .startWithSignIn()
-            .tapFirstOwnedBike()
+            .tapFirstBike(in: Status.found)
             .tapEditButton()
             .tapViewBikeButton()
             .tapEditButton()

@@ -29,11 +29,11 @@ final class MainContentUITestCase: XCTestCase {
 
             // Validate By-Status display
             .tapGroupingMenuButton()
-            .tapGroupButton(for: Status.groupMode)
+            .tapGroupButton(for: Status.found.groupMode)
 
             .tapGroupingMenuButton()
             // will continue if sort order is already correct and dismsis menu
-            .tapGroupSortOrderButton(.forward, returnTo: Status.groupMode)
+            .tapGroupSortOrderButton(.forward, returnTo: Status.found.groupMode)
 
             .check(section: Status.found, isExpanded: true)
             .checkBike(section: Status.found, index: 1, exists: true)
@@ -44,9 +44,9 @@ final class MainContentUITestCase: XCTestCase {
 
             // Validate By-Manufacturer display
             .tapGroupingMenuButton()
-            .tapGroupButton(for: Manufacturer.groupMode)
+            .tapGroupButton(for: Manufacturer.specialized.groupMode)
             .tapGroupingMenuButton()
-            .tapGroupSortOrderButton(.forward, returnTo: Manufacturer.groupMode)
+            .tapGroupSortOrderButton(.forward, returnTo: Manufacturer.specialized.groupMode)
 
             .check(section: Manufacturer.specialized, isExpanded: true)
             .checkBike(section: Manufacturer.specialized, index: 1, exists: true)
