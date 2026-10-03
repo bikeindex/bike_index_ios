@@ -1,5 +1,5 @@
 {
-  "originHash" : "30c5054ec96043f7611058738063cf09fb0219a72b4086413cca66266004c22c",
+  "originHash" : "9e727bd063fdf1459f3d6013f5202534214bf3b1acb1c805408dfecf10535bf2",
   "pins" : [
     {
       "identity" : "flyingfox",
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/EmergeTools/SnapshotPreviews",
       "state" : {
-        "revision" : "ee45c68cd1b7576890c4f1bc54bbee7d5fcf3fed",
-        "version" : "0.14.0"
+        "revision" : "93275706be351c3a6b56eda6a683ee1906c9da9f",
+        "version" : "0.19.0"
       }
     },
     {

@@ -60,6 +60,8 @@ jobs:
           ref: ${{ github.ref }}
       - name: Set Xcode 27
         run: sudo xcode-select -s /Applications/Xcode_27.0.app
+      - name: Install tools
+        run: brew bundle install
       - name: Restore cached build products
         id: cache-build-restore
         uses: actions/cache/restore@v5
@@ -75,17 +77,21 @@ jobs:
       - name: Collect still-failing tests
         id: collect-failed
         if: failure()
-        env:
-          DEVICE: ${{ matrix.device }}
         run: |
           set -euo pipefail
-          report="fastlane/test_output/test_output_${DEVICE}_UnitTests/report.junit"
+          # scan writes the JUnit to <output_directory>/report.junit. The default
+          # output_directory is fastlane/test_output (see fastlane/Scanfile) -- NOT
+          # a per-device/per-target subdirectory. A wrong path leaves failed-tests
+          # empty, which silently skips the retry job.
+          report="fastlane/test_output/report.junit"
           if [ ! -f "$report" ]; then
             echo "no JUnit report at $report; nothing to re-run" >&2
             printf 'failed-tests<<EOF\nEOF\n' >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          failed=$(ruby scripts/failed-test-configurations.rb "$report")
+          # The target (first selector segment) is known here; pass it explicitly.
+          failed="$(ruby scripts/failed-test-configurations.rb "$report" "UnitTests")"
+          echo "still-failing UnitTests:"; printf '%s\n' "$failed"
           printf 'failed-tests<<EOF\n%s\nEOF\n' "$failed" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v7
         if: always()
@@ -115,6 +121,8 @@ jobs:
           ref: ${{ github.ref }}
       - name: Set Xcode 27
         run: sudo xcode-select -s /Applications/Xcode_27.0.app
+      - name: Install tools
+        run: brew bundle install
       - name: Restore cached build products
         id: cache-build-restore
         uses: actions/cache/restore@v5
@@ -130,17 +138,21 @@ jobs:
       - name: Collect still-failing tests
         id: collect-failed
         if: failure()
-        env:
-          DEVICE: ${{ matrix.device }}
         run: |
           set -euo pipefail
-          report="fastlane/test_output/test_output_${DEVICE}_UITests/report.junit"
+          # scan writes the JUnit to <output_directory>/report.junit. The default
+          # output_directory is fastlane/test_output (see fastlane/Scanfile) -- NOT
+          # a per-device/per-target subdirectory. A wrong path leaves failed-tests
+          # empty, which silently skips the retry job.
+          report="fastlane/test_output/report.junit"
           if [ ! -f "$report" ]; then
             echo "no JUnit report at $report; nothing to re-run" >&2
             printf 'failed-tests<<EOF\nEOF\n' >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          failed=$(ruby scripts/failed-test-configurations.rb "$report")
+          # The target (first selector segment) is known here; pass it explicitly.
+          failed="$(ruby scripts/failed-test-configurations.rb "$report" "UITests")"
+          echo "still-failing UITests:"; printf '%s\n' "$failed"
           printf 'failed-tests<<EOF\n%s\nEOF\n' "$failed" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v7
         if: always()
@@ -188,13 +200,22 @@ jobs:
           DEVICE: ${{ matrix.device }}
         run: |
           set -euo pipefail
-          cell_selectors="$(printf '%s\n' "$FAILED_TESTS" | grep -E "^UnitTests/" | tr '\n' ' ' | sed 's/ $//')"
-          if [ -z "$cell_selectors" ]; then
+          selectors="$(printf '%s\n' "$FAILED_TESTS" | grep -E '^UnitTests/' || true)"
+          if [ -z "$selectors" ]; then
             echo "no failing UnitTests selectors; nothing to retry" >&2
             exit 0
           fi
+          # -only-testing (NOT -only-test-configuration, which selects test-plan
+          # configurations, not tests) takes <Target>/<Class>/<Method> identifiers.
+          # Snapshot-test method names contain spaces (e.g. "portrait-Main Content
+          # Page-0-16"), so a single space-joined value is ambiguous. xcodebuild
+          # reads a newline-delimited response file via -only-testing:@<file>,
+          # treating each line as one full identifier (internal spaces preserved).
+          identifiers="$(mktemp)"
+          printf '%s\n' "$selectors" > "$identifiers"
+          echo "retrying UnitTests:"; cat "$identifiers"
           fastlane scan \
-            --only-test-configurations="$cell_selectors" \
+            --xcargs="-only-testing:@$identifiers" \
             --device="${DEVICE}" \
             --deployment-target-version="${{ matrix.deployment_target_version }}" \
             --test_without_building=true
@@ -243,13 +264,21 @@ jobs:
           DEVICE: ${{ matrix.device }}
         run: |
           set -euo pipefail
-          cell_selectors="$(printf '%s\n' "$FAILED_TESTS" | grep -E "^UITests/" | tr '\n' ' ' | sed 's/ $//')"
-          if [ -z "$cell_selectors" ]; then
+          selectors="$(printf '%s\n' "$FAILED_TESTS" | grep -E '^UITests/' || true)"
+          if [ -z "$selectors" ]; then
             echo "no failing UITests selectors; nothing to retry" >&2
             exit 0
           fi
+          # -only-testing (NOT -only-test-configuration, which selects test-plan
+          # configurations, not tests) takes <Target>/<Class>/<Method> identifiers.
+          # Method names can contain spaces, so a single space-joined value is
+          # ambiguous. xcodebuild reads a newline-delimited response file via
+          # -only-testing:@<file>, treating each line as one full identifier.
+          identifiers="$(mktemp)"
+          printf '%s\n' "$selectors" > "$identifiers"
+          echo "retrying UITests:"; cat "$identifiers"
           fastlane scan \
-            --only-test-configurations="$cell_selectors" \
+            --xcargs="-only-testing:@$identifiers" \
             --device="${DEVICE}" \
             --deployment-target-version="${{ matrix.deployment_target_version }}" \
             --test_without_building=true
