@@ -168,8 +168,13 @@ jobs:
     # Must match the build-tests image/Xcode so --test_without_building works on
     # the cached build products. See build-tests.
     runs-on: xcode-27
-    timeout-minutes: 180
+    timeout-minutes: 30
     name: Retry failed UnitTests on ${{ matrix.device }}
+    # Tests still failing after the retry (newline-separated selectors). Emitted
+    # even when the retry step times out or is killed, so the "still failing
+    # post-retry" signal is never lost.
+    outputs:
+      still-failing: ${{ steps.collect-failed.outputs.still-failing }}
     strategy:
       matrix:
         device: ["iPhone 17"]
@@ -195,6 +200,13 @@ jobs:
           honeybadger_api_key: ${{ secrets.HONEYBADGER_API_KEY }}
       - name: Retry failing UnitTests
         id: retry
+        # Bound the retry. A hanging/stalling test (e.g. a snapshot test tripping
+        # the plan timeout) must not run the job to the 2h+ runner watchdog; a
+        # bounded step fails fast and the collect step below still captures the
+        # post-retry JUnit and still-failing list. 30m sits above the observed
+        # 18-33m failing-retry baseline (gives a slow-but-legit pass headroom)
+        # while still cutting the 134m hang by ~70%.
+        timeout-minutes: 30
         env:
           FAILED_TESTS: ${{ needs.test-unit.outputs['failed-tests'] }}
           DEVICE: ${{ matrix.device }}
@@ -219,6 +231,24 @@ jobs:
             --device="${DEVICE}" \
             --deployment-target-version="${{ matrix.deployment_target_version }}" \
             --test_without_building=true
+      - name: Collect still-failing tests (post-retry)
+        id: collect-failed
+        # Always run: on retry success there is nothing to report; on failure or
+        # timeout it captures the JUnit and emits the still-failing selectors so
+        # the outcome is visible even when the retry step is killed mid-run.
+        if: always()
+        run: |
+          set -uo pipefail
+          report="fastlane/test_output/report.junit"
+          if [ ! -f "$report" ]; then
+            echo "no post-retry JUnit at $report (retry step may have been killed before scan wrote it)" >&2
+            printf 'still-failing<<EOF\nEOF\n' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          still="$(ruby scripts/failed-test-configurations.rb "$report" "UnitTests")"
+          echo "still-failing UnitTests after retry:"
+          if [ -n "$still" ]; then printf '%s\n' "$still"; else echo "  (none -- retry passed)"; fi
+          printf 'still-failing<<EOF\n%s\nEOF\n' "$still" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -232,8 +262,13 @@ jobs:
     # Must match the build-tests image/Xcode so --test_without_building works on
     # the cached build products. See build-tests.
     runs-on: xcode-27
-    timeout-minutes: 180
+    timeout-minutes: 30
     name: Retry failed UITests on ${{ matrix.device }}
+    # Tests still failing after the retry (newline-separated selectors). Emitted
+    # even when the retry step times out or is killed, so the "still failing
+    # post-retry" signal is never lost.
+    outputs:
+      still-failing: ${{ steps.collect-failed.outputs.still-failing }}
     strategy:
       matrix:
         device: ["iPhone 17"]
@@ -259,6 +294,12 @@ jobs:
           honeybadger_api_key: ${{ secrets.HONEYBADGER_API_KEY }}
       - name: Retry failing UITests
         id: retry
+        # Bound the retry. A hanging/stalling test must not run the job to the
+        # 2h+ runner watchdog; a bounded step fails fast and the collect step
+        # below still captures the post-retry JUnit and still-failing list. 30m
+        # sits above the observed 18-33m failing-retry baseline (gives a
+        # slow-but-legit pass headroom) while still cutting the 134m hang by ~70%.
+        timeout-minutes: 30
         env:
           FAILED_TESTS: ${{ needs.test-ui.outputs['failed-tests'] }}
           DEVICE: ${{ matrix.device }}
@@ -282,6 +323,24 @@ jobs:
             --device="${DEVICE}" \
             --deployment-target-version="${{ matrix.deployment_target_version }}" \
             --test_without_building=true
+      - name: Collect still-failing tests (post-retry)
+        id: collect-failed
+        # Always run: on retry success there is nothing to report; on failure or
+        # timeout it captures the JUnit and emits the still-failing selectors so
+        # the outcome is visible even when the retry step is killed mid-run.
+        if: always()
+        run: |
+          set -uo pipefail
+          report="fastlane/test_output/report.junit"
+          if [ ! -f "$report" ]; then
+            echo "no post-retry JUnit at $report (retry step may have been killed before scan wrote it)" >&2
+            printf 'still-failing<<EOF\nEOF\n' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          still="$(ruby scripts/failed-test-configurations.rb "$report" "UITests")"
+          echo "still-failing UITests after retry:"
+          if [ -n "$still" ]; then printf '%s\n' "$still"; else echo "  (none -- retry passed)"; fi
+          printf 'still-failing<<EOF\n%s\nEOF\n' "$still" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v7
         if: always()
         with:
