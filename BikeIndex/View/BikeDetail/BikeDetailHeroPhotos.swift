@@ -19,7 +19,7 @@ struct BikeDetailHeroPhotos: View {
                 let allImages = largeImage + publicImages
                 let imageUrls = allImages.enumerated().map { (offset: $0, element: $1) }
                 ForEach(imageUrls, id: \.offset) { index, url in
-                    AsyncImage(url: url) { image in
+                    CompatibleAsyncImage(url: url) { image in
                         switch image {
                         case .success(let image):
                             image

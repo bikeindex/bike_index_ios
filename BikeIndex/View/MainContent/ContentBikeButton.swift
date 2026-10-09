@@ -26,12 +26,14 @@ struct ContentBikeButtonView: View {
         if let bike = bikeQuery.first, bikeQuery.count == 1 {
             NavigationLink(value: bike.identifier) {
                 VStack {
-                    AsyncImage(url: bike.largeImage) { image in
-                        image
-                            .resizable()
-                            .scaledToFill()
-                    } placeholder: {
-                        FrameColorBackground(frameColors: bike.frameColors)
+                    CompatibleAsyncImage(url: bike.largeImage) { phase in
+                        if let image = phase.image {
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        } else {
+                            FrameColorBackground(frameColors: bike.frameColors)
+                        }
                     }
                     .tint(.primary)
                     .foregroundStyle(.primary)

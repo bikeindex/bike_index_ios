@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0428F4812D75156300BDD2A5 /* SectionedQuery in Frameworks */ = {isa = PBXBuildFile; productRef = 0428F4802D75156300BDD2A5 /* SectionedQuery */; };
 		042927712E03D33F009D0609 /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = 042927702E03D33F009D0609 /* Flow */; };
+		044441302DC6A1DC004B19AE /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = 0444412F2DC6A1DC004B19AE /* CachedAsyncImage */; };
 		047ED3E530786D280014FBC1 /* PreviewGallery in Frameworks */ = {isa = PBXBuildFile; productRef = 047ED3E430786D280014FBC1 /* PreviewGallery */; };
 		047ED3E730786D280014FBC1 /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 047ED3E630786D280014FBC1 /* SnapshotPreferences */; };
 		047ED3E930786D280014FBC1 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 047ED3E830786D280014FBC1 /* SnapshottingTests */; };
@@ -149,6 +150,7 @@
 				0428F4812D75156300BDD2A5 /* SectionedQuery in Frameworks */,
 				04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */,
 				042927712E03D33F009D0609 /* Flow in Frameworks */,
+				044441302DC6A1DC004B19AE /* CachedAsyncImage in Frameworks */,
 				048770782FCA52CB00340322 /* Honeybadger in Frameworks */,
 				047ED3E730786D280014FBC1 /* SnapshotPreferences in Frameworks */,
 				04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */,
@@ -302,6 +304,7 @@
 				04EA11212B2504340024CDDD /* URLEncodedForm */,
 				04E1343D2B4B718200CE88DD /* WebViewKit */,
 				0428F4802D75156300BDD2A5 /* SectionedQuery */,
+				0444412F2DC6A1DC004B19AE /* CachedAsyncImage */,
 				042927702E03D33F009D0609 /* Flow */,
 				048770772FCA52CB00340322 /* Honeybadger */,
 				047ED3E430786D280014FBC1 /* PreviewGallery */,
@@ -396,6 +399,7 @@
 				04EA11202B2504340024CDDD /* XCRemoteSwiftPackageReference "URLEncodedForm" */,
 				04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */,
 				0428F47F2D75156300BDD2A5 /* XCRemoteSwiftPackageReference "swiftdata-sectionedquery" */,
+				0444412E2DC6A1DC004B19AE /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
 				0429276F2E03D33F009D0609 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */,
 				048770762FCA52CB00340322 /* XCRemoteSwiftPackageReference "honeybadger-cocoa" */,
 				047ED3E330786D280014FBC1 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */,
@@ -826,6 +830,14 @@
 				minimumVersion = 3.1.1;
 			};
 		};
+		0444412E2DC6A1DC004B19AE /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.1;
+			};
+		};
 		047ED3E330786D280014FBC1 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/getsentry/SnapshotPreviews/";
@@ -878,6 +890,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0429276F2E03D33F009D0609 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */;
 			productName = Flow;
+		};
+		0444412F2DC6A1DC004B19AE /* CachedAsyncImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0444412E2DC6A1DC004B19AE /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */;
+			productName = CachedAsyncImage;
 		};
 		047ED3E430786D280014FBC1 /* PreviewGallery */ = {
 			isa = XCSwiftPackageProductDependency;
