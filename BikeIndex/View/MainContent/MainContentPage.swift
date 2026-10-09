@@ -113,6 +113,7 @@ struct MainContentPage: View {
     @Previewable let stickerRouter = QRStickerRouter()
     @Previewable let container = try! ModelContainer(
         for: AuthenticatedUser.self, User.self, Bike.self, AutocompleteManufacturer.self,
+        FullPublicImage.self, Organization.self, MenuItem.self,
         configurations: ModelConfiguration(isStoredInMemoryOnly: true))
 
     MainContentPage()
