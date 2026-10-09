@@ -20,7 +20,12 @@ struct ProportionalLazyVGrid<Content>: View where Content: View {
     var body: some View {
         switch UIDevice.current.userInterfaceIdiom {
         case .phone:
-            if horizontalSizeClass == .compact {
+            if verticalSizeClass == .compact {
+                LazyVGrid(columns: Array(repeating: GridItem(), count: 4), pinnedViews: pinnedViews)
+                {
+                    content()
+                }
+            } else if horizontalSizeClass == .compact {
                 LazyVGrid(columns: Array(repeating: GridItem(), count: 2), pinnedViews: pinnedViews)
                 {
                     content()
