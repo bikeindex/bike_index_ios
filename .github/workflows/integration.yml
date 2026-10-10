@@ -223,7 +223,10 @@ jobs:
           # Page-0-16"), so a single space-joined value is ambiguous. xcodebuild
           # reads a newline-delimited response file via -only-testing:@<file>,
           # treating each line as one full identifier (internal spaces preserved).
-          identifiers="$(mktemp)"
+          # $GITHUB_WORKSPACE is preserved across steps (mktemp is not), so the
+          # post-retry collect step can re-read these expected selectors to run
+          # the vacuous-run guard.
+          identifiers="${GITHUB_WORKSPACE}/.retry-unit-expected.txt"
           printf '%s\n' "$selectors" > "$identifiers"
           echo "retrying UnitTests:"; cat "$identifiers"
           fastlane scan \
@@ -249,6 +252,16 @@ jobs:
           echo "still-failing UnitTests after retry:"
           if [ -n "$still" ]; then printf '%s\n' "$still"; else echo "  (none -- retry passed)"; fi
           printf 'still-failing<<EOF\n%s\nEOF\n' "$still" >> "$GITHUB_OUTPUT"
+          # Vacuous-run guard: prove the -only-testing selectors actually matched
+          # a test. A malformed selector makes scan run zero tests and "pass",
+          # masking the real failure -- fail loudly instead.
+          expected="${GITHUB_WORKSPACE}/.retry-unit-expected.txt"
+          if [ -f "$expected" ] && [ -n "$(cat "$expected" 2>/dev/null)" ]; then
+            if ! ruby scripts/failed-test-configurations.rb --guard "$report" "UnitTests" "$expected"; then
+              echo "::error::retry-unit guard failed: expected selectors matched no executed test (vacuous retry)" >&2
+              exit 1
+            fi
+          fi
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -315,7 +328,10 @@ jobs:
           # Method names can contain spaces, so a single space-joined value is
           # ambiguous. xcodebuild reads a newline-delimited response file via
           # -only-testing:@<file>, treating each line as one full identifier.
-          identifiers="$(mktemp)"
+          # $GITHUB_WORKSPACE is preserved across steps (mktemp is not), so the
+          # post-retry collect step can re-read these expected selectors to run
+          # the vacuous-run guard.
+          identifiers="${GITHUB_WORKSPACE}/.retry-ui-expected.txt"
           printf '%s\n' "$selectors" > "$identifiers"
           echo "retrying UITests:"; cat "$identifiers"
           fastlane scan \
@@ -341,6 +357,16 @@ jobs:
           echo "still-failing UITests after retry:"
           if [ -n "$still" ]; then printf '%s\n' "$still"; else echo "  (none -- retry passed)"; fi
           printf 'still-failing<<EOF\n%s\nEOF\n' "$still" >> "$GITHUB_OUTPUT"
+          # Vacuous-run guard: prove the -only-testing selectors actually matched
+          # a test. A malformed selector makes scan run zero tests and "pass",
+          # masking the real failure -- fail loudly instead.
+          expected="${GITHUB_WORKSPACE}/.retry-ui-expected.txt"
+          if [ -f "$expected" ] && [ -n "$(cat "$expected" 2>/dev/null)" ]; then
+            if ! ruby scripts/failed-test-configurations.rb --guard "$report" "UITests" "$expected"; then
+              echo "::error::retry-ui guard failed: expected selectors matched no executed test (vacuous retry)" >&2
+              exit 1
+            fi
+          fi
       - uses: actions/upload-artifact@v7
         if: always()
         with:
