@@ -10,9 +10,9 @@
 		0428F4812D75156300BDD2A5 /* SectionedQuery in Frameworks */ = {isa = PBXBuildFile; productRef = 0428F4802D75156300BDD2A5 /* SectionedQuery */; };
 		042927712E03D33F009D0609 /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = 042927702E03D33F009D0609 /* Flow */; };
 		044441302DC6A1DC004B19AE /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = 0444412F2DC6A1DC004B19AE /* CachedAsyncImage */; };
-		044BDBC82F26AEA500E0049E /* PreviewGallery in Frameworks */ = {isa = PBXBuildFile; productRef = 044BDBC72F26AEA500E0049E /* PreviewGallery */; };
-		044BDBCA2F26AEA500E0049E /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 044BDBC92F26AEA500E0049E /* SnapshotPreferences */; };
-		044BDBCC2F26AEA500E0049E /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 044BDBCB2F26AEA500E0049E /* SnapshottingTests */; };
+		047ED3E530786D280014FBC1 /* PreviewGallery in Frameworks */ = {isa = PBXBuildFile; productRef = 047ED3E430786D280014FBC1 /* PreviewGallery */; };
+		047ED3E730786D280014FBC1 /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 047ED3E630786D280014FBC1 /* SnapshotPreferences */; };
+		047ED3E930786D280014FBC1 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 047ED3E830786D280014FBC1 /* SnapshottingTests */; };
 		048770782FCA52CB00340322 /* Honeybadger in Frameworks */ = {isa = PBXBuildFile; productRef = 048770772FCA52CB00340322 /* Honeybadger */; };
 		04CE915B300D2F97002546C3 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE915A300D2F97002546C3 /* SnapshotHelper.swift */; };
 		04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 04E1343D2B4B718200CE88DD /* WebViewKit */; };
@@ -146,13 +146,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				047ED3E530786D280014FBC1 /* PreviewGallery in Frameworks */,
 				0428F4812D75156300BDD2A5 /* SectionedQuery in Frameworks */,
 				04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */,
 				042927712E03D33F009D0609 /* Flow in Frameworks */,
-				044BDBC82F26AEA500E0049E /* PreviewGallery in Frameworks */,
 				044441302DC6A1DC004B19AE /* CachedAsyncImage in Frameworks */,
-				044BDBCA2F26AEA500E0049E /* SnapshotPreferences in Frameworks */,
 				048770782FCA52CB00340322 /* Honeybadger in Frameworks */,
+				047ED3E730786D280014FBC1 /* SnapshotPreferences in Frameworks */,
 				04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */,
 				04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */,
 			);
@@ -162,7 +162,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				044BDBCC2F26AEA500E0049E /* SnapshottingTests in Frameworks */,
+				047ED3E930786D280014FBC1 /* SnapshottingTests in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -306,9 +306,9 @@
 				0428F4802D75156300BDD2A5 /* SectionedQuery */,
 				0444412F2DC6A1DC004B19AE /* CachedAsyncImage */,
 				042927702E03D33F009D0609 /* Flow */,
-				044BDBC72F26AEA500E0049E /* PreviewGallery */,
-				044BDBC92F26AEA500E0049E /* SnapshotPreferences */,
 				048770772FCA52CB00340322 /* Honeybadger */,
+				047ED3E430786D280014FBC1 /* PreviewGallery */,
+				047ED3E630786D280014FBC1 /* SnapshotPreferences */,
 			);
 			productName = BikeIndex;
 			productReference = 04F4B8F72B098ADB009442B5 /* BikeIndex.app */;
@@ -332,7 +332,7 @@
 			);
 			name = UnitTests;
 			packageProductDependencies = (
-				044BDBCB2F26AEA500E0049E /* SnapshottingTests */,
+				047ED3E830786D280014FBC1 /* SnapshottingTests */,
 			);
 			productName = UnitTests;
 			productReference = 04F4B90A2B098ADE009442B5 /* UnitTests.xctest */;
@@ -401,8 +401,8 @@
 				0428F47F2D75156300BDD2A5 /* XCRemoteSwiftPackageReference "swiftdata-sectionedquery" */,
 				0444412E2DC6A1DC004B19AE /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
 				0429276F2E03D33F009D0609 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */,
-				044BDBC62F26AEA500E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */,
 				048770762FCA52CB00340322 /* XCRemoteSwiftPackageReference "honeybadger-cocoa" */,
+				047ED3E330786D280014FBC1 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 04F4B8F82B098ADB009442B5 /* Products */;
@@ -838,12 +838,12 @@
 				minimumVersion = 2.1.1;
 			};
 		};
-		044BDBC62F26AEA500E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */ = {
+		047ED3E330786D280014FBC1 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/EmergeTools/SnapshotPreviews";
+			repositoryURL = "https://github.com/getsentry/SnapshotPreviews/";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.14.0;
+				minimumVersion = 0.20.0;
 			};
 		};
 		048770762FCA52CB00340322 /* XCRemoteSwiftPackageReference "honeybadger-cocoa" */ = {
@@ -896,19 +896,19 @@
 			package = 0444412E2DC6A1DC004B19AE /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */;
 			productName = CachedAsyncImage;
 		};
-		044BDBC72F26AEA500E0049E /* PreviewGallery */ = {
+		047ED3E430786D280014FBC1 /* PreviewGallery */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 044BDBC62F26AEA500E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			package = 047ED3E330786D280014FBC1 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
 			productName = PreviewGallery;
 		};
-		044BDBC92F26AEA500E0049E /* SnapshotPreferences */ = {
+		047ED3E630786D280014FBC1 /* SnapshotPreferences */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 044BDBC62F26AEA500E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			package = 047ED3E330786D280014FBC1 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
 			productName = SnapshotPreferences;
 		};
-		044BDBCB2F26AEA500E0049E /* SnapshottingTests */ = {
+		047ED3E830786D280014FBC1 /* SnapshottingTests */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 044BDBC62F26AEA500E0049E /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			package = 047ED3E330786D280014FBC1 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
 			productName = SnapshottingTests;
 		};
 		048770772FCA52CB00340322 /* Honeybadger */ = {

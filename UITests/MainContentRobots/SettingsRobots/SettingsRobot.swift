@@ -5,6 +5,8 @@
 //  Created by Milo Wyner on 7/2/25.
 //
 
+import Foundation
+
 /// Robot for testing the settings page.
 final class SettingsRobot: Robot {
     lazy var appIcon = app.buttons["App Icon"]
@@ -77,5 +79,13 @@ final class SettingsRobot: Robot {
     @discardableResult
     func checkTextExists(_ text: String) -> Self {
         assert(app.staticTexts[text], [.exists])
+    }
+
+    @discardableResult
+    func checkTextBegins(with text: String) -> Self {
+        let textElement = app.staticTexts.matching(
+            NSPredicate(format: "label BEGINSWITH %@", text)
+        ).firstMatch
+        return assert(textElement, [.exists])
     }
 }

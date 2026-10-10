@@ -32,7 +32,7 @@ final class BikeIndexUITests: XCTestCase {
     func test_basic_bike_detail_navigation() throws {
         try MainContentRobot(app)
             .startWithSignIn()
-            .tapFirstOwnedBike()
+            .tapFirstBike(in: Status.found)
             .tapEditButton()
             .tapViewBikeButton()
             .tapEditButton()
@@ -120,8 +120,8 @@ final class BikeIndexUITests: XCTestCase {
             .tapSettings()
 
             .tapUserSettings()
-            .checkTextExists(
-                "Give us permission to contact you if we believe your bike has been stolen,"
+            .checkTextBegins(
+                with: "Give us permission to contact you if we believe your bike has been stolen,"
             )
             .back()
 
