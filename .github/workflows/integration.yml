@@ -44,7 +44,11 @@ jobs:
   test-unit:
     needs: build-tests
     runs-on: xcode-27
-    timeout-minutes: 180
+    # 90m: a healthy run is ~20-25m (fast path, no retries) and up to ~60-90m
+    # with in-plan retryOnFailure churn. Anything beyond that is a hang -- the
+    # per-test timeout (AllTests.xctestplan defaultTestExecutionTimeAllowance) now
+    # kills a wedged test in 2m so a run can no longer silently burn to the cap.
+    timeout-minutes: 90
     name: ${{ matrix.device }} UnitTests ${{ matrix.deployment_target_version }}
     # Still-failing tests (post-retry), newline-separated "<target>/<class>/<method>".
     outputs:
@@ -105,7 +109,10 @@ jobs:
     # broken build or API contract that makes UI test results meaningless.
     needs: [build-tests, test-unit]
     runs-on: xcode-27
-    timeout-minutes: 180
+    # 90m: UI tests are slower than unit tests (app launch + snapshots); a
+    # healthy run is ~30-60m. The per-test timeout bounds any single wedged UI
+    # test so this cap is a hang-detector, not the expected runtime.
+    timeout-minutes: 90
     name: ${{ matrix.device }} UITests ${{ matrix.deployment_target_version }}
     # Still-failing tests (post-retry), newline-separated "<target>/<class>/<method>".
     outputs:
