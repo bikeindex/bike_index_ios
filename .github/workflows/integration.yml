@@ -218,7 +218,7 @@ jobs:
           FAILED_TESTS: ${{ needs.test-unit.outputs['failed-tests'] }}
           DEVICE: ${{ matrix.device }}
         run: |
-          set -euo pipefail
+          set -uo pipefail
           selectors="$(printf '%s\n' "$FAILED_TESTS" | grep -E '^UnitTests/' || true)"
           if [ -z "$selectors" ]; then
             echo "no failing UnitTests selectors; nothing to retry" >&2
@@ -241,6 +241,17 @@ jobs:
             --device="${DEVICE}" \
             --deployment-target-version="${{ matrix.deployment_target_version }}" \
             --test_without_building=true
+          rc=$?
+          # If scan was killed by the step timeout, xcodebuild's post-failure
+          # diagnostics collection keeps running and mutates the xcresult
+          # (simctl_diagnostics files appearing/disappearing) while the
+          # upload-artifact step zips it -> ENOENT and a failed job. Kill
+          # stragglers so the tree is static before we read/upload it.
+          if [ "$rc" -ne 0 ]; then
+            pkill -f "xcodebuild.*-only-testing" 2>/dev/null || true
+            sleep 5
+          fi
+          exit "$rc"
       - name: Collect still-failing tests (post-retry)
         id: collect-failed
         # Always run: on retry success there is nothing to report; on failure or
@@ -249,6 +260,12 @@ jobs:
         if: always()
         run: |
           set -uo pipefail
+          # A timeout cancellation kills the step but not xcodebuild's process
+          # tree on macOS runners; its diagnostics collector keeps mutating
+          # simctl_diagnostics inside the xcresult while a later step reads or
+          # zips it. Kill anything still alive before touching the tree.
+          pkill -f "xcodebuild.*-only-testing" 2>/dev/null || true
+          sleep 5
           report="fastlane/test_output/report.junit"
           if [ ! -f "$report" ]; then
             echo "no post-retry JUnit at $report (retry step may have been killed before scan wrote it)" >&2
@@ -269,6 +286,19 @@ jobs:
               exit 1
             fi
           fi
+      - name: Prune live simulator diagnostics
+        # simctl_diagnostics under the xcresult is a live, mutable tree owned by
+        # any still-draining simulator/xcodebuild processes and is ~180MB of
+        # noise for artifact purposes. Delete it after the collect step (which
+        # only reads report.junit) so upload-artifact zips a static tree and
+        # can't hit ENOENT on files vanishing mid-zip.
+        if: always()
+        run: |
+          set -uo pipefail
+          find fastlane/test_output -type d -name Diagnostics -prune 2>/dev/null | while IFS= read -r d; do
+            echo "removing $d"
+            rm -rf "$d" || true
+          done
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -346,6 +376,14 @@ jobs:
             --device="${DEVICE}" \
             --deployment-target-version="${{ matrix.deployment_target_version }}" \
             --test_without_building=true
+          rc=$?
+          # See retry-unit: kill straggling xcodebuild so the xcresult is
+          # static before the collect/upload steps read it.
+          if [ "$rc" -ne 0 ]; then
+            pkill -f "xcodebuild.*-only-testing" 2>/dev/null || true
+            sleep 5
+          fi
+          exit "$rc"
       - name: Collect still-failing tests (post-retry)
         id: collect-failed
         # Always run: on retry success there is nothing to report; on failure or
@@ -354,6 +392,9 @@ jobs:
         if: always()
         run: |
           set -uo pipefail
+          # See retry-unit: kill stragglers before reading the xcresult.
+          pkill -f "xcodebuild.*-only-testing" 2>/dev/null || true
+          sleep 5
           report="fastlane/test_output/report.junit"
           if [ ! -f "$report" ]; then
             echo "no post-retry JUnit at $report (retry step may have been killed before scan wrote it)" >&2
@@ -374,6 +415,16 @@ jobs:
               exit 1
             fi
           fi
+      - name: Prune live simulator diagnostics
+        # See retry-unit: remove the live simctl_diagnostics tree before upload
+        # so upload-artifact zips a static tree.
+        if: always()
+        run: |
+          set -uo pipefail
+          find fastlane/test_output -type d -name Diagnostics -prune 2>/dev/null | while IFS= read -r d; do
+            echo "removing $d"
+            rm -rf "$d" || true
+          done
       - uses: actions/upload-artifact@v7
         if: always()
         with:
