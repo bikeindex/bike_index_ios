@@ -175,7 +175,7 @@ jobs:
     # Must match the build-tests image/Xcode so --test_without_building works on
     # the cached build products. See build-tests.
     runs-on: xcode-27
-    timeout-minutes: 30
+    timeout-minutes: 60
     name: Retry failed UnitTests on ${{ matrix.device }}
     # Tests still failing after the retry (newline-separated selectors). Emitted
     # even when the retry step times out or is killed, so the "still failing
@@ -210,10 +210,10 @@ jobs:
         # Bound the retry. A hanging/stalling test (e.g. a snapshot test tripping
         # the plan timeout) must not run the job to the 2h+ runner watchdog; a
         # bounded step fails fast and the collect step below still captures the
-        # post-retry JUnit and still-failing list. 30m sits above the observed
-        # 18-33m failing-retry baseline (gives a slow-but-legit pass headroom)
-        # while still cutting the 134m hang by ~70%.
-        timeout-minutes: 30
+        # post-retry JUnit and still-failing list. 60m handles up to ~10
+        # failing tests with retryOnFailure (2 runs each × 2.5m) plus setup.
+        # The per-test timeout (120s) already prevents any single hang.
+        timeout-minutes: 60
         env:
           FAILED_TESTS: ${{ needs.test-unit.outputs['failed-tests'] }}
           DEVICE: ${{ matrix.device }}
@@ -337,7 +337,7 @@ jobs:
     # Must match the build-tests image/Xcode so --test_without_building works on
     # the cached build products. See build-tests.
     runs-on: xcode-27
-    timeout-minutes: 30
+    timeout-minutes: 60
     name: Retry failed UITests on ${{ matrix.device }}
     # Tests still failing after the retry (newline-separated selectors). Emitted
     # even when the retry step times out or is killed, so the "still failing
@@ -371,10 +371,11 @@ jobs:
         id: retry
         # Bound the retry. A hanging/stalling test must not run the job to the
         # 2h+ runner watchdog; a bounded step fails fast and the collect step
-        # below still captures the post-retry JUnit and still-failing list. 30m
-        # sits above the observed 18-33m failing-retry baseline (gives a
-        # slow-but-legit pass headroom) while still cutting the 134m hang by ~70%.
-        timeout-minutes: 30
+        # below still captures the post-retry JUnit and still-failing list. 60m
+        # handles up to ~10 failing tests with retryOnFailure (2 runs each ×
+        # 2.5m) plus setup. The per-test timeout (120s) already prevents any
+        # single hang from running to the runner watchdog.
+        timeout-minutes: 60
         env:
           FAILED_TESTS: ${{ needs.test-ui.outputs['failed-tests'] }}
           DEVICE: ${{ matrix.device }}
