@@ -247,8 +247,14 @@ jobs:
           # (simctl_diagnostics files appearing/disappearing) while the
           # upload-artifact step zips it -> ENOENT and a failed job. Kill
           # stragglers so the tree is static before we read/upload it.
+          #
+          # Use a broad pattern ("xcodebuild") rather than
+          # "xcodebuild.*-only-testing": the orphaned process is a child/worker
+          # spawned by the killed xcodebuild and may not carry the full arg
+          # string in its cmdline. In the retry job the only xcodebuild process
+          # is the one we just ran, so a broad kill is safe.
           if [ "$rc" -ne 0 ]; then
-            pkill -f "xcodebuild.*-only-testing" 2>/dev/null || true
+            pkill -9 -f "xcodebuild" 2>/dev/null || true
             sleep 5
           fi
           exit "$rc"
@@ -264,7 +270,9 @@ jobs:
           # tree on macOS runners; its diagnostics collector keeps mutating
           # simctl_diagnostics inside the xcresult while a later step reads or
           # zips it. Kill anything still alive before touching the tree.
-          pkill -f "xcodebuild.*-only-testing" 2>/dev/null || true
+          # Broad pattern: the orphaned worker may not carry "-only-testing" in
+          # its cmdline.
+          pkill -9 -f "xcodebuild" 2>/dev/null || true
           sleep 5
           report="fastlane/test_output/report.junit"
           if [ ! -f "$report" ]; then
@@ -292,9 +300,26 @@ jobs:
         # noise for artifact purposes. Delete it after the collect step (which
         # only reads report.junit) so upload-artifact zips a static tree and
         # can't hit ENOENT on files vanishing mid-zip.
+        #
+        # Kill stragglers FIRST (broad pattern + verification loop) so the tree
+        # is truly static before we rm. A bare rm races against a still-running
+        # diagnostics writer that re-creates files mid-zip.
         if: always()
         run: |
           set -uo pipefail
+          # Kill any remaining xcodebuild/simctl processes and wait for them
+          # to actually exit (up to 30s). The broad "xcodebuild" pattern
+          # catches orphaned worker processes that lack the -only-testing arg.
+          pkill -9 -f "xcodebuild" 2>/dev/null || true
+          for i in 1 2 3 4 5 6; do
+            if ! pgrep -f "xcodebuild" > /dev/null 2>&1; then
+              break
+            fi
+            echo "xcodebuild still alive after $((i * 5))s; re-killing"
+            sleep 5
+            pkill -9 -f "xcodebuild" 2>/dev/null || true
+          done
+          # Now remove the Diagnostics tree — it's static.
           find fastlane/test_output -type d -name Diagnostics -prune 2>/dev/null | while IFS= read -r d; do
             echo "removing $d"
             rm -rf "$d" || true
@@ -380,7 +405,7 @@ jobs:
           # See retry-unit: kill straggling xcodebuild so the xcresult is
           # static before the collect/upload steps read it.
           if [ "$rc" -ne 0 ]; then
-            pkill -f "xcodebuild.*-only-testing" 2>/dev/null || true
+            pkill -9 -f "xcodebuild" 2>/dev/null || true
             sleep 5
           fi
           exit "$rc"
@@ -393,7 +418,7 @@ jobs:
         run: |
           set -uo pipefail
           # See retry-unit: kill stragglers before reading the xcresult.
-          pkill -f "xcodebuild.*-only-testing" 2>/dev/null || true
+          pkill -9 -f "xcodebuild" 2>/dev/null || true
           sleep 5
           report="fastlane/test_output/report.junit"
           if [ ! -f "$report" ]; then
@@ -416,11 +441,20 @@ jobs:
             fi
           fi
       - name: Prune live simulator diagnostics
-        # See retry-unit: remove the live simctl_diagnostics tree before upload
-        # so upload-artifact zips a static tree.
+        # See retry-unit: kill stragglers + remove the live simctl_diagnostics
+        # tree before upload so upload-artifact zips a static tree.
         if: always()
         run: |
           set -uo pipefail
+          pkill -9 -f "xcodebuild" 2>/dev/null || true
+          for i in 1 2 3 4 5 6; do
+            if ! pgrep -f "xcodebuild" > /dev/null 2>&1; then
+              break
+            fi
+            echo "xcodebuild still alive after $((i * 5))s; re-killing"
+            sleep 5
+            pkill -9 -f "xcodebuild" 2>/dev/null || true
+          done
           find fastlane/test_output -type d -name Diagnostics -prune 2>/dev/null | while IFS= read -r d; do
             echo "removing $d"
             rm -rf "$d" || true
