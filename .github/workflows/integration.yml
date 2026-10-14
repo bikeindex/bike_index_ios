@@ -140,6 +140,12 @@ jobs:
         uses: ./.github/actions/setup-xcconfig
         with:
           honeybadger_api_key: ${{ secrets.HONEYBADGER_API_KEY }}
+      - name: Validate sandbox (OAuth + stickers)
+        run: |
+          set -euo pipefail
+          API_CLIENT_ID=$(grep '^API_CLIENT_ID' BikeIndex-development.xcconfig | awk '{print $3}')
+          export API_CLIENT_ID
+          ruby scripts/validate-sandbox.rb
       - name: UITests on ${{ matrix.device }} ${{ matrix.deployment_target_version }}
         run: fastlane scan --only-testing="UITests" --device="${{ matrix.device }}" --deployment-target-version="${{ matrix.deployment_target_version }}" --test_without_building=true
       - name: Collect still-failing tests
