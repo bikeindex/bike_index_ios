@@ -69,10 +69,10 @@ struct ContentBikeButtonView: View {
         status: .withOwner,
         stolenCoordinateLatitude: 0,
         stolenCoordinateLongitude: 0,
-        largeImage: URL(string: "https://placekitten.com/200/200"),
+        largeImage: URL(string: "https://placecats.com/200/200"),
         url: URL(string: "about:blank").unsafelyUnwrapped,
         publicImages: [
-            "https://placekitten.com/200/200"
+            "https://placecats.com/200/200"
         ]
     )
 
@@ -86,10 +86,10 @@ struct ContentBikeButtonView: View {
         status: .withOwner,
         stolenCoordinateLatitude: 0,
         stolenCoordinateLongitude: 0,
-        largeImage: URL(string: "https://placekitten.com/500/200"),
+        largeImage: URL(string: "https://placecats.com/500/200"),
         url: URL(string: "about:blank").unsafelyUnwrapped,
         publicImages: [
-            "https://placekitten.com/200/200"
+            "https://placecats.com/200/200"
         ]
     )
 
@@ -102,10 +102,10 @@ struct ContentBikeButtonView: View {
         status: .withOwner,
         stolenCoordinateLatitude: 0,
         stolenCoordinateLongitude: 0,
-        largeImage: URL(string: "https://placekitten.com/200/500"),
+        largeImage: URL(string: "https://placecats.com/200/500"),
         url: URL(string: "about:blank").unsafelyUnwrapped,
         publicImages: [
-            "https://placekitten.com/200/200"
+            "https://placecats.com/200/200"
         ]
     )
 
@@ -121,7 +121,7 @@ struct ContentBikeButtonView: View {
         largeImage: nil,
         url: URL(string: "about:blank").unsafelyUnwrapped,
         publicImages: [
-            "https://placekitten.com/200/200"
+            "https://placecats.com/200/200"
         ]
     )
 
