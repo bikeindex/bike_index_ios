@@ -15,11 +15,45 @@
 
 default_platform(:ios)
 
+# Ensure an available simulator with an exact name match exists so xcodebuild
+# never falls back to `simctl clone` (which fails on CI when the template
+# device references a runtime bundle missing from the runner image).
+ensure_simulator = lambda do |device|
+  raise "ensure_simulator requires a device" if device.to_s.empty?
+
+  sh("xcrun simctl delete unavailable")
+
+  if sh("xcrun simctl list devices available").include?("  #{device} (")
+    UI.message("Using existing simulator: #{device}")
+    return true
+  end
+
+  runtimes = JSON.parse(sh("xcrun simctl list runtimes --json"))["runtimes"]
+  ios = runtimes.select do |r|
+    r["name"].to_s.start_with?("iOS") && r["isAvailable"] &&
+      Array(r["supportedDeviceTypes"]).any? { |t| t["name"] == device }
+  end
+  ios.sort_by! { |r| r["version"].split(".").map(&:to_i) }.reverse!
+  raise "ensure_simulator: no installed iOS runtime supports '#{device}'" if ios.empty?
+
+  runtime = ios.first
+  device_type = Array(runtime["supportedDeviceTypes"]).find { |t| t["name"] == device }
+  sh("xcrun simctl create '#{device}' '#{device_type["identifier"]}'")
+  UI.message("Created simulator: #{device} on #{runtime["name"]}")
+end
+
+# CI invokes scan directly (`fastlane scan --device=...`), bypassing lanes.
+before_all do |lane, parameters|
+  device = parameters[:device] || lane.parameters[:device]
+  ensure_simulator.call(device) if device
+end
+
 platform :ios do
   # ------ Continuous Integration ------
 
   desc "Run test suite on iPhone 17"
   lane :tests_iphone17 do
+    ensure_simulator.call("iPhone 17")
     # See Scanfile for default configuration
     scan(
       devices: ["iPhone 17"],
@@ -29,6 +63,7 @@ platform :ios do
 
   desc "Run test suite on iPhone 18 Pro"
   lane :tests_iphone18pro do
+    ensure_simulator.call("iPhone 18 Pro")
     # See Scanfile for default configuration
     scan(
       devices: ["iPhone 18 Pro"],
@@ -38,6 +73,7 @@ platform :ios do
 
   desc "Run test suite on iPad (A16)"
   lane :tests_ipad do
+    ensure_simulator.call("iPad (A16)")
     # See Scanfile for default configuration
     scan(
       devices: ["iPad (A16)"],
