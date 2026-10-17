@@ -89,7 +89,6 @@ extension MainContentPage {
         /// - Parameter client: App network Client to perform network requests.
         /// - Parameter modelContext: SwiftData modelContext to do work on
         /// - Throws: ViewModel.Error
-        @MainActor
         func fetchProfile(client: Client, modelContext: ModelContext)
             async
             throws(ViewModel.Error)
@@ -187,7 +186,6 @@ extension MainContentPage {
         /// - Parameter client: App network Client to perform network requests.
         /// - Parameter modelContext: SwiftData modelContext to do work on
         /// - Throws: ViewModel.Error
-        @MainActor
         func fetchBikes(client: Client, modelContext: ModelContext)
             async
             throws(ViewModel.Error)

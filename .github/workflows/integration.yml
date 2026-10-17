@@ -44,7 +44,11 @@ jobs:
   test-unit:
     needs: build-tests
     runs-on: xcode-27
-    timeout-minutes: 180
+    # 90m: a healthy run is ~20-25m (fast path, no retries) and up to ~60-90m
+    # with in-plan retryOnFailure churn. Anything beyond that is a hang -- the
+    # per-test timeout (AllTests.xctestplan defaultTestExecutionTimeAllowance) now
+    # kills a wedged test in 2m so a run can no longer silently burn to the cap.
+    timeout-minutes: 90
     name: ${{ matrix.device }} UnitTests ${{ matrix.deployment_target_version }}
     # Still-failing tests (post-retry), newline-separated "<target>/<class>/<method>".
     outputs:
@@ -60,6 +64,8 @@ jobs:
           ref: ${{ github.ref }}
       - name: Set Xcode 27
         run: sudo xcode-select -s /Applications/Xcode_27.0.app
+      - name: Install tools
+        run: brew bundle install
       - name: Restore cached build products
         id: cache-build-restore
         uses: actions/cache/restore@v5
@@ -75,17 +81,21 @@ jobs:
       - name: Collect still-failing tests
         id: collect-failed
         if: failure()
-        env:
-          DEVICE: ${{ matrix.device }}
         run: |
           set -euo pipefail
-          report="fastlane/test_output/test_output_${DEVICE}_UnitTests/report.junit"
+          # scan writes the JUnit to <output_directory>/report.junit. The default
+          # output_directory is fastlane/test_output (see fastlane/Scanfile) -- NOT
+          # a per-device/per-target subdirectory. A wrong path leaves failed-tests
+          # empty, which silently skips the retry job.
+          report="fastlane/test_output/report.junit"
           if [ ! -f "$report" ]; then
             echo "no JUnit report at $report; nothing to re-run" >&2
             printf 'failed-tests<<EOF\nEOF\n' >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          failed=$(ruby scripts/failed-test-configurations.rb "$report")
+          # The target (first selector segment) is known here; pass it explicitly.
+          failed="$(ruby scripts/failed-test-configurations.rb "$report" "UnitTests")"
+          echo "still-failing UnitTests:"; printf '%s\n' "$failed"
           printf 'failed-tests<<EOF\n%s\nEOF\n' "$failed" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v7
         if: always()
@@ -99,7 +109,10 @@ jobs:
     # broken build or API contract that makes UI test results meaningless.
     needs: [build-tests, test-unit]
     runs-on: xcode-27
-    timeout-minutes: 180
+    # 90m: UI tests are slower than unit tests (app launch + snapshots); a
+    # healthy run is ~30-60m. The per-test timeout bounds any single wedged UI
+    # test so this cap is a hang-detector, not the expected runtime.
+    timeout-minutes: 90
     name: ${{ matrix.device }} UITests ${{ matrix.deployment_target_version }}
     # Still-failing tests (post-retry), newline-separated "<target>/<class>/<method>".
     outputs:
@@ -115,6 +128,8 @@ jobs:
           ref: ${{ github.ref }}
       - name: Set Xcode 27
         run: sudo xcode-select -s /Applications/Xcode_27.0.app
+      - name: Install tools
+        run: brew bundle install
       - name: Restore cached build products
         id: cache-build-restore
         uses: actions/cache/restore@v5
@@ -125,22 +140,32 @@ jobs:
         uses: ./.github/actions/setup-xcconfig
         with:
           honeybadger_api_key: ${{ secrets.HONEYBADGER_API_KEY }}
+      - name: Validate sandbox (OAuth + stickers)
+        run: |
+          set -euo pipefail
+          API_CLIENT_ID=$(grep '^API_CLIENT_ID' BikeIndex-development.xcconfig | awk '{print $3}')
+          export API_CLIENT_ID
+          ruby scripts/validate-sandbox.rb
       - name: UITests on ${{ matrix.device }} ${{ matrix.deployment_target_version }}
         run: fastlane scan --only-testing="UITests" --device="${{ matrix.device }}" --deployment-target-version="${{ matrix.deployment_target_version }}" --test_without_building=true
       - name: Collect still-failing tests
         id: collect-failed
         if: failure()
-        env:
-          DEVICE: ${{ matrix.device }}
         run: |
           set -euo pipefail
-          report="fastlane/test_output/test_output_${DEVICE}_UITests/report.junit"
+          # scan writes the JUnit to <output_directory>/report.junit. The default
+          # output_directory is fastlane/test_output (see fastlane/Scanfile) -- NOT
+          # a per-device/per-target subdirectory. A wrong path leaves failed-tests
+          # empty, which silently skips the retry job.
+          report="fastlane/test_output/report.junit"
           if [ ! -f "$report" ]; then
             echo "no JUnit report at $report; nothing to re-run" >&2
             printf 'failed-tests<<EOF\nEOF\n' >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          failed=$(ruby scripts/failed-test-configurations.rb "$report")
+          # The target (first selector segment) is known here; pass it explicitly.
+          failed="$(ruby scripts/failed-test-configurations.rb "$report" "UITests")"
+          echo "still-failing UITests:"; printf '%s\n' "$failed"
           printf 'failed-tests<<EOF\n%s\nEOF\n' "$failed" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v7
         if: always()
@@ -156,8 +181,13 @@ jobs:
     # Must match the build-tests image/Xcode so --test_without_building works on
     # the cached build products. See build-tests.
     runs-on: xcode-27
-    timeout-minutes: 180
+    timeout-minutes: 60
     name: Retry failed UnitTests on ${{ matrix.device }}
+    # Tests still failing after the retry (newline-separated selectors). Emitted
+    # even when the retry step times out or is killed, so the "still failing
+    # post-retry" signal is never lost.
+    outputs:
+      still-failing: ${{ steps.collect-failed.outputs.still-failing }}
     strategy:
       matrix:
         device: ["iPhone 17"]
@@ -183,21 +213,123 @@ jobs:
           honeybadger_api_key: ${{ secrets.HONEYBADGER_API_KEY }}
       - name: Retry failing UnitTests
         id: retry
+        # Bound the retry. A hanging/stalling test (e.g. a snapshot test tripping
+        # the plan timeout) must not run the job to the 2h+ runner watchdog; a
+        # bounded step fails fast and the collect step below still captures the
+        # post-retry JUnit and still-failing list. 60m handles up to ~10
+        # failing tests with retryOnFailure (2 runs each × 2.5m) plus setup.
+        # The per-test timeout (120s) already prevents any single hang.
+        timeout-minutes: 60
         env:
           FAILED_TESTS: ${{ needs.test-unit.outputs['failed-tests'] }}
           DEVICE: ${{ matrix.device }}
         run: |
-          set -euo pipefail
-          cell_selectors="$(printf '%s\n' "$FAILED_TESTS" | grep -E "^UnitTests/" | tr '\n' ' ' | sed 's/ $//')"
-          if [ -z "$cell_selectors" ]; then
+          set -uo pipefail
+          selectors="$(printf '%s\n' "$FAILED_TESTS" | grep -E '^UnitTests/' || true)"
+          if [ -z "$selectors" ]; then
             echo "no failing UnitTests selectors; nothing to retry" >&2
             exit 0
           fi
+          # -only-testing (NOT -only-test-configuration, which selects test-plan
+          # configurations, not tests) takes <Target>/<Class>/<Method> identifiers.
+          # Snapshot-test method names contain spaces (e.g. "portrait-Main Content
+          # Page-0-16"), so a single space-joined value is ambiguous. xcodebuild
+          # reads a newline-delimited response file via -only-testing:@<file>,
+          # treating each line as one full identifier (internal spaces preserved).
+          # $GITHUB_WORKSPACE is preserved across steps (mktemp is not), so the
+          # post-retry collect step can re-read these expected selectors to run
+          # the vacuous-run guard.
+          identifiers="${GITHUB_WORKSPACE}/.retry-unit-expected.txt"
+          printf '%s\n' "$selectors" > "$identifiers"
+          echo "retrying UnitTests:"; cat "$identifiers"
           fastlane scan \
-            --only-test-configurations="$cell_selectors" \
+            --xcargs="-only-testing:@$identifiers" \
             --device="${DEVICE}" \
             --deployment-target-version="${{ matrix.deployment_target_version }}" \
             --test_without_building=true
+          rc=$?
+          # If scan was killed by the step timeout, xcodebuild's post-failure
+          # diagnostics collection keeps running and mutates the xcresult
+          # (simctl_diagnostics files appearing/disappearing) while the
+          # upload-artifact step zips it -> ENOENT and a failed job. Kill
+          # stragglers so the tree is static before we read/upload it.
+          #
+          # Use a broad pattern ("xcodebuild") rather than
+          # "xcodebuild.*-only-testing": the orphaned process is a child/worker
+          # spawned by the killed xcodebuild and may not carry the full arg
+          # string in its cmdline. In the retry job the only xcodebuild process
+          # is the one we just ran, so a broad kill is safe.
+          if [ "$rc" -ne 0 ]; then
+            pkill -9 -f "xcodebuild" 2>/dev/null || true
+            sleep 5
+          fi
+          exit "$rc"
+      - name: Collect still-failing tests (post-retry)
+        id: collect-failed
+        # Always run: on retry success there is nothing to report; on failure or
+        # timeout it captures the JUnit and emits the still-failing selectors so
+        # the outcome is visible even when the retry step is killed mid-run.
+        if: always()
+        run: |
+          set -uo pipefail
+          # A timeout cancellation kills the step but not xcodebuild's process
+          # tree on macOS runners; its diagnostics collector keeps mutating
+          # simctl_diagnostics inside the xcresult while a later step reads or
+          # zips it. Kill anything still alive before touching the tree.
+          # Broad pattern: the orphaned worker may not carry "-only-testing" in
+          # its cmdline.
+          pkill -9 -f "xcodebuild" 2>/dev/null || true
+          sleep 5
+          report="fastlane/test_output/report.junit"
+          if [ ! -f "$report" ]; then
+            echo "no post-retry JUnit at $report (retry step may have been killed before scan wrote it)" >&2
+            printf 'still-failing<<EOF\nEOF\n' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          still="$(ruby scripts/failed-test-configurations.rb "$report" "UnitTests")"
+          echo "still-failing UnitTests after retry:"
+          if [ -n "$still" ]; then printf '%s\n' "$still"; else echo "  (none -- retry passed)"; fi
+          printf 'still-failing<<EOF\n%s\nEOF\n' "$still" >> "$GITHUB_OUTPUT"
+          # Vacuous-run guard: prove the -only-testing selectors actually matched
+          # a test. A malformed selector makes scan run zero tests and "pass",
+          # masking the real failure -- fail loudly instead.
+          expected="${GITHUB_WORKSPACE}/.retry-unit-expected.txt"
+          if [ -f "$expected" ] && [ -n "$(cat "$expected" 2>/dev/null)" ]; then
+            if ! ruby scripts/failed-test-configurations.rb --guard "$report" "UnitTests" "$expected"; then
+              echo "::error::retry-unit guard failed: expected selectors matched no executed test (vacuous retry)" >&2
+              exit 1
+            fi
+          fi
+      - name: Prune live simulator diagnostics
+        # simctl_diagnostics under the xcresult is a live, mutable tree owned by
+        # any still-draining simulator/xcodebuild processes and is ~180MB of
+        # noise for artifact purposes. Delete it after the collect step (which
+        # only reads report.junit) so upload-artifact zips a static tree and
+        # can't hit ENOENT on files vanishing mid-zip.
+        #
+        # Kill stragglers FIRST (broad pattern + verification loop) so the tree
+        # is truly static before we rm. A bare rm races against a still-running
+        # diagnostics writer that re-creates files mid-zip.
+        if: always()
+        run: |
+          set -uo pipefail
+          # Kill any remaining xcodebuild/simctl processes and wait for them
+          # to actually exit (up to 30s). The broad "xcodebuild" pattern
+          # catches orphaned worker processes that lack the -only-testing arg.
+          pkill -9 -f "xcodebuild" 2>/dev/null || true
+          for i in 1 2 3 4 5 6; do
+            if ! pgrep -f "xcodebuild" > /dev/null 2>&1; then
+              break
+            fi
+            echo "xcodebuild still alive after $((i * 5))s; re-killing"
+            sleep 5
+            pkill -9 -f "xcodebuild" 2>/dev/null || true
+          done
+          # Now remove the Diagnostics tree — it's static.
+          find fastlane/test_output -type d -name Diagnostics -prune 2>/dev/null | while IFS= read -r d; do
+            echo "removing $d"
+            rm -rf "$d" || true
+          done
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -211,8 +343,13 @@ jobs:
     # Must match the build-tests image/Xcode so --test_without_building works on
     # the cached build products. See build-tests.
     runs-on: xcode-27
-    timeout-minutes: 180
+    timeout-minutes: 60
     name: Retry failed UITests on ${{ matrix.device }}
+    # Tests still failing after the retry (newline-separated selectors). Emitted
+    # even when the retry step times out or is killed, so the "still failing
+    # post-retry" signal is never lost.
+    outputs:
+      still-failing: ${{ steps.collect-failed.outputs.still-failing }}
     strategy:
       matrix:
         device: ["iPhone 17"]
@@ -238,21 +375,97 @@ jobs:
           honeybadger_api_key: ${{ secrets.HONEYBADGER_API_KEY }}
       - name: Retry failing UITests
         id: retry
+        # Bound the retry. A hanging/stalling test must not run the job to the
+        # 2h+ runner watchdog; a bounded step fails fast and the collect step
+        # below still captures the post-retry JUnit and still-failing list. 60m
+        # handles up to ~10 failing tests with retryOnFailure (2 runs each ×
+        # 2.5m) plus setup. The per-test timeout (120s) already prevents any
+        # single hang from running to the runner watchdog.
+        timeout-minutes: 60
         env:
           FAILED_TESTS: ${{ needs.test-ui.outputs['failed-tests'] }}
           DEVICE: ${{ matrix.device }}
         run: |
           set -euo pipefail
-          cell_selectors="$(printf '%s\n' "$FAILED_TESTS" | grep -E "^UITests/" | tr '\n' ' ' | sed 's/ $//')"
-          if [ -z "$cell_selectors" ]; then
+          selectors="$(printf '%s\n' "$FAILED_TESTS" | grep -E '^UITests/' || true)"
+          if [ -z "$selectors" ]; then
             echo "no failing UITests selectors; nothing to retry" >&2
             exit 0
           fi
+          # -only-testing (NOT -only-test-configuration, which selects test-plan
+          # configurations, not tests) takes <Target>/<Class>/<Method> identifiers.
+          # Method names can contain spaces, so a single space-joined value is
+          # ambiguous. xcodebuild reads a newline-delimited response file via
+          # -only-testing:@<file>, treating each line as one full identifier.
+          # $GITHUB_WORKSPACE is preserved across steps (mktemp is not), so the
+          # post-retry collect step can re-read these expected selectors to run
+          # the vacuous-run guard.
+          identifiers="${GITHUB_WORKSPACE}/.retry-ui-expected.txt"
+          printf '%s\n' "$selectors" > "$identifiers"
+          echo "retrying UITests:"; cat "$identifiers"
           fastlane scan \
-            --only-test-configurations="$cell_selectors" \
+            --xcargs="-only-testing:@$identifiers" \
             --device="${DEVICE}" \
             --deployment-target-version="${{ matrix.deployment_target_version }}" \
             --test_without_building=true
+          rc=$?
+          # See retry-unit: kill straggling xcodebuild so the xcresult is
+          # static before the collect/upload steps read it.
+          if [ "$rc" -ne 0 ]; then
+            pkill -9 -f "xcodebuild" 2>/dev/null || true
+            sleep 5
+          fi
+          exit "$rc"
+      - name: Collect still-failing tests (post-retry)
+        id: collect-failed
+        # Always run: on retry success there is nothing to report; on failure or
+        # timeout it captures the JUnit and emits the still-failing selectors so
+        # the outcome is visible even when the retry step is killed mid-run.
+        if: always()
+        run: |
+          set -uo pipefail
+          # See retry-unit: kill stragglers before reading the xcresult.
+          pkill -9 -f "xcodebuild" 2>/dev/null || true
+          sleep 5
+          report="fastlane/test_output/report.junit"
+          if [ ! -f "$report" ]; then
+            echo "no post-retry JUnit at $report (retry step may have been killed before scan wrote it)" >&2
+            printf 'still-failing<<EOF\nEOF\n' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          still="$(ruby scripts/failed-test-configurations.rb "$report" "UITests")"
+          echo "still-failing UITests after retry:"
+          if [ -n "$still" ]; then printf '%s\n' "$still"; else echo "  (none -- retry passed)"; fi
+          printf 'still-failing<<EOF\n%s\nEOF\n' "$still" >> "$GITHUB_OUTPUT"
+          # Vacuous-run guard: prove the -only-testing selectors actually matched
+          # a test. A malformed selector makes scan run zero tests and "pass",
+          # masking the real failure -- fail loudly instead.
+          expected="${GITHUB_WORKSPACE}/.retry-ui-expected.txt"
+          if [ -f "$expected" ] && [ -n "$(cat "$expected" 2>/dev/null)" ]; then
+            if ! ruby scripts/failed-test-configurations.rb --guard "$report" "UITests" "$expected"; then
+              echo "::error::retry-ui guard failed: expected selectors matched no executed test (vacuous retry)" >&2
+              exit 1
+            fi
+          fi
+      - name: Prune live simulator diagnostics
+        # See retry-unit: kill stragglers + remove the live simctl_diagnostics
+        # tree before upload so upload-artifact zips a static tree.
+        if: always()
+        run: |
+          set -uo pipefail
+          pkill -9 -f "xcodebuild" 2>/dev/null || true
+          for i in 1 2 3 4 5 6; do
+            if ! pgrep -f "xcodebuild" > /dev/null 2>&1; then
+              break
+            fi
+            echo "xcodebuild still alive after $((i * 5))s; re-killing"
+            sleep 5
+            pkill -9 -f "xcodebuild" 2>/dev/null || true
+          done
+          find fastlane/test_output -type d -name Diagnostics -prune 2>/dev/null | while IFS= read -r d; do
+            echo "removing $d"
+            rm -rf "$d" || true
+          done
       - uses: actions/upload-artifact@v7
         if: always()
         with:

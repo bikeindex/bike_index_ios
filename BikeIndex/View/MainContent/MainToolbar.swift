@@ -115,6 +115,10 @@ extension MainContentPage {
     @Previewable @State var groupMode = MainContentPage.ViewModel.GroupMode.byStatus
     @Previewable @State var sortOrder: SortOrder = .forward
     @Previewable @State var displayRecentlyScannedStickers = false
+    let container = try! ModelContainer(
+        for: ScannedBike.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+
     NavigationStack {
         Text("Toolbar preview")
             .toolbar {
@@ -127,4 +131,5 @@ extension MainContentPage {
             }
     }
     .environment(try! Client())
+    .modelContainer(container)
 }

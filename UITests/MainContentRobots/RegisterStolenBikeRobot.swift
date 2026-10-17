@@ -12,7 +12,7 @@ final class RegisterStolenBikeRobot: Robot {
 
     private var whatToDoPageHeading: XCUIElement {
         app.webViews.staticTexts.matching(
-            NSPredicate(format: "label CONTAINS 'What to do if your bike is stolen'")
+            NSPredicate(format: "label CONTAINS 'Your bike is gone. Here is the next hour.'")
         ).firstMatch
     }
 
@@ -20,7 +20,7 @@ final class RegisterStolenBikeRobot: Robot {
 
     private var howToPageHeading: XCUIElement {
         app.webViews.staticTexts.matching(
-            NSPredicate(format: "label CONTAINS 'Bike Index is the #1 resource'")
+            NSPredicate(format: "label CONTAINS 'How to get your stolen bike back'")
         ).firstMatch
     }
 
@@ -45,7 +45,7 @@ final class RegisterStolenBikeRobot: Robot {
             // failure; only record the assertion once we actually saw the page load.
             let loaded = heading.waitForExistence(timeout: Self.pageLoadTimeout)
             if loaded {
-                self.assert(heading, [.exists], timeout: 1)
+                self.assert(heading, [.exists], timeout: 30)
             } else {
                 print(
                     "[\(self)] \(button.label) page heading not loaded after \(Self.pageLoadTimeout)s"

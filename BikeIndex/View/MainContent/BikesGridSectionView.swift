@@ -46,9 +46,7 @@ struct BikesGridSectionView: View {
             .padding()
         } header: {
             Button {
-                withAnimation(Animation.smooth(duration: 1.0, extraBounce: 2.0)) {
-                    isExpanded.toggle()
-                }
+                isExpanded.toggle()
             } label: {
                 ZStack {
                     Text(section)

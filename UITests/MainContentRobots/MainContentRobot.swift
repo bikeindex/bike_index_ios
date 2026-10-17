@@ -13,6 +13,8 @@ protocol MainContentSection: RawRepresentable {
     var headerIdentifier: String { get }
     /// The section's substring used as part of Bikes accessibility identifier in this section
     var bikeIdentifier: String { get }
+    /// The ``GroupMode`` this section belongs to
+    var groupMode: GroupMode { get }
 }
 
 /// Partial clone of `MainContentPage.ViewModel.GroupMode` because UITests don't import BikeIndex module (and all its dependencies)
@@ -28,7 +30,7 @@ enum Manufacturer: String, MainContentSection {
 
     var headerIdentifier: String { "Section toggle \(rawValue.capitalized)" }
     var bikeIdentifier: String { rawValue.capitalized }
-    static var groupMode: GroupMode { .byManufacturer }
+    var groupMode: GroupMode { .byManufacturer }
 }
 
 /// Partial clone of `BikeStatus` because UITests don't import BikeIndex module (and all its dependencies)
@@ -39,7 +41,7 @@ enum Status: String, MainContentSection {
 
     var headerIdentifier: String { rawValue.capitalized }
     var bikeIdentifier: String { rawValue.capitalized }
-    static var groupMode: GroupMode { .byStatus }
+    var groupMode: GroupMode { .byStatus }
 }
 
 // MARK: -
@@ -83,16 +85,16 @@ final class MainContentRobot: Robot {
         return BikeDetailRobot(app)
     }
 
+    /// Tap the first bike in the given section, ensuring bikes are grouped by the section's ``MainContentSection/groupMode`` so its identifier is stable.
     @discardableResult
-    func tapFirstOwnedBike() -> BikeDetailRobot {
-        // Ensure bikes are grouped by status so the "With owner" section identifier is stable.
+    func tapFirstBike(in section: any MainContentSection) -> BikeDetailRobot {
         tapGroupingMenuButton()
-        tapGroupButton(for: Status.groupMode)
+        tapGroupButton(for: section.groupMode)
         dismissGroupingMenuButton()
 
-        let ownedBike = app.buttons["Bike \(Status.withOwner.bikeIdentifier)-1"]
-        assert(ownedBike, [.exists])
-        tap(ownedBike)
+        let firstBike = app.buttons["Bike \(section.bikeIdentifier)-1"]
+        assert(firstBike, [.exists])
+        tap(firstBike)
 
         return BikeDetailRobot(app)
     }

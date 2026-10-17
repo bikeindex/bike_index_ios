@@ -18,6 +18,22 @@ reset_simulator(true)
 force_quit_simulator(true)
 include_simulator_logs(false)
 
+# Use xcbeautify (NOT the default xcpretty) as the xcodebuild formatter. This
+# makes scan write test_output/report.junit from the xcresult (trainer) instead
+# of from xcpretty. xcpretty's JUnit omits Swift Testing tests entirely, so the
+# CI retry (scripts/failed-test-configurations.rb) would never see their
+# failures; the xcresult-based report includes both XCTest and Swift Testing
+# tests (and scan's pass/fail is read from the xcresult either way). xcbeautify
+# is installed via the Brewfile in every job that runs `fastlane scan`
+# (see .github/workflows/integration.yml).
+xcodebuild_formatter("xcbeautify")
+
+# Only ask scan for the JUnit report. The default output_types is "html,junit",
+# and with a non-xcpretty formatter scan prints a warning that HTML (and the
+# other output_types) are unsupported. JUnit here is still generated from the
+# xcresult by trainer (report.junit), which is what the CI retry parses.
+output_types("junit")
+
 # Retries are configured in AllTests.xctestplan
 
 # Output Fastlane build prodcuts in a local directory

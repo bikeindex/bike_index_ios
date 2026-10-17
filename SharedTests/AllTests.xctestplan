@@ -9,19 +9,14 @@
     }
   ],
   "defaultOptions" : {
-    "environmentVariableEntries" : [
-      {
-        "key" : "EMERGE_IS_RUNNING_FOR_SNAPSHOTS",
-        "value" : "1"
-      }
-    ],
+    "defaultTestExecutionTimeAllowance" : 120,
     "repeatInNewRunnerProcess" : true,
     "targetForVariableExpansion" : {
       "containerPath" : "container:BikeIndex.xcodeproj",
       "identifier" : "04F4B8F62B098ADB009442B5",
       "name" : "BikeIndex"
     },
-    "maximumTestRepetitions" : 4,
+    "maximumTestRepetitions" : 2,
     "testExecutionOrdering" : "random",
     "testRepetitionMode" : "retryOnFailure",
     "testTimeoutsEnabled" : true
@@ -39,6 +34,12 @@
       }
     },
     {
+      "environmentVariableEntries" : [
+        {
+          "key" : "EMERGE_IS_RUNNING_FOR_SNAPSHOTS",
+          "value" : "1"
+        }
+      ],
       "skippedTests" : [
         "BikeIndexAppAccessibilityPreviewTest",
         "BikeIndexUITests\/testLaunchPerformance()",
