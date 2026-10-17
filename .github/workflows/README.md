@@ -107,7 +107,7 @@ consumption path is correct.
 cached build products:
 ```sh
 fastlane scan --xcargs="-only-testing:UnitTests/<Class>/<method>" \
-  --device="iPhone 17" --test_without_building=true
+  --device="iPhone 18 Pro" --test_without_building=true
 ```
 then confirm the post-run JUnit contains exactly that test. (Mirror the
 workflow's newline-delimited `-only-testing:@<file>` form when a method name

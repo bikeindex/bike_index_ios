@@ -51,22 +51,22 @@ end
 platform :ios do
   # ------ Continuous Integration ------
 
-  desc "Run test suite on iPhone 17"
-  lane :tests_iphone17 do
-    ensure_simulator.call("iPhone 17")
-    # See Scanfile for default configuration
-    scan(
-      devices: ["iPhone 17"],
-      deployment_target_version: "27.0"
-    )
-  end
-
   desc "Run test suite on iPhone 18 Pro"
   lane :tests_iphone18pro do
     ensure_simulator.call("iPhone 18 Pro")
     # See Scanfile for default configuration
     scan(
       devices: ["iPhone 18 Pro"],
+      deployment_target_version: "27.0"
+    )
+  end
+
+  desc "Run test suite on iPhone 17"
+  lane :tests_iphone17 do
+    ensure_simulator.call("iPhone 17")
+    # See Scanfile for default configuration
+    scan(
+      devices: ["iPhone 17"],
       deployment_target_version: "27.0"
     )
   end

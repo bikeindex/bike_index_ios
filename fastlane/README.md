@@ -15,6 +15,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## iOS
 
+### ios tests_iphone18pro
+
+```sh
+[bundle exec] fastlane ios tests_iphone18pro
+```
+
+Run test suite on iPhone 18 Pro
+
 ### ios tests_iphone17
 
 ```sh
@@ -22,14 +30,6 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 ```
 
 Run test suite on iPhone 17
-
-### ios tests_iphone17pro
-
-```sh
-[bundle exec] fastlane ios tests_iphone17pro
-```
-
-Run test suite on iPhone 17 Pro
 
 ### ios tests_ipad
 
