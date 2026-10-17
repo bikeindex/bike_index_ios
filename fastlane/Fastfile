@@ -15,56 +15,64 @@
 
 default_platform(:ios)
 
+# Ensure a usable iOS simulator with an exact name match exists before
+# scanning, so xcodebuild never falls back to `simctl clone`.
+#
+# xcodebuild resolves a destination like "platform=iOS Simulator,name=iPhone
+# 17" against *available* devices; when none matches it clones a template
+# device. CI runner images keep only their pinned iOS runtime (watchOS/tvOS
+# runtimes are never installed), leaving device entries that reference
+# missing runtime bundles. Cloning such a template fails with e.g.:
+#   Failed to clone device named 'iPhone 17'. (Underlying Error: Unable to
+#   clone device due to missing runtime bundle: Apple Watch Ultra 4 ...)
+#
+# This (1) deletes devices whose runtime is missing and (2) creates the
+# requested device if no available device with the exact name exists. Both
+# commands are idempotent; run before every scan invocation.
+ensure_simulator = lambda do |device|
+  raise "ensure_simulator requires a device" if device.to_s.empty?
+
+  # Drop devices that reference runtimes no longer present on this image.
+  # Harmless no-op when the device database is already clean.
+  sh("xcrun simctl delete unavailable")
+
+  # Exact-match check against the same available set xcodebuild considers.
+  if sh("xcrun simctl list devices available").include?("  #{device} (")
+    UI.message("Using existing simulator: #{device}")
+    return true
+  end
+
+  # No matching device: create one on the newest installed iOS runtime.
+  # `list runtimes` only reports runtimes actually installed on the image.
+  runtimes = JSON.parse(sh("xcrun simctl list runtimes --json"))["runtimes"]
+  ios = runtimes.select do |r|
+    r["name"].to_s.start_with?("iOS") && r["isAvailable"] &&
+      Array(r["supportedDeviceTypes"]).any? { |t| t["name"] == device }
+  end
+  ios.sort_by! { |r| r["version"].split(".").map(&:to_i) }.reverse!
+  raise "ensure_simulator: no installed iOS runtime supports '#{device}'" if ios.empty?
+
+  runtime = ios.first
+  # simctl create takes a *device type* identifier, not a runtime identifier.
+  device_type = Array(runtime["supportedDeviceTypes"]).find { |t| t["name"] == device }
+  sh("xcrun simctl create '#{device}' '#{device_type["identifier"]}'")
+  UI.message("Created simulator: #{device} on #{runtime["name"]}")
+end
+
+# CI invokes scan directly (`fastlane scan --device=...`), bypassing the
+# lanes below. Ensure the simulator for that device exists before scan's own
+# device detection runs. No-op for lanes that don't pass a device.
+before_all do |lane, parameters|
+  device = parameters[:device] || lane.parameters[:device]
+  ensure_simulator.call(device) if device
+end
+
 platform :ios do
   # ------ Continuous Integration ------
 
-  # Ensure a usable iOS simulator with an exact name match exists before
-  # scanning, so xcodebuild never falls back to `simctl clone`.
-  #
-  # xcodebuild resolves a destination like "platform=iOS Simulator,name=iPhone
-  # 17" against *available* devices; when none matches it clones a template
-  # device. CI runner images keep only their pinned iOS runtime (watchOS/tvOS
-  # runtimes are never installed), leaving device entries that reference
-  # missing runtime bundles. Cloning such a template fails with e.g.:
-  #   Failed to clone device named 'iPhone 17'. (Underlying Error: Unable to
-  #   clone device due to missing runtime bundle: Apple Watch Ultra 4 ...)
-  #
-  # This action (1) deletes devices whose runtime is missing and (2) creates
-  # the requested device if no available device with the exact name exists.
-  # Both commands are idempotent; run before every scan invocation.
-  private_ensure_simulator = lambda do |device|
-    raise "ensure_simulator requires a device" if device.to_s.empty?
-
-    # Drop devices that reference runtimes no longer present on this image.
-    # Harmless no-op when the device database is already clean.
-    sh("xcrun simctl delete unavailable")
-
-    # Exact-match check against the same available set xcodebuild considers.
-    if sh("xcrun simctl list devices available").include?("  #{device} (")
-      UI.message("Using existing simulator: #{device}")
-      return true
-    end
-
-    # No matching device: create one on the newest installed iOS runtime.
-    # `list runtimes` only reports runtimes actually installed on the image.
-    runtimes = JSON.parse(sh("xcrun simctl list runtimes --json"))["runtimes"]
-    ios = runtimes.select do |r|
-      r["name"].to_s.start_with?("iOS") && r["isAvailable"] &&
-        Array(r["supportedDeviceTypes"]).any? { |t| t["name"] == device }
-    end
-    ios.sort_by! { |r| r["version"].split(".").map(&:to_i) }.reverse!
-    raise "ensure_simulator: no installed iOS runtime supports '#{device}'" if ios.empty?
-
-    runtime = ios.first
-    # simctl create takes a *device type* identifier, not a runtime identifier.
-    device_type = Array(runtime["supportedDeviceTypes"]).find { |t| t["name"] == device }
-    sh("xcrun simctl create '#{device}' '#{device_type["identifier"]}'")
-    UI.message("Created simulator: #{device} on #{runtime["name"]}")
-  end
-
   desc "Run test suite on iPhone 17"
   lane :tests_iphone17 do
-    private_ensure_simulator.call("iPhone 17")
+    ensure_simulator.call("iPhone 17")
     # See Scanfile for default configuration
     scan(
       devices: ["iPhone 17"],
@@ -74,7 +82,7 @@ platform :ios do
 
   desc "Run test suite on iPhone 18 Pro"
   lane :tests_iphone18pro do
-    private_ensure_simulator.call("iPhone 18 Pro")
+    ensure_simulator.call("iPhone 18 Pro")
     # See Scanfile for default configuration
     scan(
       devices: ["iPhone 18 Pro"],
@@ -84,7 +92,7 @@ platform :ios do
 
   desc "Run test suite on iPad (A16)"
   lane :tests_ipad do
-    private_ensure_simulator.call("iPad (A16)")
+    ensure_simulator.call("iPad (A16)")
     # See Scanfile for default configuration
     scan(
       devices: ["iPad (A16)"],
