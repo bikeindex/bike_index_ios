@@ -43,8 +43,11 @@ ensure_simulator = lambda do |device|
 end
 
 # CI invokes scan directly (`fastlane scan --device=...`), bypassing lanes.
-before_all do |lane, parameters|
-  device = parameters[:device] || lane.parameters[:device]
+# --device is a Scan CLI option, not a lane parameter, so parse ARGV.
+before_all do |_lane, _parameters|
+  arg = ARGV.find { |a| a.start_with?("--device=") }
+  device = arg&.sub(/\A--device=/, "") ||
+           (ARGV.index("--device") && ARGV[ARGV.index("--device") + 1])
   ensure_simulator.call(device) if device
 end
 
