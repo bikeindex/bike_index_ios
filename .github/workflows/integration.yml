@@ -6,6 +6,7 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
+  workflow_dispatch: # manual trigger for CI debugging
   workflow_call: # allows delivery.yml to invoke test-suite
   schedule:
     - cron: '0 13 * * 4' # Thursday 9:00 AM EDT (13:00 UTC)
