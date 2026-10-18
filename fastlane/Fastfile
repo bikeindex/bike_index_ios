@@ -42,12 +42,11 @@ ensure_simulator = lambda do |device|
   UI.message("Created simulator: #{device} on #{runtime["name"]}")
 end
 
-# CI invokes scan directly (`fastlane scan --device=...`), bypassing lanes.
-# --device is a Scan CLI option, not a lane parameter, so parse ARGV.
-before_all do |_lane, _parameters|
-  arg = ARGV.find { |a| a.start_with?("--device=") }
-  device = arg&.sub(/\A--device=/, "") ||
-           (ARGV.index("--device") && ARGV[ARGV.index("--device") + 1])
+# Lane invocations pass --device through parameters; `fastlane scan --device=...`
+# does not (it's a Scan CLI option). CI prunes unavailable simulators in the
+# workflow before calling scan, so this hook covers lane-based invocations.
+before_all do |_lane, parameters|
+  device = parameters[:device]
   ensure_simulator.call(device) if device
 end
 

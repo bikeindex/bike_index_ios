@@ -66,6 +66,8 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_27.0.app
       - name: Install tools
         run: brew bundle install
+      - name: Prune unavailable simulators
+        run: xcrun simctl delete unavailable
       - name: Restore cached build products
         id: cache-build-restore
         uses: actions/cache/restore@v5
@@ -130,6 +132,8 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_27.0.app
       - name: Install tools
         run: brew bundle install
+      - name: Prune unavailable simulators
+        run: xcrun simctl delete unavailable
       - name: Restore cached build products
         id: cache-build-restore
         uses: actions/cache/restore@v5
@@ -201,6 +205,8 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_27.0.app
       - name: Install tools
         run: brew bundle install
+      - name: Prune unavailable simulators
+        run: xcrun simctl delete unavailable
       - name: Restore cached build products
         id: cache-build-restore
         uses: actions/cache/restore@v5
@@ -363,6 +369,8 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_27.0.app
       - name: Install tools
         run: brew bundle install
+      - name: Prune unavailable simulators
+        run: xcrun simctl delete unavailable
       - name: Restore cached build products
         id: cache-build-restore
         uses: actions/cache/restore@v5
