@@ -24,9 +24,7 @@ enum GroupMode: String {
 }
 
 enum Manufacturer: String, MainContentSection {
-    case specialized
-    case raleigh
-    case intense
+    case rockyMountain = "rocky mountain bicycles"
 
     var headerIdentifier: String { "Section toggle \(rawValue.capitalized)" }
     var bikeIdentifier: String { rawValue.capitalized }

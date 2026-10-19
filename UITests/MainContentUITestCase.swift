@@ -29,30 +29,32 @@ final class MainContentUITestCase: XCTestCase {
 
             // Validate By-Status display
             .tapGroupingMenuButton()
-            .tapGroupButton(for: Status.found.groupMode)
+            .tapGroupButton(for: Status.unregisteredParkingNotification.groupMode)
 
             .tapGroupingMenuButton()
             // will continue if sort order is already correct and dismsis menu
-            .tapGroupSortOrderButton(.forward, returnTo: Status.found.groupMode)
+            .tapGroupSortOrderButton(
+                .forward, returnTo: Status.unregisteredParkingNotification.groupMode
+            )
 
-            .check(section: Status.found, isExpanded: true)
-            .checkBike(section: Status.found, index: 1, exists: true)
-            .tap(section: Status.found)
-            .check(section: Status.found, isExpanded: false)
-            .checkBike(section: Status.found, index: 1, exists: false)
-            .tap(section: Status.found)
+            .check(section: Status.unregisteredParkingNotification, isExpanded: true)
+            .checkBike(section: Status.unregisteredParkingNotification, index: 1, exists: true)
+            .tap(section: Status.unregisteredParkingNotification)
+            .check(section: Status.unregisteredParkingNotification, isExpanded: false)
+            .checkBike(section: Status.unregisteredParkingNotification, index: 1, exists: false)
+            .tap(section: Status.unregisteredParkingNotification)
 
             // Validate By-Manufacturer display
             .tapGroupingMenuButton()
-            .tapGroupButton(for: Manufacturer.specialized.groupMode)
+            .tapGroupButton(for: Manufacturer.rockyMountain.groupMode)
             .tapGroupingMenuButton()
-            .tapGroupSortOrderButton(.forward, returnTo: Manufacturer.specialized.groupMode)
+            .tapGroupSortOrderButton(.forward, returnTo: Manufacturer.rockyMountain.groupMode)
 
-            .check(section: Manufacturer.specialized, isExpanded: true)
-            .checkBike(section: Manufacturer.specialized, index: 1, exists: true)
-            .tap(section: Manufacturer.specialized)
-            .check(section: Manufacturer.specialized, isExpanded: false)
-            .checkBike(section: Manufacturer.specialized, index: 1, exists: false)
-            .tap(section: Manufacturer.specialized)
+            .check(section: Manufacturer.rockyMountain, isExpanded: true)
+            .checkBike(section: Manufacturer.rockyMountain, index: 1, exists: true)
+            .tap(section: Manufacturer.rockyMountain)
+            .check(section: Manufacturer.rockyMountain, isExpanded: false)
+            .checkBike(section: Manufacturer.rockyMountain, index: 1, exists: false)
+            .tap(section: Manufacturer.rockyMountain)
     }
 }
