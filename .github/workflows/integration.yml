@@ -55,7 +55,7 @@ jobs:
       failed-tests: ${{ steps.collect-failed.outputs.failed-tests }}
     strategy:
       matrix:
-        device: ["iPhone 17"] # iOS 27.0 simulators only (runner image)
+        device: ["iPhone 18 Pro"] # "iPhone 17", "iPad (A16)"
         deployment_target_version: ["27.0"]
     steps:
       - name: Checkout
@@ -66,6 +66,8 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_27.1.app
       - name: Install tools
         run: brew bundle install
+      - name: Prune unavailable simulators
+        run: xcrun simctl delete unavailable
       - name: Restore cached build products
         id: cache-build-restore
         uses: actions/cache/restore@v5
@@ -77,7 +79,34 @@ jobs:
         with:
           honeybadger_api_key: ${{ secrets.HONEYBADGER_API_KEY }}
       - name: UnitTests on ${{ matrix.device }} ${{ matrix.deployment_target_version }}
-        run: fastlane scan --only-testing="UnitTests" --device="${{ matrix.device }}" --deployment-target-version="${{ matrix.deployment_target_version }}" --test_without_building=true
+        # A session-level crash (the test runner dying before or without running
+        # tests, e.g. "Failed to prepare device 'Clone 2 of iPhone 18 Pro' for
+        # impending launch") exits non-zero and writes no JUnit, so the
+        # test-level retry pipeline has nothing to act on. When that happens,
+        # wipe simulator state and run the full scan once more. A non-zero
+        # exit that DID produce a report means individual tests failed after
+        # the plan's own retryOnFailure -- re-running the whole suite would
+        # only duplicate work, so only the no-report case retries here.
+        run: |
+          set -uo pipefail
+          scan() {
+            fastlane scan \
+              --only-testing="UnitTests" \
+              --device="${{ matrix.device }}" \
+              --deployment-target-version="${{ matrix.deployment_target_version }}" \
+              --test_without_building=true
+          }
+          scan
+          rc=$?
+          report="fastlane/test_output/report.junit"
+          if [ "$rc" -ne 0 ] && [ ! -f "$report" ]; then
+            echo "scan exited ${rc} without a JUnit report -- the test session itself failed; wiping simulator state and running the full scan once more" >&2
+            xcrun simctl shutdown all 2>/dev/null || true
+            sleep 10
+            scan
+            rc=$?
+          fi
+          exit "$rc"
       - name: Collect still-failing tests
         id: collect-failed
         if: failure()
@@ -119,7 +148,7 @@ jobs:
       failed-tests: ${{ steps.collect-failed.outputs.failed-tests }}
     strategy:
       matrix:
-        device: ["iPhone 17"] # iOS 27.0 simulators only (runner image)
+        device: ["iPhone 18 Pro"] # "iPhone 17", "iPad (A16)"
         deployment_target_version: ["27.0"]
     steps:
       - name: Checkout
@@ -130,6 +159,8 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_27.1.app
       - name: Install tools
         run: brew bundle install
+      - name: Prune unavailable simulators
+        run: xcrun simctl delete unavailable
       - name: Restore cached build products
         id: cache-build-restore
         uses: actions/cache/restore@v5
@@ -147,7 +178,28 @@ jobs:
           export API_CLIENT_ID
           ruby scripts/validate-sandbox.rb
       - name: UITests on ${{ matrix.device }} ${{ matrix.deployment_target_version }}
-        run: fastlane scan --only-testing="UITests" --device="${{ matrix.device }}" --deployment-target-version="${{ matrix.deployment_target_version }}" --test_without_building=true
+        # Session-crash guard: same as test-unit (a crashed session writes no
+        # JUnit, so the test-level retry pipeline has nothing to act on).
+        run: |
+          set -uo pipefail
+          scan() {
+            fastlane scan \
+              --only-testing="UITests" \
+              --device="${{ matrix.device }}" \
+              --deployment-target-version="${{ matrix.deployment_target_version }}" \
+              --test_without_building=true
+          }
+          scan
+          rc=$?
+          report="fastlane/test_output/report.junit"
+          if [ "$rc" -ne 0 ] && [ ! -f "$report" ]; then
+            echo "scan exited ${rc} without a JUnit report -- the test session itself failed; wiping simulator state and running the full scan once more" >&2
+            xcrun simctl shutdown all 2>/dev/null || true
+            sleep 10
+            scan
+            rc=$?
+          fi
+          exit "$rc"
       - name: Collect still-failing tests
         id: collect-failed
         if: failure()
@@ -190,7 +242,7 @@ jobs:
       still-failing: ${{ steps.collect-failed.outputs.still-failing }}
     strategy:
       matrix:
-        device: ["iPhone 17"] # iOS 27.0 simulators only (runner image)
+        device: ["iPhone 18 Pro"]
         deployment_target_version: ["27.0"]
     steps:
       - name: Checkout
@@ -201,6 +253,8 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_27.1.app
       - name: Install tools
         run: brew bundle install
+      - name: Prune unavailable simulators
+        run: xcrun simctl delete unavailable
       - name: Restore cached build products
         id: cache-build-restore
         uses: actions/cache/restore@v5
@@ -242,12 +296,27 @@ jobs:
           identifiers="${GITHUB_WORKSPACE}/.retry-unit-expected.txt"
           printf '%s\n' "$selectors" > "$identifiers"
           echo "retrying UnitTests:"; cat "$identifiers"
-          fastlane scan \
-            --xcargs="-only-testing:@$identifiers" \
-            --device="${DEVICE}" \
-            --deployment-target-version="${{ matrix.deployment_target_version }}" \
-            --test_without_building=true
+          scan() {
+            fastlane scan \
+              --xcargs="-only-testing:@$identifiers" \
+              --device="${DEVICE}" \
+              --deployment-target-version="${{ matrix.deployment_target_version }}" \
+              --test_without_building=true
+          }
+          scan
           rc=$?
+          report="fastlane/test_output/report.junit"
+          # Session-crash guard: a crashed session writes no JUnit, so the
+          # collect step below would emit an empty still-failing list and the
+          # real failure would be masked as "retry passed". Re-run the same
+          # selectors once after wiping simulator state.
+          if [ "$rc" -ne 0 ] && [ ! -f "$report" ]; then
+            echo "retry scan exited ${rc} without a JUnit report (session-level failure); wiping simulator state and running the same selectors once more" >&2
+            xcrun simctl shutdown all 2>/dev/null || true
+            sleep 10
+            scan
+            rc=$?
+          fi
           # If scan was killed by the step timeout, xcodebuild's post-failure
           # diagnostics collection keeps running and mutates the xcresult
           # (simctl_diagnostics files appearing/disappearing) while the
@@ -352,7 +421,7 @@ jobs:
       still-failing: ${{ steps.collect-failed.outputs.still-failing }}
     strategy:
       matrix:
-        device: ["iPhone 17"] # iOS 27.0 simulators only (runner image)
+        device: ["iPhone 18 Pro"]
         deployment_target_version: ["27.0"]
     steps:
       - name: Checkout
@@ -363,6 +432,8 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_27.1.app
       - name: Install tools
         run: brew bundle install
+      - name: Prune unavailable simulators
+        run: xcrun simctl delete unavailable
       - name: Restore cached build products
         id: cache-build-restore
         uses: actions/cache/restore@v5
@@ -403,12 +474,24 @@ jobs:
           identifiers="${GITHUB_WORKSPACE}/.retry-ui-expected.txt"
           printf '%s\n' "$selectors" > "$identifiers"
           echo "retrying UITests:"; cat "$identifiers"
-          fastlane scan \
-            --xcargs="-only-testing:@$identifiers" \
-            --device="${DEVICE}" \
-            --deployment-target-version="${{ matrix.deployment_target_version }}" \
-            --test_without_building=true
+          scan() {
+            fastlane scan \
+              --xcargs="-only-testing:@$identifiers" \
+              --device="${DEVICE}" \
+              --deployment-target-version="${{ matrix.deployment_target_version }}" \
+              --test_without_building=true
+          }
+          scan
           rc=$?
+          report="fastlane/test_output/report.junit"
+          # Session-crash guard: same as retry-unit.
+          if [ "$rc" -ne 0 ] && [ ! -f "$report" ]; then
+            echo "retry scan exited ${rc} without a JUnit report (session-level failure); wiping simulator state and running the same selectors once more" >&2
+            xcrun simctl shutdown all 2>/dev/null || true
+            sleep 10
+            scan
+            rc=$?
+          fi
           # See retry-unit: kill straggling xcodebuild so the xcresult is
           # static before the collect/upload steps read it.
           if [ "$rc" -ne 0 ]; then

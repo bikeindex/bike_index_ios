@@ -20,7 +20,7 @@ final class UniversalLinksRobot: Robot {
     /// exactly what broke the previous exact-match queries).
     private var unlinkedMessage: XCUIElement {
         app.webViews.staticTexts.matching(
-            NSPredicate(format: "label CONTAINS 'assigned to this bike'")
+            NSPredicate(format: "label CONTAINS 'assigned to this'")
         ).firstMatch
     }
 

@@ -8,7 +8,7 @@
 import XCUIAutomation
 
 /// Abstract section header to support both GroupMode.byStatus and GroupMode.byManufacturer sections on MainContentPage.
-protocol MainContentSection: RawRepresentable {
+protocol MainContentSection {
     /// The section's Bikes accessibility identifier for this section
     var headerIdentifier: String { get }
     /// The section's substring used as part of Bikes accessibility identifier in this section
@@ -24,9 +24,7 @@ enum GroupMode: String {
 }
 
 enum Manufacturer: String, MainContentSection {
-    case specialized
-    case raleigh
-    case intense
+    case rockyMountain = "rocky mountain bicycles"
 
     var headerIdentifier: String { "Section toggle \(rawValue.capitalized)" }
     var bikeIdentifier: String { rawValue.capitalized }
@@ -42,6 +40,19 @@ enum Status: String, MainContentSection {
     var headerIdentifier: String { rawValue.capitalized }
     var bikeIdentifier: String { rawValue.capitalized }
     var groupMode: GroupMode { .byStatus }
+}
+
+/// A section discovered at runtime from the rendered UI, instead of a
+/// hardcoded ``Manufacturer`` or ``Status``. The sandbox test account's
+/// bikes change over time, so tests should discover what is actually
+/// rendered rather than assume a specific bike exists.
+struct DiscoveredSection: MainContentSection {
+    /// The capitalized section name as rendered in its header, e.g. "Aventón" or "Unregistered".
+    let name: String
+    let groupMode: GroupMode
+
+    var headerIdentifier: String { "Section toggle \(name)" }
+    var bikeIdentifier: String { name }
 }
 
 // MARK: -
@@ -181,6 +192,30 @@ final class MainContentRobot: Robot {
             }
         }
         return self
+    }
+
+    /// Discovers the first section currently rendered on the main content page.
+    ///
+    /// The app only renders sections that contain at least one bike, so the
+    /// returned section is guaranteed to have a bike.
+    /// - Parameter groupMode: the ``GroupMode`` the page is displaying (the
+    ///   caller must have switched to it via the grouping menu).
+    /// - Returns: the first rendered section, or `nil` if the account has no bikes.
+    func discoverFirstSection(
+        in groupMode: GroupMode,
+        timeout: TimeInterval = 10
+    ) -> DiscoveredSection? {
+        let first = app.buttons
+            .matching(NSPredicate(format: "identifier BEGINSWITH 'Section toggle '"))
+            .firstMatch
+        guard
+            first.waitForExistence(timeout: timeout),
+            first.identifier.hasPrefix("Section toggle ")
+        else {
+            return nil
+        }
+        let name = String(first.identifier.dropFirst("Section toggle ".count))
+        return DiscoveredSection(name: name, groupMode: groupMode)
     }
 
     @discardableResult

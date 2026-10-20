@@ -10,7 +10,7 @@ assuming an app regression.
 
 ## How to read a UI-test failure
 
-The GHA `UITests` job uploads a `test_output_iPhone 17_UITests` artifact that
+The GHA `UITests` job uploads a `test_output_iPhone 18 Pro_UITests` artifact that
 contains a `BikeIndex.xcresult` bundle. Even when a test fails on an assertion
 timeout, the bundle includes **screen recordings** and **UI snapshots** for each
 repetition. Extract the last frame of a failing test's recording to see exactly
