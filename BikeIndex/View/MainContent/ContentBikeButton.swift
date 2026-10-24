@@ -46,8 +46,14 @@ struct ContentBikeButtonView: View {
                     .aspectRatio(1.0, contentMode: .fit)
                     .clipShape(RoundedRectangle(cornerRadius: 24))
 
-                    HStack {
+                    // Keep bike buttons at uniform height
+                    ZStack {
+                        Text("\n")
+                            .lineLimit(2)
+                            .hidden()
                         Text(bike.displayTitle)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(2)
                     }
                 }
             }
