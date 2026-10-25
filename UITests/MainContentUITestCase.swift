@@ -24,7 +24,7 @@ final class MainContentUITestCase: XCTestCase {
 
             // Switch to by-status grouping, forward sort order
             .tapGroupingMenuButton()
-            .tapGroupButton(mode: Status.groupMode)
+            .tapGroupButton(mode: .byStatus)
 
             .tapGroupingMenuButton()
             // will continue if sort order is already correct and dismiss menu
@@ -41,7 +41,7 @@ final class MainContentUITestCase: XCTestCase {
         // Switch to by-manufacturer grouping, forward sort order
         robot
             .tapGroupingMenuButton()
-            .tapGroupButton(mode: Manufacturer.groupMode)
+            .tapGroupButton(mode: .byManufacturer)
             .tapGroupingMenuButton()
             .tapGroupSortOrderButton(.forward, returnTo: .byManufacturer)
 

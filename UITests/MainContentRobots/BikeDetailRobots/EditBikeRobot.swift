@@ -62,7 +62,7 @@ final class EditBikeRobot: Robot {
 
     @discardableResult
     func back() -> MainContentRobot {
-        tap(navigationBarButton, timeout: Robot.defaultTimeout)
+        _ = back(timeout: Robot.defaultTimeout)
         return MainContentRobot(app)
     }
 

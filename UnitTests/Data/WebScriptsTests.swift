@@ -19,7 +19,7 @@ final class WebScriptsTests {
     }
 
     private func makeClient() throws -> Client {
-        try Client(keychain: ClientAutoSignInTests.StubKeychain(), restoreSession: false)
+        try Client(keychain: StubKeychain(), restoreSession: false)
     }
 
     @Test func hideNav_not_registered_for_unknown_or_org_user() throws {

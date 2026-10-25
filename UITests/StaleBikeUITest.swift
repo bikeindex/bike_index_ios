@@ -31,14 +31,14 @@ final class StaleBikeUITest: XCTestCase {
 
             // Validate By-Status display
             .tapGroupingMenuButton()
-            .tapGroupButton(mode: Status.groupMode)
+            .tapGroupButton(mode: .byStatus)
             .checkBike(section: Status.withOwner, index: 1, exists: true)
             .identifyBikes(&bikes_belonging_to_first_user)
             .logOut()
 
             .signIn(email: "member@brakebills.edu", password: "pleaseplease12")
             .tapGroupingMenuButton()
-            .tapGroupButton(mode: Status.groupMode)
+            .tapGroupButton(mode: .byStatus)
             .checkBike(section: Status.unregisteredParkingNotification, index: 1, exists: true)
             .identifyBikes(&bikes_belonging_to_second_user)
 
@@ -61,7 +61,7 @@ final class StaleBikeUITest: XCTestCase {
         // TODO: Change this to a different account so I don't statefully break other tests!
             .startWithSignIn(email: "user@bikeindex.org", password: "pleaseplease12")
             .tapGroupingMenuButton()
-            .tapGroupButton(mode: Status.groupMode)
+            .tapGroupButton(mode: .byStatus)
             .checkBike(section: Status.withOwner, index: 1, exists: true)
             .tapFirstBike()
             .tapEditButton()
@@ -82,7 +82,7 @@ final class StaleBikeUITest: XCTestCase {
         try MainContentRobot(app)
             .startWithSignIn(email: "user@bikeindex.org", password: "pleaseplease12")
             .tapGroupingMenuButton()
-            .tapGroupButton(mode: Status.groupMode)
+            .tapGroupButton(mode: .byStatus)
             .checkBike(section: Status.withOwner, index: 1, exists: false)
     }
 

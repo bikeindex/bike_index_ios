@@ -105,7 +105,7 @@ final class MainContentRobot: Robot {
     @discardableResult
     func tapFirstBike(in section: any MainContentSection) -> BikeDetailRobot {
         tapGroupingMenuButton()
-        tapGroupButton(mode: Status.groupMode)
+        tapGroupButton(mode: section.groupMode)
         dismissGroupingMenuButton()
 
         let firstBike = app.buttons["Bike \(section.bikeIdentifier)-1"]
