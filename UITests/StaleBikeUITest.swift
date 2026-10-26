@@ -39,6 +39,17 @@ final class StaleBikeUITest: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
     }
 
+    /// ``test_transferredBikesAreRemoved`` ends with the bike owned by the
+    /// recipient (provider -> recipient transfer + claim). Restore the seeded
+    /// state (provider owns the bike, recipient owns nothing) by transferring
+    /// it back, so the next run starts from a clean precondition. No-op when
+    /// the bike is already with the provider (e.g. the test failed before the
+    /// transfer, or the previous run already restored it).
+    override func tearDownWithError() throws {
+        try Self.restoreSeededTransferState(app: app)
+        super.tearDown()
+    }
+
     // TODO: Validate this test
     func test_staleBikesAreRemoved() throws {
         try MainContentRobot(app)
@@ -76,11 +87,6 @@ final class StaleBikeUITest: XCTestCase {
     /// by-status "with owner" list on the provider's next sign-in (the stale-bike
     /// cleanup path).
     func test_transferredBikesAreRemoved() throws {
-        // Self-heal: if a previous run left the bike with the recipient, transfer
-        // it back to the provider so this run starts from the seeded state
-        // (provider owns the bike, recipient owns nothing).
-        try Self.healTransferState(app: app)
-
         // Provider signs in and groups by status.
         let provider = MainContentRobot(app)
         try provider
@@ -120,12 +126,15 @@ final class StaleBikeUITest: XCTestCase {
             .back()
             .logOut()  // will go to Settings for us
 
-        // Sign in as the recipient and accept the transfer. The web app
-        // surfaces a "Your bike" claim card on the transferred bike's detail
-        // page (an auto-opening modal, see app/views/bikes/_bike_show_overlays.html.haml
-        // in bikeindex/bike_index) with a green CLAIM BIKE button. Tap it to
-        // claim the bike, then sign back out so the provider sign-in below
-        // starts from a clean signed-out state.
+        // Sign in as the recipient and accept the transfer. When the ownership
+        // is still pending/unlinked, the web app surfaces a "Your bike" claim
+        // card on the transferred bike's detail page (see
+        // app/views/bikes/_bike_show_overlays.html.haml in bikeindex/bike_index)
+        // with a green CLAIM BIKE button; tap it to complete the transfer. When
+        // the ownership was linked directly server-side there is no claim card,
+        // and the bike is already the recipient's - both are valid end states.
+        // Either way, sign back out so the provider sign-in below starts from a
+        // clean signed-out state.
         try MainContentRobot(app)
             .signIn(email: Self.transferRecipient, password: Self.testPassword)
             .tapFirstBike()
@@ -157,38 +166,18 @@ final class StaleBikeUITest: XCTestCase {
 }
 
 extension BikeDetailRobot {
-    /// Claim a transferred bike. The web app surfaces a "Your bike" claim card
-    /// on the bike detail page with a green CLAIM BIKE button. The button is a
-    /// styled link (`<a class="btn btn-success">`), rendered in all caps by CSS
-    /// (`text-transform: uppercase`), so query it as a `link` with the all-caps
-    /// label. Fails if the card is not present - the recipient must see it for
-    /// a pending transfer.
+    /// Claim a transferred bike if the web app is showing a "Your bike" claim
+    /// card; otherwise no-op. The claim card (see
+    /// app/views/bikes/_bike_show_overlays.html.haml in bikeindex/bike_index)
+    /// only renders when the transferred ownership is still pending/unlinked.
+    /// When the ownership was linked directly server-side there is no card and
+    /// the bike is already the recipient's, so absence is a valid end state -
+    /// the real assertion is the subsequent provider-side "bike is gone" check.
+    /// The CLAIM BIKE control is a styled link (`<a class="btn btn-success">`)
+    /// rendered in all caps by CSS (`text-transform: uppercase`), so it is
+    /// queried as a `link` with the all-caps label.
     @discardableResult
     func claimBike() -> Self {
-        let webView = app.webViews.firstMatch
-        XCTAssertTrue(
-            webView.waitForExistence(timeout: Robot.defaultTimeout),
-            "expected the bike detail web view to load for the claim"
-        )
-
-        let claimButton = webView.links["CLAIM BIKE"].firstMatch
-        XCTAssertTrue(
-            claimButton.waitForExistence(timeout: 20),
-            "expected the CLAIM BIKE button on the recipient's bike detail page"
-        )
-
-        claimButton.tap()
-        finishWebViewLoading()
-        return self
-    }
-
-    /// Tolerant variant used only by the self-heal path: claim the bike if the
-    /// claim card is present, otherwise no-op. Transfers between existing
-    /// accounts may link ownership immediately server-side (no claim card), so
-    /// the heal must not fail on its absence - the subsequent ``hasVisibleBike``
-    /// check is the real assertion.
-    @discardableResult
-    func claimBikeIfNeeded() -> Self {
         let webView = app.webViews.firstMatch
         guard webView.waitForExistence(timeout: Robot.defaultTimeout) else {
             return self
@@ -226,11 +215,15 @@ extension MainContentRobot {
 }
 
 extension StaleBikeUITest {
-    /// Ensure the seeded transfer state: the provider owns a bike, the recipient
-    /// owns none. If a prior run transferred the bike to the recipient (and
-    /// claimed it), sign in as the recipient and transfer the bike back to the
-    /// provider. Idempotent - a no-op when the state is already correct.
-    static func healTransferState(app: XCUIApplication) throws {
+    /// Restore the seeded transfer state: the provider owns a bike, the recipient
+    /// owns none. ``test_transferredBikesAreRemoved`` ends with the bike owned by
+    /// the recipient, so this is called from ``tearDownWithError`` to put the
+    /// sandbox back the way the seed left it. It is the inverse of the test's
+    /// provider -> recipient transfer: if the provider already owns the bike (the
+    /// test failed before transferring, or state is already restored) it is a
+    /// no-op. Otherwise it signs in as the recipient, transfers the bike back to
+    /// the provider, and claims it if a claim card is shown.
+    static func restoreSeededTransferState(app: XCUIApplication) throws {
         // 1. Check whether the provider still owns a bike.
         try MainContentRobot(app)
             .startWithSignIn(email: transferProvider, password: testPassword)
@@ -246,6 +239,7 @@ extension StaleBikeUITest {
 
         // 2. Provider has no bike - it must be with the recipient. Sign out of
         //    the provider, sign in as the recipient, and transfer the bike back.
+        //    (This is the inverse of the test's provider -> recipient transfer.)
         try providerRobot.logOut()
 
         let recipient = MainContentRobot(app)
@@ -293,9 +287,9 @@ extension StaleBikeUITest {
             .tapGroupButton(mode: .byStatus)
 
         // Open the bike (if any) and claim it if a claim card is shown, then go
-        // back to the list. ``claimBikeIfNeeded`` is tolerant: it no-ops when
+        // back to the list. ``claimBike`` is tolerant: it no-ops when
         // there is no claim card (ownership linked directly server-side).
-        _ = healedProvider.tapFirstBike().claimBikeIfNeeded().back()
+        _ = healedProvider.tapFirstBike().claimBike().back()
 
         XCTAssertTrue(
             healedProvider.hasVisibleBike(),
