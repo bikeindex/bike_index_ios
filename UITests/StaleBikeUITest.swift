@@ -18,14 +18,19 @@ final class StaleBikeUITest: XCTestCase {
     let app = XCUIApplication()
     var bikes_belonging_to_first_user: [String] = []
     var bikes_belonging_to_second_user: [String] = []
+    /// The label ("<year> <manufacturer>") of the bike transferred in
+    /// ``test_transferredBikesAreRemoved``.
+    var transferredBikeLabel: String?
+    /// Provider's by-status bike list before the transfer, used to pick a
+    /// transfer target and to assert the post-transfer state.
+    var providerBikeLabels: [String] = []
 
     /// Accounts used for the transfer test.
     ///
-    /// TODO: Switch back to dedicated sandbox accounts (`transfer_provider@` /
-    /// `transfer_recipient@bikeindex.org`) once they have bikes seeded. Until
-    /// then, reuse `user@` (provider) and `api@` (recipient) so the test can
-    /// run against existing bikes.
-    static let transferProvider = "user@bikeindex.org"
+    /// TODO: Switch to dedicated sandbox accounts (`transfer_provider@` /
+    /// `transfer_recipient@bikeindex.org`) once they have bikes seeded.
+    /// `member@` is the only shared account currently known to own bikes.
+    static let transferProvider = "member@brakebills.edu"
     static let transferRecipient = "api@bikeindex.org"
     static let testPassword = "pleaseplease12"
 
@@ -74,14 +79,37 @@ final class StaleBikeUITest: XCTestCase {
     /// by-status "with owner" list on the provider's next sign-in (the stale-bike
     /// cleanup path).
     func test_transferredBikesAreRemoved() throws {
-        try MainContentRobot(app)
+        // Provider signs in and groups by status.
+        let provider = MainContentRobot(app)
+        try provider
             .startWithSignIn(email: Self.transferProvider, password: Self.testPassword)
             .tapGroupingMenuButton()
             .tapGroupButton(mode: .byStatus)
-            .checkBike(section: Status.withOwner, index: 1, exists: true)
-            .tapFirstBike()
+
+        // Wait for the grid to render before collecting labels.
+        let bikePredicate = NSPredicate(format: "identifier BEGINSWITH 'Bike '")
+        let firstBike = app.buttons.matching(bikePredicate).firstMatch
+        XCTAssertTrue(
+            firstBike.waitForExistence(timeout: Robot.defaultTimeout),
+            "expected at least one bike to render in the by-status grid"
+        )
+
+        // Snapshot every bike the provider owns, grouped by status.
+        providerBikeLabels = provider.identifyBikeLabels()
+        XCTAssertFalse(providerBikeLabels.isEmpty, "provider should own at least one bike")
+        guard !providerBikeLabels.isEmpty else { return }
+
+        // The first bike in the by-status grid is the first "with owner" bike.
+        let firstBikeLabel = providerBikeLabels.first!
+        transferredBikeLabel = firstBikeLabel
+
+        // Open that specific bike and transfer it to the recipient.
+        try provider
+            .tapBike(withLabel: firstBikeLabel)
             .tapEditButton()
             .finishWebViewLoading()
+
+        try EditBikeRobot(app)
             .scrollToFooter()
             .tapTransferHideOrDelete()
             .typeNewOwner(email: Self.transferRecipient)
@@ -104,11 +132,22 @@ final class StaleBikeUITest: XCTestCase {
         app.terminate()
         sleep(3)
         app.launch()
-        try MainContentRobot(app)
+        let reSignedInProvider = MainContentRobot(app)
+        try reSignedInProvider
             .startWithSignIn(email: Self.transferProvider, password: Self.testPassword)
             .tapGroupingMenuButton()
             .tapGroupButton(mode: .byStatus)
-            .checkBike(section: Status.withOwner, index: 1, exists: false)
+
+        // The specific bike that was transferred must be gone from the
+        // provider's list, and the remaining bikes must still be there.
+        if let transferredBikeLabel {
+            reSignedInProvider.checkNoBike(withLabel: transferredBikeLabel)
+            for label in providerBikeLabels where label != transferredBikeLabel {
+                reSignedInProvider.checkBike(withLabel: label, exists: true)
+            }
+        } else {
+            XCTFail("Could not capture the transferred bike's label")
+        }
     }
 
 }
