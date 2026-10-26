@@ -25,13 +25,10 @@ final class StaleBikeUITest: XCTestCase {
     /// transfer target and to assert the post-transfer state.
     var providerBikeLabels: [String] = []
 
-    /// Accounts used for the transfer test.
-    ///
-    /// TODO: Switch to dedicated sandbox accounts (`transfer_provider@` /
-    /// `transfer_recipient@bikeindex.org`) once they have bikes seeded.
-    /// `member@` is the only shared account currently known to own bikes.
-    static let transferProvider = "member@brakebills.edu"
-    static let transferRecipient = "api@bikeindex.org"
+    /// Dedicated sandbox accounts (bikeindex/bike_index#4656): the provider is
+    /// seeded with exactly one bike to transfer, the recipient starts empty.
+    static let transferProvider = "transfer_provider@bikeindex.org"
+    static let transferRecipient = "transfer_recipient@bikeindex.org"
     static let testPassword = "pleaseplease12"
 
     override func setUpWithError() throws {
