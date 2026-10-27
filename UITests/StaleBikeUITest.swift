@@ -258,7 +258,7 @@ extension StaleBikeUITest {
         guard let firstLabel = recipientLabels.first else { return }
 
         // Open the bike and transfer ownership back to the provider.
-        try recipient
+        recipient
             .tapBike(withLabel: firstLabel)
             .tapEditButton()
             .finishWebViewLoading()
