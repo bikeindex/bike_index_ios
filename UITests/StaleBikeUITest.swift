@@ -121,7 +121,7 @@ final class StaleBikeUITest: XCTestCase {
         transferredBikeLabel = firstBikeLabel
 
         // Open that specific bike and transfer it to the recipient.
-        try provider
+        provider
             .tapBike(withLabel: firstBikeLabel)
             .tapEditButton()
             .finishWebViewLoading()
@@ -253,7 +253,8 @@ extension StaleBikeUITest {
 
         // Snapshot the recipient's bikes and pick the first one to transfer back.
         let recipientLabels = recipient.identifyBikeLabels()
-        XCTAssertFalse(recipientLabels.isEmpty, "self-heal: recipient has no bikes to transfer back")
+        XCTAssertFalse(
+            recipientLabels.isEmpty, "self-heal: recipient has no bikes to transfer back")
         guard let firstLabel = recipientLabels.first else { return }
 
         // Open the bike and transfer ownership back to the provider.
