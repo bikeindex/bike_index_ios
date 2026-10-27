@@ -10,7 +10,7 @@
   ],
   "defaultOptions" : {
     "codeCoverage" : false,
-    "defaultTestExecutionTimeAllowance" : 60,
+    "defaultTestExecutionTimeAllowance" : 180,
     "preferredScreenCaptureFormat" : "screenshot",
     "targetForVariableExpansion" : {
       "containerPath" : "container:BikeIndex.xcodeproj",

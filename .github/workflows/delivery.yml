@@ -88,7 +88,22 @@ jobs:
           honeybadger_api_key: ""
 
       - name: Capture snapshots
-        run: fastlane snapshot
+        run: |
+          set -o pipefail
+          fastlane snapshot 2>&1 | tee /tmp/fastlane_snapshot.log
+          snapshot_status=${PIPESTATUS[0]}
+          count=$(find fastlane/screenshots -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
+          echo ""
+          echo "fastlane snapshot exit status: ${snapshot_status}"
+          echo "Screenshots produced: ${count} / 20"
+          echo "Snapshot log: /tmp/fastlane_snapshot.log"
+          # Fail fast: don't let an incomplete capture fall through to the
+          # validate step. Surface the real test failure here with a clear
+          # pointer to the snapshot log instead of failing late at validation.
+          if [ "${snapshot_status}" -ne 0 ] || [ "${count}" -ne 20 ]; then
+            echo "::error::Snapshot capture incomplete: fastlane status=${snapshot_status}, ${count}/20 screenshots. See /tmp/fastlane_snapshot.log"
+            exit 1
+          fi
 
       - name: Validate snapshots
         run: |
