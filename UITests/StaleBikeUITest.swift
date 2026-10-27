@@ -50,36 +50,45 @@ final class StaleBikeUITest: XCTestCase {
         super.tearDown()
     }
 
-    // TODO: Validate this test
+    /// Session isolation: sign in as one user, note their bikes, sign out, sign
+    /// in as a different user, and confirm the second user does NOT see the
+    /// first user's bikes (the app must clear the prior user's data on account
+    /// switch). Complements ``test_transferredBikesAreRemoved`` (same user,
+    /// transfer flow) and the unit tests (pure ``MainContentViewModel`` stale-
+    /// bike mutation): this is the only test of the cross-account, persisted-
+    /// store path.
     func test_staleBikesAreRemoved() throws {
-        try MainContentRobot(app)
-            .startWithSignIn(email: "user@bikeindex.org", password: Self.testPassword)
+        let robot = MainContentRobot(app)
+        try robot.startWithSignIn(email: "user@bikeindex.org", password: Self.testPassword)
 
-            // Validate By-Status display
-            .tapGroupingMenuButton()
+        // Validate By-Status display and capture the first user's bike labels.
+        robot.tapGroupingMenuButton()
             .tapGroupButton(mode: .byStatus)
             .checkBike(section: Status.withOwner, index: 1, exists: true)
-            .identifyBikes(&bikes_belonging_to_first_user)
-            .logOut()
+        bikes_belonging_to_first_user = robot.identifyBikeLabels()
 
-            .signIn(email: "member@brakebills.edu", password: Self.testPassword)
+        try robot.logOut()
+
+        // Sign in as a different user and capture their bike labels.
+        try robot.signIn(email: "member@brakebills.edu", password: Self.testPassword)
             .tapGroupingMenuButton()
             .tapGroupButton(mode: .byStatus)
             .checkBike(section: Status.unregisteredParkingNotification, index: 1, exists: true)
-            .identifyBikes(&bikes_belonging_to_second_user)
+        bikes_belonging_to_second_user = robot.identifyBikeLabels()
 
-        XCTAssertFalse(bikes_belonging_to_first_user.isEmpty)
-        XCTAssertFalse(bikes_belonging_to_second_user.isEmpty)
-        XCTAssertNotEqual(bikes_belonging_to_first_user, bikes_belonging_to_second_user)
+        XCTAssertFalse(bikes_belonging_to_first_user.isEmpty, "first user should have bikes")
+        XCTAssertFalse(bikes_belonging_to_second_user.isEmpty, "second user should have bikes")
 
-        /*
-         TODO: Alright so this UI test isn't behaving quite right. Let's move on to validating in the app and in the unit tests. Then we can come back to the UITest.
-         */
+        // The second user must not see any of the first user's bikes. Comparing
+        // rendered labels ("<year> <manufacturer>") rather than raw accessibility
+        // identifiers, which embed a section position and are not a stable bike
+        // identity across users.
         let setOfFirstBikes = Set(bikes_belonging_to_first_user)
         let setOfSecondBikes = Set(bikes_belonging_to_second_user)
         XCTAssertTrue(
             setOfFirstBikes.isDisjoint(with: setOfSecondBikes),
-            "expected distinct sets, found A) <\(setOfFirstBikes)> -- vs -- <\(setOfSecondBikes)>")
+            "expected distinct sets, found A) <\(setOfFirstBikes)> -- vs -- <\(setOfSecondBikes)>"
+        )
     }
 
     /// Provider transfers a bike to a dedicated recipient account. After the
@@ -193,20 +202,6 @@ extension BikeDetailRobot {
 }
 
 extension MainContentRobot {
-    @discardableResult
-    func identifyBikes(_ identifiedBikes: inout [String]) -> Self {
-        let predicate = NSPredicate(format: "identifier BEGINSWITH 'Bike'")
-        let bikeButtons = app.buttons.matching(predicate)
-        let filteredBikes = bikeButtons.allElementsBoundByIndex.map {
-            $0.identifier
-            // TODO: do some validation to make sure these are the right elements and we're not getting non-bike UI elements
-            // TODO: Transform to appropriate bike identifiers for comparison against other account
-        }
-        identifiedBikes.append(contentsOf: filteredBikes)
-
-        return self
-    }
-
     /// Whether at least one bike is currently visible in the app's by-status grid.
     func hasVisibleBike() -> Bool {
         let predicate = NSPredicate(format: "identifier BEGINSWITH 'Bike '")
