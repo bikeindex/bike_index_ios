@@ -61,10 +61,18 @@ final class StaleBikeUITest: XCTestCase {
         let robot = MainContentRobot(app)
         try robot.startWithSignIn(email: "user@bikeindex.org", password: Self.testPassword)
 
-        // Validate By-Status display and capture the first user's bike labels.
+        // Group by status and wait for at least one bike to render.
         robot.tapGroupingMenuButton()
             .tapGroupButton(mode: .byStatus)
-            .checkBike(section: Status.withOwner, index: 1, exists: true)
+
+        // Wait for the grid to render (any bike, not a specific section — the
+        // sandbox account's bikes change over time).
+        let firstBikePredicate = NSPredicate(format: "identifier BEGINSWITH 'Bike '")
+        let firstBike = app.buttons.matching(firstBikePredicate).firstMatch
+        XCTAssertTrue(
+            firstBike.waitForExistence(timeout: Robot.defaultTimeout),
+            "expected at least one bike to render for user@bikeindex.org"
+        )
         bikes_belonging_to_first_user = robot.identifyBikeLabels()
 
         try robot.logOut()
@@ -73,7 +81,13 @@ final class StaleBikeUITest: XCTestCase {
         try robot.signIn(email: "member@brakebills.edu", password: Self.testPassword)
             .tapGroupingMenuButton()
             .tapGroupButton(mode: .byStatus)
-            .checkBike(section: Status.unregisteredParkingNotification, index: 1, exists: true)
+
+        let secondBikePredicate = NSPredicate(format: "identifier BEGINSWITH 'Bike '")
+        let secondBike = app.buttons.matching(secondBikePredicate).firstMatch
+        XCTAssertTrue(
+            secondBike.waitForExistence(timeout: Robot.defaultTimeout),
+            "expected at least one bike to render for member@brakebills.edu"
+        )
         bikes_belonging_to_second_user = robot.identifyBikeLabels()
 
         XCTAssertFalse(bikes_belonging_to_first_user.isEmpty, "first user should have bikes")
