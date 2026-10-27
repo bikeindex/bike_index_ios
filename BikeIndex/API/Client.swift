@@ -10,6 +10,7 @@ import HoneybadgerSwift
 import KeychainSwift
 import OSLog
 import StoreKit
+import SwiftData
 import URLEncodedForm
 import WebKit
 
@@ -193,7 +194,11 @@ typealias QueryItemTuple = (name: String, value: String)
 
     // MARK: Logout
     /// Allow users to log out
-    func destroySession() async {
+    /// - Parameter modelContext: Optional SwiftData context. When provided, all
+    ///   ``AuthenticatedUser`` entries are purged so the next sign-in starts
+    ///   from a clean store. Pass `nil` to skip the database purge (e.g. during
+    ///   test deinit where no model context is available).
+    func destroySession(modelContext: ModelContext? = nil) async {
         // Clear web state
         // NOTE: We could parse this for a 302 redirect to /goodbye but that seems unnecessary
         let logoutResult = await get(OAuth.logout)
@@ -223,6 +228,13 @@ typealias QueryItemTuple = (name: String, value: String)
         }
 
         invalidateAuth()
+
+        // Purge authenticated user records so the next sign-in starts clean.
+        // Prevents transient multi-user states that trigger false
+        // "Found more than one active authenticated user" Honeybadger reports.
+        if let modelContext {
+            try? modelContext.delete(model: AuthenticatedUser.self)
+        }
     }
 
     var userCanRegisterBikes: Bool {

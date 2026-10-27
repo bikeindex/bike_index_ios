@@ -13,6 +13,7 @@ import PreviewGallery
 #endif
 
 struct SettingsPage: View {
+    @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
     @State var iconsModel = AlternateIconsModel()
@@ -184,7 +185,7 @@ struct SettingsPage: View {
     }
 
     func logout() async {
-        await client.destroySession()
+        await client.destroySession(modelContext: modelContext)
         path = NavigationPath()
     }
 
