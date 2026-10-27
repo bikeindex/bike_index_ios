@@ -88,8 +88,13 @@ final class MainContentRobot: Robot {
 
     @discardableResult
     func tapFirstBike() -> BikeDetailRobot {
+        return tapBike(at: 1)
+    }
+
+    @discardableResult
+    func tapBike(at index: Int) -> BikeDetailRobot {
         let firstBike = app.buttons.matching(
-            NSPredicate(format: "identifier BEGINSWITH 'Bike' AND identifier ENDSWITH '1'")
+            NSPredicate(format: "identifier BEGINSWITH 'Bike' AND identifier ENDSWITH '\(index)'")
         ).firstMatch
         tap(firstBike)
 
@@ -100,7 +105,7 @@ final class MainContentRobot: Robot {
     @discardableResult
     func tapFirstBike(in section: any MainContentSection) -> BikeDetailRobot {
         tapGroupingMenuButton()
-        tapGroupButton(for: section.groupMode)
+        tapGroupButton(mode: section.groupMode)
         dismissGroupingMenuButton()
 
         let firstBike = app.buttons["Bike \(section.bikeIdentifier)-1"]
@@ -111,10 +116,76 @@ final class MainContentRobot: Robot {
     }
 
     @discardableResult
+    func tapBike(at index: Int) -> EditBikeRobot {
+        let firstBike = app.buttons.matching(
+            NSPredicate(format: "identifier BEGINSWITH 'Bike' AND identifier ENDSWITH '\(index)'")
+        ).firstMatch
+        tap(firstBike)
+
+        return EditBikeRobot(app)
+    }
+
+    @discardableResult
     func checkBike(section: any MainContentSection, index: Int, exists: Bool) -> Self {
         let bike = app.buttons["Bike \(section.bikeIdentifier)-\(index)"]
         assert(bike, [exists ? .exists : .doesNotExist])
         return self
+    }
+
+    // MARK: Label-based (stable) bike lookups
+    //
+    // Positional lookups (`Bike <section>-<index>`) break whenever the set or order of
+    // seeded bikes changes. The main-content bike buttons render `displayTitle`
+    // ("<year> <manufacturer>") as their label, so matching on a distinct label is stable
+    // across reseeds and sort order. Use these for the UI-test fixture bikes.
+
+    /// The bike button whose label contains `label`.
+    func bikeButton(withLabel label: String) -> XCUIElement {
+        app.buttons.matching(
+            NSPredicate(format: "label CONTAINS '\(label)'")
+        ).firstMatch
+    }
+
+    @discardableResult
+    func checkBike(withLabel label: String, exists: Bool) -> Self {
+        assert(bikeButton(withLabel: label), [exists ? .exists : .doesNotExist])
+        return self
+    }
+
+    @discardableResult
+    func checkNoBike(withLabel label: String) -> Self {
+        return checkBike(withLabel: label, exists: false)
+    }
+
+    @discardableResult
+    func tapBike(withLabel label: String) -> BikeDetailRobot {
+        let bike = bikeButton(withLabel: label)
+        assert(bike, [.exists])
+        tap(bike)
+        return BikeDetailRobot(app)
+    }
+
+    /// Taps the bike and hands off to the web-based edit robot, used when the next
+    /// action (e.g. claiming a transferred bike) lives in the edit web view.
+    @discardableResult
+    func tapBikeForEdit(withLabel label: String) -> EditBikeRobot {
+        let bike = bikeButton(withLabel: label)
+        assert(bike, [.exists])
+        tap(bike)
+        return EditBikeRobot(app)
+    }
+
+    /// Collects the labels of every bike currently shown on the main content page.
+    /// Used to assert that two accounts see distinct sets of bikes.
+    @discardableResult
+    func identifyBikeLabels() -> [String] {
+        // Every main-content bike button carries an accessibility identifier beginning
+        // with "Bike " (see BikesGridSectionView). We match on that prefix to scope to
+        // real bikes and read their rendered labels.
+        let bikeButtons = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'Bike '"))
+        return bikeButtons.allElementsBoundByIndex
+            .compactMap { $0.label }
+            .filter { !$0.isEmpty }
     }
 
     @discardableResult
@@ -159,7 +230,7 @@ final class MainContentRobot: Robot {
     }
 
     @discardableResult
-    func tapGroupButton(for groupMode: GroupMode) -> Self {
+    func tapGroupButton(mode groupMode: GroupMode) -> Self {
         switch groupMode {
         case .byStatus:
             tap(groupByStatusButton)
@@ -181,14 +252,14 @@ final class MainContentRobot: Robot {
             if sortOrderAscending.waitForExistence(timeout: timeout) {
                 tap(sortOrderAscending)
             } else {
-                tapGroupButton(for: groupMode)
+                tapGroupButton(mode: groupMode)
             }
         case .reverse:
             // _change to_ descending/forward, if not using that already
             if sortOrderDescending.waitForExistence(timeout: timeout) {
                 tap(sortOrderDescending)
             } else {
-                tapGroupButton(for: groupMode)
+                tapGroupButton(mode: groupMode)
             }
         }
         return self

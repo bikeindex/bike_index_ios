@@ -9,6 +9,7 @@ import XCTest
 
 @MainActor
 final class MainContentUITestCase: XCTestCase {
+
     let app = XCUIApplication()
 
     override func setUpWithError() throws {
@@ -23,7 +24,8 @@ final class MainContentUITestCase: XCTestCase {
 
             // Switch to by-status grouping, forward sort order
             .tapGroupingMenuButton()
-            .tapGroupButton(for: .byStatus)
+            .tapGroupButton(mode: .byStatus)
+
             .tapGroupingMenuButton()
             // will continue if sort order is already correct and dismiss menu
             .tapGroupSortOrderButton(.forward, returnTo: .byStatus)
@@ -39,7 +41,7 @@ final class MainContentUITestCase: XCTestCase {
         // Switch to by-manufacturer grouping, forward sort order
         robot
             .tapGroupingMenuButton()
-            .tapGroupButton(for: .byManufacturer)
+            .tapGroupButton(mode: .byManufacturer)
             .tapGroupingMenuButton()
             .tapGroupSortOrderButton(.forward, returnTo: .byManufacturer)
 

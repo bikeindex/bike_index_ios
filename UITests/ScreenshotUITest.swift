@@ -55,18 +55,21 @@ public final class ScreenshotUITest: XCTestCase {
             .captureSnapshot(named: "2-register-bike-initial")
     }
 
-    // MARK: - 3. Bike Details Page (bike 44)
+    // MARK: - 3. Bike Details Page (fixture bike)
 
-    /// Bike 44 is associated with the sandbox user (user@bikeindex.org) and is
-    /// the first bike on the main content page, so a simple tap-through
-    /// reaches it without any deep-link plumbing.
-    public func test_3_screenshot_bike_details_44() throws {
+    /// Captures the bike detail page for a claimed bike owned by a real seeded account.
+    /// We sign in as user@fakegmail.com (which owns the 2023 Riese & Müller Load4) and
+    /// open it by its rendered label ("<year> <manufacturer>") rather than by list
+    /// position. (user@bikeindex.org, the CI default, owns no claimed bike, so it can't
+    /// be the source here.) NOTE: renaming the snapshot from "3-bike-details-44" requires
+    /// regenerating the reference screenshot (the displayed bike changed from "bike 44").
+    public func test_3_screenshot_bike_details() throws {
         try MainContentRobot(app)
-            .startWithSignIn()
-            .tapFirstBike()
+            .startWithSignIn(email: "user@fakegmail.com", password: "pleaseplease12")
+            .tapBike(withLabel: "2023 Riese & Müller")
             .finishWebViewLoading()
             .ensureSandboxReviewAppBannerAbsent()
-            .captureSnapshot(named: "3-bike-details-44")
+            .captureSnapshot(named: "3-bike-details")
     }
 
     public func test_4_sticker_details() throws {

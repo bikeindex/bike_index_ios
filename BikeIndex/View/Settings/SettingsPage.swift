@@ -6,6 +6,7 @@
 //
 
 import OSLog
+import SwiftData
 import SwiftUI
 
 #if canImport(PreviewGallery) && DEBUG
@@ -13,6 +14,7 @@ import PreviewGallery
 #endif
 
 struct SettingsPage: View {
+    @Environment(\.modelContext) private var modelContext
     @Environment(Client.self) var client
 
     @State var iconsModel = AlternateIconsModel()
@@ -66,6 +68,7 @@ struct SettingsPage: View {
                             .foregroundStyle(Color.highlightPrimary)
                     }
                     .tint(Color.highlightPrimary)
+                    .accessibilityIdentifier("signOutButton")
 
                     NavigationLink(value: SettingsSelection.deleteAccount) {
                         Label("Delete Account", systemImage: "trash.fill")
@@ -184,6 +187,12 @@ struct SettingsPage: View {
 
     func logout() async {
         await client.destroySession()
+
+        // Purge authenticated user records so the next sign-in starts clean.
+        // Prevents transient multi-user states that trigger false
+        // "Found more than one active authenticated user" Honeybadger reports.
+        try? modelContext.delete(model: AuthenticatedUser.self)
+
         path = NavigationPath()
     }
 

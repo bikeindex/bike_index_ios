@@ -137,6 +137,8 @@ Running UI Tests from Xcode may cache logged-in state. Set up a credentials xcco
 
 Fastlane scan can run a single test case such as: `fastlane scan --only-testing "UITests/ManufacturerKeyboardUITestCase"`.
 
+> **Note:** `fastlane scan` (via `-only-testing`) can only run **whole-class** Swift Testing tests. Individual Swift Testing test functions cannot be selected — e.g. `fastlane scan --only-testing "UnitTests/MainContentViewModelTests"` runs the entire class.
+
 ## Creating a release
 
 See the [docs](https://github.com/bikeindex/bike_index_ios/blob/main/docs/release-steps.md#release-steps) for information on the release process, requirements, and continuous delivery.

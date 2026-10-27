@@ -247,7 +247,7 @@ enum Bikes: APIEndpoint {
 
 enum Me: APIEndpoint {
     case `self`  // v3/me
-    case bikes
+    case bikes  // `/v3/me/bikes`
 
     var path: [String] {
         switch self {
