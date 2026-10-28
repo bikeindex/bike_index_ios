@@ -291,6 +291,26 @@ typealias QueryItemTuple = (name: String, value: String)
         return true
     }
 
+    /// True when `url` is this client's OAuth authorization-code callback: the registered
+    /// ``ClientConfiguration/redirectUri`` scheme carrying a `code` query parameter
+    /// (e.g. `bikeindex://?code=…`).
+    ///
+    /// Such URLs are normally intercepted inside the sign-in WebView (see
+    /// `AuthenticationNavigator.Interceptor.filterCompletedAuthentication`), but they can also
+    /// arrive at the app level through `onOpenURL` when a sign-in completes *outside* the
+    /// WebView. The most common trigger is a Magic Link email: the user taps the emailed link in
+    /// their mail app/browser, the web sign-in resumes the OAuth flow, and the resulting
+    /// `redirect_uri` bounce is handed to the app as a plain deeplink. Callers must recognize it
+    /// here and complete the exchange via ``accept(authCallback:)`` instead of misparsing the URL
+    /// as a QR sticker.
+    func isOAuthCodeCallback(_ url: URL) -> Bool {
+        guard let scheme = url.scheme, scheme + "://" == configuration.redirectUri else {
+            return false
+        }
+        let components = URLComponents(string: url.absoluteString)
+        return components?.queryItems?.contains { $0.name == Constants.code } ?? false
+    }
+
     func invalidateAuth() {
         Logger.client.warning("Auth invalidated, clearing session")
         Honeybadger.reset()

@@ -49,6 +49,24 @@ struct BikeIndexApp: App {
     /// If this boxed result contains a QR sticker scanned bike then the view model will persist it.
     /// After the view model persists the QR sticker, it can be stored in DeeplinkManager as the most-recent.
     private func handleUniversalLink(_ url: URL?) {
+        // An OAuth authorization-code callback (e.g. the final redirect of a Magic Link sign-in
+        // that completed outside the in-app WebView) is delivered to us as a plain deeplink.
+        // Recognize it *before* sticker parsing so it is never misreported as an unhandled
+        // deeplink, then complete the token exchange asynchronously.
+        if let url, client.isOAuthCodeCallback(url) {
+            Logger.auth.debug(
+                "\(#function) routing OAuth code callback to Client: \(url, privacy: .auto)")
+            Task {
+                let completed = await client.accept(authCallback: url)
+                if !completed {
+                    Logger.auth.error(
+                        "\(#function) OAuth from deeplink failed: \(url, privacy: .auto)"
+                    )
+                }
+            }
+            return
+        }
+
         let stickerParser = StickerParser(host: client.hostProvider)
         guard let scannedBike = stickerParser.scan(url: url) else {
             Logger.model.error("Failed to handle deeplink: \(String(describing: url))")
