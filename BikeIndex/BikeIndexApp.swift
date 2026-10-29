@@ -97,6 +97,7 @@ struct BikeIndexApp: App {
         self.qrStickerRouter = QRStickerRouter()
 
         Honeybadger.configure(apiKey: client.configuration.honeybadgerApiKey)
+        Honeybadger.setLaunchContext()
 
         let schema = Schema([
             Bike.self,
