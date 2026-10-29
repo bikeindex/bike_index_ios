@@ -444,6 +444,12 @@ jobs:
         uses: ./.github/actions/setup-xcconfig
         with:
           honeybadger_api_key: ${{ secrets.HONEYBADGER_API_KEY }}
+      - name: Validate sandbox (OAuth + stickers + bikes)
+        run: |
+          set -euo pipefail
+          API_CLIENT_ID=$(grep '^API_CLIENT_ID' BikeIndex-development.xcconfig | awk '{print $3}')
+          export API_CLIENT_ID
+          ruby scripts/validate-sandbox.rb
       - name: Retry failing UITests
         id: retry
         # Bound the retry. A hanging/stalling test must not run the job to the

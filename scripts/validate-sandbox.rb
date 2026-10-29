@@ -4,8 +4,9 @@
 # validate-sandbox.rb
 #
 # Validates that the sandbox server has the required OAuth application
-# registered and that test stickers are present. Designed to run as a
-# pre-flight check before integration / UI tests in CI.
+# registered, that test stickers are present, and that test accounts
+# have the bikes the UI tests expect. Designed to run as a pre-flight
+# check before integration / UI tests in CI.
 #
 # Usage:
 #   ruby scripts/validate-sandbox.rb
@@ -22,6 +23,9 @@
 #      returns a code or consent page, not 401).
 #   3. The test sticker BR0001 is present (scanned redirect targets a
 #      bike page, not the user root).
+#   4. Test accounts have bikes: verifies via the admin bikes page that
+#      user@bikeindex.org, transfer_provider@bikeindex.org, and
+#      member@brakebills.edu each own at least one bike.
 #
 # Exit codes:
 #   0 — all checks passed
@@ -38,6 +42,17 @@ CLIENT_ID    = ENV.fetch("API_CLIENT_ID", "")
 STICKER_ID   = "BR0001"
 SCOPE        = "read_bikes"
 USER_AGENT   = "BikeIndexIOS-Validate/1.0"
+
+# Test accounts that must have bikes for the UI tests to pass.
+# Key: display label, Value: [email, minimum bike count]
+BIKE_CHECKS = {
+  "user@bikeindex.org"           => ["user@bikeindex.org", 1],
+  "transfer_provider@bikeindex.org" => ["transfer_provider@bikeindex.org", 1],
+  "member@brakebills.edu"        => ["member@brakebills.edu", 1],
+}.freeze
+
+ADMIN_EMAIL    = "admin@bikeindex.org".freeze
+ADMIN_PASSWORD = "pleaseplease12".freeze
 
 fail "[validate-sandbox] API_CLIENT_ID environment variable is required" if CLIENT_ID.empty?
 
@@ -102,6 +117,50 @@ def doorkeeper_error(body)
 end
 
 # ---------------------------------------------------------------------------
+# Login helper (two-step: identify → password)
+# ---------------------------------------------------------------------------
+def login(session, email, password)
+  res = session.get("/session/identify")
+  return false unless res.code == "200"
+
+  csrf = csrf_from_form(res.body, /session\/identify/)
+  return false if csrf.nil?
+
+  res = session.post("/session/identify",
+    "authenticity_token" => csrf,
+    "session[email]" => email,
+    "session[remember_me]" => "1",
+    "commit" => "Continue"
+  )
+  return false unless res.body.include?("session[password]")
+
+  all_csrf = res.body.scan(/name="authenticity_token" value="([^"]*)"/).flatten
+  password_csrf = all_csrf[2] || all_csrf.last
+
+  res = session.post("/session",
+    "authenticity_token" => password_csrf,
+    "session[email]" => email,
+    "session[password]" => password,
+    "session[remember_me]" => "1",
+    "commit" => "Sign in"
+  )
+  # Regular users land on /my_account; superusers land on /admin.
+  # Any 302 away from the login page means success.
+  res.code == "302" && !res["location"]&.match?(/session\/(identify|new)/)
+end
+
+# ---------------------------------------------------------------------------
+# Bike-count check via admin page
+# ---------------------------------------------------------------------------
+def count_bikes_for_email(admin_session, email)
+  path = "/admin/bikes?search_email=#{URI.encode_www_form(email: email)}&per_page=1"
+  res = admin_session.get(path)
+  return 0 unless res.code == "200"
+  # Each bike row contains a link to /admin/bikes/<id>; count them.
+  res.body.scan(%r{/admin/bikes/\d+}).uniq.size
+end
+
+# ---------------------------------------------------------------------------
 # Checks
 # ---------------------------------------------------------------------------
 errors = []
@@ -113,36 +172,10 @@ puts "→ Logging in to #{SANDBOX_URL.host}..."
 res = session.get("/session/identify")
 fail "[validate-sandbox] Cannot reach #{SANDBOX_URL} (HTTP #{res.code})" unless res.code == "200"
 
-csrf = csrf_from_form(res.body, /session\/identify/)
-fail "[validate-sandbox] Could not extract CSRF token from /session/identify" if csrf.nil?
-
-res = session.post("/session/identify",
-  "authenticity_token" => csrf,
-  "session[email]" => EMAIL,
-  "session[remember_me]" => "1",
-  "commit" => "Continue"
-)
-unless res.body.include?("session[password]")
-  errors << "Step 1 (identify): expected password form but got HTTP #{res.code}"
-  res.body[/name="authenticity_token" value="([^"]*)"/] # keep going to report
-end
-
-if errors.empty?
-  all_csrf = res.body.scan(/name="authenticity_token" value="([^"]*)"/).flatten
-  password_csrf = all_csrf[2] || all_csrf.last
-
-  res = session.post("/session",
-    "authenticity_token" => password_csrf,
-    "session[email]" => EMAIL,
-    "session[password]" => PASSWORD,
-    "session[remember_me]" => "1",
-    "commit" => "Sign in"
-  )
-  if res.code == "302" && res["location"]&.include?("/my_account")
-    puts "  ✓ Login successful"
-  else
-    errors << "Step 2 (password): expected 302 to /my_account, got #{res.code} → #{res['location']}"
-  end
+if login(session, EMAIL, PASSWORD)
+  puts "  ✓ Login successful (#{EMAIL})"
+else
+  errors << "Login as #{EMAIL} failed"
 end
 
 # --- Check 2: OAuth client registered ---------------------------------------
@@ -198,6 +231,25 @@ if errors.empty?
   end
 end
 
+# --- Check 4: Test accounts have bikes ------------------------------------
+if errors.empty?
+  puts "→ Validating bike ownership for test accounts..."
+
+  admin_session = SandboxSession.new(SANDBOX_URL)
+  if login(admin_session, ADMIN_EMAIL, ADMIN_PASSWORD)
+    BIKE_CHECKS.each do |label, (check_email, min_bikes)|
+      count = count_bikes_for_email(admin_session, check_email)
+      if count >= min_bikes
+        puts "  ✓ #{label}: #{count} bike(s) found"
+      else
+        errors << "#{label}: expected ≥#{min_bikes} bike(s), found #{count}"
+      end
+    end
+  else
+    errors << "Could not log in as #{ADMIN_EMAIL} for bike-ownership check"
+  end
+end
+
 # ---------------------------------------------------------------------------
 # Result
 # ---------------------------------------------------------------------------
@@ -206,4 +258,4 @@ if errors.any?
   abort "[validate-sandbox] #{errors.size} check(s) FAILED"
 end
 
-puts "[validate-sandbox] OK: login, OAuth client, and sticker #{STICKER_ID} all valid"
+puts "[validate-sandbox] OK: login, OAuth client, sticker #{STICKER_ID}, and bike ownership all valid"
