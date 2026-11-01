@@ -34,6 +34,7 @@
 require "net/http"
 require "uri"
 require "json"
+require "cgi"
 
 SANDBOX_URL  = URI(ENV.fetch("SANDBOX_URL", "https://sandbox.review.bikeindex.org"))
 EMAIL        = ENV.fetch("SANDBOX_EMAIL", "user@bikeindex.org")
@@ -153,7 +154,7 @@ end
 # Bike-count check via admin page
 # ---------------------------------------------------------------------------
 def count_bikes_for_email(admin_session, email)
-  path = "/admin/bikes?search_email=#{URI.encode_www_form(email: email)}&per_page=1"
+  path = "/admin/bikes?search_email=#{CGI.escape(email)}&per_page=1"
   res = admin_session.get(path)
   return 0 unless res.code == "200"
   # Each bike row contains a link to /admin/bikes/<id>; count them.
