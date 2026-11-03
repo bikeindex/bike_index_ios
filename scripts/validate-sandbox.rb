@@ -106,9 +106,11 @@ end
 # ---------------------------------------------------------------------------
 # HTML helpers
 # ---------------------------------------------------------------------------
-def csrf_from_form(body, action_pattern)
+def csrf_from_form(body, contains: nil, action: nil)
   body.scan(/<form([^>]*)>(.*?<\/form>)/m).each do |attrs, content|
-    return content[/name="authenticity_token" value="([^"]*)"/, 1] if attrs.match?(action_pattern)
+    next if contains && !content.include?(contains)
+    next if action && !attrs.match?(action)
+    return content[/name="authenticity_token" value="([^"]*)"/, 1]
   end
   nil
 end
@@ -124,7 +126,10 @@ def login(session, email, password)
   res = session.get("/session/identify")
   return false unless res.code == "200"
 
-  csrf = csrf_from_form(res.body, /session\/identify/)
+  # Match the form that contains the session[email] input — the page also
+  # embeds a magic-link form whose attributes reference /session/identify,
+  # and a bare action-regex would grab the wrong token.
+  csrf = csrf_from_form(res.body, contains: 'name="session[email]"')
   return false if csrf.nil?
 
   res = session.post("/session/identify",
@@ -135,10 +140,8 @@ def login(session, email, password)
   )
   return false unless res.body.include?("session[password]")
 
-  # The password form's CSRF lives inside <form ... action="/session"> — the
-  # page also embeds magic-link and identify forms whose tokens would 422 on
-  # /session. Match the specific form rather than counting tokens in order.
-  password_csrf = csrf_from_form(res.body, /action="\/session"/)
+  # Match the form containing the password input (the "Log in" form).
+  password_csrf = csrf_from_form(res.body, contains: 'name="session[password]"')
   return false if password_csrf.nil?
 
   res = session.post("/session",
