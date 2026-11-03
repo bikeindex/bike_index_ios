@@ -135,8 +135,11 @@ def login(session, email, password)
   )
   return false unless res.body.include?("session[password]")
 
-  all_csrf = res.body.scan(/name="authenticity_token" value="([^"]*)"/).flatten
-  password_csrf = all_csrf[2] || all_csrf.last
+  # The password form's CSRF lives inside <form ... action="/session"> — the
+  # page also embeds magic-link and identify forms whose tokens would 422 on
+  # /session. Match the specific form rather than counting tokens in order.
+  password_csrf = csrf_from_form(res.body, /action="\/session"/)
+  return false if password_csrf.nil?
 
   res = session.post("/session",
     "authenticity_token" => password_csrf,

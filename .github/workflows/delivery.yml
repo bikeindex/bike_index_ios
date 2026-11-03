@@ -37,6 +37,11 @@ jobs:
     name: Build release archive and distribute
     runs-on: xcode-27
     needs: requires-integration-tests
+    # Safety net: snapshot capture on a wedged sandbox (e.g. a sign-in loop
+    # that never resolves) must not burn the full runner lifetime. The
+    # snapshot step alone takes ~10m on a healthy sandbox; the full release
+    # flow has historically completed in ~55m. 2h is generous.
+    timeout-minutes: 120
     # Release pushes and manual dispatch run the full flow; scheduled runs are
     # snapshot-validation canaries only.
     #
