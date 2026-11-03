@@ -30,6 +30,8 @@ public final class ScreenshotUITest: XCTestCase {
 
     override public func setUpWithError() throws {
         continueAfterFailure = false
+        // test_3's sign-out + re-auth can exceed the plan's 180 s default (mirrors StaleBikeUITest).
+        executionTimeAllowance = 600
         XCUIDevice.shared.orientation = .portrait
         setupSnapshot(app, waitForAnimations: true)
         app.launchEnvironment["EMERGE_IS_RUNNING_FOR_SNAPSHOTS"] = "1"
@@ -57,16 +59,24 @@ public final class ScreenshotUITest: XCTestCase {
 
     // MARK: - 3. Bike Details Page (fixture bike)
 
-    /// Captures the bike detail page for a claimed bike owned by a real seeded account.
-    /// We sign in as user@fakegmail.com (which owns the 2023 Riese & Müller Load4) and
-    /// open it by its rendered label ("<year> <manufacturer>") rather than by list
-    /// position. (user@bikeindex.org, the CI default, owns no claimed bike, so it can't
-    /// be the source here.) NOTE: renaming the snapshot from "3-bike-details-44" requires
-    /// regenerating the reference screenshot (the displayed bike changed from "bike 44").
+    /// Captures the bike detail page for the claimed bike owned by user@fakegmail.com
+    /// (the 2023 Riese & Müller Load4), opened by its rendered label.
+    ///
+    /// `startSignedInAs` is required (not `startWithSignIn`): a prior test may leave the
+    /// app signed in as the CI default (which owns no claimed bike), and plain `signIn`
+    /// would skip, leaving the Riese bike absent. `startSignedInAs` verifies the bike is
+    /// on the grid and re-authenticates as fakegmail only if it's missing.
+    ///
+    /// Renaming the snapshot from "3-bike-details-44" requires regenerating the
+    /// reference screenshot (the displayed bike changed from "bike 44").
     public func test_3_screenshot_bike_details() throws {
         try MainContentRobot(app)
-            .startWithSignIn(email: "user@fakegmail.com", password: "pleaseplease12")
-            .tapBike(withLabel: "2023 Riese & Müller")
+            .startSignedInAs(
+                email: "user@fakegmail.com",
+                password: "pleaseplease12",
+                expectingBike: "Riese & Müller"
+            )
+            .tapBike(displayTitle: "2023 Riese & Müller")
             .finishWebViewLoading()
             .ensureSandboxReviewAppBannerAbsent()
             .captureSnapshot(named: "3-bike-details")

@@ -15,6 +15,43 @@ extension Robot {
             .signIn(email: email, password: password)
     }
 
+    /// Launch the app and guarantee the session is authenticated as `email` (not just
+    /// *any* account), proving it by confirming `bikeLabel` is on the grid.
+    @discardableResult
+    func startSignedInAs(email: String, password: String, expectingBike bikeLabel: String) throws -> Self {
+        try start()
+            .signInAs(email: email, password: password, expectingBike: bikeLabel)
+    }
+
+    /// Ensure the session is `email`, verified by the target bike (`bikeLabel`) being on
+    /// the grid.
+    ///
+    /// `signIn` short-circuits when already signed in as *any* account, so a session
+    /// left over from a prior test would be mistaken for ours. We only log out when the
+    /// bike is missing (wrong account), avoiding an otherwise-flaky always-log-out path.
+    @discardableResult
+    func signInAs(email: String, password: String, expectingBike bikeLabel: String) throws -> Self {
+        try signIn(email: email, password: password)
+        if bikeAppears(onScreenLabel: bikeLabel) {
+            return self
+        }
+
+        Logger.tests.debug("Bike '\(bikeLabel)' absent; logging out and re-authenticating as \(email).")
+        try logOut()
+        try signIn(email: email, password: password)
+        if !bikeAppears(onScreenLabel: bikeLabel) {
+            XCTFail("Still not signed in as \(email) after re-auth; bike '\(bikeLabel)' is not visible.")
+        }
+        return self
+    }
+
+    /// Wait up to `timeout` seconds for a bike button whose label contains `bikeLabel`.
+    func bikeAppears(onScreenLabel bikeLabel: String, timeout: TimeInterval = 15) -> Bool {
+        let normalized = bikeLabel.replacingOccurrences(of: "\u{00A0}", with: " ")
+        let bike = app.buttons.matching(NSPredicate(format: "label CONTAINS '\(normalized)'"))
+        return bike.firstMatch.waitForExistence(timeout: timeout)
+    }
+
     @discardableResult
     func signIn(email: String? = nil, password: String? = nil) throws -> Self {
         // Step 1: A) Open the Sign In Page
@@ -92,21 +129,34 @@ extension Robot {
 
     @discardableResult
     func logOut() throws -> Self {
-        let timeout: TimeInterval = 5
+        let timeout: TimeInterval = 15
 
         let settingsButton = app.buttons["settingsMenu"]
         assert(settingsButton, [.isHittable], timeout: timeout)
-        settingsButton.tap()
+        tapWithRetry(settingsButton, attempts: 3, timeout: timeout)
 
         let signOutButton = app.buttons["signOutButton"]
         assert(signOutButton, [.isHittable], timeout: timeout)
-        signOutButton.tap()
+        tapWithRetry(signOutButton, attempts: 3, timeout: timeout)
 
         // make sure auth page is presented
         let signIn = app.buttons["SignIn"]
         assert(signIn, [.isHittable], timeout: timeout)
 
         return self
+    }
+
+    /// Tap `element`, retrying if it's transiently non-hittable (post-navigation/animation).
+    @discardableResult
+    private func tapWithRetry(_ element: XCUIElement, attempts: Int, timeout: TimeInterval) -> Bool {
+        for _ in 0..<attempts {
+            if element.waitForExistence(timeout: timeout) && element.isHittable {
+                element.tap()
+                return true
+            }
+        }
+        element.tap()
+        return false
     }
 
     /// If OAuth Authorization is required, there _may also_ be a security

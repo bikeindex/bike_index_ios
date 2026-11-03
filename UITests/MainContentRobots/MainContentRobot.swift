@@ -165,6 +165,35 @@ final class MainContentRobot: Robot {
         return BikeDetailRobot(app)
     }
 
+    /// Taps a hardcoded fixture bike by its display title ("<year> <manufacturer>").
+    ///
+    /// Unlike ``tapBike(withLabel:)`` (exact, used for runtime-discovered labels), this
+    /// tolerates whitespace/character drift: it tries the full label, then the
+    /// manufacturer token (e.g. "Riese & Müller").
+    @discardableResult
+    func tapBike(displayTitle: String) -> BikeDetailRobot {
+        let normalized = displayTitle.replacingOccurrences(of: "\u{00A0}", with: " ")
+        var candidates = [normalized]
+        if let spaceIndex = normalized.firstIndex(of: " ") {
+            let manufacturer = normalized[normalized.index(after: spaceIndex)...].trimmingCharacters(in: .whitespaces)
+            if !manufacturer.isEmpty && manufacturer != normalized {
+                candidates.append(manufacturer)
+            }
+        }
+        for candidate in candidates {
+            let bike = app.buttons.matching(
+                NSPredicate(format: "label CONTAINS '\(candidate)'")
+            ).firstMatch
+            if bike.waitForExistence(timeout: 5) {
+                tap(bike)
+                return BikeDetailRobot(app)
+            }
+        }
+        assert(bikeButton(withLabel: normalized), [.exists])
+        tap(bikeButton(withLabel: normalized))
+        return BikeDetailRobot(app)
+    }
+
     /// Taps the bike and hands off to the web-based edit robot, used when the next
     /// action (e.g. claiming a transferred bike) lives in the edit web view.
     @discardableResult
