@@ -59,7 +59,9 @@ extension Robot {
 
     @discardableResult
     func signIn(email: String? = nil, password: String? = nil) throws -> Self {
-        // Step 1: A) Open the Sign In Page
+        // Step 1: A) Open the Sign In Page. Dismiss any OAuth interruption
+        // that may be hiding the button before checking for it.
+        attemptAppOAuthSecurity()
         let signIn = app.buttons["SignIn"]
         let result = signIn.waitForExistence(timeout: 2)
 

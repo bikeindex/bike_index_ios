@@ -31,6 +31,9 @@ final class StaleBikeUITest: XCTestCase {
     static let transferRecipient = "transfer_recipient@bikeindex.org"
     static let testPassword = "pleaseplease12"
 
+    /// Seeded bike on user@bikeindex.org; used to verify-then-recover sign-in.
+    static let firstUserBikeLabel = "Rocky Mountain"
+
     override func setUpWithError() throws {
         continueAfterFailure = false
         // Three sign-in flows + webview transfer + claim: well beyond the
@@ -59,7 +62,12 @@ final class StaleBikeUITest: XCTestCase {
     /// store path.
     func test_staleBikesAreRemoved() throws {
         let robot = MainContentRobot(app)
-        try robot.startWithSignIn(email: "user@bikeindex.org", password: Self.testPassword)
+        // Verify-then-recover: a prior test may leave a different session active.
+        try robot.startSignedInAs(
+            email: "user@bikeindex.org",
+            password: Self.testPassword,
+            expectingBike: Self.firstUserBikeLabel
+        )
 
         // Group by status and wait for at least one bike to render.
         robot.tapGroupingMenuButton()
@@ -78,7 +86,11 @@ final class StaleBikeUITest: XCTestCase {
         try robot.logOut()
 
         // Sign in as a different user and capture their bike labels.
-        try robot.signIn(email: "member@brakebills.edu", password: Self.testPassword)
+        try robot.startSignedInAs(
+            email: "member@brakebills.edu",
+            password: Self.testPassword,
+            expectingBike: "Bianchi"
+        )
             .tapGroupingMenuButton()
             .tapGroupButton(mode: .byStatus)
 
@@ -110,10 +122,14 @@ final class StaleBikeUITest: XCTestCase {
     /// by-status "with owner" list on the provider's next sign-in (the stale-bike
     /// cleanup path).
     func test_transferredBikesAreRemoved() throws {
-        // Provider signs in and groups by status.
+        // Verify-then-recover: a prior test may leave a different session active.
         let provider = MainContentRobot(app)
         try provider
-            .startWithSignIn(email: Self.transferProvider, password: Self.testPassword)
+            .startSignedInAs(
+                email: Self.transferProvider,
+                password: Self.testPassword,
+                expectingBike: "Rocky Mountain"
+            )
             .tapGroupingMenuButton()
             .tapGroupButton(mode: .byStatus)
 
@@ -149,17 +165,13 @@ final class StaleBikeUITest: XCTestCase {
             .back()
             .logOut()  // will go to Settings for us
 
-        // Sign in as the recipient and accept the transfer. When the ownership
-        // is still pending/unlinked, the web app surfaces a "Your bike" claim
-        // card on the transferred bike's detail page (see
-        // app/views/bikes/_bike_show_overlays.html.haml in bikeindex/bike_index)
-        // with a green CLAIM BIKE button; tap it to complete the transfer. When
-        // the ownership was linked directly server-side there is no claim card,
-        // and the bike is already the recipient's - both are valid end states.
-        // Either way, sign back out so the provider sign-in below starts from a
-        // clean signed-out state.
+        // Verify-then-recover: the app may still be signed in as the provider.
         try MainContentRobot(app)
-            .signIn(email: Self.transferRecipient, password: Self.testPassword)
+            .startSignedInAs(
+                email: Self.transferRecipient,
+                password: Self.testPassword,
+                expectingBike: transferredBikeLabel ?? "Bike"
+            )
             .tapFirstBike()
             .claimBike()
             .back()
@@ -170,7 +182,11 @@ final class StaleBikeUITest: XCTestCase {
         app.launch()
         let reSignedInProvider = MainContentRobot(app)
         try reSignedInProvider
-            .startWithSignIn(email: Self.transferProvider, password: Self.testPassword)
+            .startSignedInAs(
+                email: Self.transferProvider,
+                password: Self.testPassword,
+                expectingBike: "Rocky Mountain"
+            )
             .tapGroupingMenuButton()
             .tapGroupButton(mode: .byStatus)
 
@@ -235,7 +251,11 @@ extension StaleBikeUITest {
     static func restoreSeededTransferState(app: XCUIApplication) throws {
         // 1. Check whether the provider still owns a bike.
         try MainContentRobot(app)
-            .startWithSignIn(email: transferProvider, password: testPassword)
+            .startSignedInAs(
+                email: transferProvider,
+                password: testPassword,
+                expectingBike: "Rocky Mountain"
+            )
             .tapGroupingMenuButton()
             .tapGroupButton(mode: .byStatus)
 
@@ -253,7 +273,11 @@ extension StaleBikeUITest {
 
         let recipient = MainContentRobot(app)
         try recipient
-            .signIn(email: transferRecipient, password: testPassword)
+            .startSignedInAs(
+                email: transferRecipient,
+                password: testPassword,
+                expectingBike: "Bike"
+            )
             .tapGroupingMenuButton()
             .tapGroupButton(mode: .byStatus)
 
@@ -292,7 +316,11 @@ extension StaleBikeUITest {
         //    list (matching the seeded state).
         let healedProvider = MainContentRobot(app)
         try healedProvider
-            .startWithSignIn(email: transferProvider, password: testPassword)
+            .startSignedInAs(
+                email: transferProvider,
+                password: testPassword,
+                expectingBike: "Rocky Mountain"
+            )
             .tapGroupingMenuButton()
             .tapGroupButton(mode: .byStatus)
 
