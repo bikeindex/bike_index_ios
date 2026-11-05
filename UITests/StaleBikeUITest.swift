@@ -91,8 +91,8 @@ final class StaleBikeUITest: XCTestCase {
             password: Self.testPassword,
             expectingBike: "Bianchi"
         )
-            .tapGroupingMenuButton()
-            .tapGroupButton(mode: .byStatus)
+        .tapGroupingMenuButton()
+        .tapGroupButton(mode: .byStatus)
 
         let secondBikePredicate = NSPredicate(format: "identifier BEGINSWITH 'Bike '")
         let secondBike = app.buttons.matching(secondBikePredicate).firstMatch
