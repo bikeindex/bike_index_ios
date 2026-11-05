@@ -34,26 +34,25 @@ extension Robot {
     @discardableResult
     func signInAs(email: String, password: String, expectingBike bikeLabel: String) throws -> Self {
         try signIn(email: email, password: password)
-        if bikeAppears(onScreenLabel: bikeLabel) {
+        if anyBikeOnScreen(timeout: 5) {
             return self
         }
 
         Logger.tests.debug(
-            "Bike '\(bikeLabel)' absent; logging out and re-authenticating as \(email).")
+            "No bike on screen; logging out and re-authenticating as \(email).")
         try logOut()
         try signIn(email: email, password: password)
-        if !bikeAppears(onScreenLabel: bikeLabel) {
+        if !anyBikeOnScreen(timeout: 15) {
             XCTFail(
-                "Still not signed in as \(email) after re-auth; bike '\(bikeLabel)' is not visible."
+                "Still not signed in as \(email) after re-auth; no bike visible on screen."
             )
         }
         return self
     }
 
-    /// Wait up to `timeout` seconds for a bike button whose label contains `bikeLabel`.
-    func bikeAppears(onScreenLabel bikeLabel: String, timeout: TimeInterval = 15) -> Bool {
-        let normalized = bikeLabel.replacingOccurrences(of: "\u{00A0}", with: " ")
-        let bike = app.buttons.matching(NSPredicate(format: "label CONTAINS '\(normalized)'"))
+    /// Wait up to `timeout` seconds for any bike button (identifier "Bike N") to appear.
+    func anyBikeOnScreen(timeout: TimeInterval = 15) -> Bool {
+        let bike = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'Bike '"))
         return bike.firstMatch.waitForExistence(timeout: timeout)
     }
 

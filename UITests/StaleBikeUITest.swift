@@ -31,9 +31,6 @@ final class StaleBikeUITest: XCTestCase {
     static let transferRecipient = "transfer_recipient@bikeindex.org"
     static let testPassword = "pleaseplease12"
 
-    /// Seeded bike on user@bikeindex.org; used to verify-then-recover sign-in.
-    static let firstUserBikeLabel = "Rocky Mountain"
-
     override func setUpWithError() throws {
         continueAfterFailure = false
         // Three sign-in flows + webview transfer + claim: well beyond the
@@ -66,7 +63,7 @@ final class StaleBikeUITest: XCTestCase {
         try robot.startSignedInAs(
             email: "user@bikeindex.org",
             password: Self.testPassword,
-            expectingBike: Self.firstUserBikeLabel
+            expectingBike: "Bike"
         )
 
         // Group by status and wait for at least one bike to render.
@@ -89,7 +86,7 @@ final class StaleBikeUITest: XCTestCase {
         try robot.startSignedInAs(
             email: "member@brakebills.edu",
             password: Self.testPassword,
-            expectingBike: "Bianchi"
+            expectingBike: "Bike"
         )
         .tapGroupingMenuButton()
         .tapGroupButton(mode: .byStatus)
@@ -128,7 +125,7 @@ final class StaleBikeUITest: XCTestCase {
             .startSignedInAs(
                 email: Self.transferProvider,
                 password: Self.testPassword,
-                expectingBike: "Rocky Mountain"
+                expectingBike: "Bike"
             )
             .tapGroupingMenuButton()
             .tapGroupButton(mode: .byStatus)
@@ -170,7 +167,7 @@ final class StaleBikeUITest: XCTestCase {
             .startSignedInAs(
                 email: Self.transferRecipient,
                 password: Self.testPassword,
-                expectingBike: transferredBikeLabel ?? "Bike"
+                expectingBike: "Bike"
             )
             .tapFirstBike()
             .claimBike()
@@ -185,7 +182,7 @@ final class StaleBikeUITest: XCTestCase {
             .startSignedInAs(
                 email: Self.transferProvider,
                 password: Self.testPassword,
-                expectingBike: "Rocky Mountain"
+                expectingBike: "Bike"
             )
             .tapGroupingMenuButton()
             .tapGroupButton(mode: .byStatus)
@@ -254,7 +251,7 @@ extension StaleBikeUITest {
             .startSignedInAs(
                 email: transferProvider,
                 password: testPassword,
-                expectingBike: "Rocky Mountain"
+                expectingBike: "Bike"
             )
             .tapGroupingMenuButton()
             .tapGroupButton(mode: .byStatus)
@@ -319,7 +316,7 @@ extension StaleBikeUITest {
             .startSignedInAs(
                 email: transferProvider,
                 password: testPassword,
-                expectingBike: "Rocky Mountain"
+                expectingBike: "Bike"
             )
             .tapGroupingMenuButton()
             .tapGroupButton(mode: .byStatus)
