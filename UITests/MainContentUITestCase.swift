@@ -20,7 +20,11 @@ final class MainContentUITestCase: XCTestCase {
     func test_main_content_section() throws {
         let robot = MainContentRobot(app)
         try robot
-            .startWithSignIn()
+            .startSignedInAs(
+                email: "user@bikeindex.org",
+                password: "pleaseplease12",
+                expectingBike: "Bike"
+            )
 
             // Switch to by-status grouping, forward sort order
             .tapGroupingMenuButton()
