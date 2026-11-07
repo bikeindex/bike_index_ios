@@ -34,15 +34,16 @@ extension Robot {
     @discardableResult
     func signInAs(email: String, password: String, expectingBike bikeLabel: String) throws -> Self {
         try signIn(email: email, password: password)
-        if anyBikeOnScreen(timeout: 20) {
+        if anyBikeOnScreen(timeout: Self.defaultTimeout) {
             return self
         }
 
         Logger.tests.debug(
             "No bike on screen; logging out and re-authenticating as \(email).")
         try logOut()
+        start()
         try signIn(email: email, password: password)
-        if !anyBikeOnScreen(timeout: 15) {
+        if !anyBikeOnScreen(timeout: Self.defaultTimeout) {
             XCTFail(
                 "Still not signed in as \(email) after re-auth; no bike visible on screen."
             )
