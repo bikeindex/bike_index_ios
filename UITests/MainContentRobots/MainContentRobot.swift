@@ -175,7 +175,8 @@ final class MainContentRobot: Robot {
         let normalized = displayTitle.replacingOccurrences(of: "\u{00A0}", with: " ")
         var candidates = [normalized]
         if let spaceIndex = normalized.firstIndex(of: " ") {
-            let manufacturer = normalized[normalized.index(after: spaceIndex)...].trimmingCharacters(in: .whitespaces)
+            let manufacturer = normalized[normalized.index(after: spaceIndex)...]
+                .trimmingCharacters(in: .whitespaces)
             if !manufacturer.isEmpty && manufacturer != normalized {
                 candidates.append(manufacturer)
             }

@@ -18,7 +18,9 @@ extension Robot {
     /// Launch the app and guarantee the session is authenticated as `email` (not just
     /// *any* account), proving it by confirming `bikeLabel` is on the grid.
     @discardableResult
-    func startSignedInAs(email: String, password: String, expectingBike bikeLabel: String) throws -> Self {
+    func startSignedInAs(email: String, password: String, expectingBike bikeLabel: String) throws
+        -> Self
+    {
         try start()
             .signInAs(email: email, password: password, expectingBike: bikeLabel)
     }
@@ -36,11 +38,14 @@ extension Robot {
             return self
         }
 
-        Logger.tests.debug("Bike '\(bikeLabel)' absent; logging out and re-authenticating as \(email).")
+        Logger.tests.debug(
+            "Bike '\(bikeLabel)' absent; logging out and re-authenticating as \(email).")
         try logOut()
         try signIn(email: email, password: password)
         if !bikeAppears(onScreenLabel: bikeLabel) {
-            XCTFail("Still not signed in as \(email) after re-auth; bike '\(bikeLabel)' is not visible.")
+            XCTFail(
+                "Still not signed in as \(email) after re-auth; bike '\(bikeLabel)' is not visible."
+            )
         }
         return self
     }
@@ -148,7 +153,8 @@ extension Robot {
 
     /// Tap `element`, retrying if it's transiently non-hittable (post-navigation/animation).
     @discardableResult
-    private func tapWithRetry(_ element: XCUIElement, attempts: Int, timeout: TimeInterval) -> Bool {
+    private func tapWithRetry(_ element: XCUIElement, attempts: Int, timeout: TimeInterval) -> Bool
+    {
         for _ in 0..<attempts {
             if element.waitForExistence(timeout: timeout) && element.isHittable {
                 element.tap()
