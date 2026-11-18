@@ -231,6 +231,10 @@ if errors.empty?
 
   if res.code == "302" && res["location"]&.match?(%r{/bikes/\d})
     puts "  ✓ Sticker #{STICKER_ID} found → #{res['location']}"
+  elsif res.code == "302" && res["location"]&.match?(%r{/registrations/})
+    # Sticker exists but the user already owns the bike — the server
+    # redirects to a re-scan/registration page.  This is valid.
+    puts "  ✓ Sticker #{STICKER_ID} found (already owned) → #{res['location']}"
   elsif res.code == "302" && res["location"]&.include?("/my_account")
     errors << "Sticker #{STICKER_ID}: not found (redirected to /my_account)"
   else
