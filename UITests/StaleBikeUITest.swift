@@ -159,8 +159,9 @@ final class StaleBikeUITest: XCTestCase {
             .typeNewOwner(email: Self.transferRecipient)
             .updateOwnership()
             .finishWebViewLoading()
-            .back()
-            .logOut()  // will go to Settings for us
+            .back()  // EditBike → BikeDetail
+            .back()  // BikeDetail → main content (needed for logOut's settingsMenu)
+            .logOut()
 
         // Verify-then-recover: the app may still be signed in as the provider.
         try MainContentRobot(app)
@@ -304,7 +305,8 @@ extension StaleBikeUITest {
             .typeNewOwner(email: transferProvider)
             .updateOwnership()
             .finishWebViewLoading()
-            .back()
+            .back()  // EditBike → BikeDetail
+            .back()  // BikeDetail → main content
             .logOut()
 
         // 3. Sign in as the provider. If a claim card is present (pending
