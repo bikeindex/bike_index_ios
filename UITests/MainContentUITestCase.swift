@@ -21,7 +21,7 @@ final class MainContentUITestCase: XCTestCase {
         let robot = MainContentRobot(app)
         try robot
             .startSignedInAs(
-                email: "user@bikeindex.org",
+                email: "ios_review@bikeindex.org",
                 password: "pleaseplease12",
                 expectingBike: "Bike"
             )

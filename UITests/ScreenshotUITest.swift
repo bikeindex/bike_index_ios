@@ -59,20 +59,20 @@ public final class ScreenshotUITest: XCTestCase {
 
     // MARK: - 3. Bike Details Page (fixture bike)
 
-    /// Captures the bike detail page for the claimed bike owned by user@fakegmail.com
+    /// Captures the bike detail page for the claimed bike owned by ios_review@bikeindex.org
     /// (the 2023 Riese & Müller Load4), opened by its rendered label.
     ///
     /// `startSignedInAs` is required (not `startWithSignIn`): a prior test may leave the
     /// app signed in as the CI default (which owns no claimed bike), and plain `signIn`
     /// would skip, leaving the Riese bike absent. `startSignedInAs` verifies the bike is
-    /// on the grid and re-authenticates as fakegmail only if it's missing.
+    /// on the grid and re-authenticates as the ios_review account only if it's missing.
     ///
     /// Renaming the snapshot from "3-bike-details-44" requires regenerating the
     /// reference screenshot (the displayed bike changed from "bike 44").
     public func test_3_screenshot_bike_details() throws {
         try MainContentRobot(app)
             .startSignedInAs(
-                email: "user@fakegmail.com",
+                email: "ios_review@bikeindex.org",
                 password: "pleaseplease12",
                 expectingBike: "Riese & Müller"
             )

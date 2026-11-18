@@ -27,6 +27,10 @@ final class StaleBikeUITest: XCTestCase {
 
     /// Dedicated sandbox accounts (bikeindex/bike_index#4656): the provider is
     /// seeded with exactly one bike to transfer, the recipient starts empty.
+    /// `stale@` has a year-prefixed label ("2025 {M}") that cannot collide
+    /// with `user@`'s "no-year" labels ("{M} {serial}"), guaranteeing
+    /// the disjoint assertion never flakes on a label collision.
+    static let staleUser = "stale@bikeindex.org"
     static let transferProvider = "transfer_provider@bikeindex.org"
     static let transferRecipient = "transfer_recipient@bikeindex.org"
     static let testPassword = "pleaseplease12"
@@ -61,7 +65,7 @@ final class StaleBikeUITest: XCTestCase {
         let robot = MainContentRobot(app)
         // Verify-then-recover: a prior test may leave a different session active.
         try robot.startSignedInAs(
-            email: "user@bikeindex.org",
+            email: "ios_review@bikeindex.org",
             password: Self.testPassword,
             expectingBike: "Bike"
         )
@@ -76,7 +80,7 @@ final class StaleBikeUITest: XCTestCase {
         let firstBike = app.buttons.matching(firstBikePredicate).firstMatch
         XCTAssertTrue(
             firstBike.waitForExistence(timeout: Robot.defaultTimeout),
-            "expected at least one bike to render for user@bikeindex.org"
+            "expected at least one bike to render for ios_review@bikeindex.org"
         )
         bikes_belonging_to_first_user = robot.identifyBikeLabels()
 
@@ -84,7 +88,7 @@ final class StaleBikeUITest: XCTestCase {
 
         // Sign in as a different user and capture their bike labels.
         try robot.startSignedInAs(
-            email: "member@brakebills.edu",
+            email: Self.staleUser,
             password: Self.testPassword,
             expectingBike: "Bike"
         )
@@ -95,7 +99,7 @@ final class StaleBikeUITest: XCTestCase {
         let secondBike = app.buttons.matching(secondBikePredicate).firstMatch
         XCTAssertTrue(
             secondBike.waitForExistence(timeout: Robot.defaultTimeout),
-            "expected at least one bike to render for member@brakebills.edu"
+            "expected at least one bike to render for \(Self.staleUser)"
         )
         bikes_belonging_to_second_user = robot.identifyBikeLabels()
 
