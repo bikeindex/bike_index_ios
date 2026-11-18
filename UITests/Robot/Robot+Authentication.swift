@@ -34,7 +34,7 @@ extension Robot {
     @discardableResult
     func signInAs(email: String, password: String, expectingBike bikeLabel: String) throws -> Self {
         try signIn(email: email, password: password)
-        if anyBikeOnScreen(timeout: 5) {
+        if anyBikeOnScreen(timeout: 20) {
             return self
         }
 
@@ -129,6 +129,15 @@ extension Robot {
 
         // Step 5: Make sure that this OAuth Application is authorized.
         authorizeOAuthApplication()
+
+        // Step 6: The OAuth callback (deep link back into the app) takes longer
+        // than the "Authorize" tap to land — the app briefly re-shows the Sign in
+        // page before the session is persisted and the bike grid renders. Without
+        // this gate, callers that immediately query the grid (e.g. signInAs's
+        // 5 s identity check) see the transient logged-out UI and wrongly
+        // conclude the sign-in failed.
+        let postOAuthSignIn = app.buttons["SignIn"]
+        _ = postOAuthSignIn.waitForNonExistence(timeout: 90)
 
         return self
     }

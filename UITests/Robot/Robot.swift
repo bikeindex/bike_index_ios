@@ -22,6 +22,13 @@ open class Robot {
 
     @discardableResult
     func start(timeout: TimeInterval = Robot.defaultTimeout) -> Self {
+        // Tests run in the same process on the same simulator, so a prior test
+        // can leave the app mid-webview (e.g. stuck on the OAuth login page).
+        // Terminating before launch guarantees each test starts from a clean
+        // state instead of inheriting a broken one and cascading into
+        // timeout failures. (Not app.reset(): that would wipe the keychain and
+        // force a full OAuth re-auth on every test.)
+        app.terminate()
         app.launch()
         return assert(app, [.exists], timeout: timeout)
     }
