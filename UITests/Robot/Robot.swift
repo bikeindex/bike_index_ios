@@ -68,9 +68,17 @@ open class Robot {
     /// retry the whole test via the test plan's maximumTestRepetitions).
     @discardableResult
     func back(timeout: TimeInterval = 10) -> Self {
-        let button = navigationBar.buttons.firstMatch
-        if button.waitForExistence(timeout: 2), button.isHittable {
-            button.tap()
+        // On the root (main content) page there is no back button, but the
+        // toolbar's `settingsMenu` gear is the firstMatch in the navigation bar
+        // and masquerades as one. Tapping it pushes onto Settings and silently
+        // breaks any subsequent logOut()/main-content assertion. The SwiftUI
+        // back button has no such identifier, so we query for a back button
+        // explicitly excluding the gear.
+        let backButton = navigationBar.buttons
+            .matching(NSPredicate(format: "identifier != 'settingsMenu'"))
+            .firstMatch
+        if backButton.waitForExistence(timeout: 2), backButton.isHittable {
+            backButton.tap()
             return self
         }
         print("[\(self)] warning: nav back button not hittable in 2s")
