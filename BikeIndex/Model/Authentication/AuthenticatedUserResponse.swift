@@ -88,7 +88,8 @@ struct AuthenticatedUserResponse: ResponseDecodable, ResponseModelInstantiable {
                         matchPaths: item.matchPaths?.paths ?? [],
                         matchParams: item.matchParams,
                         childrenData: childrenData)
-                })
+                },
+                users: [])
         }
     }
 }
