@@ -278,7 +278,8 @@ final class UserRelationshipTests: XCTestCase {
             menu: [
                 MenuItem(type: "link", label: "A", path: "/a"),
                 MenuItem(type: "divider"),
-            ])
+            ],
+            users: [])
         user.organizations = [org]
 
         let context = container.mainContext
