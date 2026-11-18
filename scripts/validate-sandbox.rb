@@ -34,6 +34,7 @@
 require "net/http"
 require "uri"
 require "json"
+require "cgi"
 
 SANDBOX_URL  = URI(ENV.fetch("SANDBOX_URL", "https://sandbox.review.bikeindex.org"))
 EMAIL        = ENV.fetch("SANDBOX_EMAIL", "user@bikeindex.org")
@@ -105,9 +106,11 @@ end
 # ---------------------------------------------------------------------------
 # HTML helpers
 # ---------------------------------------------------------------------------
-def csrf_from_form(body, action_pattern)
+def csrf_from_form(body, contains: nil, action: nil)
   body.scan(/<form([^>]*)>(.*?<\/form>)/m).each do |attrs, content|
-    return content[/name="authenticity_token" value="([^"]*)"/, 1] if attrs.match?(action_pattern)
+    next if contains && !content.include?(contains)
+    next if action && !attrs.match?(action)
+    return content[/name="authenticity_token" value="([^"]*)"/, 1]
   end
   nil
 end
@@ -123,7 +126,10 @@ def login(session, email, password)
   res = session.get("/session/identify")
   return false unless res.code == "200"
 
-  csrf = csrf_from_form(res.body, /session\/identify/)
+  # Match the form that contains the session[email] input — the page also
+  # embeds a magic-link form whose attributes reference /session/identify,
+  # and a bare action-regex would grab the wrong token.
+  csrf = csrf_from_form(res.body, contains: 'name="session[email]"')
   return false if csrf.nil?
 
   res = session.post("/session/identify",
@@ -134,8 +140,9 @@ def login(session, email, password)
   )
   return false unless res.body.include?("session[password]")
 
-  all_csrf = res.body.scan(/name="authenticity_token" value="([^"]*)"/).flatten
-  password_csrf = all_csrf[2] || all_csrf.last
+  # Match the form containing the password input (the "Log in" form).
+  password_csrf = csrf_from_form(res.body, contains: 'name="session[password]"')
+  return false if password_csrf.nil?
 
   res = session.post("/session",
     "authenticity_token" => password_csrf,
@@ -153,7 +160,7 @@ end
 # Bike-count check via admin page
 # ---------------------------------------------------------------------------
 def count_bikes_for_email(admin_session, email)
-  path = "/admin/bikes?search_email=#{URI.encode_www_form(email: email)}&per_page=1"
+  path = "/admin/bikes?search_email=#{CGI.escape(email)}&per_page=1"
   res = admin_session.get(path)
   return 0 unless res.code == "200"
   # Each bike row contains a link to /admin/bikes/<id>; count them.
