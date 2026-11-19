@@ -33,9 +33,9 @@ final class StaleBikeUITest: XCTestCase {
 
     override func setUpWithError() throws {
         continueAfterFailure = false
-        // Three sign-in flows + webview transfer + claim: well beyond the
-        // 120 s scheme default.
-        executionTimeAllowance = 600
+        // Three sign-in flows + webview transfer + claim + terminate/launch:
+        // CI devices (iPhone 18 Pro) can be slow; 15 min covers worst-case.
+        executionTimeAllowance = 900
         XCUIDevice.shared.orientation = .portrait
     }
 

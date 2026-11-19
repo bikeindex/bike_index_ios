@@ -52,7 +52,7 @@ extension Robot {
     }
 
     /// Wait up to `timeout` seconds for any bike button (identifier "Bike N") to appear.
-    func anyBikeOnScreen(timeout: TimeInterval = 15) -> Bool {
+    func anyBikeOnScreen(timeout: TimeInterval = Robot.defaultTimeout) -> Bool {
         let bike = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'Bike '"))
         return bike.firstMatch.waitForExistence(timeout: timeout)
     }
