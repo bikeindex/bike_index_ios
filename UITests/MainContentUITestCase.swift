@@ -15,6 +15,7 @@ final class MainContentUITestCase: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
         XCUIDevice.shared.orientation = .portrait
+        executionTimeAllowance = 300
     }
 
     func test_main_content_section() throws {

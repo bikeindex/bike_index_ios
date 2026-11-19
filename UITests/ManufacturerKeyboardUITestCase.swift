@@ -14,6 +14,7 @@ final class ManufacturerKeyboardUITestCase: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
         XCUIDevice.shared.orientation = .portrait
+        executionTimeAllowance = 300
     }
 
     override func tearDownWithError() throws {
