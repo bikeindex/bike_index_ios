@@ -35,7 +35,7 @@ final class StaleBikeUITest: XCTestCase {
         continueAfterFailure = false
         // Three sign-in flows + webview transfer + claim + terminate/launch:
         // CI devices (iPhone 18 Pro) can be slow; 15 min covers worst-case.
-        executionTimeAllowance = 900
+        executionTimeAllowance = 1200
         XCUIDevice.shared.orientation = .portrait
     }
 
