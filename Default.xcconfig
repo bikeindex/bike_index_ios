@@ -5,8 +5,8 @@
 //  Created by Jack on 5/8/26.
 //
 
-CURRENT_PROJECT_VERSION = 77
-MARKETING_VERSION = 1.7
+CURRENT_PROJECT_VERSION = 78
+MARKETING_VERSION = 1.7.1
 
 API_HOST = https:\/\/sandbox.review.bikeindex.org
 API_PORT = 443
