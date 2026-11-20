@@ -35,7 +35,7 @@ final class BikeIndexUITests: XCTestCase {
     func test_basic_bike_detail_navigation() throws {
         try MainContentRobot(app)
             .startWithSignIn()
-            .tapFirstBike(in: Status.unregisteredParkingNotification)
+            .tapFirstBike()
             .tapEditButton()
             .tapViewBikeButton()
             .tapEditButton()
