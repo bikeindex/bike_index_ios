@@ -35,7 +35,7 @@ runs:
       run: |
         {
           echo '#include "BikeIndex-development"'
-          echo 'TEST_USERNAME = user@bikeindex.org'
+          echo 'TEST_USERNAME = ios_review@bikeindex.org'
           echo 'TEST_PASSWORD = pleaseplease12'
         } > Test-credentials.xcconfig
       shell: bash

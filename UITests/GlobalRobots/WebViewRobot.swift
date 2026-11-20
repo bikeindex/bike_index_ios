@@ -73,8 +73,13 @@ final class WebViewRobot: Robot {
     func tapViewAllFilesIfNeeded(timeout: TimeInterval = Robot.defaultTimeout) -> Self {
         // Conditional because iPad has enough space to display LICENSE.txt without tapping "View all files"
         let viewAllFiles = app.webViews.buttons["View all files"]
-        if viewAllFiles.waitForExistence(timeout: timeout) {
-            viewAllFiles.tap()
+        retry { [weak self] in
+            if viewAllFiles.waitForExistence(timeout: timeout) {
+                viewAllFiles.tap()
+                return true
+            }
+            self?.app.swipeUp()
+            return false
         }
 
         return self

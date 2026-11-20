@@ -88,6 +88,7 @@ struct WelcomeView: View {
     }
 }
 
+#if DEBUG
 #Preview("Client always restoring") {
     NavigationStack {
         WelcomeView(displaySignIn: .constant(false))
@@ -96,3 +97,4 @@ struct WelcomeView: View {
             .navigationTitle("Welcome to Bike Index")
     }
 }
+#endif

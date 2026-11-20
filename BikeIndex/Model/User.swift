@@ -50,7 +50,7 @@ import SwiftData
 
     /// The organizations this user belongs to, as reported by `GET /api/v3/me`.
     /// Ordered the way the server serves them (the user's set organization-role order).
-    @Relationship(deleteRule: .cascade)
+    @Relationship(deleteRule: .nullify)
     var organizations: [Organization]
 
     init(

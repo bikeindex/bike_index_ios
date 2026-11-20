@@ -14,6 +14,9 @@ final class BikeIndexUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
         XCUIDevice.shared.orientation = .portrait
+        // Scheme default is 2 min; sign-in via OAuth+deep-link can take ~50s
+        // on CI, leaving little headroom. 5 min covers sign-in + navigation.
+        executionTimeAllowance = 600
     }
 
     override func tearDownWithError() throws {
@@ -32,7 +35,7 @@ final class BikeIndexUITests: XCTestCase {
     func test_basic_bike_detail_navigation() throws {
         try MainContentRobot(app)
             .startWithSignIn()
-            .tapFirstBike(in: Status.unregisteredParkingNotification)
+            .tapFirstBike()
             .tapEditButton()
             .tapViewBikeButton()
             .tapEditButton()

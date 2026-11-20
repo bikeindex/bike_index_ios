@@ -30,6 +30,9 @@ import SwiftData
     @Relationship(deleteRule: .cascade)
     fileprivate(set) var menu: [MenuItem]
 
+    @Relationship(deleteRule: .nullify, inverse: \User.organizations)
+    var users: [User]
+
     init(
         identifier: Int,
         name: String,
@@ -38,7 +41,8 @@ import SwiftData
         logo: URL? = nil,
         accessToken: String,
         userIsOrganizationAdmin: Bool,
-        menu: [MenuItem]
+        menu: [MenuItem],
+        users: [User]
     ) {
         self.identifier = identifier
         self.name = name
@@ -48,6 +52,7 @@ import SwiftData
         self.accessToken = accessToken
         self.userIsOrganizationAdmin = userIsOrganizationAdmin
         self.menu = menu
+        self.users = users
     }
 }
 

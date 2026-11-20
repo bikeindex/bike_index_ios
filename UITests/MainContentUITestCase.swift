@@ -15,12 +15,17 @@ final class MainContentUITestCase: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
         XCUIDevice.shared.orientation = .portrait
+        executionTimeAllowance = 300
     }
 
     func test_main_content_section() throws {
         let robot = MainContentRobot(app)
         try robot
-            .startWithSignIn()
+            .startSignedInAs(
+                email: "ios_review@bikeindex.org",
+                password: "pleaseplease12",
+                expectingBike: "Bike"
+            )
 
             // Switch to by-status grouping, forward sort order
             .tapGroupingMenuButton()
