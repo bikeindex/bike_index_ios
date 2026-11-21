@@ -59,8 +59,13 @@ jobs:
       # ─── Per-device snapshot steps ───────────────────────────────────
       # Each device runs sequentially with its own timeout. If one device
       # hangs (e.g. OAuth loop in test_3), the remaining devices still
-      # get a fair shot. The first device clears previous screenshots;
-      # subsequent devices accumulate (`--clear_previous_screenshots false`).
+      # get a fair shot. Screenshots are cleared before the first device
+      # and accumulated across subsequent devices (the incompatible
+      # --clear_previous_screenshots flag was removed — fastlane on the
+      # runner is v2.241.2; the flag was added in v2.242.0).
+
+      - name: Clear previous screenshots
+        run: rm -rf fastlane/screenshots/*
 
       - name: Capture iPhone 18 Pro Max screenshots
         timeout-minutes: 25
@@ -72,7 +77,6 @@ jobs:
             --derived_data_path build \
             --result_bundle true \
             --output_types junit \
-            --clear_previous_screenshots true \
             2>&1 | tee /tmp/fastlane_snapshot.log
           count=$(find fastlane/screenshots -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
           echo "iPhone 18 Pro Max: ${count}/5 screenshots"
@@ -91,7 +95,6 @@ jobs:
             --derived_data_path build \
             --result_bundle true \
             --output_types junit \
-            --clear_previous_screenshots false \
             2>&1 | tee -a /tmp/fastlane_snapshot.log
           count=$(find fastlane/screenshots -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
           echo "iPhone 18 Pro: ${count}/5 screenshots"
@@ -110,7 +113,6 @@ jobs:
             --derived_data_path build \
             --result_bundle true \
             --output_types junit \
-            --clear_previous_screenshots false \
             2>&1 | tee -a /tmp/fastlane_snapshot.log
           count=$(find fastlane/screenshots -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
           echo "iPad Air 13-inch: ${count}/5 screenshots"
@@ -129,7 +131,6 @@ jobs:
             --derived_data_path build \
             --result_bundle true \
             --output_types junit \
-            --clear_previous_screenshots false \
             2>&1 | tee -a /tmp/fastlane_snapshot.log
           count=$(find fastlane/screenshots -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
           echo "iPad Air 11-inch: ${count}/5 screenshots"
