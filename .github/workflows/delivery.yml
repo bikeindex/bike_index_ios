@@ -55,12 +55,6 @@ jobs:
        github.event_name == 'workflow_dispatch' ||
        github.event_name == 'schedule')
     steps:
-      # Release mode must not proceed if the integration gate failed (the job
-      # runs thanks to `always()`). Snapshot-validation mode ignores the gate.
-      - name: Enforce integration gate (release mode)
-        if: startsWith(github.ref_name, 'release/v') && needs.requires-integration-tests.result != 'success'
-        run: exit 1
-
       - name: Select flow (release vs. snapshot validation)
         env:
           SCHEDULED: ${{ github.event_name == 'schedule' }}
@@ -140,6 +134,13 @@ jobs:
       # All release-mode steps below are gated on steps.flow.outputs.
 
       # ─── Release build and distribution ───────────────────────────────
+      # Release mode must not proceed if the integration gate failed (the job
+      # runs thanks to `always()`). Snapshot-validation mode ignores the gate.
+      - name: Enforce integration gate (release mode)
+        if: steps.flow.outputs.SNAPSHOT_VALIDATION_ONLY != 'true' &&
+            startsWith(github.ref_name, 'release/v') &&
+            needs.requires-integration-tests.result != 'success'
+        run: exit 1
 
       - name: Strip SnapshotPreviews package
         if: steps.flow.outputs.SNAPSHOT_VALIDATION_ONLY != 'true'
