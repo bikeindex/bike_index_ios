@@ -1,0 +1,166 @@
+name: CD Snapshots
+# Captures and validates UI screenshots against the sandbox.
+# Each device runs as a separate step with its own bounded timeout
+# so a hung device doesn't burn the entire job's runner quota.
+#
+# Runs on:
+#   - push to release/v* branches
+#   - weekly Monday 6am UTC (canary)
+#   - manual dispatch
+#   - workflow_call (reusable)
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: ["release/v*"]
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+  workflow_call:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  snapshot:
+    name: Snapshot validation
+    runs-on: xcode-27
+    # 90m: 4 devices × ~25 min each = ~100 min worst case (conservative)
+    # Realistic: ~60-80 min total (5 tests × 4 devices × ~3-5 min each)
+    # Individual step timeouts (25m) prevent one hung device from
+    # consuming the full job budget.
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set Xcode 27
+        run: sudo xcode-select -s /Applications/Xcode_27.1.app
+
+      # Sandbox env: no Honeybadger key for canary screenshots.
+      - name: Set up development + production xcconfigs (sandbox)
+        uses: ./.github/actions/setup-xcconfig
+        with:
+          environments: development production
+          honeybadger_api_key: ""
+
+      - name: Restore cached build products (optional)
+        uses: actions/cache/restore@v5
+        with:
+          path: build
+          key: cache-build-${{ github.sha }}
+          fail-on-cache-miss: false
+
+      # ─── Per-device snapshot steps ───────────────────────────────────
+      # Each device runs sequentially with its own timeout. If one device
+      # hangs (e.g. OAuth loop in test_3), the remaining devices still
+      # get a fair shot. The first device clears previous screenshots;
+      # subsequent devices accumulate (`--clear_previous_screenshots false`).
+
+      - name: Capture iPhone 18 Pro Max screenshots
+        timeout-minutes: 25
+        run: |
+          set -o pipefail
+          fastlane scan \
+            --testplan ReleaseScreenshots \
+            --device "iPhone 18 Pro Max" \
+            --derived_data_path build \
+            --result_bundle true \
+            --output_types junit \
+            --clear_previous_screenshots true \
+            2>&1 | tee /tmp/fastlane_snapshot.log
+          count=$(find fastlane/screenshots -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
+          echo "iPhone 18 Pro Max: ${count}/5 screenshots"
+          if [ "${count}" -ne 5 ]; then
+            echo "::error::Expected 5 screenshots for iPhone 18 Pro Max, got ${count}. See /tmp/fastlane_snapshot.log"
+            exit 1
+          fi
+
+      - name: Capture iPhone 18 Pro screenshots
+        timeout-minutes: 25
+        run: |
+          set -o pipefail
+          fastlane scan \
+            --testplan ReleaseScreenshots \
+            --device "iPhone 18 Pro" \
+            --derived_data_path build \
+            --result_bundle true \
+            --output_types junit \
+            --clear_previous_screenshots false \
+            2>&1 | tee -a /tmp/fastlane_snapshot.log
+          count=$(find fastlane/screenshots -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
+          echo "iPhone 18 Pro: ${count}/5 screenshots"
+          if [ "$((count % 5))" -ne 0 ]; then
+            echo "::error::Expected screenshots in multiples of 5, got ${count}. See /tmp/fastlane_snapshot.log"
+            exit 1
+          fi
+
+      - name: Capture iPad Air 13-inch (M4) screenshots
+        timeout-minutes: 25
+        run: |
+          set -o pipefail
+          fastlane scan \
+            --testplan ReleaseScreenshots \
+            --device "iPad Air 13-inch (M4)" \
+            --derived_data_path build \
+            --result_bundle true \
+            --output_types junit \
+            --clear_previous_screenshots false \
+            2>&1 | tee -a /tmp/fastlane_snapshot.log
+          count=$(find fastlane/screenshots -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
+          echo "iPad Air 13-inch: ${count}/5 screenshots"
+          if [ "$((count % 5))" -ne 0 ]; then
+            echo "::error::Expected screenshots in multiples of 5, got ${count}. See /tmp/fastlane_snapshot.log"
+            exit 1
+          fi
+
+      - name: Capture iPad Air 11-inch (M4) screenshots
+        timeout-minutes: 25
+        run: |
+          set -o pipefail
+          fastlane scan \
+            --testplan ReleaseScreenshots \
+            --device "iPad Air 11-inch (M4)" \
+            --derived_data_path build \
+            --result_bundle true \
+            --output_types junit \
+            --clear_previous_screenshots false \
+            2>&1 | tee -a /tmp/fastlane_snapshot.log
+          count=$(find fastlane/screenshots -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
+          echo "iPad Air 11-inch: ${count}/5 screenshots"
+          if [ "$((count % 5))" -ne 0 ]; then
+            echo "::error::Expected screenshots in multiples of 5, got ${count}. See /tmp/fastlane_snapshot.log"
+            exit 1
+          fi
+
+      # ─── Validation ──────────────────────────────────────────────────
+
+      - name: Validate snapshots
+        run: |
+          # 5 test methods × 4 devices = 20 expected PNGs
+          ruby scripts/validate-screenshots.rb fastlane/screenshots 20
+
+      - name: Upload snapshots as artifact
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: snapshots-${{ github.sha }}
+          path: fastlane/screenshots/**/*.png
+          retention-days: 30
+
+      - name: Upload test results (.xcresult) for diagnosis
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-results-${{ github.sha }}
+          path: |
+            build/test-output/**/*.xcresult
+            fastlane/screenshots/**/*.xcresult
+            fastlane/test_output/**/*.xcresult
+          if-no-files-found: warn
+          retention-days: 14

@@ -1,0 +1,93 @@
+name: CD Release
+# Builds a release archive and uploads it as a CI artifact.
+#
+# Triggers ONLY on push to `release/v*` branches.
+# Requires integration tests to pass first (via reusable workflow call).
+#
+# This workflow does NOT capture snapshots — use `cd-snapshots.yml` for that.
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: ["release/v*"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  requires-integration-tests:
+    uses: bikeindex/bike_index_ios/.github/workflows/integration.yml@main
+    secrets: inherit
+
+  build-release:
+    name: Build release archive and distribute
+    runs-on: xcode-27
+    needs: requires-integration-tests
+    # Safety net: snapshot capture on a wedged sandbox (e.g. a sign-in loop
+    # that never resolves) must not burn the full runner lifetime. The
+    # snapshot step alone takes ~10m on a healthy sandbox; the full release
+    # flow has historically completed in ~55m. 2h is generous.
+    timeout-minutes: 120
+    steps:
+      - name: Enforce integration gate
+        if: needs.requires-integration-tests.result != 'success'
+        run: exit 1
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set Xcode 27
+        run: sudo xcode-select -s /Applications/Xcode_27.1.app
+
+      - name: Strip SnapshotPreviews package
+        run: |
+          brew install swift-sh
+          ./scripts/release/strip-SnapshotPreviews.swift BikeIndex.xcodeproj
+          xcodebuild -resolvePackageDependencies
+
+      - name: Load API key and xcconfig
+        env:
+          MATCH_API_KEY_JSON_CONTENT: ${{ secrets.MATCH_API_KEY_JSON_CONTENT }}
+          API_SECRET: ${{ secrets.PRODUCTION__API_SECRET }}
+          API_CLIENT_ID: ${{ secrets.PRODUCTION__API_CLIENT_ID }}
+          HONEYBADGER_API_KEY: ${{ secrets.HONEYBADGER_API_KEY }}
+        run: |
+          echo "$MATCH_API_KEY_JSON_CONTENT" > ./fastlane/api-key.json
+          # Rewrite the production xcconfig fresh (the sandbox block above
+          # already generated one); the script bakes in the real Honeybadger
+          # key and the API credentials from Default.
+          ./scripts/generate-xcconfig.sh production BikeIndex-production.xcconfig
+
+      - name: Validate production xcconfig
+        run: ./scripts/validate-xcconfig.sh production
+
+      - name: Set up keychain and codesigning
+        env:
+          CODESIGNING_IOS_READ_TOKEN: ${{ secrets.CODESIGNING_IOS_READ_TOKEN }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_READONLY: "true"
+        run: |
+          sed -i.bak "s/git_url.*/git_url\(\"https:\/\/${GITHUB_ACTOR}:${CODESIGNING_IOS_READ_TOKEN}@github.com\/bikeindex\/codesigning_ios.git\"\)/g" fastlane/Matchfile
+          fastlane CD_setup_keychain_and_codesigning
+
+      - name: Build release archive
+        run: fastlane CD_build_release_archive
+
+      - name: Calculate delivery changes
+        run: git diff > delivery-changes.patch
+
+      - uses: actions/upload-artifact@v7
+        if: success()
+        with:
+          name: ${{ github.sha }}-artifact
+          path: |
+            BikeIndex.app.dSYM.zip
+            BikeIndex.ipa
+            ~/Library/Developer/Xcode/Archives/*
+            delivery-changes.patch
+          compression-level: 9
