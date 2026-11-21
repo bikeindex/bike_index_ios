@@ -164,3 +164,9 @@ jobs:
             fastlane/test_output/**/*.xcresult
           if-no-files-found: warn
           retention-days: 14
+
+      - name: Trim derived data to speed runner cleanup
+        if: always()
+        run: |
+          rm -rf build/
+          echo "Cleaned up derived data"

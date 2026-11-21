@@ -88,6 +88,11 @@ jobs:
           path: |
             BikeIndex.app.dSYM.zip
             BikeIndex.ipa
-            ~/Library/Developer/Xcode/Archives/*
+            ~/Library/Developer/Xcode/Archives/*.xcarchive
             delivery-changes.patch
-          compression-level: 9
+
+      - name: Trim derived data to speed runner cleanup
+        if: always()
+        run: |
+          rm -rf build/
+          echo "Cleaned up derived data (archives preserved for crash desymbolication)"
