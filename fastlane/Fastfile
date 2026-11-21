@@ -96,7 +96,8 @@ platform :ios do
     deliver(
       # Only available for CI/CD after "Load API key" step
       api_key_path: "./fastlane/api-key.json",
-      skip_metadata: true
+      skip_metadata: true,
+      force: true
     )
   end
 end
