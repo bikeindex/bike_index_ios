@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   requires-integration-tests:
-    uses: bikeindex/bike_index_ios/.github/workflows/integration.yml@main
+    uses: bikeindex/bike_index_ios/.github/workflows/integration.yml@release/v1.7.1
     secrets: inherit
 
   build-release:
