@@ -40,7 +40,7 @@ runs:
         } > Test-credentials.xcconfig
       shell: bash
     # Always validates the two invariants (development + test credentials).
-    # Production validated by delivery.yml.
+    # Production validated by cd-release.yml.
     - name: Validate xcconfigs
       run: |
         ./scripts/validate-xcconfig.sh development && ./scripts/validate-xcconfig.sh test

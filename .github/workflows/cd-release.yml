@@ -60,7 +60,7 @@ jobs:
           echo "$MATCH_API_KEY_JSON_CONTENT" > ./fastlane/api-key.json
           # Rewrite the production xcconfig fresh (the sandbox block above
           # already generated one); the script bakes in the real Honeybadger
-          # key and the API credentials from Default.
+          # key and the API credentials from GHA secrets (not Default.xcconfig).
           ./scripts/generate-xcconfig.sh production BikeIndex-production.xcconfig
 
       - name: Validate production xcconfig
