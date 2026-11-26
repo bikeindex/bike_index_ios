@@ -46,6 +46,10 @@ API_CLIENT_ID="${API_CLIENT_ID:-}"
   else
     grep '^API_CLIENT_ID' Default.xcconfig
   fi
+  if [[ "$ENVIRONMENT" == "production" ]]; then
+    echo "API_HOST = https:\/\/bikeindex.org"
+    echo "API_PORT = 443"
+  fi
 } > "$FILE"
 
 echo "generated $FILE ($ENVIRONMENT)"
