@@ -1,0 +1,353 @@
+name: CD Snapshots
+# Captures and validates UI screenshots against the sandbox.
+# Each device runs as a separate parallel job so a hung device
+# (e.g. OAuth loop in test_3) only burns ~25 min and doesn't
+# block the remaining devices. Re-run UI targets individual jobs.
+#
+# Runs on:
+#   - push to release/v* branches
+#   - weekly Monday 6am UTC (canary)
+#   - manual dispatch
+#   - workflow_call (reusable)
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: ["release/v*"]
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+  workflow_call:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# ─── Shared setup (runs once, seeds build cache) ─────────────────────
+
+jobs:
+  setup:
+    name: Build and cache
+    runs-on: xcode-27
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set Xcode 27
+        run: sudo xcode-select -s /Applications/Xcode_27.1.app
+
+      - name: Set up development + production xcconfigs (sandbox)
+        uses: ./.github/actions/setup-xcconfig
+        with:
+          environments: development production
+          honeybadger_api_key: ""
+
+      - name: Build and cache derived data
+        run: |
+          set -o pipefail
+          # Build once; scan will reuse these artifacts per device.
+          xcodebuild clean build \
+            -project BikeIndex.xcodeproj \
+            -scheme BikeIndex \
+            -destination 'platform=iOS Simulator,name=iPhone 18 Pro Max,OS=latest' \
+            -derivedDataPath build \
+            2>&1 | tee /tmp/fastlane_setup.log
+        # Cache key is per-commit so re-runs on the same commit reuse it.
+      - name: Save build cache
+        uses: actions/cache/save@v5
+        with:
+          path: build
+          key: cache-build-${{ github.sha }}
+
+# ─── Per-device snapshot jobs ─────────────────────────────────────────
+
+  snapshot-iphone-18-pro-max:
+    name: Snapshot iPhone 18 Pro Max
+    needs: setup
+    runs-on: xcode-27
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set Xcode 27
+        run: sudo xcode-select -s /Applications/Xcode_27.1.app
+
+      - name: Set up development + production xcconfigs (sandbox)
+        uses: ./.github/actions/setup-xcconfig
+        with:
+          environments: development production
+          honeybadger_api_key: ""
+
+      - name: Restore cached build products
+        uses: actions/cache/restore@v5
+        with:
+          path: build
+          key: cache-build-${{ github.sha }}
+
+      - name: Clear previous screenshots
+        run: rm -rf fastlane/screenshots/*
+
+      - name: Capture screenshots
+        id: capture
+        timeout-minutes: 25
+        run: |
+          set -o pipefail
+          fastlane scan \
+            --testplan ReleaseScreenshots \
+            --device "iPhone 18 Pro Max" \
+            --derived_data_path build \
+            --result_bundle true \
+            --output_types junit \
+            2>&1 | tee /tmp/fastlane_snapshot.log
+          count=$(find fastlane/screenshots -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
+          echo "iPhone 18 Pro Max: ${count}/5 screenshots"
+          if [ "${count}" -ne 5 ]; then
+            echo "::error::Expected 5 screenshots for iPhone 18 Pro Max, got ${count}. See /tmp/fastlane_snapshot.log"
+            exit 1
+          fi
+
+      - name: Upload device screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: snapshots-iphone-18-pro-max-${{ github.sha }}
+          path: fastlane/screenshots/**/*
+          retention-days: 30
+
+  snapshot-iphone-18-pro:
+    name: Snapshot iPhone 18 Pro
+    needs: setup
+    runs-on: xcode-27
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set Xcode 27
+        run: sudo xcode-select -s /Applications/Xcode_27.1.app
+
+      - name: Set up development + production xcconfigs (sandbox)
+        uses: ./.github/actions/setup-xcconfig
+        with:
+          environments: development production
+          honeybadger_api_key: ""
+
+      - name: Restore cached build products
+        uses: actions/cache/restore@v5
+        with:
+          path: build
+          key: cache-build-${{ github.sha }}
+
+      - name: Capture screenshots
+        id: capture
+        timeout-minutes: 25
+        run: |
+          set -o pipefail
+          fastlane scan \
+            --testplan ReleaseScreenshots \
+            --device "iPhone 18 Pro" \
+            --derived_data_path build \
+            --result_bundle true \
+            --output_types junit \
+            2>&1 | tee /tmp/fastlane_snapshot.log
+          count=$(find fastlane/screenshots -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
+          echo "iPhone 18 Pro: ${count}/5 screenshots"
+          if [ "$((count % 5))" -ne 0 ]; then
+            echo "::error::Expected screenshots in multiples of 5, got ${count}. See /tmp/fastlane_snapshot.log"
+            exit 1
+          fi
+
+      - name: Upload device screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: snapshots-iphone-18-pro-${{ github.sha }}
+          path: fastlane/screenshots/**/*
+          retention-days: 30
+
+  snapshot-ipad-air-13-inch:
+    name: Snapshot iPad Air 13-inch (M4)
+    needs: setup
+    runs-on: xcode-27
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set Xcode 27
+        run: sudo xcode-select -s /Applications/Xcode_27.1.app
+
+      - name: Set up development + production xcconfigs (sandbox)
+        uses: ./.github/actions/setup-xcconfig
+        with:
+          environments: development production
+          honeybadger_api_key: ""
+
+      - name: Restore cached build products
+        uses: actions/cache/restore@v5
+        with:
+          path: build
+          key: cache-build-${{ github.sha }}
+
+      - name: Capture screenshots
+        id: capture
+        timeout-minutes: 25
+        run: |
+          set -o pipefail
+          fastlane scan \
+            --testplan ReleaseScreenshots \
+            --device "iPad Air 13-inch (M4)" \
+            --derived_data_path build \
+            --result_bundle true \
+            --output_types junit \
+            2>&1 | tee /tmp/fastlane_snapshot.log
+          count=$(find fastlane/screenshots -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
+          echo "iPad Air 13-inch: ${count}/5 screenshots"
+          if [ "$((count % 5))" -ne 0 ]; then
+            echo "::error::Expected screenshots in multiples of 5, got ${count}. See /tmp/fastlane_snapshot.log"
+            exit 1
+          fi
+
+      - name: Upload device screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: snapshots-ipad-air-13-inch-${{ github.sha }}
+          path: fastlane/screenshots/**/*
+          retention-days: 30
+
+  snapshot-ipad-air-11-inch:
+    name: Snapshot iPad Air 11-inch (M4)
+    needs: setup
+    runs-on: xcode-27
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set Xcode 27
+        run: sudo xcode-select -s /Applications/Xcode_27.1.app
+
+      - name: Set up development + production xcconfigs (sandbox)
+        uses: ./.github/actions/setup-xcconfig
+        with:
+          environments: development production
+          honeybadger_api_key: ""
+
+      - name: Restore cached build products
+        uses: actions/cache/restore@v5
+        with:
+          path: build
+          key: cache-build-${{ github.sha }}
+
+      - name: Capture screenshots
+        id: capture
+        timeout-minutes: 25
+        run: |
+          set -o pipefail
+          fastlane scan \
+            --testplan ReleaseScreenshots \
+            --device "iPad Air 11-inch (M4)" \
+            --derived_data_path build \
+            --result_bundle true \
+            --output_types junit \
+            2>&1 | tee /tmp/fastlane_snapshot.log
+          count=$(find fastlane/screenshots -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
+          echo "iPad Air 11-inch: ${count}/5 screenshots"
+          if [ "$((count % 5))" -ne 0 ]; then
+            echo "::error::Expected screenshots in multiples of 5, got ${count}. See /tmp/fastlane_snapshot.log"
+            exit 1
+          fi
+
+      - name: Upload device screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: snapshots-ipad-air-11-inch-${{ github.sha }}
+          path: fastlane/screenshots/**/*
+          retention-days: 30
+
+# ─── Validation & consolidation ───────────────────────────────────────
+
+  validate:
+    name: Validate snapshots
+    needs:
+      - snapshot-iphone-18-pro-max
+      - snapshot-iphone-18-pro
+      - snapshot-ipad-air-13-inch
+      - snapshot-ipad-air-11-inch
+    if: always()
+    runs-on: xcode-27
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Check job results
+        run: |
+          echo "=== Job Results ==="
+          echo "iPhone 18 Pro Max: ${{ needs.snapshot-iphone-18-pro-max.result }}"
+          echo "iPhone 18 Pro: ${{ needs.snapshot-iphone-18-pro.result }}"
+          echo "iPad Air 13-inch: ${{ needs.snapshot-ipad-air-13-inch.result }}"
+          echo "iPad Air 11-inch: ${{ needs.snapshot-ipad-air-11-inch.result }}"
+          # If any job failed, fail validation
+          if [[ "${{ needs.snapshot-iphone-18-pro-max.result }}" != "success" ]] || \
+             [[ "${{ needs.snapshot-iphone-18-pro.result }}" != "success" ]] || \
+             [[ "${{ needs.snapshot-ipad-air-13-inch.result }}" != "success" ]] || \
+             [[ "${{ needs.snapshot-ipad-air-11-inch.result }}" != "success" ]]; then
+            echo "::error::One or more device snapshot jobs failed. Check the job logs."
+            exit 1
+          fi
+
+      - name: Download all device screenshots
+        uses: actions/download-artifact@v7
+        with:
+          pattern: snapshots-*-${{ github.sha }}
+          path: fastlane/screenshots/
+          merge-multiple: true
+
+      - name: Validate screenshots
+        run: |
+          # 5 test methods × 4 devices = 20 expected PNGs
+          ruby scripts/validate-screenshots.rb fastlane/screenshots 20
+
+      - name: Upload combined screenshots as artifact
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: snapshots-${{ github.sha }}
+          path: fastlane/screenshots/**/*
+          retention-days: 30
+
+      - name: Upload test results (.xcresult) for diagnosis
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-results-${{ github.sha }}
+          path: |
+            build/test-output/**/*.xcresult
+            fastlane/screenshots/**/*.xcresult
+            fastlane/test_output/**/*.xcresult
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Trim derived data to speed runner cleanup
+        if: always()
+        run: |
+          rm -rf build/
+          echo "Cleaned up derived data"

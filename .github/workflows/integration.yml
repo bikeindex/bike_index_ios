@@ -93,7 +93,7 @@ jobs:
             fastlane scan \
               --only-testing="UnitTests" \
               --device="${{ matrix.device }}" \
-              --deployment-target-version="${{ matrix.deployment_target_version }}" \
+              --deployment-target-version="${{ matrix.deployment_target_version }}"
           }
           scan
           rc=$?
@@ -185,7 +185,7 @@ jobs:
             fastlane scan \
               --only-testing="UITests" \
               --device="${{ matrix.device }}" \
-              --deployment-target-version="${{ matrix.deployment_target_version }}" \
+              --deployment-target-version="${{ matrix.deployment_target_version }}"
           }
           scan
           rc=$?
@@ -298,7 +298,7 @@ jobs:
             fastlane scan \
               --xcargs="-only-testing:@$identifiers" \
               --device="${DEVICE}" \
-              --deployment-target-version="${{ matrix.deployment_target_version }}" \
+              --deployment-target-version="${{ matrix.deployment_target_version }}"
           }
           scan
           rc=$?
@@ -481,7 +481,7 @@ jobs:
             fastlane scan \
               --xcargs="-only-testing:@$identifiers" \
               --device="${DEVICE}" \
-              --deployment-target-version="${{ matrix.deployment_target_version }}" \
+              --deployment-target-version="${{ matrix.deployment_target_version }}"
           }
           scan
           rc=$?
