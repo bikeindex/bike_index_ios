@@ -1,0 +1,937 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0428F4812D75156300BDD2A5 /* SectionedQuery in Frameworks */ = {isa = PBXBuildFile; productRef = 0428F4802D75156300BDD2A5 /* SectionedQuery */; };
+		042927712E03D33F009D0609 /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = 042927702E03D33F009D0609 /* Flow */; };
+		044441302DC6A1DC004B19AE /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = 0444412F2DC6A1DC004B19AE /* CachedAsyncImage */; };
+		047ED3E530786D280014FBC1 /* PreviewGallery in Frameworks */ = {isa = PBXBuildFile; productRef = 047ED3E430786D280014FBC1 /* PreviewGallery */; };
+		047ED3E730786D280014FBC1 /* SnapshotPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = 047ED3E630786D280014FBC1 /* SnapshotPreferences */; };
+		047ED3E930786D280014FBC1 /* SnapshottingTests in Frameworks */ = {isa = PBXBuildFile; productRef = 047ED3E830786D280014FBC1 /* SnapshottingTests */; };
+		048770782FCA52CB00340322 /* Honeybadger in Frameworks */ = {isa = PBXBuildFile; productRef = 048770772FCA52CB00340322 /* Honeybadger */; };
+		04CE915B300D2F97002546C3 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE915A300D2F97002546C3 /* SnapshotHelper.swift */; };
+		04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 04E1343D2B4B718200CE88DD /* WebViewKit */; };
+		04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */ = {isa = PBXBuildFile; productRef = 04EA11212B2504340024CDDD /* URLEncodedForm */; };
+		04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04F4B95D2B0990CE009442B5 /* KeychainSwift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		04F4B90B2B098ADE009442B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 04F4B8EF2B098ADB009442B5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 04F4B8F62B098ADB009442B5;
+			remoteInfo = BikeIndex;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		04ABEBC92D1F399E00E30577 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		041B73652FAE697E00057A7A /* BikeIndex-template.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "BikeIndex-template.xcconfig"; sourceTree = "<group>"; };
+		0423F2632E6CA34F00199160 /* .swift-format */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".swift-format"; sourceTree = "<group>"; };
+		04566C772E67475E00E3EC6E /* app-icons.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "app-icons.md"; sourceTree = "<group>"; };
+		04566C782E67475E00E3EC6E /* release-steps.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "release-steps.md"; sourceTree = "<group>"; };
+		04566C7A2E67475E00E3EC6E /* Appfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Appfile; sourceTree = "<group>"; };
+		04566C7B2E67475E00E3EC6E /* Fastfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Fastfile; sourceTree = "<group>"; };
+		04566C7C2E67475E00E3EC6E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		04566C7D2E67475E00E3EC6E /* Scanfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Scanfile; sourceTree = "<group>"; };
+		04566C7F2E67475E00E3EC6E /* update-icons.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "update-icons.sh"; sourceTree = "<group>"; };
+		0496C6702CB36BED00B88D1B /* Brewfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Brewfile; sourceTree = "<group>"; };
+		04CE8FC2300C7220002546C3 /* delivery.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = delivery.yml; sourceTree = "<group>"; };
+		04CE8FC3300C7220002546C3 /* integration.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = integration.yml; sourceTree = "<group>"; };
+		04CE8FC4300C7220002546C3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		04CE8FC6300C7220002546C3 /* CODEOWNERS */ = {isa = PBXFileReference; lastKnownFileType = text; path = CODEOWNERS; sourceTree = "<group>"; };
+		04CE8FC7300C7220002546C3 /* FUNDING.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = FUNDING.yml; sourceTree = "<group>"; };
+		04CE915A300D2F97002546C3 /* SnapshotHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
+		04CE915C300D2FB2002546C3 /* Gymfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Gymfile; sourceTree = "<group>"; };
+		04CE915D300D2FB2002546C3 /* Matchfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Matchfile; sourceTree = "<group>"; };
+		04D641902FAE35B4000B5546 /* format.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = format.sh; sourceTree = "<group>"; };
+		04D641912FAE35B4000B5546 /* lint.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = lint.sh; sourceTree = "<group>"; };
+		04D641922FAE35B4000B5546 /* validate-xcconfig.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "validate-xcconfig.sh"; sourceTree = "<group>"; };
+		04D641932FAE6675000B5546 /* Default.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Default.xcconfig; sourceTree = "<group>"; };
+		04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Test-credentials.xcconfig"; sourceTree = "<group>"; };
+		04D80BB72D8673F200E29577 /* Test-credentials-template.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Test-credentials-template.xcconfig"; sourceTree = "<group>"; };
+		04F4B8F72B098ADB009442B5 /* BikeIndex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BikeIndex.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		04F4B90A2B098ADE009442B5 /* UnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		04F4B9142B098ADE009442B5 /* UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		04F4B9272B098B44009442B5 /* BikeIndex-production.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "BikeIndex-production.xcconfig"; sourceTree = "<group>"; };
+		04F4B9292B098B44009442B5 /* BikeIndex-development.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "BikeIndex-development.xcconfig"; sourceTree = "<group>"; };
+		04F4B9312B098B5A009442B5 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		04CDF1442D3C344100F90515 /* Exceptions for "BikeIndex" folder in "BikeIndex" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+				"Preview Content/Preview Assets.xcassets",
+			);
+			target = 04F4B8F62B098ADB009442B5 /* BikeIndex */;
+		};
+		04CDF16A2D3C344800F90515 /* Exceptions for "UITests" folder in "UITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 04F4B9132B098ADE009442B5 /* UITests */;
+		};
+		04CDF1722D3C344C00F90515 /* Exceptions for "SharedTests" folder in "UnitTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Logger+Tests.swift",
+			);
+			target = 04F4B9092B098ADE009442B5 /* UnitTests */;
+		};
+		04CDF1732D3C344C00F90515 /* Exceptions for "SharedTests" folder in "UITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Logger+Tests.swift",
+			);
+			target = 04F4B9132B098ADE009442B5 /* UITests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		04CDF1012D3C344100F90515 /* BikeIndex */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				04CDF1442D3C344100F90515 /* Exceptions for "BikeIndex" folder in "BikeIndex" target */,
+			);
+			path = BikeIndex;
+			sourceTree = "<group>";
+		};
+		04CDF1502D3C344500F90515 /* UnitTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = UnitTests;
+			sourceTree = "<group>";
+		};
+		04CDF1632D3C344800F90515 /* UITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				04CDF16A2D3C344800F90515 /* Exceptions for "UITests" folder in "UITests" target */,
+			);
+			path = UITests;
+			sourceTree = "<group>";
+		};
+		04CDF16F2D3C344C00F90515 /* SharedTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				04CDF1722D3C344C00F90515 /* Exceptions for "SharedTests" folder in "UnitTests" target */,
+				04CDF1732D3C344C00F90515 /* Exceptions for "SharedTests" folder in "UITests" target */,
+			);
+			path = SharedTests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		04F4B8F42B098ADB009442B5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				047ED3E530786D280014FBC1 /* PreviewGallery in Frameworks */,
+				0428F4812D75156300BDD2A5 /* SectionedQuery in Frameworks */,
+				04F4B95E2B0990CE009442B5 /* KeychainSwift in Frameworks */,
+				042927712E03D33F009D0609 /* Flow in Frameworks */,
+				044441302DC6A1DC004B19AE /* CachedAsyncImage in Frameworks */,
+				048770782FCA52CB00340322 /* Honeybadger in Frameworks */,
+				047ED3E730786D280014FBC1 /* SnapshotPreferences in Frameworks */,
+				04EA11222B2504340024CDDD /* URLEncodedForm in Frameworks */,
+				04E1343E2B4B718200CE88DD /* WebViewKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04F4B9072B098ADE009442B5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				047ED3E930786D280014FBC1 /* SnapshottingTests in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04F4B9112B098ADE009442B5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		04566C792E67475E00E3EC6E /* docs */ = {
+			isa = PBXGroup;
+			children = (
+				04566C772E67475E00E3EC6E /* app-icons.md */,
+				04566C782E67475E00E3EC6E /* release-steps.md */,
+			);
+			path = docs;
+			sourceTree = "<group>";
+		};
+		04566C7E2E67475E00E3EC6E /* fastlane */ = {
+			isa = PBXGroup;
+			children = (
+				04CE915A300D2F97002546C3 /* SnapshotHelper.swift */,
+				04566C7A2E67475E00E3EC6E /* Appfile */,
+				04566C7B2E67475E00E3EC6E /* Fastfile */,
+				04566C7C2E67475E00E3EC6E /* README.md */,
+				04CE915C300D2FB2002546C3 /* Gymfile */,
+				04CE915D300D2FB2002546C3 /* Matchfile */,
+				04566C7D2E67475E00E3EC6E /* Scanfile */,
+				04CE9159300D2F80002546C3 /* metadata */,
+			);
+			path = fastlane;
+			sourceTree = "<group>";
+		};
+		04566C802E67475E00E3EC6E /* scripts */ = {
+			isa = PBXGroup;
+			children = (
+				04D641902FAE35B4000B5546 /* format.sh */,
+				04D641912FAE35B4000B5546 /* lint.sh */,
+				04D641922FAE35B4000B5546 /* validate-xcconfig.sh */,
+				04566C7F2E67475E00E3EC6E /* update-icons.sh */,
+			);
+			path = scripts;
+			sourceTree = "<group>";
+		};
+		04ABEBC32D1F399E00E30577 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		04CE8FC5300C7220002546C3 /* workflows */ = {
+			isa = PBXGroup;
+			children = (
+				04CE8FC2300C7220002546C3 /* delivery.yml */,
+				04CE8FC3300C7220002546C3 /* integration.yml */,
+				04CE8FC4300C7220002546C3 /* README.md */,
+			);
+			path = workflows;
+			sourceTree = "<group>";
+		};
+		04CE8FC8300C7220002546C3 /* .github */ = {
+			isa = PBXGroup;
+			children = (
+				04CE8FC5300C7220002546C3 /* workflows */,
+				04CE8FC6300C7220002546C3 /* CODEOWNERS */,
+				04CE8FC7300C7220002546C3 /* FUNDING.yml */,
+			);
+			path = .github;
+			sourceTree = "<group>";
+		};
+		04CE9159300D2F80002546C3 /* metadata */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = metadata;
+			sourceTree = "<group>";
+		};
+		04F4B8EE2B098ADB009442B5 = {
+			isa = PBXGroup;
+			children = (
+				04F4B9312B098B5A009442B5 /* README.md */,
+				04F4B9292B098B44009442B5 /* BikeIndex-development.xcconfig */,
+				04F4B9272B098B44009442B5 /* BikeIndex-production.xcconfig */,
+				041B73652FAE697E00057A7A /* BikeIndex-template.xcconfig */,
+				04D641932FAE6675000B5546 /* Default.xcconfig */,
+				04D80BB72D8673F200E29577 /* Test-credentials-template.xcconfig */,
+				04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */,
+				04CDF1012D3C344100F90515 /* BikeIndex */,
+				04CDF16F2D3C344C00F90515 /* SharedTests */,
+				04CDF1632D3C344800F90515 /* UITests */,
+				04CDF1502D3C344500F90515 /* UnitTests */,
+				0496C6702CB36BED00B88D1B /* Brewfile */,
+				0423F2632E6CA34F00199160 /* .swift-format */,
+				04566C802E67475E00E3EC6E /* scripts */,
+				04566C792E67475E00E3EC6E /* docs */,
+				04566C7E2E67475E00E3EC6E /* fastlane */,
+				04CE8FC8300C7220002546C3 /* .github */,
+				04ABEBC32D1F399E00E30577 /* Frameworks */,
+				04F4B8F82B098ADB009442B5 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		04F4B8F82B098ADB009442B5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				04F4B8F72B098ADB009442B5 /* BikeIndex.app */,
+				04F4B90A2B098ADE009442B5 /* UnitTests.xctest */,
+				04F4B9142B098ADE009442B5 /* UITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		04F4B8F62B098ADB009442B5 /* BikeIndex */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 04F4B91E2B098ADE009442B5 /* Build configuration list for PBXNativeTarget "BikeIndex" */;
+			buildPhases = (
+				04F4B8F32B098ADB009442B5 /* Sources */,
+				04F4B8F42B098ADB009442B5 /* Frameworks */,
+				04F4B8F52B098ADB009442B5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				04CDF1012D3C344100F90515 /* BikeIndex */,
+			);
+			name = BikeIndex;
+			packageProductDependencies = (
+				04F4B95D2B0990CE009442B5 /* KeychainSwift */,
+				04EA11212B2504340024CDDD /* URLEncodedForm */,
+				04E1343D2B4B718200CE88DD /* WebViewKit */,
+				0428F4802D75156300BDD2A5 /* SectionedQuery */,
+				0444412F2DC6A1DC004B19AE /* CachedAsyncImage */,
+				042927702E03D33F009D0609 /* Flow */,
+				048770772FCA52CB00340322 /* Honeybadger */,
+				047ED3E430786D280014FBC1 /* PreviewGallery */,
+				047ED3E630786D280014FBC1 /* SnapshotPreferences */,
+			);
+			productName = BikeIndex;
+			productReference = 04F4B8F72B098ADB009442B5 /* BikeIndex.app */;
+			productType = "com.apple.product-type.application";
+		};
+		04F4B9092B098ADE009442B5 /* UnitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 04F4B9212B098ADE009442B5 /* Build configuration list for PBXNativeTarget "UnitTests" */;
+			buildPhases = (
+				04F4B9062B098ADE009442B5 /* Sources */,
+				04F4B9072B098ADE009442B5 /* Frameworks */,
+				04F4B9082B098ADE009442B5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				04F4B90C2B098ADE009442B5 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				04CDF1502D3C344500F90515 /* UnitTests */,
+			);
+			name = UnitTests;
+			packageProductDependencies = (
+				047ED3E830786D280014FBC1 /* SnapshottingTests */,
+			);
+			productName = UnitTests;
+			productReference = 04F4B90A2B098ADE009442B5 /* UnitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		04F4B9132B098ADE009442B5 /* UITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 04F4B9242B098ADE009442B5 /* Build configuration list for PBXNativeTarget "UITests" */;
+			buildPhases = (
+				04F4B9102B098ADE009442B5 /* Sources */,
+				04F4B9112B098ADE009442B5 /* Frameworks */,
+				04F4B9122B098ADE009442B5 /* Resources */,
+				04ABEBC92D1F399E00E30577 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				04F4B90C2B098ADE009442B5 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				04CDF1632D3C344800F90515 /* UITests */,
+			);
+			name = UITests;
+			packageProductDependencies = (
+			);
+			productName = UITests;
+			productReference = 04F4B9142B098ADE009442B5 /* UITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		04F4B8EF2B098ADB009442B5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 2710;
+				TargetAttributes = {
+					04F4B8F62B098ADB009442B5 = {
+						CreatedOnToolsVersion = 15.0.1;
+					};
+					04F4B9092B098ADE009442B5 = {
+						CreatedOnToolsVersion = 15.0.1;
+						TestTargetID = 04F4B8F62B098ADB009442B5;
+					};
+					04F4B9132B098ADE009442B5 = {
+						CreatedOnToolsVersion = 15.0.1;
+						TestTargetID = 04F4B8F62B098ADB009442B5;
+					};
+				};
+			};
+			buildConfigurationList = 04F4B8F22B098ADB009442B5 /* Build configuration list for PBXProject "BikeIndex" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 04F4B8EE2B098ADB009442B5;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				04F4B95C2B0990CE009442B5 /* XCRemoteSwiftPackageReference "keychain-swift" */,
+				04EA11202B2504340024CDDD /* XCRemoteSwiftPackageReference "URLEncodedForm" */,
+				04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */,
+				0428F47F2D75156300BDD2A5 /* XCRemoteSwiftPackageReference "swiftdata-sectionedquery" */,
+				0444412E2DC6A1DC004B19AE /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
+				0429276F2E03D33F009D0609 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */,
+				048770762FCA52CB00340322 /* XCRemoteSwiftPackageReference "honeybadger-cocoa" */,
+				047ED3E330786D280014FBC1 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 04F4B8F82B098ADB009442B5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				04F4B8F62B098ADB009442B5 /* BikeIndex */,
+				04F4B9092B098ADE009442B5 /* UnitTests */,
+				04F4B9132B098ADE009442B5 /* UITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		04F4B8F52B098ADB009442B5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04F4B9082B098ADE009442B5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04F4B9122B098ADE009442B5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		04F4B8F32B098ADB009442B5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04F4B9062B098ADE009442B5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04F4B9102B098ADE009442B5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04CE915B300D2F97002546C3 /* SnapshotHelper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		04F4B90C2B098ADE009442B5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 04F4B8F62B098ADB009442B5 /* BikeIndex */;
+			targetProxy = 04F4B90B2B098ADE009442B5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		04EA11232B25135D0024CDDD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		04EA11242B25135D0024CDDD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 04F4B9292B098B44009442B5 /* BikeIndex-development.xcconfig */;
+			buildSettings = {
+				APP_SHORTCUTS_ENABLE_FLEXIBLE_MATCHING = NO;
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "Striped Grayscale Pride Shadow";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BikeIndex/BikeIndex.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development: Created via API (5B9LNWHAK9)";
+				CODE_SIGN_STYLE = Manual;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "BikeIndex/Preview\\ Content/MultipleBikeResponse_mock.json BikeIndex/Preview\\ Content";
+				DEVELOPMENT_TEAM = 8ZM5ZL6ABT;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BikeIndex/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Bike Index";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Add photos of your bike, and found bikes, to find matches and make recovery easier.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Add photos of your bike, and found bikes, to find matches and make recovery easier.";
+				INFOPLIST_KEY_NSSiriUsageDescription = "Siri interacts with the app to complete your shortcuts.";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.4;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development org.bikeindex.app";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		04EA11252B25135D0024CDDD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.bikeindex.UnitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BikeIndex.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BikeIndex";
+			};
+			name = Debug;
+		};
+		04EA11262B25135D0024CDDD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = UITests/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = org.bikeindex.UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = BikeIndex;
+			};
+			name = Debug;
+		};
+		04F4B91D2B098ADE009442B5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		04F4B9202B098ADE009442B5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 04F4B9272B098B44009442B5 /* BikeIndex-production.xcconfig */;
+			buildSettings = {
+				APP_SHORTCUTS_ENABLE_FLEXIBLE_MATCHING = NO;
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "Striped Grayscale Pride Shadow";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BikeIndex/BikeIndex.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "BikeIndex/Preview\\ Content/MultipleBikeResponse_mock.json BikeIndex/Preview\\ Content";
+				DEVELOPMENT_TEAM = 8ZM5ZL6ABT;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BikeIndex/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Bike Index";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Add photos of your bike, and found bikes, to find matches and make recovery easier.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Add photos of your bike, and found bikes, to find matches and make recovery easier.";
+				INFOPLIST_KEY_NSSiriUsageDescription = "Siri interacts with the app to complete your shortcuts.";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.4;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore org.bikeindex.app";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		04F4B9232B098ADE009442B5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.bikeindex.UnitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BikeIndex.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BikeIndex";
+			};
+			name = Release;
+		};
+		04F4B9262B098ADE009442B5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 04D80BB62D8673F200E29577 /* Test-credentials.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = UITests/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = org.bikeindex.UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = BikeIndex;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		04F4B8F22B098ADB009442B5 /* Build configuration list for PBXProject "BikeIndex" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				04EA11232B25135D0024CDDD /* Debug */,
+				04F4B91D2B098ADE009442B5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		04F4B91E2B098ADE009442B5 /* Build configuration list for PBXNativeTarget "BikeIndex" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				04EA11242B25135D0024CDDD /* Debug */,
+				04F4B9202B098ADE009442B5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		04F4B9212B098ADE009442B5 /* Build configuration list for PBXNativeTarget "UnitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				04EA11252B25135D0024CDDD /* Debug */,
+				04F4B9232B098ADE009442B5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		04F4B9242B098ADE009442B5 /* Build configuration list for PBXNativeTarget "UITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				04EA11262B25135D0024CDDD /* Debug */,
+				04F4B9262B098ADE009442B5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0428F47F2D75156300BDD2A5 /* XCRemoteSwiftPackageReference "swiftdata-sectionedquery" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/beechtom/swiftdata-sectionedquery.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
+			};
+		};
+		0429276F2E03D33F009D0609 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tevelee/SwiftUI-Flow.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.1;
+			};
+		};
+		0444412E2DC6A1DC004B19AE /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.1;
+			};
+		};
+		047ED3E330786D280014FBC1 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/SnapshotPreviews/";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.20.0;
+			};
+		};
+		048770762FCA52CB00340322 /* XCRemoteSwiftPackageReference "honeybadger-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/honeybadger-io/honeybadger-cocoa";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
+		04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/danielsaidi/WebViewKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		04EA11202B2504340024CDDD /* XCRemoteSwiftPackageReference "URLEncodedForm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/interactord/URLEncodedForm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.9;
+			};
+		};
+		04F4B95C2B0990CE009442B5 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/evgenyneu/keychain-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 20.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0428F4802D75156300BDD2A5 /* SectionedQuery */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0428F47F2D75156300BDD2A5 /* XCRemoteSwiftPackageReference "swiftdata-sectionedquery" */;
+			productName = SectionedQuery;
+		};
+		042927702E03D33F009D0609 /* Flow */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0429276F2E03D33F009D0609 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */;
+			productName = Flow;
+		};
+		0444412F2DC6A1DC004B19AE /* CachedAsyncImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0444412E2DC6A1DC004B19AE /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */;
+			productName = CachedAsyncImage;
+		};
+		047ED3E430786D280014FBC1 /* PreviewGallery */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 047ED3E330786D280014FBC1 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			productName = PreviewGallery;
+		};
+		047ED3E630786D280014FBC1 /* SnapshotPreferences */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 047ED3E330786D280014FBC1 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			productName = SnapshotPreferences;
+		};
+		047ED3E830786D280014FBC1 /* SnapshottingTests */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 047ED3E330786D280014FBC1 /* XCRemoteSwiftPackageReference "SnapshotPreviews" */;
+			productName = SnapshottingTests;
+		};
+		048770772FCA52CB00340322 /* Honeybadger */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 048770762FCA52CB00340322 /* XCRemoteSwiftPackageReference "honeybadger-cocoa" */;
+			productName = Honeybadger;
+		};
+		04E1343D2B4B718200CE88DD /* WebViewKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04E1343C2B4B718200CE88DD /* XCRemoteSwiftPackageReference "WebViewKit" */;
+			productName = WebViewKit;
+		};
+		04EA11212B2504340024CDDD /* URLEncodedForm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04EA11202B2504340024CDDD /* XCRemoteSwiftPackageReference "URLEncodedForm" */;
+			productName = URLEncodedForm;
+		};
+		04F4B95D2B0990CE009442B5 /* KeychainSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04F4B95C2B0990CE009442B5 /* XCRemoteSwiftPackageReference "keychain-swift" */;
+			productName = KeychainSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 04F4B8EF2B098ADB009442B5 /* Project object */;
+}
