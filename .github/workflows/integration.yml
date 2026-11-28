@@ -21,7 +21,7 @@ jobs:
         with:
           ref: ${{ github.ref }}
       - name: Set Xcode 27
-        run: sudo xcode-select -s /Applications/Xcode_27.1.app
+        run: sudo xcode-select -s /Applications/Xcode_27.2.app
       - name: Install tools
         run: brew bundle install
       - name: Set up xcconfigs
@@ -63,7 +63,7 @@ jobs:
         with:
           ref: ${{ github.ref }}
       - name: Set Xcode 27
-        run: sudo xcode-select -s /Applications/Xcode_27.1.app
+        run: sudo xcode-select -s /Applications/Xcode_27.2.app
       - name: Install tools
         run: brew bundle install
       - name: Prune unavailable simulators
@@ -93,8 +93,7 @@ jobs:
             fastlane scan \
               --only-testing="UnitTests" \
               --device="${{ matrix.device }}" \
-              --deployment-target-version="${{ matrix.deployment_target_version }}" \
-              --test_without_building=true
+              --deployment-target-version="${{ matrix.deployment_target_version }}"
           }
           scan
           rc=$?
@@ -156,7 +155,7 @@ jobs:
         with:
           ref: ${{ github.ref }}
       - name: Set Xcode 27
-        run: sudo xcode-select -s /Applications/Xcode_27.1.app
+        run: sudo xcode-select -s /Applications/Xcode_27.2.app
       - name: Install tools
         run: brew bundle install
       - name: Prune unavailable simulators
@@ -186,8 +185,7 @@ jobs:
             fastlane scan \
               --only-testing="UITests" \
               --device="${{ matrix.device }}" \
-              --deployment-target-version="${{ matrix.deployment_target_version }}" \
-              --test_without_building=true
+              --deployment-target-version="${{ matrix.deployment_target_version }}"
           }
           scan
           rc=$?
@@ -230,8 +228,8 @@ jobs:
   retry-unit:
     needs: [build-tests, test-unit]
     if: always() && needs.test-unit.result == 'failure' && needs.test-unit.outputs['failed-tests'] != ''
-    # Must match the build-tests image/Xcode so --test_without_building works on
-    # the cached build products. See build-tests.
+    # Must match the build-tests image/Xcode so the restored derived-data
+    # cache is usable. See build-tests.
     runs-on: xcode-27
     timeout-minutes: 60
     name: Retry failed UnitTests on ${{ matrix.device }}
@@ -250,7 +248,7 @@ jobs:
         with:
           ref: ${{ github.ref }}
       - name: Set Xcode 27
-        run: sudo xcode-select -s /Applications/Xcode_27.1.app
+        run: sudo xcode-select -s /Applications/Xcode_27.2.app
       - name: Install tools
         run: brew bundle install
       - name: Prune unavailable simulators
@@ -300,8 +298,7 @@ jobs:
             fastlane scan \
               --xcargs="-only-testing:@$identifiers" \
               --device="${DEVICE}" \
-              --deployment-target-version="${{ matrix.deployment_target_version }}" \
-              --test_without_building=true
+              --deployment-target-version="${{ matrix.deployment_target_version }}"
           }
           scan
           rc=$?
@@ -409,8 +406,8 @@ jobs:
   retry-ui:
     needs: [build-tests, test-ui]
     if: always() && needs.test-ui.result == 'failure' && needs.test-ui.outputs['failed-tests'] != ''
-    # Must match the build-tests image/Xcode so --test_without_building works on
-    # the cached build products. See build-tests.
+    # Must match the build-tests image/Xcode so the restored derived-data
+    # cache is usable. See build-tests.
     runs-on: xcode-27
     timeout-minutes: 60
     name: Retry failed UITests on ${{ matrix.device }}
@@ -429,7 +426,7 @@ jobs:
         with:
           ref: ${{ github.ref }}
       - name: Set Xcode 27
-        run: sudo xcode-select -s /Applications/Xcode_27.1.app
+        run: sudo xcode-select -s /Applications/Xcode_27.2.app
       - name: Install tools
         run: brew bundle install
       - name: Prune unavailable simulators
@@ -484,8 +481,7 @@ jobs:
             fastlane scan \
               --xcargs="-only-testing:@$identifiers" \
               --device="${DEVICE}" \
-              --deployment-target-version="${{ matrix.deployment_target_version }}" \
-              --test_without_building=true
+              --deployment-target-version="${{ matrix.deployment_target_version }}"
           }
           scan
           rc=$?

@@ -88,7 +88,7 @@ This same script is used in CI to catch missing configuration before builds. Run
 
 ### Development
 
-- Requirements: Xcode 27.1
+- Requirements: Xcode 27.2
 - Simulator tests run on iOS 27.0 (the `xcode-27` runner image only ships iOS 27.0 simulators)
 - Target deployment: iOS 17.2
 

@@ -7,6 +7,10 @@
 # Environment variables:
 #   HONEYBADGER_API_KEY  Baked into the file. Empty for sandbox/snapshot runs;
 #                        the real secret for release builds.
+#   API_SECRET           Production API secret (from GHA secrets).
+#                        Falls back to Default.xcconfig for local/sandbox use.
+#   API_CLIENT_ID        Production API client ID (from GHA secrets).
+#                        Falls back to Default.xcconfig for local/sandbox use.
 #
 # DEVELOPMENT_TEAM is the Bike Index team, hardcoded: it is not a secret (it
 # appears in provisioning profiles and docs) and is the same for every
@@ -25,27 +29,38 @@ case "$ENVIRONMENT" in
 esac
 DEVELOPMENT_TEAM="8ZM5ZL6ABT"
 HONEYBADGER_API_KEY="${HONEYBADGER_API_KEY:-}"
+API_SECRET="${API_SECRET:-}"
+API_CLIENT_ID="${API_CLIENT_ID:-}"
 
 {
   echo '#include "Default"'
   echo "DEVELOPMENT_TEAM = ${DEVELOPMENT_TEAM}"
   echo "HONEYBADGER_API_KEY = ${HONEYBADGER_API_KEY}"
-  grep '^API_SECRET' Default.xcconfig
-  grep '^API_CLIENT_ID' Default.xcconfig
+  if [[ -n "$API_SECRET" ]]; then
+    echo "API_SECRET = ${API_SECRET}"
+  else
+    grep '^API_SECRET' Default.xcconfig
+  fi
+  if [[ -n "$API_CLIENT_ID" ]]; then
+    echo "API_CLIENT_ID = ${API_CLIENT_ID}"
+  else
+    grep '^API_CLIENT_ID' Default.xcconfig
+  fi
+  if [[ "$ENVIRONMENT" == "production" ]]; then
+    echo "API_HOST = https:\/\/bikeindex.org"
+    echo "API_PORT = 443"
+  fi
 } > "$FILE"
 
 echo "generated $FILE ($ENVIRONMENT)"
 
 if [[ "$ENVIRONMENT" == "production" ]]; then
-  # The file is written with the shared sandbox OAuth credentials from
-  # Default.xcconfig. validate-xcconfig.sh production will fail until a real
-  # Honeybadger key is set and (for non-Bike-Index accounts) real OAuth
-  # credentials are in place.
-  cat <<'EOF'
-Reminder: this file uses the shared sandbox OAuth credentials from Default.xcconfig
-and an empty HONEYBADGER_API_KEY. `validate-xcconfig.sh production` will fail until
-you set HONEYBADGER_API_KEY. To use your own OAuth app, create one at
-https://bikeindex.org/oauth/applications (redirect URI: bikeindex://) and set
-API_CLIENT_ID / API_SECRET in this file.
+  if [[ -z "$HONEYBADGER_API_KEY" ]]; then
+    cat <<'EOF'
+Reminder: HONEYBADGER_API_KEY is not set. `validate-xcconfig.sh production`
+will fail until you export HONEYBADGER_API_KEY. To use your own OAuth app,
+create one at https://bikeindex.org/oauth/applications (redirect URI:
+bikeindex://) and set API_CLIENT_ID / API_SECRET via environment variables.
 EOF
+  fi
 fi
